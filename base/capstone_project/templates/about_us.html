@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Knights of Columbus - About Us
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/about-style.css' %}?v={% now 'U' %}">
+<div class="background">
+    <h1>About Us</h1>
+    <p>Learn about the history and impact of the Knights of Columbus.</p>
+</div>
+<div class="container">
+    <section class="hero">
+        <div class="content">
+            <h1>Our History</h1>
+            <p>Founded in 1882 by Blessed Michael McGivney in New Haven, Connecticut, the Knights of Columbus was created to provide financial support to Catholic families, particularly widows and orphans. What began as a small fraternal organization has grown into a global network of over 2 million members dedicated to charity, unity, fraternity, and patriotism.</p>
+        </div>
+    </section>
+
+    <section class="section mission">
+        <div class="mission-overlay">
+            <h2>Our Founder</h2>
+            <p>Blessed Michael McGivney, a parish priest, saw the struggles of Catholic immigrant families in the late 19th century. He founded the Knights to offer mutual aid and insurance, ensuring that families would be cared for in times of need. His vision continues to inspire our work today.</p>
+        </div>
+    </section>
+</div>
+{% endblock %}

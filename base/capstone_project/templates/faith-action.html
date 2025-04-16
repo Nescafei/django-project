@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Faith & Action
+{% endblock %}
+
+{% block content %}
+<body>
+<link rel="stylesheet" href="{% static 'css/faith-action-style.css' %}?v={% now 'U' %}">
+    <main>
+        <section class="faith-n-action">
+            <div class="faith-n-action-logo">
+                <img src="{% static 'images/faith-and-act-logo2.svg' %}" alt="Faith 'N Action Logo">
+            </div>
+            <h1>Faith 'N Action</h1>
+            <p class="tagline">"Serving Faith, Community, and Charity with Transparency"</p>
+            <p>Faith 'n Action is a blockchain-driven web application designed to modernize the Knights of Columbus (KoFC) Lucena Chapter by enhancing transparency, engagement, and efficiency in donation and community service. This platform serves as a centralized hub for members, officers, and the public, offering secure donation tracking via blockchain, real-time activity monitoring, and streamlined event management. Key features include a transparent donation portal (with immutable ledger records), automated member tier systems, QR-based attendance tracking, and humanitarian and request tools. By digitizing operations, the app ensures accountability in fundraising, simplifies volunteer coordination, and preserves the council's legacy through a digital historical archive. Ultimately, Faith 'n Action empowers the KoFC Lucena to strengthen trust with donors, boost member participation, and amplify their impact in serving faith and community—all while upholding the order's core values of charity, unity, and fraternity.</p>
+        </section>
+    </main>
+</body>
+</html>
+{% endblock %}

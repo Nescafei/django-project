@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Knights of Columbus - Sign In
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/signin-style.css' %}?v={% now 'U' %}">
+<div class="container">
+    <h1>Sign In</h1>
+    <p>Access your Knights of Columbus account.</p>
+    <section class="sign-in-form">
+        <h2>Member Sign In</h2>
+        <form method="post">
+            {% csrf_token %}
+            <label for="username">Username:</label>
+            <input type="text" id="username" name="username" placeholder="Enter your username" required>
+            <label for="password">Password:</label>
+            <input type="password" id="password" name="password" placeholder="Enter your password" required>
+            <button type="submit">Sign In</button>
+        </form>
+        <p>Not a member? <a href="{% url 'sign-up' %}">Join now</a>.</p>
+    </section>
+</div>
+{% endblock %}

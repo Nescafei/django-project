@@ -1,0 +1,93 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}   
+Knights of Columbus
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/homepage-style.css' %}?v={% now 'U' %}">
+</head>
+<body>
+    <div class="background" style="background: url('{% static 'images/homepage-img.jpg' %}') no-repeat center/cover;">
+        <h1>Welcome to the Knights of Columbus</h1>
+        <p>Strengthening faith, families, and communities since 1882.</p>
+        <a href="/donations/" class="cta-button">Support Our Mission</a>
+    </div>
+    <div class="container">
+        <section class="highlights">
+            <h2>Why Join the Knights of Columbus?</h2>
+            <div class="highlight-grid">
+                <div class="highlight">
+                    <h3>Faith in Action</h3>
+                    <p>Participate in programs that deepen your faith and serve the Church.</p>
+                </div>
+                <div class="highlight">
+                    <h3>Community Service</h3>
+                    <p>Make a difference through charity and volunteer work in your local community.</p>
+                </div>
+                <div class="highlight">
+                    <h3>Brotherhood</h3>
+                    <p>Join a global network of over 2 million Catholic men dedicated to fraternity.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="impact">
+            <h2>Our Impact</h2>
+            <div class="impact-stats">
+                <div class="stat">
+                    <h3>2M+</h3>
+                    <p>Members Worldwide</p>
+                </div>
+                <div class="stat">
+                    <h3>$185M+</h3>
+                    <p>Donated to Charity in 2023</p>
+                </div>
+                <div class="stat">
+                    <h3>77M+</h3>
+                    <p>Volunteer Hours in 2023</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="cta-section">
+            <h2>Join Us Today</h2>
+            <p>Become a Knight and make a lasting impact in your community.</p>
+            <a href="/sign-in/" class="cta-button">Join Now</a>
+        </section>
+
+        <section class="contact-us">
+            <div class="user-input">
+                <h2>Contact Us</h2>
+                <p>Have questions? Reach out to learn more about the Knights of Columbus.</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <input type="text" name="name" placeholder="Name" required>
+                    <input type="email" name="email" placeholder="Email" required>
+                    <textarea name="message" placeholder="Message" required></textarea>
+                    <button type="submit">Send</button>
+                </form>
+                <div class="social-icons">
+                    <a href="https://i.pinimg.com/originals/93/b6/45/93b645d9b137732bed2bf050feebfb08.jpg" target="_blank" class="social-link">
+                        <i class="fa fa-facebook"></i>
+                    </a>
+                    <a href="https://youtu.be/xvFZjo5PgG0" target="_blank" class="social-link">
+                        <i class="fa fa-twitter"></i>
+                    </a>
+                    <a href="https://youtu.be/xvFZjo5PgG0" target="_blank" class="social-link">
+                        <i class="fa fa-instagram"></i>
+                    </a>
+                    <a href="https://youtu.be/xvFZjo5PgG0" target="_blank" class="social-link">
+                        <i class="fa fa-linkedin"></i>
+                    </a>
+                </div>
+            </div>
+        </section>
+    </div>
+    <footer class="footer">
+        <p>© 2025 Knights of Columbus. All rights reserved.</p>
+    </footer>
+</body>
+</html> 
+{% endblock %}

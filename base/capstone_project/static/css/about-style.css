@@ -1,0 +1,198 @@
+body {
+    background-color: #0d3471; 
+    margin: 0;
+    padding: 0;
+    font-family: "Roboto", sans-serif;
+}
+
+
+.background {
+    width: 100%;
+    min-height: 50vh;
+    padding: 2rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    background-color: #0d3471;
+    /* background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url('/static/images/about-bg.jpg') no-repeat center/cover;  */
+}
+
+.background h1 {
+    font-size: 3.5rem;
+    margin: 0 0 1rem;
+    font-weight: 600;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+}
+
+.background p {
+    font-size: 1.2rem;
+    color: #f0f1f6; 
+    margin: 0;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    max-width: 90%;
+    margin: 0 auto;
+}
+
+
+.container {
+    margin: 5rem auto;
+    padding: 0 1rem;
+    max-width: 1200px; 
+}
+
+
+.hero {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.hero .content h1 {
+    font-size: 2.5rem;
+    color: #f4b41a;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.hero .content p {
+    font-size: 1.2rem;
+    color: #f0f1f6;
+    max-width: 90%;
+    margin: 0 auto;
+}
+
+
+.section.mission {
+    text-align: center;
+    padding: 3rem 0;
+    background-color: #0d3471; 
+}
+
+.mission-overlay {
+    max-width: 90%;
+    margin: 0 auto;
+}
+
+.mission-overlay h2 {
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.mission-overlay p {
+    font-size: 1.2rem;
+    color: #f0f1f6;
+    max-width: 90%;
+    margin: 0 auto;
+}
+
+/* Impact Section */
+.impact {
+    text-align: center;
+    padding: 3rem 0;
+}
+
+.impact h2 {
+    font-size: 2.5rem;
+    color: #f4b41a;
+    margin-bottom: 2rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.impact-stats {
+    display: flex;
+    justify-content: center;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.stat {
+    text-align: center;
+    width: 30%;
+    min-width: 200px;
+}
+
+.stat h3 {
+    font-size: 2rem;
+    color: #f4b41a;
+    margin-bottom: 0.5rem;
+}
+
+.stat p {
+    font-size: 1rem;
+    color: #f0f1f6;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .background {
+        min-height: 40vh;
+        padding: 1.5rem;
+    }
+
+    .background h1 {
+        font-size: 2.5rem;
+    }
+
+    .background p {
+        font-size: 1rem;
+    }
+
+    .container {
+        margin: 3rem auto;
+    }
+
+    .hero,
+    .section.mission,
+    .impact {
+        padding: 2rem 0;
+    }
+
+    .hero .content h1,
+    .mission-overlay h2,
+    .impact h2 {
+        font-size: 2rem;
+    }
+
+    .hero .content p,
+    .mission-overlay p {
+        font-size: 1rem;
+    }
+
+    .stat {
+        width: 45%;
+    }
+}
+
+@media (max-width: 480px) {
+    .background {
+        min-height: 30vh;
+        padding: 1rem;
+    }
+
+    .background h1 {
+        font-size: 2rem;
+    }
+
+    .background p {
+        font-size: 0.9rem;
+    }
+
+    .hero .content h1,
+    .mission-overlay h2,
+    .impact h2 {
+        font-size: 1.8rem;
+    }
+
+    .hero .content p,
+    .mission-overlay p {
+        font-size: 0.9rem;
+    }
+
+    .stat {
+        width: 100%;
+        min-width: unset;
+    }
+}

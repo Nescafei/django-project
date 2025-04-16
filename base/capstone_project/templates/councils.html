@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Councils
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/council-style.css' %}?v={% now 'U' %}">
+<body>
+    <main>
+        <h1>Knights of Columbus <br> in Lucena District</h1>
+        <p>Linggang guli guli guli 😲🔥</p>
+
+        <div class="councils-grid">
+            <div class="council">
+                <img src="{% static 'images/kofc-logo.png' %}" alt="Council Logo">
+                <p>Council 3469</p>
+            </div>
+            <div class="council">
+                <img src="{% static 'images/kofc-logo.png' %}" alt="Council Logo">
+                <p>Council 18035</p>
+            </div>
+            <div class="council">
+                <img src="{% static 'images/kofc-logo.png' %}" alt="Council Logo">
+                <p>Council 1234</p>
+            </div>
+            <div class="council">
+                <img src="{% static 'images/kofc-logo.png' %}" alt="Council Logo">
+                <p>Council 6789</p>
+            </div>
+        </div>
+    </main>
+</body>
+</html>
+{% endblock %}
