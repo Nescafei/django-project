@@ -157,7 +157,6 @@ body {
     cursor: pointer;
 }
 
-/* Submit Button */
 .sign-up-form button {
     margin: 1.5rem 0;
     border: none;
@@ -166,7 +165,7 @@ body {
     height: 3rem;
     font-size: 1.2rem;
     cursor: pointer;
-    background: #030d4e; /* Dark blue button */
+    background: #030d4e;
     color: #f0f1f6;
     transition: 0.2s ease-in-out;
     font-family: "Noto Sans", sans-serif;
@@ -174,8 +173,57 @@ body {
 }
 
 .sign-up-form button:hover {
-    background: #f4b41a; /* Yellow on hover */
+    background: #f4b41a;
     color: #030d4e;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: #0d3471;
+    color: #F0F1F6;
+    margin: 15% auto;
+    padding: 20px;
+    border: 2px solid #f4b41a;
+    border-radius: 10px;
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.modal-message {
+    font-size: 1.2rem;
+    margin-bottom: 20px;
+}
+
+.modal-message.success {
+    color: #f4b41a;
+}
+
+.modal-message.error {
+    color: #ff4444;
+}
+
+.modal-close {
+    background-color: #f4b41a;
+    color: #161B5F;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.modal-close:hover {
+    background-color: #e0a317;
 }
 
 /* Responsive Adjustments */
