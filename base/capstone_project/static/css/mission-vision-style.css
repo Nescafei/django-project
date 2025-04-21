@@ -2,7 +2,6 @@ body {
     background-color: #0d3471;
 }
 
-
 .background {
     background: url('kofc-bg.jpg') no-repeat center/cover;
     object-fit: cover;
@@ -14,6 +13,7 @@ body {
     flex-direction: column;
     justify-content: center;
 }
+
 .background h1 {
     font-size: 4rem;
     margin: 0;
@@ -59,6 +59,7 @@ body {
     max-width: 80%;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
+
 .content p {
     font-size: 2rem;
     color: #F0F1F6;
@@ -66,12 +67,6 @@ body {
     max-width: 80%;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
-
-/* .section {
-    padding: 50px;
-    max-width: 800px;
-    margin: 0 auto;
-} */
 
 .mission-overlay {
     display: flex;
@@ -96,16 +91,14 @@ body {
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
 
-
-.section-history{
+.section-history {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
     margin: 0 auto;
     margin-top: 30%;
-    margin-bottom: 20%; 
-
+    margin-bottom: 20%;
 }
 
 .section-history h2 {
@@ -114,6 +107,7 @@ body {
     color: #f4b41a;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
+
 .section-history p {
     font-size: 2rem;
     color: #f0f1f6;
@@ -149,16 +143,8 @@ body {
     text-align: center;
 }
 
-/* .icons{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-} */
-
-
 .user-input [type="text"],
-.user-input [type="email"]{
+.user-input [type="email"] {
     width: 60vh;
     height: 6vh;
     font-family: "Roboto", sans-serif;
@@ -227,22 +213,9 @@ body {
     text-align: center;
     color: #F0F1F6;
 }
+
 /* Responsive Styles */
 @media (max-width: 1024px) {
-    .logo img {
-        width: 6vh;
-        height: 6vh;
-    }
-
-    nav ul {
-        gap: 3vw;
-        padding-right: 3vw;
-    }
-
-    nav ul li a {
-        font-size: 0.9rem;
-    }
-
     .background h1 {
         font-size: 3rem;
         width: 70%;
@@ -308,28 +281,6 @@ body {
 }
 
 @media (max-width: 768px) {
-    header {
-        flex-direction: column;
-        padding: 2vh 3vw;
-    }
-
-    .logo img {
-        width: 5vh;
-        height: 5vh;
-    }
-
-    nav ul {
-        flex-direction: column;
-        gap: 2vh;
-        padding-right: 0;
-        margin-top: 2vh;
-        text-align: center;
-    }
-
-    nav ul li a {
-        font-size: 0.8rem;
-    }
-
     .background {
         height: 80vh;
     }
