@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h1>Update Degree for {{ user.username }}</h1>
+    <form method="post">
+        {% csrf_token %}
+        <label for="current_degree">Current Degree:</label>
+        <select id="current_degree" name="current_degree" required>
+            <option value="" disabled {% if not user.current_degree %}selected{% endif %}>Select a degree</option>
+            <option value="1st" {% if user.current_degree == '1st' %}selected{% endif %}>1st Degree</option>
+            <option value="2nd" {% if user.current_degree == '2nd' %}selected{% endif %}>2nd Degree</option>
+            <option value="3rd" {% if user.current_degree == '3rd' %}selected{% endif %}>3rd Degree</option>
+            <option value="4th" {% if user.current_degree == '4th' %}selected{% endif %}>4th Degree</option>
+        </select>
+        <button type="submit">Save Degree</button>
+    </form>
+</div>
+{% endblock %}
