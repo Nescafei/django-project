@@ -1,3 +1,67 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Member Dashboard
+{% endblock %}
+
+
+{% block content %}
+<div class="container">
+    <h1>Member Dashboard</h1>
+    {% if user.profile_picture %}
+        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-pic">
+    {% endif %}
+     <p><a href="{% url 'edit_profile' %}">Edit Profile</a></p>
+    <h2>Events</h2>
+    <ul>
+        {% for event in events %}
+            <li>{{ event.name }} - {{ event.date }}</li>
+        {% endfor %}
+    </ul>
+</div>
+<!-- <div class="container">
+    <h1>Welcome, {{ user.first_name }} {{ user.last_name }}</h1>
+    {% if user.profile_picture %}
+        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-pic">
+    {% endif %}
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Council:</strong> {{ user.council.name }}</p>
+    <p><strong>Age:</strong> {{ user.age }}</p>
+    <p><strong>Address:</strong> {{ user.address }}</p>
+    <p><strong>Contact Number:</strong> {{ user.contact_number }}</p>
+    <p><strong>Current Degree:</strong> {{ user.current_degree|default:'Not assigned yet' }}</p>
+    <p><a href="{% url 'edit_profile' %}">Edit Profile</a></p>
+</div> -->
+
+<style>
+body {
+    background-color: #5383cf;
+    margin: 0;
+    padding: 0;
+    font-family: "Roboto", sans-serif;
+}
+
+.profile-pic {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+    border-radius: 50%;
+}
+@media (max-width: 768px) {
+    .profile-pic {
+        width: 100px;
+        height: 100px;
+    }
+}
+@media (max-width: 480px) {
+    .profile-pic {
+        width: 80px;
+        height: 80px;
+    }
+}
+</style>
+
 <script type="text/javascript">
         var gk_isXlsx = false;
         var gk_xlsxFileLookup = {};
@@ -37,21 +101,5 @@
         }
         return gk_fileData[filename] || "";
         }
-        </script>{% extends 'base.html' %}
-
-{% block title %}
-Knights of Columbus - Member Dashboard
-{% endblock %}
-
-{% block content %}
-<div class="container">
-    <h1>Welcome, {{ user.first_name }} {{ user.last_name }}</h1>
-    <p><strong>Username:</strong> {{ user.username }}</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <p><strong>Council:</strong> {{ user.council.name }}</p>
-    <p><strong>Age:</strong> {{ user.age }}</p>
-    <p><strong>Address:</strong> {{ user.address }}</p>
-    <p><strong>Contact Number:</strong> {{ user.contact_number }}</p>
-    <p><strong>Current Degree:</strong> {{ user.current_degree|default:'Not assigned yet' }}</p>
-</div>
+</script>
 {% endblock %}

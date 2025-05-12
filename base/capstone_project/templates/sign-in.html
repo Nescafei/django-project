@@ -11,6 +11,9 @@ Knights of Columbus - Sign In
     <h1>Sign In</h1>
     <p>Access your Knights of Columbus account.</p>
     <section class="sign-in-form">
+        {% if pending_message %}
+            <p class="message" style="color: #721c24; background-color: #f8d7da; border: 1px solid #f5c6cb;">{{ pending_message }}</p>
+        {% endif %}
         {% if error %}
             <p style="color: red; font-size: 14px; margin-bottom: 10px;">{{ error }}</p>
         {% endif %}

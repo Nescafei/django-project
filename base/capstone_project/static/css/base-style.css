@@ -29,7 +29,7 @@ header {
     align-items: center;
     background-color: #030D4E;
     margin: 0 auto;
-    padding: 0 4vh;
+    padding: 2vh 4vh;
 }
 
 .logo img {
@@ -78,6 +78,26 @@ nav ul li a.active {
     background-color: #F0F1F6;
     margin: 5px 0;
     transition: all 0.3s ease-in-out;
+}
+
+.search-form input[type="text"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.search-form button {
+    padding: 5px 10px;
+    background-color: #f4b41a;
+    border: none;
+    border-radius: 4px;
+    color: #030D4E;
+    cursor: pointer;
+}
+
+.search-form button:hover {
+    background-color: #e0a10a;
 }
 
 .footer {
@@ -137,6 +157,12 @@ nav ul li a.active {
         gap: 2vh;
         padding: 2vh 0;
         text-align: center;
+        display: none;
+    }
+
+    nav.active ul {
+        display: flex;
+        flex-direction: column;
     }
 
     nav ul li a {
@@ -148,6 +174,18 @@ nav ul li a.active {
     .logo img {
         width: 5vh;
         height: 5vh;
+    }
+    @media (max-width: 768px) {
+    .search-form {
+        width: 100%;
+        margin: 10px 0;
+    }
+    .search-form input[type="text"] {
+        width: 70%;
+    }
+    .search-form button {
+        width: 25%;
+    }
     }
 }
 

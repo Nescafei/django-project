@@ -16,7 +16,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
     <!-- CSS SECTION -->
-    <link rel="stylesheet" href="{% static 'css/base-style.css' %}?v={% now 'U' %}">
+    <link rel="stylesheet" href="{% static 'css/base-style.css' %}?v={% now 'U' %}" />
     
     <title>{% block title %}Knights of Columbus{% endblock %}</title>
 </head>
@@ -28,6 +28,9 @@
                     <img src="{% static 'images/faith-and-act-logo.svg' %}" alt="Knights of Columbus Logo">
                 </a>
             </div>
+        {% else %}
+            <!-- Debug: Show if authenticated -->
+            <p style="color: rgb(253, 235, 34);">Authenticated as {{ user.role }}</p>
         {% endif %}
         <button class="hamburger" aria-label="Toggle menu">
             <span></span>
@@ -37,7 +40,7 @@
         <nav>
             <ul>
                 {% if not user.is_authenticated %}
-
+                    <!-- Public links for non-logged-in users -->
                     <li><a href="{% url 'capstone_project' %}" {% if request.path == '/' %}class="active"{% endif %}>Home</a></li>
                     <li><a href="{% url 'faith-action' %}" {% if request.path == '/faith-action/' %}class="active"{% endif %}>FAITH 'N ACTION</a></li>
                     <li><a href="{% url 'mission_vision' %}" {% if request.path == '/mission_vision/' %}class="active"{% endif %}>Mission & Vision</a></li>
@@ -46,18 +49,25 @@
                     <li><a href="{% url 'about_us' %}" {% if request.path == '/about_us/' %}class="active"{% endif %}>About us</a></li>
                     <li><a href="{% url 'sign-in' %}" {% if request.path == '/sign-in/' %}class="active"{% endif %}>Sign in</a></li>
                 {% else %}
-                    {% if user.role == 'admin' %}
-                        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-                        <li><a href="{% url 'analytics_view' %}">View Analytics</a></li>
-                        <li><a href="/admin/capstone_project/user/add/">Add User</a></li>
-                        <li><a href="/admin/capstone_project/user/">Manage Users</a></li>
-                    {% elif user.role == 'officer' %}
-                        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-                        <li><a href="{% url 'manage_pending_users' %}">Manage Pending Users</a></li>
-                        <li><a href="{% url 'analytics_form' %}">Update Analytics</a></li>
-                    {% elif user.role == 'member' %}
-                        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-                    {% endif %}
+                    <li>
+                        <form method="get" action="{% url 'search' %}" style="display: inline;">
+                            <input type="text" name="q" placeholder="Search users..." style="padding: 5px; margin-right: 10px;">
+                            <button type="submit" style="padding: 5px 10px;">Search</button>
+                        </form>
+                    </li>
+                    <!-- Role-specific links for logged-in users -->
+                {% if user.role == 'admin' %}
+                    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                    <li><a href="{% url 'analytics_view' %}">View Analytics</a></li>
+                    <li><a href="/admin/capstone_project/user/add/">Add User</a></li>
+                    <li><a href="/admin/capstone_project/user/">Manage Users</a></li>
+                {% elif user.role == 'officer' %}
+                    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                    <li><a href="{% url 'manage_pending_users' %}">Manage Pending Users</a></li>
+                    <li><a href="{% url 'analytics_form' %}">Update Analytics</a></li>
+                {% elif user.role == 'member' %}
+                    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                {% endif %}
                     <li><a href="{% url 'logout' %}">Logout</a></li>
                 {% endif %}
             </ul>

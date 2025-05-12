@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Knights of Columbus - Search Results
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Search Results for "{{ query }}"</h1>
+    {% if results %}
+        <ul>
+            {% for user in results %}
+                <li>{{ user.username }} - {{ user.role }} - {{ user.council.name|default:"No council" }}</li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p>No users found.</p>
+    {% endif %}
+</div>
+
+<style>
+/* Add to existing base-style.css */
+.search-form input[type="text"] {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.9rem;
+}
+
+.search-form button {
+    padding: 5px 10px;
+    background-color: #f4b41a;
+    border: none;
+    border-radius: 4px;
+    color: #030D4E;
+    cursor: pointer;
+}
+
+.search-form button:hover {
+    background-color: #e0a10a;
+}
+
+@media (max-width: 768px) {
+    .search-form {
+        width: 100%;
+        margin: 10px 0;
+    }
+    .search-form input[type="text"] {
+        width: 70%;
+    }
+    .search-form button {
+        width: 25%;
+    }
+}
+</style>
+{% endblock %}

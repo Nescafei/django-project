@@ -1,3 +1,62 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Admin Dashboard
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/admin_dashboard_style.css' %}?v={% now 'U' %}">
+<div class="container">
+    <div class="admin">
+        <h1>Knights of Columbus</h1>
+        <h2>Admin Dashboard</h2>
+        <div class="admin-info">
+            <!-- <p>Welcome, {{ user.username }}</p>
+            <p>Role: {{ user.role }}</p>
+            {% if user.council %}
+                <p>Council: {{ user.council.name }}</p>
+            {% else %}
+                <p>No council assigned</p>
+            {% endif %} -->
+            <div class="admin-details">
+                {% if user.profile_picture %}
+                <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-pic">
+                <p>{{ user.username }}</p>
+    
+            {% endif %}
+            </div>
+            <p><a href="{% url 'edit_profile' %}">Edit Profile</a></p>
+            <p><a href="{% url 'archived_users' %}">View Archived Users</a></p>
+        </div>
+    </div>
+    <!-- <h2>Users</h2>
+    <ul>y
+        {% for u in user_list %}
+            <li>{{ u.username }} - {{ u.role }} - {{ u.council.name|default:"No council" }}</li>
+        {% endfor %}
+    </ul> -->
+    <div class="user-list">
+        <h2>Users</h2>
+        {% for u in user_list %}
+            <p>{{ u.first_name }} {{ u.last_name }} - {{ u.council.name|default:"No council" }} <a href="{% url 'update_degree' u.id %}">Update Degree</a> | <a href="{% url 'archive_user' u.id %}">Archive User</a></p>
+        {% endfor %}
+        <h2>Events</h2>
+        <ul>
+            {% for event in events %}
+                <li>{{ event.name }} - {{ event.date }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div class="analytics">
+        <h2>Analytics</h2>
+        <ul>
+            {% for a in analytics %}
+                <li>{{ a.council.name }}: {{ a.events_count }} events, ${{ a.donations_amount }}</li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+
 <script type="text/javascript">
         var gk_isXlsx = false;
         var gk_xlsxFileLookup = {};
@@ -37,30 +96,19 @@
         }
         return gk_fileData[filename] || "";
         }
-        </script>{% extends 'base.html' %}
-
-{% block title %}
-Knights of Columbus - Admin Dashboard
-{% endblock %}
-
-{% block content %}
-<div class="container">
-    <h1>Welcome, Admin {{ user.first_name }} {{ user.last_name }}</h1>
-    <h2>Manage Users</h2>
-    <ul>
-        {% for user in user_list %}
-        <p>{{ user.username }} - <a href="{% url 'update_degree' user.id %}">Update Degree</a></p>
-            <li>
-                {{ user.first_name }} {{ user.last_name }} ({{ user.get_role_display }} - {{ user.council.name }})
-                {% if user.role == 'member' %}
-                    <a href="{% url 'promote_user' user.id %}">Promote to Officer</a>
-                {% elif user.role == 'officer' %}
-                    <a href="{% url 'demote_user' user.id %}">Demote to Member</a>
-                {% endif %}
-                <p>{{ user.username }} - <a href="{% url 'archive_user' user.id %}">Archive User</a></p>
-            </li>
-        {% endfor %}
-        
-    </ul>
-</div>
+</script>
+<!-- <div class="container">
+    <h1>Admin Dashboard</h1>
+    {% if user.profile_picture %}
+        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-pic">
+    {% endif %}
+    <p>Welcome, {{ user.username }}</p>
+    <h2>Users</h2>
+    {% for u in user_list %}
+        <p>{{ u.username }} - <a href="{% url 'update_degree' u.id %}">Update Degree</a> | <a href="{% url 'archive_user' u.id %}">Archive User</a></p>
+    {% endfor %}
+    <p><a href="{% url 'archived_users' %}">View Archived Users</a></p>
+    <p><a href="{% url 'edit_profile' %}">Edit Profile</a></p>
+    <p><a href="{% url 'logout' %}">Logout</a></p>
+</div> -->
 {% endblock %}

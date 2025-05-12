@@ -1,3 +1,40 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Analytics
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Analytics Overview</h1>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>Council</th>
+                <th>Events Count</th>
+                <th>Donations Amount</th>
+                <th>Last Updated</th>
+                <th>Updated By</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for record in analytics %}
+                <tr>
+                    <td>{{ record.council.name }}</td>
+                    <td>{{ record.events_count }}</td>
+                    <td>{{ record.donations_amount }}</td>
+                    <td>{{ record.date_updated }}</td>
+                    <td>{{ record.updated_by.username }}</td>
+                </tr>
+            {% empty %}
+                <tr>
+                    <td colspan="5">No analytics data available.</td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
 <script type="text/javascript">
         var gk_isXlsx = false;
         var gk_xlsxFileLookup = {};
@@ -37,40 +74,5 @@
         }
         return gk_fileData[filename] || "";
         }
-        </script>{% extends 'base.html' %}
-
-{% block title %}
-Knights of Columbus - Analytics
-{% endblock %}
-
-{% block content %}
-<div class="container">
-    <h1>Analytics Overview</h1>
-    <table border="1">
-        <thead>
-            <tr>
-                <th>Council</th>
-                <th>Events Count</th>
-                <th>Donations Amount</th>
-                <th>Last Updated</th>
-                <th>Updated By</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for record in analytics %}
-                <tr>
-                    <td>{{ record.council.name }}</td>
-                    <td>{{ record.events_count }}</td>
-                    <td>{{ record.donations_amount }}</td>
-                    <td>{{ record.date_updated }}</td>
-                    <td>{{ record.updated_by.username }}</td>
-                </tr>
-            {% empty %}
-                <tr>
-                    <td colspan="5">No analytics data available.</td>
-                </tr>
-            {% endfor %}
-        </tbody>
-    </table>
-</div>
+</script>
 {% endblock %}

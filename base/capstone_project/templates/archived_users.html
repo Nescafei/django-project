@@ -1,3 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <h1>Archived Users</h1>
+    {% if archived_users %}
+        <ul>
+        {% for user in archived_users %}
+            <li>{{ user.username }} ({{ user.role }}) - {{ user.email }}</li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No archived users found.</p>
+    {% endif %}
+    <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+</div>
+
 <script type="text/javascript">
         var gk_isXlsx = false;
         var gk_xlsxFileLookup = {};
@@ -37,19 +53,5 @@
         }
         return gk_fileData[filename] || "";
         }
-        </script>{% extends 'base.html' %}
-{% block content %}
-<div class="container">
-    <h1>Archived Users</h1>
-    {% if archived_users %}
-        <ul>
-        {% for user in archived_users %}
-            <li>{{ user.username }} ({{ user.role }}) - {{ user.email }}</li>
-        {% endfor %}
-        </ul>
-    {% else %}
-        <p>No archived users found.</p>
-    {% endif %}
-    <a href="{% url 'dashboard' %}">Back to Dashboard</a>
-</div>
+</script>
 {% endblock %}

@@ -21,5 +21,3 @@ class AnalyticsAdmin(admin.ModelAdmin):
     list_display = ('council', 'events_count', 'donations_amount', 'updated_by')
     list_filter = ('council',)
     search_fields = ('council__name',)
-
-
