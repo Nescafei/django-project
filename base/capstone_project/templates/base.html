@@ -1,87 +1,125 @@
 {% load static %}
+        
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="Cache-Control" content="no-store, no-cache, must-revalidate, max-age=0">
-    <meta http-equiv="Pragma" content="no-cache">
-    <meta http-equiv="Expires" content="0">
-    <link rel="icon" type="image/png" href="{% static 'images/kofc-logo.png' %}">
-
-    <!-- FONT SECTION -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:ital,wght@0,100..900;1,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
-    <!-- CSS SECTION -->
-    <link rel="stylesheet" href="{% static 'css/base-style.css' %}?v={% now 'U' %}" />
-    
     <title>{% block title %}Knights of Columbus{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/base-style.css' %}">
+    <script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script>
 </head>
 <body>
     <header>
+        <div class="logo">
+            <img src="{% static 'images/logo.png' %}" alt="Logo">
+        </div>
         {% if not user.is_authenticated %}
-            <div class="logo">
-                <a href="{% url 'capstone_project' %}">
-                    <img src="{% static 'images/faith-and-act-logo.svg' %}" alt="Knights of Columbus Logo">
-                </a>
-            </div>
+            <nav>
+                <ul>
+                    <li><a href="{% url 'capstone_project' %}">Home</a></li>
+                    <li><a href="{% url 'faith-action' %}">FAITH 'N ACTION</a></li>
+                    <li><a href="{% url 'mission_vision' %}">Mission & Vision</a></li>
+                    <li><a href="{% url 'councils' %}">Councils</a></li>
+                    <li><a href="{% url 'donations' %}">Donations</a></li>
+                    <li><a href="{% url 'about_us' %}">About us</a></li>
+                    <li><a href="{% url 'sign-in' %}">Sign in</a></li>
+                </ul>
+            </nav>
         {% else %}
-            <!-- Debug: Show if authenticated -->
-            <p style="color: rgb(253, 235, 34);">Authenticated as {{ user.role }}</p>
+            <div>Welcome as {{ user.role }}</div>
+            <nav>
+                <ul>
+                    <li>
+                        <form class="search-form" method="get" action="{% url 'search_users' %}">
+                            <input type="text" name="q" placeholder="Search users..." required>
+                            <button type="submit">Search</button>
+                        </form>
+                    </li>
+                    {% if user.role == 'admin' %}
+                        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                        <li><a href="{% url 'analytics_view' %}">View Analytics</a></li>
+                        <li><a href="{% url 'sign-up' %}">Add User</a></li>
+                        <li><a href="{% url 'manage_pending_users' %}">Manage Users</a></li>
+                        <li><a href="{% url 'review_manual_donations' %}">Review Donations</a></li>
+                    {% elif user.role == 'officer' %}
+                        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                        <li><a href="{% url 'manage_pending_users' %}">Manage Pending Users</a></li>
+                        <li><a href="{% url 'analytics_form' %}">Update Analytics</a></li>
+                        <li><a href="{% url 'review_manual_donations' %}">Review Donations</a></li>
+                    {% elif user.role == 'member' %}
+                        <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
+                    {% endif %}
+                    <li><a href="{% url 'logout' %}">Logout</a></li>
+                </ul>
+            </nav>
         {% endif %}
-        <button class="hamburger" aria-label="Toggle menu">
+        <button class="hamburger" title="Toggle navigation menu">
             <span></span>
             <span></span>
             <span></span>
         </button>
-        <nav>
-            <ul>
-                {% if not user.is_authenticated %}
-                    <!-- Public links for non-logged-in users -->
-                    <li><a href="{% url 'capstone_project' %}" {% if request.path == '/' %}class="active"{% endif %}>Home</a></li>
-                    <li><a href="{% url 'faith-action' %}" {% if request.path == '/faith-action/' %}class="active"{% endif %}>FAITH 'N ACTION</a></li>
-                    <li><a href="{% url 'mission_vision' %}" {% if request.path == '/mission_vision/' %}class="active"{% endif %}>Mission & Vision</a></li>
-                    <li><a href="{% url 'councils' %}" {% if request.path == '/councils/' %}class="active"{% endif %}>Councils</a></li>
-                    <li><a href="{% url 'donations' %}" {% if request.path == '/donations/' %}class="active"{% endif %}>Donations</a></li>
-                    <li><a href="{% url 'about_us' %}" {% if request.path == '/about_us/' %}class="active"{% endif %}>About us</a></li>
-                    <li><a href="{% url 'sign-in' %}" {% if request.path == '/sign-in/' %}class="active"{% endif %}>Sign in</a></li>
-                {% else %}
-                    <li>
-                        <form method="get" action="{% url 'search' %}" style="display: inline;">
-                            <input type="text" name="q" placeholder="Search users..." style="padding: 5px; margin-right: 10px;">
-                            <button type="submit" style="padding: 5px 10px;">Search</button>
-                        </form>
-                    </li>
-                    <!-- Role-specific links for logged-in users -->
-                {% if user.role == 'admin' %}
-                    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-                    <li><a href="{% url 'analytics_view' %}">View Analytics</a></li>
-                    <li><a href="/admin/capstone_project/user/add/">Add User</a></li>
-                    <li><a href="/admin/capstone_project/user/">Manage Users</a></li>
-                {% elif user.role == 'officer' %}
-                    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-                    <li><a href="{% url 'manage_pending_users' %}">Manage Pending Users</a></li>
-                    <li><a href="{% url 'analytics_form' %}">Update Analytics</a></li>
-                {% elif user.role == 'member' %}
-                    <li><a href="{% url 'dashboard' %}">Dashboard</a></li>
-                {% endif %}
-                    <li><a href="{% url 'logout' %}">Logout</a></li>
-                {% endif %}
-            </ul>
-        </nav>
     </header>
+
+    {% if messages %}
+        <div class="messages-container">
+            {% for message in messages %}
+                <p>{{ message }}</p>
+            {% endfor %}
+        </div>
+    {% endif %}
+
     <main>
         {% block content %}
         {% endblock %}
     </main>
+
+    <footer class="footer">
+        <p>&copy; 2025 Knights of Columbus. All rights reserved.</p>
+    </footer>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelector('.hamburger').addEventListener('click', () => {
-                document.querySelector('nav').classList.toggle('active');
-            });
+        document.querySelector('.hamburger').addEventListener('click', function() {
+            document.querySelector('nav').classList.toggle('active');
         });
     </script>
 </body>

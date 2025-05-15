@@ -1,0 +1,242 @@
+/* Reset default styles for consistency */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    color: #e6d7a3; /* Light gold/ivory color to complement the blue gradient */
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Header Section */
+.header {
+    text-align: center;
+    padding: 40px 0;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: 10px;
+    margin-bottom: 30px;
+}
+
+.header h1 {
+    font-size: 2.5rem;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #f4b41a;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.header p {
+    font-size: 1.2rem;
+    margin-top: 10px;
+    opacity: 0.9;
+}
+
+/* Blockchain Container */
+.blockchain-container {
+    max-width: 1200px;
+    max-height: 80vh;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Summary Section */
+.summary {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.summary p {
+    font-size: 1.1rem;
+    margin: 5px 0;
+}
+
+.summary strong {
+    color: #f4b41a;
+}
+
+/* Blockchain Table */
+.blockchain-table {
+    width: 90%; /* Slightly less than full width for margin */
+    margin: 40px auto; /* Centered with formal margin */
+    border-collapse: collapse;
+    background: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.blockchain-table th,
+.blockchain-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.blockchain-table th {
+    background: #f4b41a;
+    color: #1e3c72;
+    font-weight: bold;
+    text-transform: uppercase;
+    font-size: 0.9rem;
+    letter-spacing: 1px;
+}
+
+.blockchain-table td {
+    font-size: 0.95rem;
+}
+
+.blockchain-table ul {
+    list-style: none;
+    padding-left: 0;
+}
+
+.blockchain-table li {
+    margin: 5px 0;
+    position: relative;
+}
+
+.blockchain-table li::before {
+    content: "•";
+    color: #f4b41a;
+    font-weight: bold;
+    display: inline-block;
+    width: 1em;
+    margin-right: 0.5em;
+}
+
+/* Hover Effect for Rows */
+.blockchain-table tr:hover {
+    background: rgba(255, 255, 255, 0.1);
+}
+
+/* No Data Message */
+.no-data {
+    text-align: center;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+}
+
+/* Pagination */
+.pagination {
+    text-align: center;
+    margin: 20px 0;
+}
+
+.pagination-link {
+    display: inline-block;
+    padding: 8px 16px;
+    margin: 0 5px;
+    background-color: #f4b41a;
+    color: #1e3c72;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.pagination-link:hover {
+    background-color: #e0a10d;
+    color: #ffffff;
+}
+
+.pagination-info {
+    margin: 0 10px;
+    font-size: 1rem;
+}
+
+/* Back Button */
+.back-button {
+    display: block;
+    width: fit-content;
+    margin: 20px auto;
+    padding: 10px 20px;
+    background-color: #f4b41a;
+    color: #1e3c72;
+    text-decoration: none;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+}
+
+.back-button:hover {
+    background-color: #e0a10d;
+    color: #ffffff;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .header h1 {
+        font-size: 2rem;
+    }
+
+    .header p {
+        font-size: 1rem;
+    }
+
+    .blockchain-table {
+        width: 95%;
+        margin: 20px auto;
+    }
+
+    .blockchain-table th,
+    .blockchain-table td {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    .summary p {
+        font-size: 1rem;
+    }
+
+    .pagination-link {
+        padding: 6px 12px;
+        font-size: 0.9rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .header h1 {
+        font-size: 1.5rem;
+    }
+
+    .header p {
+        font-size: 0.9rem;
+    }
+
+    .blockchain-table {
+        width: 100%;
+        margin: 10px auto;
+    }
+
+    .blockchain-table th,
+    .blockchain-table td {
+        padding: 8px;
+        font-size: 0.85rem;
+    }
+
+    .summary p {
+        font-size: 0.9rem;
+    }
+
+    .pagination-link {
+        padding: 5px 10px;
+        font-size: 0.85rem;
+    }
+
+    .back-button {
+        padding: 8px 16px;
+        font-size: 0.9rem;
+    }
+}

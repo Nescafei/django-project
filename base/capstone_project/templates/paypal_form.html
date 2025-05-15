@@ -1,0 +1,5 @@
+{% load static %}
+<form action="https://www.sandbox.paypal.com/cgi-bin/webscr" method="post">
+    {{ form.as_p }}
+    <script>document.forms[0].submit();</script>
+</form>

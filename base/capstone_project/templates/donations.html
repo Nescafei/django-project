@@ -1,3 +1,35 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+</script>
 {% extends 'base.html' %}
 {% load static %}
 
@@ -7,7 +39,8 @@ Knights of Columbus - Donations
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/donations-style.css' %}?v={% now 'U' %}">
-<div class="background" style="background: url('{% static 'images/donation-bg.jpg' %}') no-repeat center/cover;">
+<script src="{% static 'js/payment.js' %}"></script>
+<div class="background">
     <h1>Support Our Mission</h1>
     <p>Your donation helps us serve those in need and strengthen our communities.</p>
 </div>
@@ -21,16 +54,28 @@ Knights of Columbus - Donations
 
     <section class="donation-form">
         <h2>Donate Now</h2>
-        <form method="post">
+        <form id="donation-form" method="post">
             {% csrf_token %}
+            <label for="donor_email">Email:</label>
+            <input type="email" id="donor_email" name="donor_email" placeholder="Your Email" required>
             <label for="amount">Donation Amount (₱):</label>
-            <input type="number" id="amount" name="amount" placeholder="Enter amount" min="1" required>
-            <label for="name">Name:</label>
-            <input type="text" id="name" name="name" placeholder="Your Name" required>
-            <label for="email">Email:</label>
-            <input type="email" id="email" name="email" placeholder="Your Email" required>
+            <input type="number" id="amount" name="amount" placeholder="Enter amount" min="1" step="0.01" required>
+            <label>Payment Method:</label>
+            <div>
+                <input type="radio" id="paypal" name="payment_method" value="paypal" required>
+                <label for="paypal">PayPal</label>
+            </div>
+            <div>
+                <input type="radio" id="gcash" name="payment_method" value="gcash" required>
+                <label for="gcash">GCash</label>
+            </div>
             <button type="submit">Donate</button>
         </form>
+        {% if show_manual_link %}
+            <p class="manual-donation-text"><a href="{% url 'manual_donation_input' %}" class="manual-donation-link">Add Manual Donation</a></p>
+        {% endif %}
+        <button id="view-blockchain">View Blockchain</button>
     </section>
 </div>
 {% endblock %}
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93f37dd60b1044f3',t:'MTc0NzE1MzMxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>

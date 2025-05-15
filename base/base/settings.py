@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 """
 
 from pathlib import Path
+from decouple import config
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -39,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'capstone_project',
+    'paypal.standard.ipn',
 ]
 
 MIDDLEWARE = [
@@ -145,3 +147,17 @@ LOGIN_URL = '/sign-in/'
 LOGOUT_REDIRECT_URL = '/sign-in/'
 
 AUTH_USER_MODEL = 'capstone_project.User'
+
+# PayPal Settings
+# CONFIGURE: Reads PAYPAL_RECEIVER_EMAIL from .env (set to your sandbox Business email)
+PAYPAL_RECEIVER_EMAIL = config('PAYPAL_RECEIVER_EMAIL')
+
+# CONFIGURE: Reads PAYPAL_TEST from .env (True for sandbox, False for live)
+PAYPAL_TEST = config('PAYPAL_TEST', cast=bool)
+
+# PayMongo Settings
+# CONFIGURE: Reads PAYMONGO_PUBLIC_KEY from .env (set to pk_test_...)
+PAYMONGO_PUBLIC_KEY = config('PAYMONGO_PUBLIC_KEY')
+
+# CONFIGURE: Reads PAYMONGO_SECRET_KEY from .env (set to sk_test_...)
+PAYMONGO_SECRET_KEY = config('PAYMONGO_SECRET_KEY')

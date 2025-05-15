@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Knights of Columbus - Blockchain
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/blockchain-style.css' %}?v={% now 'U' %}">
+<div class="header">
+    <h1>Donation Blockchain</h1>
+    <p>View all recorded donation transactions securely on the blockchain.</p>
+</div>
+<div class="blockchain-container">
+    <div class="summary">
+        <p><strong>Chain Valid:</strong> {{ is_valid }}</p>
+        <p><strong>Total Amount:</strong> ₱{{ total_amount|floatformat:2 }}</p>
+    </div>
+
+    {% if page_obj %}
+        <table class="blockchain-table">
+            <thead>
+                <tr>
+                    <th>Block #</th>
+                    <th>Timestamp</th>
+                    <th>Transactions</th>
+                    <th>Proof</th>
+                    <th>Previous Hash</th>
+                    <th>Hash</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for block in page_obj %}
+                    <tr>
+                        <td>{{ block.index }}</td>
+                        <td>{{ block.timestamp|date:"Y-m-d H:i:s" }}</td>
+                        <td>
+                            {% for tx in block.transactions %}
+                            <ul>
+                                    <li>{{ tx }}</li>
+                                </ul>
+                            {% endfor %}
+                        </td>
+                        <td>{{ block.proof }}</td>
+                        <td>{{ block.previous_hash }}</td>
+                        <td>{{ block.hash }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Pagination Controls -->
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}" class="pagination-link">Previous</a>
+            {% endif %}
+            <span class="pagination-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}" class="pagination-link">Next</a>
+            {% endif %}
+        </div>
+    {% else %}
+        <div class="no-data">
+            <p>No blocks found in the blockchain.</p>
+        </div>
+    {% endif %}
+
+    <a href="{% url 'donations' %}" class="back-button">Back to Donations</a>
+</div>
+{% endblock %}

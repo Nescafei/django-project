@@ -1,0 +1,125 @@
+main {
+    max-width: 120vh;
+    margin: 0 auto;
+    padding: 4vh 2vw;
+}
+
+.faith-n-action {
+    text-align: center;
+    margin-bottom: 8vh;
+    position: relative;
+}
+
+.faith-n-action-logo {
+    margin: 8vh auto 5vh;
+    width: 34vh;
+    height: 34vh;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    box-shadow: 0 0.5vh 1vh rgba(0, 0, 0, 0.2);
+}
+
+.faith-n-action-logo img {
+    width: 50vh;
+    height: 50vh;
+}
+
+.faith-n-action h1 {
+    font-family: "Cardo", serif;
+    font-size: 3rem;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 1vh;
+}
+
+.faith-n-action .tagline {
+    font-size: 1.5rem;
+    font-style: italic;
+    color: #333;
+    margin-bottom: 3vh;
+}
+
+.faith-n-action p {
+    font-size: 1.1rem;
+    color: #333;
+    line-height: 1.6;
+    max-width: 80%;
+    margin: 0 auto;
+}
+
+/* Responsive Styles */
+@media (max-width: 1024px) {
+    .faith-n-action-logo {
+        width: 25vh;
+        height: 25vh;
+    }
+
+    .faith-n-action-logo img {
+        width: 36vh;
+        height: 36vh;
+    }
+
+    .faith-n-action h1 {
+        font-size: 2.5rem;
+    }
+
+    .faith-n-action .tagline {
+        font-size: 1.3rem;
+    }
+
+    .faith-n-action p {
+        font-size: 0.95rem;
+        max-width: 90%;
+    }
+}
+
+@media (max-width: 768px) {
+    .faith-n-action-logo {
+        width: 20vh;
+        height: 20vh;
+    }
+
+    .faith-n-action-logo img {
+        width: 30vh;
+        height: 30vh;
+    }
+
+    .faith-n-action h1 {
+        font-size: 2rem;
+    }
+
+    .faith-n-action .tagline {
+        font-size: 1.1rem;
+    }
+
+    .faith-n-action p {
+        font-size: 0.9rem;
+        max-width: 95%;
+    }
+}
+
+@media (max-width: 480px) {
+    .faith-n-action-logo {
+        width: 18vh;
+        height: 18vh;
+    }
+
+    .faith-n-action-logo img {
+        width: 28vh;
+        height: 28vh;
+    }
+
+    .faith-n-action h1 {
+        font-size: 1.8rem;
+    }
+
+    .faith-n-action .tagline {
+        font-size: 1rem;
+    }
+
+    .faith-n-action p {
+        font-size: 0.85rem;
+    }
+}

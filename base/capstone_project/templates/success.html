@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Knights of Columbus - Payment Success
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/donations-style.css' %}?v={% now 'U' %}">
+<div class="background">
+    <h1>Payment Successful</h1>
+    <p>{{ message }}</p>
+</div>
+<div class="container">
+    <section class="hero">
+        <div class="content">
+            <p>Thank you for your donation! You will receive a confirmation soon.</p>
+            <a href="{% url 'donations' %}" class="donation-link">Back to Donations</a>
+        </div>
+    </section>
+</div>
+{% endblock %}

@@ -41,19 +41,19 @@ Knights of Columbus - Admin Dashboard
             <p>{{ u.first_name }} {{ u.last_name }} - {{ u.council.name|default:"No council" }} <a href="{% url 'update_degree' u.id %}">Update Degree</a> | <a href="{% url 'archive_user' u.id %}">Archive User</a></p>
         {% endfor %}
         <h2>Events</h2>
-        <ul>
-            {% for event in events %}
+        {% for event in events %}
+            <ul>
                 <li>{{ event.name }} - {{ event.date }}</li>
-            {% endfor %}
-        </ul>
+            </ul>
+        {% endfor %}
     </div>
     <div class="analytics">
         <h2>Analytics</h2>
-        <ul>
-            {% for a in analytics %}
+        {% for a in analytics %}
+            <ul>
                 <li>{{ a.council.name }}: {{ a.events_count }} events, ${{ a.donations_amount }}</li>
-            {% endfor %}
-        </ul>
+            </ul>
+        {% endfor %}
     </div>
 </div>
 
