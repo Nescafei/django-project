@@ -32,6 +32,7 @@ header {
     padding: 2vh 4vh;
 }
 
+
 .logo img {
     width: 8vh;
     height: 8vh;
@@ -174,7 +175,7 @@ nav ul li a.active {
     .logo img {
         width: 5vh;
         height: 5vh;
-    }
+    }   
     @media (max-width: 768px) {
     .search-form {
         width: 100%;

@@ -1,36 +1,57 @@
-from capstone_project.models import User, Council, Event, Analytics, Donation, blockchain
+from .models import User, Council, Event, Analytics, Donation, Blockchain, blockchain, Block
+from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.decorators import login_required
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.primitives.asymmetric import padding
+from cryptography.hazmat.backends import default_backend
 from django.http import HttpResponseRedirect, JsonResponse
 from django.views.decorators.cache import never_cache
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.csrf import csrf_exempt, csrf_protect
 from django.contrib.sessions.models import Session
-from django.contrib import messages
+from django.template.loader import render_to_string
 from django.core.exceptions import ValidationError
 from django.core.files.base import ContentFile
 from django.core.paginator import Paginator
-from django.urls import reverse
+from .forms import DonationForm, ManualDonationForm
+from django.contrib import messages
+from django.db import transaction
+from django.db.models.signals import pre_save, pre_delete
+from django.dispatch import receiver
 from django.conf import settings
-from django.template.loader import render_to_string
-from paypal.standard.forms import PayPalPaymentsForm
-from paypal.standard.models import ST_PP_COMPLETED
-from paypal.standard.ipn.signals import valid_ipn_received
-import base64
+from django.urls import reverse
 from io import BytesIO
+from datetime import datetime, date
+from base64 import b64encode, b64decode
+import base64
 import os
 import re
-from datetime import datetime
 import uuid
 import logging
 import requests
 import json
-from decimal import Decimal
 
-# Set up logging
+def load_keys():
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    with open(os.path.join(base_dir, 'private_key.pem'), 'rb') as f:
+        private_key = serialization.load_pem_private_key(f.read(), password=None, backend=default_backend())
+    with open(os.path.join(base_dir, 'public_key.pem'), 'rb') as f:
+        public_key = serialization.load_pem_public_key(f.read(), backend=default_backend())
+    return private_key, public_key
+PRIVATE_KEY, PUBLIC_KEY = load_keys()
+
 logger = logging.getLogger(__name__)
+@receiver(pre_save, sender=Block)
+def log_block_change(sender, instance, **kwargs):
+    if instance.pk:
+        old_block = Block.objects.get(pk=instance.pk)
+        logger.warning(f"Block {instance.index} modified: Old={old_block.__dict__}, New={instance.__dict__}")
 
-# PayMongo API base URL
+@receiver(pre_delete, sender=Block)
+def log_block_delete(sender, instance, **kwargs):
+    timestamp_str = instance.timestamp.isoformat() if isinstance(instance.timestamp, datetime) else str(instance.timestamp)
+    logger.warning(f"Block {instance.index} deleted: index={instance.index}, timestamp={timestamp_str}")
+
 PAYMONGO_API_URL = 'https://api.paymongo.com/v1'
 
 def capstone_project(request):
@@ -61,58 +82,33 @@ def donation_page(request):
         })
     return render(request, 'donation_form.html')
 
-def donations(request):
-    if request.method == 'POST':
-        amount = request.POST.get('amount')
-        name = request.POST.get('name')
-        email = request.POST.get('email')
-        print(f"Donation Form Submitted: Amount=₱{amount}, Name={name}, Email={email}")
-        
-        # Create donation record
-        donation = Donation(
-            donor_name=name,
-            donor_email=email,
-            amount=amount,
-            payment_method='online',
-            status='pending',
-            transaction_id=f'ONLINE-{uuid.uuid4().hex[:8]}',
-            submitted_by=request.user if request.user.is_authenticated else None
-        )
-        donation.save()
-        print(f"Online Donation created: ID={donation.id}, Transaction ID={donation.transaction_id}")
-        return HttpResponseRedirect('/donations/')
-    
-    # Show manual donation link only for officers and admins
-    show_manual_link = request.user.is_authenticated and request.user.role in ['officer', 'admin']
-    return render(request, 'donations.html', {'show_manual_link': show_manual_link})
-
 @never_cache
 def sign_in(request):
     if request.user.is_authenticated:
-        print(f"User {request.user.username} already authenticated, redirecting to dashboard")
+        logger.debug(f"User {request.user.username} already authenticated, redirecting to dashboard")
         return redirect('dashboard')
     if request.method == 'POST':
         username = request.POST.get('username')
         password = request.POST.get('password')
-        print(f"Attempting to authenticate user: {username}")
+        logger.debug(f"Attempting to authenticate user: {username}")
         user = authenticate(request, username=username, password=password)
         if user is not None:
             if user.is_active and not user.is_archived:
                 if user.role == 'pending':
                     pending_message = 'Your account is pending approval. Please wait for an officer to review your request.'
-                    print(f"User {username} is pending approval")
+                    logger.debug(f"User {username} is pending approval")
                     return render(request, 'sign-in.html', {'pending_message': pending_message})
                 else:
                     login(request, user)
-                    print(f"User {username} logged in successfully, role: {user.role}, redirecting to dashboard")
+                    logger.debug(f"User {username} logged in successfully, role: {user.role}, redirecting to dashboard")
                     return redirect('dashboard')
             else:
-                print(f"User {username} is not active or is archived")
+                logger.debug(f"User {username} is not active or is archived")
                 return render(request, 'sign-in.html', {'error': 'This account is not active or has been archived'})
         else:
-            print(f"Authentication failed for username: {username}")
+            logger.debug(f"Authentication failed for username: {username}")
             return render(request, 'sign-in.html', {'error': 'Invalid username or password'})
-    print("Rendering sign-in page")
+    logger.debug("Rendering sign-in page")
     return render(request, 'sign-in.html')
 
 @never_cache
@@ -120,7 +116,7 @@ def sign_up(request):
     if request.user.is_authenticated:
         return redirect('dashboard')
     councils = Council.objects.all()
-    print(f"Number of councils available: {councils.count()}")
+    logger.debug(f"Number of councils available: {councils.count()}")
     if request.method == 'POST':
         full_name = request.POST.get('full_name')
         username = request.POST.get('username')
@@ -131,18 +127,18 @@ def sign_up(request):
         address = request.POST.get('address')
         contact_number = request.POST.get('contact_number')
         council_id = request.POST.get('council', '')
-        print(f"Received form data: full_name={full_name}, username={username}, email={email}, council_id={council_id}, birthday={birthday}, address={address}, contact_number={contact_number}")
-        
+        logger.debug(f"Received form data: full_name={full_name}, username={username}, email={email}, council_id={council_id}")
+
         if password != re_password:
-            print("Validation failed: Passwords do not match")
+            logger.debug("Validation failed: Passwords do not match")
             return render(request, 'sign-up.html', {'error': 'Passwords do not match', 'councils': councils})
 
         if not username:
-            print("Validation failed: Username is required")
+            logger.debug("Validation failed: Username is required")
             return render(request, 'sign-up.html', {'error': 'Username is required', 'councils': councils})
 
         if User.objects.filter(username=username, is_archived=False).exists():
-            print(f"Validation failed: Username {username} already exists")
+            logger.debug(f"Validation failed: Username {username} already exists")
             return render(request, 'sign-up.html', {'error': 'This username is already taken', 'councils': councils})
 
         try:
@@ -150,19 +146,19 @@ def sign_up(request):
             today = datetime.today().date()
             age = today.year - birth_date.year - ((today.month, today.day) < (birth_date.month, birth_date.day))
             if age < 18:
-                print("Validation failed: User must be at least 18 years old")
+                logger.debug("Validation failed: User must be at least 18 years old")
                 return render(request, 'sign-up.html', {'error': 'You must be at least 18 years old to sign up', 'councils': councils})
         except ValueError:
-            print("Validation failed: Invalid birthday format")
+            logger.debug("Validation failed: Invalid birthday format")
             return render(request, 'sign-up.html', {'error': 'Invalid birthday format', 'councils': councils})
 
         try:
             council = Council.objects.get(id=council_id) if council_id else None
             if not council and council_id:
-                print("Validation failed: Invalid council selected")
+                logger.debug("Validation failed: Invalid council selected")
                 return render(request, 'sign-up.html', {'error': 'Invalid council selected', 'councils': councils})
         except Council.DoesNotExist:
-            print("Validation failed: Council does not exist")
+            logger.debug("Validation failed: Council does not exist")
             return render(request, 'sign-up.html', {'error': 'Invalid council selected', 'councils': councils})
 
         try:
@@ -178,17 +174,17 @@ def sign_up(request):
             )
             user.first_name, user.last_name = full_name.split(' ', 1) if ' ' in full_name else (full_name, '')
             user.save()
-            print(f"User {username} saved successfully with details: email={email}, role={user.role}, council={council}, age={age}, address={address}, contact_number={contact_number}")
+            logger.info(f"User {username} saved successfully with role={user.role}, council={council}")
             success_message = 'Account request submitted. Awaiting approval. Use your username to sign in once approved.'
             return render(request, 'sign-up.html', {'success': success_message, 'councils': councils})
         except Exception as e:
-            print(f"Sign Up Error: {str(e)}")
+            logger.error(f"Sign Up Error: {str(e)}")
             return render(request, 'sign-up.html', {'error': f'An error occurred during registration: {str(e)}', 'councils': councils})
     return render(request, 'sign-up.html', {'councils': councils})
 
 def logout_view(request):
     logout(request)
-    print("User logged out")
+    logger.debug("User logged out")
     response = redirect('sign-in')
     response['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
     response['Pragma'] = 'no-cache'
@@ -205,7 +201,7 @@ def dashboard(request):
 
     user = request.user
     if user.role == 'pending':
-        print(f"User {user.username} is pending, redirecting to sign-in")
+        logger.debug(f"User {user.username} is pending, redirecting to sign-in")
         return render(request, 'sign-in.html', {'pending_message': 'Your account is pending approval. Please wait for an officer to review your request.'})
 
     context = {'user': user}
@@ -239,11 +235,20 @@ def manage_pending_users(request):
     if request.user.role not in ['officer', 'admin']:
         return redirect('dashboard')
     if request.user.role == 'officer' and request.user.council:
-        pending_users = User.objects.filter(role='pending', council=request.user.council, is_archived=False).exclude(role='admin')
+        pending_users = User.objects.filter(
+            role='pending',
+            council=request.user.council,
+            is_archived=False
+        )
     elif request.user.role == 'admin':
-        pending_users = User.objects.filter(role='pending', is_archived=False).exclude(role='admin')
+        pending_users = User.objects.filter(role='pending', is_archived=False)
     else:
-        pending_users = []
+        pending_users = User.objects.none()
+    
+    logger.debug(f"Pending users for {request.user.username} (role={request.user.role}): {pending_users.count()}")
+    for user in pending_users:
+        logger.debug(f"User ID={user.id}, Username={user.username}, Council={user.council.name if user.council else 'None'}")
+    
     return render(request, 'manage_pending_users.html', {'pending_users': pending_users})
 
 @never_cache
@@ -255,7 +260,7 @@ def approve_user(request, user_id):
     if user.council == request.user.council or request.user.role == 'admin':
         user.role = 'member'
         user.save()
-        print(f"User {user.username} approved by {request.user.username}")
+        logger.info(f"User {user.username} approved by {request.user.username}")
     return redirect('manage_pending_users')
 
 @never_cache
@@ -268,7 +273,7 @@ def reject_user(request, user_id):
         user.is_active = False
         user.is_archived = True
         user.save()
-        print(f"User {user.username} archived by {request.user.username}")
+        logger.info(f"User {user.username} archived by {request.user.username}")
     return redirect('manage_pending_users')
 
 @never_cache
@@ -298,12 +303,12 @@ def archive_user(request, user_id):
         return redirect('dashboard')
     user = get_object_or_404(User, id=user_id, is_archived=False)
     if user == request.user:
-        print(f"User {request.user.username} attempted to archive themselves")
+        logger.debug(f"User {request.user.username} attempted to archive themselves")
         return redirect('dashboard')
     user.is_active = False
     user.is_archived = True
     user.save()
-    print(f"User {user.username} archived by {request.user.username}")
+    logger.info(f"User {user.username} archived by {request.user.username}")
     return redirect('dashboard')
 
 @never_cache
@@ -312,7 +317,7 @@ def archived_users(request):
     if request.user.role != 'admin':
         return redirect('dashboard')
     archived_users = User.objects.filter(is_archived=True)
-    print(f"Admin {request.user.username} accessed archived users: {archived_users.count()} found")
+    logger.debug(f"Admin {request.user.username} accessed archived users: {archived_users.count()} found")
     return render(request, 'archived_users.html', {'archived_users': archived_users})
 
 @never_cache
@@ -351,15 +356,15 @@ def update_degree(request, user_id):
         return redirect('dashboard')
     if request.method == 'POST':
         degree = request.POST.get('current_degree')
-        print(f"Received degree: {degree}")
+        logger.debug(f"Received degree: {degree}")
         valid_degrees = [choice[0] for choice in User._meta.get_field('current_degree').choices]
-        print(f"Valid degrees: {valid_degrees}")
+        logger.debug(f"Valid degrees: {valid_degrees}")
         if degree in valid_degrees:
             user.current_degree = degree
             user.save()
-            print(f"User {user.username}'s degree updated to {degree} by {request.user.username}")
+            logger.info(f"User {user.username}'s degree updated to {degree} by {request.user.username}")
         else:
-            print(f"Invalid degree {degree} selected for user {user.username}")
+            logger.error(f"Invalid degree {degree} selected for user {user.username}")
         return redirect('dashboard')
     return render(request, 'update_degree.html', {'user': user})
 
@@ -382,7 +387,7 @@ def edit_profile(request):
             cropped_image = request.POST.get('cropped_image')
             if cropped_image:
                 format, imgstr = re.match(r'data:image/(\w+);base64,(.+)', cropped_image).groups()
-                image_data = base64.b64decode(imgstr)
+                image_data = b64decode(imgstr)
                 filename = f'{user.username}_profile.jpg'
                 user.profile_picture.save(filename, ContentFile(image_data), save=False)
 
@@ -403,394 +408,342 @@ def search_users(request):
     return render(request, 'search_results.html', {'results': results, 'query': query})
 
 @never_cache
-@login_required
-def manual_donation_input(request):
-    if request.user.role not in ['officer', 'admin']:
-        print(f"User {request.user.username} (role: {request.user.role}) not authorized for manual donation input")
-        return redirect('donations')
-    
+def donations(request):
+    show_manual_link = request.user.is_authenticated and request.user.role in ['admin', 'officer']
+    logger.debug(f"show_manual_link: {show_manual_link}, User: {request.user}, Role: {getattr(request.user, 'role', 'N/A')}")
     if request.method == 'POST':
-        donor_name = request.POST.get('donor_name')
-        donor_email = request.POST.get('donor_email')
-        amount_str = request.POST.get('amount')
-        donation_date_str = request.POST.get('donation_date')
-        notes = request.POST.get('notes', '')
-        receipt = request.FILES.get('receipt')
+        form = DonationForm(request.POST, request.FILES)
+        logger.debug(f"Form fields: {form.as_p()}")
+        if form.is_valid():
+            donation = form.save(commit=False)
+            donation.submitted_by = request.user if request.user.is_authenticated else None
+            donation.transaction_id = f"GCASH-{uuid.uuid4().hex[:8]}"
+            donation.payment_method = 'gcash'
+            donation.status = 'pending'
+            donation.signature = ''
+            donation.donation_date = date.today()
+            donation.save()
+            logger.info(f"GCash donation created: ID={donation.id}, Email={donation.email}, Amount={donation.amount}")
+            return initiate_gcash_payment(request, donation)
+        else:
+            logger.debug(f"Form errors: {form.errors}")
+            messages.error(request, 'Please correct the errors in the form.')
+    else:
+        form = DonationForm(initial={'donation_date': date.today()})
+        logger.debug(f"Rendered form HTML: {form.as_p()}")
+    return render(request, 'donations.html', {'form': form, 'show_manual_link': show_manual_link})
 
-        # Validation
-        if not donor_name:
-            return render(request, 'manual_donation.html', {'error': 'Donor name is required.'})
-        if not donor_email:
-            return render(request, 'manual_donation.html', {'error': 'Donor email is required.'})
-        try:
-            amount = float(amount_str)
-            if amount <= 0:
-                return render(request, 'manual_donation.html', {'error': 'Amount must be greater than 0.'})
-        except (ValueError, TypeError):
-            return render(request, 'manual_donation.html', {'error': 'Invalid amount format.'})
-        try:
-            donation_date = datetime.strptime(donation_date_str, '%Y-%m-%d').date() if donation_date_str else None
-            if donation_date and donation_date > datetime.now().date():
-                return render(request, 'manual_donation.html', {'error': 'Donation date cannot be in the future.'})
-        except ValueError:
-            return render(request, 'manual_donation.html', {'error': 'Invalid date format. Use YYYY-MM-DD.'})
-
-        # Create Donation
-        donation = Donation.objects.create(
-            donor_name=donor_name,
-            donor_email=donor_email,
-            amount=amount,
-            payment_method='manual',
-            status='pending_manual',
-            transaction_id=f'MANUAL-{uuid.uuid4().hex[:8]}',
-            donation_date=donation_date,
-            receipt=receipt,
-            notes=notes,
-            submitted_by=request.user
-        )
-        logger.info(f"Manual Donation created: ID={donation.id}, Transaction ID={donation.transaction_id}, Donor Email={donor_email}, Amount={amount}, Date={donation_date}, Notes={notes}, Receipt={receipt}")
-        messages.success(request, 'Manual donation submitted for review. Awaiting approval.')
-        return redirect('donations')
-
-    return render(request, 'manual_donation.html')
-
-@never_cache
+@csrf_protect
 @login_required
+@permission_required('capstone_project.add_manual_donation', raise_exception=True)
+def manual_donation(request):
+    if request.method == 'POST':
+        logger.debug(f"POST data: {dict(request.POST)}")
+        form = ManualDonationForm(request.POST, request.FILES)
+        if form.is_valid():
+            donation = form.save(commit=False)
+            donation.payment_method = 'manual'
+            donation.submitted_by = request.user
+            donation.transaction_id = f"MANUAL-{uuid.uuid4().hex[:8]}"
+            donation.source_id = ''
+            donation.status = 'pending_manual'
+            donation.save()
+            logger.info(f"Manual donation created: ID={donation.id}, Email={donation.email}, Amount={donation.amount}, Status={donation.status}")
+            messages.success(request, 'Manual donation submitted for review.')
+            return redirect('donations')
+        else:
+            logger.debug(f"Form errors: {form.errors}")
+            messages.error(request, 'Please correct the errors in the form.')
+    else:
+        form = ManualDonationForm(initial={'donation_date': date.today()})
+    return render(request, 'add_manual_donation.html', {'form': form})
+
+@csrf_protect
+@login_required
+@permission_required('capstone_project.review_manual_donations', raise_exception=True)
 def review_manual_donations(request):
-    if request.user.role not in ['officer', 'admin']:
-        print(f"User {request.user.username} (role: {request.user.role}) not authorized for manual donation review")
-        return redirect('dashboard')
+    if request.user.role == 'admin':
+        pending_donations = Donation.objects.filter(status='pending_manual')
+    else:
+        pending_donations = Donation.objects.filter(status='pending_manual').exclude(submitted_by=request.user)
+    
+    logger.debug(f"User {request.user.username} (role={request.user.role}, council={request.user.council.name if request.user.council else 'None'}): Found {pending_donations.count()} pending manual donations")
+    for donation in pending_donations:
+        logger.debug(f"Donation ID={donation.id}, Transaction={donation.transaction_id}, Submitted by={donation.submitted_by.username if donation.submitted_by else 'None'}, Council={donation.submitted_by.council.name if donation.submitted_by and donation.submitted_by.council else 'None'}")
+    
+    paginator = Paginator(pending_donations, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
 
     if request.method == 'POST':
         donation_id = request.POST.get('donation_id')
         action = request.POST.get('action')
+        rejection_reason = request.POST.get('rejection_reason', '')
 
         try:
             donation = Donation.objects.get(id=donation_id, status='pending_manual')
-            # Officers can only review donations submitted by users in their council
-            if request.user.role == 'officer' and donation.submitted_by.council != request.user.council:
+            if request.user.role == 'officer' and donation.submitted_by and donation.submitted_by.council and donation.submitted_by.council != request.user.council:
                 messages.error(request, 'You are not authorized to review this donation.')
                 return redirect('review_manual_donations')
+            if donation.submitted_by == request.user:
+                messages.error(request, 'You cannot review your own donation.')
+                return redirect('review_manual_donations')
 
-            if action == 'approve':
-                donation.status = 'completed'
-                block_index = blockchain.add_block(donation)  # Add block
-                if block_index is not None:
-                    donation.block_index = block_index  # Set block_index
-                donation.save()
-                logger.info(f"Manual Donation {donation.id} approved by {request.user.username}, block_index={block_index}")
-                messages.success(request, f"Donation {donation.id} approved successfully.")
-            elif action == 'reject':
-                donation.status = 'failed'
-                donation.save()
-                logger.info(f"Manual Donation {donation.id} rejected by {request.user.username}")
-                messages.success(request, f"Donation {donation.id} rejected.")
-            else:
-                messages.error(request, 'Invalid action.')
+            with transaction.atomic():
+                if action == 'approve':
+                    donation.status = 'completed'
+                    donation.reviewed_by = request.user
+                    donation.sign_donation(PRIVATE_KEY)
+                    donation.save()
+                    blockchain.initialize_chain()
+                    transaction = blockchain.add_transaction(donation, PUBLIC_KEY)
+                    if transaction:
+                        previous_block = blockchain.get_previous_block()
+                        previous_proof = previous_block['proof']
+                        proof = blockchain.proof_of_work(previous_proof)
+                        new_block = blockchain.create_block(proof)
+                        if new_block:
+                            logger.info(f"New block created for manual donation: Index={new_block['index']}, Transactions={len(new_block['transactions'])}")
+                            messages.success(request, f"Donation {donation.transaction_id} approved and recorded on the blockchain.")
+                        else:
+                            logger.error("Failed to create block for donation")
+                            donation.status = 'pending_manual'
+                            donation.save()
+                            messages.error(request, "Failed to record donation on blockchain.")
+                    else:
+                        logger.error(f"Invalid signature for donation {donation.transaction_id}")
+                        donation.status = 'pending_manual'
+                        donation.save()
+                        messages.error(request, "Invalid donation signature.")
+                elif action == 'reject':
+                    donation.status = 'failed'
+                    donation.reviewed_by = request.user
+                    donation.rejection_reason = rejection_reason
+                    donation.save()
+                    logger.info(f"Manual Donation {donation.transaction_id} rejected by {request.user.username}, reason={rejection_reason}")
+                    messages.success(request, f"Donation {donation.transaction_id} rejected.")
+                else:
+                    messages.error(request, 'Invalid action.')
         except Donation.DoesNotExist:
             messages.error(request, 'Donation not found or already reviewed.')
-
         return redirect('review_manual_donations')
 
-    # Filter donations based on role
-    if request.user.role == 'admin':
-        pending_donations = Donation.objects.filter(status='pending_manual')
-    else:  # Officer
-        pending_donations = Donation.objects.filter(status='pending_manual', submitted_by__council=request.user.council)
-    return render(request, 'review_manual_donations.html', {'donations': pending_donations})
+    return render(request, 'review_manual_donations.html', {'page_obj': page_obj})
 
-@csrf_exempt
-def initiate_paypal_payment(request):
-    if request.method != 'POST':
-        logger.error("PayPal Error: Invalid request method")
-        return JsonResponse({'error': 'Invalid request method'}, status=400)
+def initiate_gcash_payment(request, donation):
+    logger.debug(f"Initiating GCash payment for donation ID={donation.id}, Amount={donation.amount}")
+    amount = int(donation.amount * 100)
+    if amount < 10000:
+        donation.status = 'failed'
+        donation.save()
+        messages.error(request, 'Donation amount must be at least ₱100.')
+        return redirect('donations')
 
-    try:
-        # Handle JSON or form-data
-        if request.content_type == 'application/json':
-            data = json.loads(request.body)
-            amount_str = data.get('amount')
-            donor_email = data.get('donor_email')
-        else:
-            amount_str = request.POST.get('amount')
-            donor_email = request.POST.get('donor_email')
+    paymongo_secret_key = getattr(settings, 'PAYMONGO_SECRET_KEY', '')
+    if not paymongo_secret_key:
+        logger.error("PayMongo secret key not configured in settings")
+        donation.status = 'failed'
+        donation.save()
+        messages.error(request, "Payment system is currently unavailable. Please try again later.")
+        return redirect('donations')
 
-        if not amount_str:
-            raise ValidationError("Amount is required")
-        try:
-            amount = float(amount_str)
-            if amount <= 0:
-                raise ValidationError("Amount must be greater than 0")
-        except (ValueError, TypeError):
-            raise ValidationError("Invalid amount format")
+    request.session['donation_id'] = donation.id
+    request.session.modified = True
 
-        if not donor_email:
-            raise ValidationError("Donor email is required")
-
-        # Create Donation record
-        try:
-            donation = Donation(
-                donor_email=donor_email,
-                amount=Decimal(amount_str).quantize(Decimal('0.01')),
-                payment_method='paypal',
-                transaction_id=f'PENDING-PP-{uuid.uuid4().hex[:8]}',
-            )
-            donation.save()
-            logger.info(f"Donation created: ID={donation.id}, Transaction ID={donation.transaction_id}")
-        except Exception as e:
-            logger.error(f"Failed to create Donation: {str(e)}")
-            raise ValidationError(f"Failed to create donation: {str(e)}")
-
-        # PayPal form
-        paypal_dict = {
-            'business': settings.PAYPAL_RECEIVER_EMAIL,
-            'amount': str(amount),
-            'item_name': 'Donation',
-            'invoice': donation.transaction_id,
-            'notify_url': request.build_absolute_uri(reverse('paypal-ipn')),
-            'return': request.build_absolute_uri('/success/'),
-            'cancel_return': request.build_absolute_uri('/cancel/'),
-            'custom': str(donation.id),
-            'currency_code': 'USD',
-        }
-        form = PayPalPaymentsForm(initial=paypal_dict)
-        form_html = render_to_string('paypal_form.html', {'form': form})
-        response = {
-            'form': form_html
-        }
-        logger.info(f"PayPal Dict: {paypal_dict}")
-        logger.info(f"PayPal Initiate Response: {response}, Redirect URLs: return={paypal_dict.get('return', 'N/A')}, cancel={paypal_dict.get('cancel_return', 'N/A')}")
-        return JsonResponse(response)
-    except ValidationError as e:
-        logger.error(f"PayPal Error: {str(e)}")
-        return JsonResponse({'error': str(e)}, status=400)
-    except json.JSONDecodeError:
-        logger.error("PayPal Error: Invalid JSON data")
-        return JsonResponse({'error': 'Invalid JSON data'}, status=400)
-    except Exception as e:
-        logger.error(f"Unexpected PayPal Error: {str(e)}")
-        return JsonResponse({'error': f"Unexpected error: {str(e)}"}, status=500)
-
-@csrf_exempt
-def initiate_gcash_payment(request):
-    if request.method != 'POST':
-        logger.error("GCash: Invalid request method")
-        return JsonResponse({'error': 'Invalid request method'}, status=400)
-
-    try:
-        donor_email = request.POST.get('donor_email')
-        if not donor_email:
-            logger.error("GCash: Donor email is required")
-            return JsonResponse({'error': 'Donor email is required'}, status=400)
-        amount_str = request.POST.get('amount')
-        if not amount_str:
-            logger.error("GCash: Amount is required")
-            return JsonResponse({'error': 'Amount is required'}, status=400)
-        try:
-            amount = float(amount_str) * 100  # Convert to centavos
-            if amount <= 0:
-                logger.error("GCash: Amount must be greater than 0")
-                return JsonResponse({'error': 'Amount must be greater than 0'}, status=400)
-        except (ValueError, TypeError):
-            logger.error("GCash: Invalid amount format")
-            return JsonResponse({'error': 'Invalid amount format'}, status=400)
-
-        payment_method = 'gcash'
-        donation = Donation.objects.create(
-            donor_email=donor_email,
-            amount=Decimal(amount / 100).quantize(Decimal('0.01')),
-            payment_method=payment_method,
-            status='pending',
-            transaction_id=f'PENDING-GC-{uuid.uuid4().hex[:8]}',
-            source_id=''  # Will be updated after source creation
-        )
-        logger.info(f"Donation created: ID={donation.id}, Transaction ID={donation.transaction_id}, Donor Email={donor_email}")
-
-        # PayMongo API request
-        auth_key = base64.b64encode(f"{settings.PAYMONGO_SECRET_KEY}:".encode()).decode()
-        headers = {'Authorization': f'Basic {auth_key}'}        # Include source_id in the success URL
-        payload = {
-            'data': {
-                'attributes': {
-                    'type': 'gcash',
-                    'amount': int(amount),
-                    'currency': 'PHP',
-                    'description': 'Donation via GCash',
-                    'redirect': {
-                        'success': request.build_absolute_uri(f"/gcash/confirm/?donation_id={donation.id}"),
-                        'failed': request.build_absolute_uri('/cancel/')
-                    },
-                    'metadata': {
-                        'donation_id': str(donation.id),
-                        'source_id': '',
-                    }
+    auth_key = base64.b64encode(f"{paymongo_secret_key}:".encode()).decode()
+    url = f"{PAYMONGO_API_URL}/sources"
+    headers = {
+        "Accept": "application/json",
+        "Content-Type": "application/json",
+        "Authorization": f"Basic {auth_key}"
+    }
+    donor_name = f"{donation.first_name} {donation.middle_initial}. {donation.last_name}".strip() or "Anonymous"
+    payload = {
+        "data": {
+            "attributes": {
+                "amount": amount,
+                "currency": "PHP",
+                "type": "gcash",
+                "redirect": {
+                    "success": request.build_absolute_uri(reverse('confirm_gcash_payment')),
+                    "failed": request.build_absolute_uri(reverse('cancel_page'))
+                },
+                "billing": {
+                    "name": donor_name,
+                    "email": donation.email
+                },
+                "metadata": {
+                    "donation_id": str(donation.id),
+                    "transaction_id": donation.transaction_id
                 }
             }
         }
-        logger.info(f"GCash Request: URL={PAYMONGO_API_URL}/sources, Headers=Authorization: Basic [REDACTED], Payload={payload}")
-
-        response = requests.post(f'{PAYMONGO_API_URL}/sources', headers=headers, json=payload)
-        logger.info(f"GCash Raw Response: Status={response.status_code}, Text={response.text}")
-        if response.status_code != 200:
-            error_detail = response.text
-            logger.error(f"GCash: PayMongo API error: Status={response.status_code}, Detail={error_detail}")
-            return JsonResponse({'error': f'PayMongo API error: {error_detail}'}, status=500)
-        source = response.json()['data']
-        logger.info(f"GCash Parsed Response: Source={source}")
-        source_id = source.get('id')
-        if not source_id:
-            logger.error(f"GCash: No 'id' field in source response: {source}")
-            return JsonResponse({'error': 'Invalid PayMongo response: No source ID'}, status=500)
-
-        donation.source_id = source_id
-        donation.save()
-        logger.info(f"GCash Response: Status={response.status_code}, Source ID={source_id}, Full Response={response.json()}")
-
-        return JsonResponse({'redirect_url': source['attributes']['redirect']['checkout_url']})
-    except requests.RequestException as e:
-        error_msg = f"GCash: PayMongo API request failed: {str(e)}"
-        if hasattr(e, 'response') and e.response:
-            error_msg += f" (Status: {e.response.status_code}, Detail: {e.response.text})"
-        logger.error(error_msg)
-        return JsonResponse({'error': error_msg}, status=500)
-    except Exception as e:
-        logger.error(f"GCash: Unexpected error: {str(e)}")
-        return JsonResponse({'error': f'Unexpected error: {str(e)}'}, status=500)
-    
-@csrf_exempt
-def confirm_gcash_payment(request):
-    logger.info("Entering confirm_gcash_payment view")
-    logger.info(f"Request URL: {request.build_absolute_uri()}")
-    logger.info(f"Request GET parameters: {dict(request.GET)}")
-    donation_id = request.GET.get('donation_id')
-    logger.info(f"GCash: Received confirmation request with donation_id={donation_id}")
-
-    if not donation_id:
-        logger.error("GCash: No donation_id provided in request")
-        # Fallback: Retrieve the most recent pending GCash donation
-        recent_donation = Donation.objects.filter(
-            payment_method='gcash',
-            status='pending'
-        ).order_by('-created_at').first()
-        if recent_donation:
-            logger.info(f"Found recent donation with ID={recent_donation.id}, attempting to confirm")
-            donation = recent_donation
-        else:
-            logger.error("GCash: Could not infer donation from recent donations")
-            return render(request, 'cancel.html', {
-                'error': 'Payment confirmation failed: No donation ID provided, and no recent pending GCash donation found. Please try again or contact support.'
-            })
-    else:
-        try:
-            donation = Donation.objects.get(id=donation_id, payment_method='gcash', status='pending')
-        except Donation.DoesNotExist:
-            logger.error(f"GCash: No pending donation found for donation_id={donation_id}")
-            return render(request, 'cancel.html', {'error': 'No matching donation found. Please try again or contact support.'})
-
-    source_id = donation.source_id
-    if not source_id:
-        logger.error(f"GCash: Donation {donation.id} has no source_id")
-        return render(request, 'cancel.html', {'error': 'Payment confirmation failed: No source ID associated with this donation.'})
+    }
 
     try:
-        # Prevent re-processing if already completed
-        if donation.status != 'pending':
-            logger.warning(f"Donation {donation.id} already processed with status {donation.status}")
-            return render(request, 'success.html', {'message': 'Payment already confirmed!'})
-
-        auth_key = base64.b64encode(f"{settings.PAYMONGO_SECRET_KEY}:".encode()).decode()
-        headers = {'Authorization': f'Basic {auth_key}'}
-        response = requests.get(f'{PAYMONGO_API_URL}/sources/{source_id}', headers=headers)
-        if response.status_code != 200:
-            logger.error(f"GCash: PayMongo source verification failed: Status={response.status_code}, Detail={response.text}")
-            return render(request, 'cancel.html', {'error': 'Payment verification failed: Invalid source. Please try again or contact support.'})
-        source_data = response.json()['data']
-        logger.info(f"PayMongo Source Verification Response: {source_data}")
-
-        # Check source status
-        source_status = source_data['attributes']['status']
-        if source_status != 'chargeable':
-            logger.info(f"GCash: Source {source_id} is not yet chargeable, status={source_status}")
-            return render(request, 'processing.html', {
-                'message': 'Payment is being processed. You will be notified once it is confirmed.'
-            })
-
-        payment_id = source_data['attributes'].get('payment_id') or source_id
-        donation.status = 'completed'
-        donation.transaction_id = payment_id
-        block_index = blockchain.add_block(donation)  # Add block once
-        if block_index is not None:
-            donation.block_index = block_index
+        response = requests.post(url, headers=headers, json=payload)
+        response.raise_for_status()
+        data = response.json()
+        donation.source_id = data['data']['id']
         donation.save()
-        logger.info(f"GCash: Donation {donation.id} marked as completed, Txn ID: {payment_id}, Donor Email={donation.donor_email}")
-        logger.info(f"Block created for Donation {donation.id}, block_index={block_index}")
-
-        return render(request, 'success.html', {'message': 'Payment confirmed successfully!'})
-    except requests.RequestException as e:
-        logger.error(f"GCash: PayMongo verification failed: {str(e)}", exc_info=True)
-        return render(request, 'cancel.html', {'error': f'Payment verification failed: {str(e)}. Please try again or contact support.'})
-    except Exception as e:
-        logger.error(f"GCash: Unexpected error in confirmation: {str(e)}", exc_info=True)
-        return render(request, 'cancel.html', {'error': f'Unexpected error during payment confirmation: {str(e)}. Please contact support.'})
+        logger.info(f"PayMongo source created: Source ID={data['data']['id']}, Donation ID={donation.id}")
+        return redirect(data['data']['attributes']['redirect']['checkout_url'])
+    except requests.exceptions.RequestException as e:
+        error_detail = e.response.json().get('errors', [{}])[0].get('detail', str(e)) if e.response else str(e)
+        logger.error(f"PayMongo API error for donation ID {donation.id}: {error_detail}")
+        donation.status = 'failed'
+        donation.save()
+        messages.error(request, f"Failed to initiate payment: {error_detail}")
+        return redirect('donations')
     
-def paypal_ipn_handler(sender, **kwargs):
-    ipn_obj = sender
-    logger.info(f"PayPal IPN: Status={ipn_obj.payment_status}, Invoice={ipn_obj.invoice}, Custom={ipn_obj.custom}, Amount={ipn_obj.mc_gross}, Currency={ipn_obj.mc_currency}")
-    if ipn_obj.payment_status == ST_PP_COMPLETED:
-        try:
-            donation = Donation.objects.get(id=ipn_obj.custom)
-            if ipn_obj.mc_currency == 'USD' and abs(float(ipn_obj.mc_gross) - float(donation.amount)) < 0.01:
-                donation.transaction_id = ipn_obj.txn_id
-                donation.status = 'completed'
-                block_index = blockchain.add_block(donation)  # Add block
-                if block_index is not None:
-                    donation.block_index = block_index  # Set block_index
+@csrf_protect
+def confirm_gcash_payment(request):
+    logger.debug(f"Session data: {request.session.items()}")
+    donation_id = request.session.get('donation_id') or request.GET.get('donation_id')
+    source_id = request.GET.get('source_id')
+
+    if not donation_id:
+        logger.error("Missing donation_id in GCash confirmation")
+        messages.error(request, "Invalid payment confirmation request: Missing donation ID.")
+        return redirect('donations')
+
+    try:
+        donation = get_object_or_404(Donation, id=donation_id, payment_method='gcash', status='pending')
+        
+        if not source_id:
+            source_id = donation.source_id
+            if not source_id:
+                logger.error(f"No source_id available for donation ID {donation_id}")
+                donation.status = 'failed'
                 donation.save()
-                logger.info(f"PayPal IPN: Donation {donation.id} marked as completed, Txn ID: {ipn_obj.txn_id}, block_index={block_index}")
-            else:
-                logger.error(f"PayPal IPN: Validation failed for Donation {donation.id}: Amount={ipn_obj.mc_gross}, Currency={ipn_obj.mc_currency}, Expected={donation.amount}, USD")
-        except Donation.DoesNotExist:
-            logger.error(f"PayPal IPN: Donation ID {ipn_obj.custom} not found")
-        except Exception as e:
-            logger.error(f"PayPal IPN: Unexpected error for Donation ID {ipn_obj.custom}: {str(e)}")
-    else:
-        try:
-            donation = Donation.objects.get(id=ipn_obj.custom)
+                messages.error(request, "Invalid payment confirmation: Missing source ID.")
+                return redirect('donations')
+
+        paymongo_secret_key = getattr(settings, 'PAYMONGO_SECRET_KEY', '')
+        if not paymongo_secret_key:
+            logger.error("PayMongo secret key not configured")
             donation.status = 'failed'
             donation.save()
-            logger.info(f"PayPal IPN: Donation {donation.id} marked as failed")
-        except Donation.DoesNotExist:
-            logger.error(f"PayPal IPN: Donation ID {ipn_obj.custom} not found")
-        except Exception as e:
-            logger.error(f"PayPal IPN: Failed to process Donation ID {ipn_obj.custom}: {str(e)}")
+            messages.error(request, "Payment verification failed due to configuration error.")
+            return redirect('donations')
 
-valid_ipn_received.connect(paypal_ipn_handler)
+        auth_key = base64.b64encode(f"{paymongo_secret_key}:".encode()).decode()
+        headers = {
+            "Accept": "application/json",
+            "Authorization": f"Basic {auth_key}"
+        }
+        response = requests.get(f"{PAYMONGO_API_URL}/sources/{source_id}", headers=headers)
+        response.raise_for_status()
+        source_data = response.json()
+        logger.debug(f"PayMongo source response: {source_data}")
 
+        if source_data['data']['attributes']['status'] != 'chargeable':
+            logger.error(f"Invalid source status for donation ID {donation_id}: {source_data['data']['attributes']['status']}")
+            donation.status = 'failed'
+            donation.save()
+            messages.error(request, "Payment could not be verified.")
+            return redirect('donations')
+
+        with transaction.atomic():
+            donation.status = 'completed'
+            donation.source_id = source_id
+            try:
+                donation.sign_donation(PRIVATE_KEY)
+            except Exception as e:
+                logger.error(f"Failed to sign donation ID {donation.id}: {str(e)}")
+                donation.status = 'pending'
+                donation.save()
+                messages.error(request, "Payment processed but failed to sign donation. Contact support.")
+                raise
+
+            donation.save()
+
+            blockchain.initialize_chain()
+            try:
+                transaction_result = blockchain.add_transaction(donation, PUBLIC_KEY)
+                if transaction_result:
+                    previous_block = blockchain.get_previous_block()
+                    previous_proof = previous_block['proof'] if previous_block else 0
+                    proof = blockchain.proof_of_work(previous_proof)
+                    block = blockchain.create_block(proof)
+                    if block:
+                        logger.info(f"Block created for donation ID {donation.id}, Transaction ID {donation.transaction_id}")
+                        blockchain.refresh_from_db()
+                        logger.debug(f"Pending transactions after block creation: {blockchain.pending_transactions}")
+                        messages.success(request, "Payment successful! Donation recorded on the blockchain.")
+                    else:
+                        logger.error(f"Failed to create block for donation ID {donation.id}")
+                        donation.status = 'pending'
+                        donation.save()
+                        messages.error(request, "Payment processed but failed to record on blockchain. Contact support.")
+                        raise Exception("Blockchain recording failed")
+                else:
+                    logger.error(f"Failed to add transaction for donation ID {donation.id}: Invalid transaction data or signature")
+                    donation.status = 'pending'
+                    donation.save()
+                    messages.error(request, "Payment processed but failed to record donation due to invalid signature. Contact support.")
+                    raise Exception("Transaction recording failed")
+            except Exception as e:
+                logger.error(f"Error adding transaction for donation ID {donation.id}: {str(e)}")
+                donation.status = 'pending'
+                donation.save()
+                messages.error(request, "Payment processed but failed to record donation due to blockchain error. Contact support.")
+                raise
+
+        if 'donation_id' in request.session:
+            del request.session['donation_id']
+            request.session.modified = True
+
+    except Donation.DoesNotExist:
+        logger.error(f"Donation ID {donation_id} not found or invalid")
+        messages.error(request, "Donation not found or already processed.")
+    except requests.exceptions.RequestException as e:
+        error_detail = e.response.json().get('errors', [{}])[0].get('detail', str(e)) if e.response else str(e)
+        logger.error(f"PayMongo verification error for donation ID {donation_id}: {error_detail}")
+        donation.status = 'failed'
+        donation.save()
+        messages.error(request, "Payment verification failed.")
+    except Exception as e:
+        logger.error(f"Unexpected error in GCash confirmation for donation ID {donation_id}: {str(e)}")
+        donation.status = 'failed'
+        donation.save()
+        messages.error(request, "An error occurred while processing your payment. Please try again.")
+    return redirect('donations')
+
+@never_cache
 @login_required
 def get_blockchain_data(request):
-    chain = blockchain.get_chain()
-    total_amount = 0
-    for block in chain:
-        for tx in block.get('transactions', []):
-            try:
-                amount = float(tx.split('Amount: ₱')[1].split(',')[0])
-                total_amount += amount
-            except (IndexError, ValueError) as e:
-                logger.error(f"Error parsing transaction amount: {tx}, {str(e)}")
-
-    # Add pagination
-    paginator = Paginator(chain, 10)  # Show 10 blocks per page
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-
-    return render(request, 'blockchain.html', {
-        'page_obj': page_obj,  # Pass the paginated object
-        'is_valid': blockchain.is_chain_valid(),
-        'total_amount': total_amount,
-    })
-
+    logger.debug("Fetching blockchain data")
+    try:
+        chain = blockchain.get_chain()
+        if not blockchain.is_chain_valid():
+            logger.error("Blockchain validation failed")
+            messages.error(request, "Blockchain data is corrupted. Contact support.")
+            return redirect('donations')
+        pending_transactions = blockchain.pending_transactions
+        logger.info(f"Blockchain data retrieved: {len(chain)} blocks, {len(pending_transactions)} pending transactions")
+        return render(request, 'blockchain.html', {
+            'chain': chain,
+            'pending_transactions': pending_transactions
+        })
+    except Exception as e:
+        logger.error(f"Error fetching blockchain data: {str(e)}")
+        messages.error(request, "Unable to retrieve blockchain data. Please try again later.")
+        return redirect('donations')
+    
 def success_page(request):
     return render(request, 'success.html', {'message': 'Payment processing. Awaiting confirmation.'})
 
 def cancel_page(request):
+    donation_id = request.GET.get('donation_id')
+    if donation_id:
+        try:
+            donation = get_object_or_404(Donation, id=donation_id, payment_method='gcash')
+            donation.status = 'failed'
+            donation.save()
+            logger.info(f"Donation {donation.transaction_id} marked as failed due to cancellation")
+        except Exception as e:
+            logger.error(f"Error marking donation {donation_id} as failed: {str(e)}")
+    logger.error("Payment cancelled")
+    messages.error(request, "Payment was cancelled or failed.")
     return render(request, 'cancel.html', {'error': 'Payment was cancelled or failed.'})

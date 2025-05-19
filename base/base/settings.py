@@ -17,21 +17,16 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
-
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'django-insecure-&rpa0v6&rmfo8ucl20$q=_=9ch^2b70$0ul#da2$#%c*+v1_jv'
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
-
+# Update ALLOWED_HOSTS for local development and production
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'yourdomain.com']  # Add your production domain
 
 # Application definition
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -40,7 +35,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'capstone_project',
-    'paypal.standard.ipn',
 ]
 
 MIDDLEWARE = [
@@ -73,10 +67,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'base.wsgi.application'
 
-
 # Database
-# https://docs.djangoproject.com/en/5.2/ref/settings/#databases
-
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
@@ -84,10 +75,7 @@ DATABASES = {
     }
 }
 
-
 # Password validation
-# https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
-
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -103,61 +91,77 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
-# https://docs.djangoproject.com/en/5.2/topics/i18n/
-
 LANGUAGE_CODE = 'en-us'
-
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
-
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.2/howto/static-files/
-
-STATIC_URL = '/static/' 
+# Static files
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     BASE_DIR / "capstone_project/static",
 ]
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# Ensure DEBUG is True for development
-DEBUG = True
-
-# Optional: Ensure static file finders are set (Django’s default should work)
 STATICFILES_FINDERS = [
     'django.contrib.staticfiles.finders.FileSystemFinder',
     'django.contrib.staticfiles.finders.AppDirectoriesFinder',
 ]
 
-# Default primary key field type
-# https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
-
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-#============
+# Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
+# Authentication
 AUTH_USER_MODEL = 'capstone_project.User'
 LOGIN_URL = '/sign-in/'
 LOGOUT_REDIRECT_URL = '/sign-in/'
 
-AUTH_USER_MODEL = 'capstone_project.User'
-
-# PayPal Settings
-# CONFIGURE: Reads PAYPAL_RECEIVER_EMAIL from .env (set to your sandbox Business email)
-PAYPAL_RECEIVER_EMAIL = config('PAYPAL_RECEIVER_EMAIL')
-
-# CONFIGURE: Reads PAYPAL_TEST from .env (True for sandbox, False for live)
-PAYPAL_TEST = config('PAYPAL_TEST', cast=bool)
+# Logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': 'debug.log',
+            'formatter': 'verbose',
+        },
+        'console': {
+            'level': 'DEBUG',
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'capstone_project': {
+            'handlers': ['file', 'console'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
 
 # PayMongo Settings
-# CONFIGURE: Reads PAYMONGO_PUBLIC_KEY from .env (set to pk_test_...)
-PAYMONGO_PUBLIC_KEY = config('PAYMONGO_PUBLIC_KEY')
+PAYMONGO_PUBLIC_KEY = config('PAYMONGO_PUBLIC_KEY', default='')  # Fallback to empty string
+PAYMONGO_SECRET_KEY = config('PAYMONGO_SECRET_KEY', default='')  # Rename and add fallback
 
-# CONFIGURE: Reads PAYMONGO_SECRET_KEY from .env (set to sk_test_...)
-PAYMONGO_SECRET_KEY = config('PAYMONGO_SECRET_KEY')
+# Security settings for production
+SESSION_ENGINE = 'django.contrib.sessions.backends.db'
+SESSION_COOKIE_AGE = 1200  # 20 minutes
+SECURE_SSL_REDIRECT = False  # Set to True in production
+SESSION_COOKIE_SECURE = False  # Set to True in production
+CSRF_COOKIE_SECURE = False  # Set to True in production
+SECURE_BROWSER_XSS_FILTER = True
+SECURE_CONTENT_TYPE_NOSNIFF = True
+
+# Default primary key field type
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'

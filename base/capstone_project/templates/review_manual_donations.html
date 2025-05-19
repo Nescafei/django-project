@@ -1,3 +1,72 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Knights of Columbus - Review Manual Donations
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Review Manual Donations</h1>
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    {% if page_obj %}
+        <table class="pending-users-table">
+            <thead>
+                <tr>
+                    <th>Transaction ID</th>
+                    <th>Donor</th>
+                    <th>Email</th>
+                    <th>Amount</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for donation in page_obj %}
+                    <tr>
+                        <td>{{ donation.transaction_id }}</td>
+                        <td>{{ donation.first_name }} {{ donation.middle_initial }}. {{ donation.last_name }}</td>
+                        <td>{{ donation.email }}</td>
+                        <td>₱{{ donation.amount }}</td>
+                        <td>{{ donation.donation_date }}</td>
+                        <td>
+                            <form method="post" style="display:inline;">
+                                {% csrf_token %}
+                                <input type="hidden" name="donation_id" value="{{ donation.id }}">
+                                <button type="submit" name="action" value="approve" class="btn approve-btn">Approve</button>
+                                <button type="submit" name="action" value="reject" class="btn reject-btn">Reject</button>
+                                <input type="text" name="rejection_reason" placeholder="Rejection reason" class="form-control" style="display:inline; width:200px;">
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="pagination">
+            <span class="step-links">
+                {% if page_obj.has_previous %}
+                    <a href="?page=1">« first</a>
+                    <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+                {% endif %}
+                <span class="current">
+                    Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}
+                </span>
+                {% if page_obj.has_next %}
+                    <a href="?page={{ page_obj.next_page_number }}">next</a>
+                    <a href="?page={{ page_obj.paginator.num_pages }}">last »</a>
+                {% endif %}
+            </span>
+        </div>
+    {% else %}
+        <p>No pending manual donations to review.</p>
+    {% endif %}
+    <a href="{% url 'donations' %}" class="back-link">Back to Donations</a>
+</div>
+
 <script type="text/javascript">
         var gk_isXlsx = false;
         var gk_xlsxFileLookup = {};
@@ -37,73 +106,5 @@
         }
         return gk_fileData[filename] || "";
         }
-        </script>{% extends 'base.html' %}
-{% load static %}
-
-{% block title %}
-Knights of Columbus - Review Manual Donations
-{% endblock %}
-
-{% block content %}
-<link rel="stylesheet" href="{% static 'css/donations-style.css' %}?v={% now 'U' %}">
-<div class="background" style="background: url('{% static 'images/donation-bg.jpg' %}') no-repeat center/cover;">
-    <h1>Review Manual Donations</h1>
-    <p>Approve or reject manual donations submitted by users.</p>
-</div>
-<div class="container">
-    <section class="donation-form">
-        <h2>Pending Manual Donations</h2>
-        {% if messages %}
-            {% for message in messages %}
-                <p class="{{ message.tags }}">{{ message }}</p>
-            {% endfor %}
-        {% endif %}
-        {% if donations %}
-            <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
-                <thead>
-                    <tr>
-                        <th style="border: 1px solid #ddd; padding: 8px;">ID</th>
-                        <th style="border: 1px solid #ddd; padding: 8px;">Donor Name</th>
-                        <th style="border: 1px solid #ddd; padding: 8px;">Email</th>
-                        <th style="border: 1px solid #ddd; padding: 8px;">Amount (₱)</th>
-                        <th style="border: 1px solid #ddd; padding: 8px;">Date</th>
-                        <th style="border: 1px solid #ddd; padding: 8px;">Receipt</th>
-                        <th style="border: 1px solid #ddd; padding: 8px;">Notes</th>
-                        <th style="border: 1px solid #ddd; padding: 8px;">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for donation in donations %}
-                        <tr>
-                            <td style="border: 1px solid #ddd; padding: 8px;">{{ donation.id }}</td>
-                            <td style="border: 1px solid #ddd; padding: 8px;">{{ donation.donor_name }}</td>
-                            <td style="border: 1px solid #ddd; padding: 8px;">{{ donation.donor_email }}</td>
-                            <td style="border: 1px solid #ddd; padding: 8px;">{{ donation.amount }}</td>
-                            <td style="border: 1px solid #ddd; padding: 8px;">{{ donation.donation_date|default:"Not specified" }}</td>
-                            <td style="border: 1px solid #ddd; padding: 8px;">
-                                {% if donation.receipt %}
-                                    <a href="{{ donation.receipt.url }}" target="_blank">View Receipt</a>
-                                {% else %}
-                                    No receipt
-                                {% endif %}
-                            </td>
-                            <td style="border: 1px solid #ddd; padding: 8px;">{{ donation.notes|default:"No notes" }}</td>
-                            <td style="border: 1px solid #ddd; padding: 8px;">
-                                <form method="post" style="display:inline;">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="donation_id" value="{{ donation.id }}">
-                                    <button type="submit" name="action" value="approve" style="background-color: #28a745; color: white; border: none; padding: 5px 10px; cursor: pointer;">Approve</button>
-                                    <button type="submit" name="action" value="reject" style="background-color: #dc3545; color: white; border: none; padding: 5px 10px; cursor: pointer;">Reject</button>
-                                </form>
-                            </td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        {% else %}
-            <p>No manual donations pending review.</p>
-        {% endif %}
-        <p style="margin-top: 20px;"><a href="{% url 'donations' %}" style="color: #f4b41a;">Back to Donations</a></p>
-    </section>
-</div>
+</script>
 {% endblock %}

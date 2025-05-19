@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+Knights of Columbus - Add Manual Donation
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/donations-style.css' %}?v={% now 'U' %}">
+<div class="background" style='background: url("{% static 'images/donation-bg.jpg' %}") no-repeat center/cover;'>
+    <h1>Add Manual Donation</h1>
+    <p>Enter details for donations made offline (e.g., cash, bank transfer).</p>
+</div>
+<div class="container">
+    <section class="donation-form">
+        <h2>Manual Donation Input</h2>
+        {% if messages %}
+            {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+            {% endfor %}
+        {% endif %}
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <p>{{ form.first_name.label_tag }} {{ form.first_name }} {{ form.first_name.errors }}</p>
+            <p>{{ form.middle_initial.label_tag }} {{ form.middle_initial }} {{ form.middle_initial.errors }}</p>
+            <p>{{ form.last_name.label_tag }} {{ form.last_name }} {{ form.last_name.errors }}</p>
+            <p>{{ form.email.label_tag }} {{ form.email }} {{ form.email.errors }}</p>
+            <p>{{ form.amount.label_tag }} {{ form.amount }} {{ form.amount.errors }}</p>
+            <p>{{ form.donation_date.label_tag }} {{ form.donation_date }} {{ form.donation_date.errors }}</p>
+            <p>{{ form.status.label_tag }} {{ form.status }} {{ form.status.errors }}</p>
+            <p>{{ form.signature.label_tag }} {{ form.signature }} {{ form.signature.errors }}</p>
+            <button type="submit" class="btn btn-primary">Submit Donation</button>
+        </form>
+        <a href="{% url 'donations' %}">Back to Donations</a>
+    </section>
+</div>
+{% endblock %}

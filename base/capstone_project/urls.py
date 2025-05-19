@@ -1,4 +1,4 @@
-from django.urls import path, include
+from django.urls import path
 from capstone_project import views
 
 urlpatterns = [
@@ -23,14 +23,12 @@ urlpatterns = [
     path('about_us/', views.about_us, name='about_us'),
     path('events-management/', views.events_management, name='events_management'),
     path('donation-reports/', views.donation_reports, name='donation_reports'),
-    path('manual_donation/', views.manual_donation_input, name='manual_donation_input'),
+    path('manual_donation/', views.manual_donation, name='manual_donation'),
     path('review_manual_donations/', views.review_manual_donations, name='review_manual_donations'),
-    path('initiate_gcash_payment/', views.initiate_gcash_payment, name='initiate_gcash_payment'),
+    path('gcash/initiate', views.initiate_gcash_payment, name='initiate_gcash_payment'),
     path('success/', views.success_page, name='success_page'),
     path('cancel/', views.cancel_page, name='cancel_page'),
     path('gcash/confirm/', views.confirm_gcash_payment, name='confirm_gcash_payment'),
-    path('blockchain/', views.get_blockchain_data, name='blockchain_data'),
+    path('blockchain/', views.get_blockchain_data, name='blockchain'),
     path('search-users/', views.search_users, name='search_users'),
-    path('initiate_paypal_payment/', views.initiate_paypal_payment, name='initiate_paypal_payment'),
-    path('paypal-ipn/', include('paypal.standard.ipn.urls')),
 ]

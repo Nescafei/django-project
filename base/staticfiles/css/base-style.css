@@ -12,7 +12,7 @@ body {
     font-family: "Roboto", sans-serif;
     margin: auto;
     background-color: #F0F1F6;
-    color: #F0F1F6;
+    color: black;
 }
 
 h1, h2 {
@@ -31,6 +31,7 @@ header {
     margin: 0 auto;
     padding: 2vh 4vh;
 }
+
 
 .logo img {
     width: 8vh;
@@ -174,7 +175,7 @@ nav ul li a.active {
     .logo img {
         width: 5vh;
         height: 5vh;
-    }
+    }   
     @media (max-width: 768px) {
     .search-form {
         width: 100%;

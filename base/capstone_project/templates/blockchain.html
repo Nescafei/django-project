@@ -6,65 +6,143 @@ Knights of Columbus - Blockchain
 {% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/blockchain-style.css' %}?v={% now 'U' %}">
-<div class="header">
-    <h1>Donation Blockchain</h1>
-    <p>View all recorded donation transactions securely on the blockchain.</p>
-</div>
+<link rel="stylesheet" href="{% static 'css/blockchain.css' %}">
 <div class="blockchain-container">
-    <div class="summary">
-        <p><strong>Chain Valid:</strong> {{ is_valid }}</p>
-        <p><strong>Total Amount:</strong> ₱{{ total_amount|floatformat:2 }}</p>
+    <div class="header">
+        <h1>Donation Blockchain</h1>
+        <p>View the immutable record of all donation transactions.</p>
     </div>
-
-    {% if page_obj %}
-        <table class="blockchain-table">
-            <thead>
-                <tr>
-                    <th>Block #</th>
-                    <th>Timestamp</th>
-                    <th>Transactions</th>
-                    <th>Proof</th>
-                    <th>Previous Hash</th>
-                    <th>Hash</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for block in page_obj %}
+    {% if messages %}
+        {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+    {% endif %}
+    <div class="summary">
+        <p><strong>Total Blocks:</strong> {{ chain|length }}</p>
+        <p><strong>Pending Transactions:</strong> {{ pending_transactions|length }}</p>
+    </div>
+    {% if chain %}
+        <div class="table-container">
+            <table class="blockchain-table">
+                <thead>
                     <tr>
-                        <td>{{ block.index }}</td>
-                        <td>{{ block.timestamp|date:"Y-m-d H:i:s" }}</td>
-                        <td>
-                            {% for tx in block.transactions %}
-                            <ul>
-                                    <li>{{ tx }}</li>
-                                </ul>
-                            {% endfor %}
-                        </td>
-                        <td>{{ block.proof }}</td>
-                        <td>{{ block.previous_hash }}</td>
-                        <td>{{ block.hash }}</td>
+                        <th>Block Index</th>
+                        <th>Timestamp</th>
+                        <th>Proof</th>
+                        <th>Current Hash</th>
+                        <th>Previous Hash</th>
+                        <th>Transactions</th>
                     </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-
-        <!-- Pagination Controls -->
-        <div class="pagination">
-            {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}" class="pagination-link">Previous</a>
-            {% endif %}
-            <span class="pagination-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-            {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}" class="pagination-link">Next</a>
-            {% endif %}
+                </thead>
+                <tbody>
+                    {% for block in chain %}
+                        <tr>
+                            <td>{{ block.index }}</td>
+                            <td>{{ block.timestamp|date:"Y-m-d H:i:s" }}</td>
+                            <td>{{ block.proof }}</td>
+                            <td>{{ block.current_hash }}</td>
+                            <td>{{ block.previous_hash }}</td>
+                            <td>
+                                {% if block.transactions %}
+                                    <ul>
+                                        {% for tx in block.transactions %}
+                                            <li>
+                                                Transaction ID: {{ tx.transaction_id }}<br>
+                                                Donor: {{ tx.first_name }} {{ tx.middle_initial }}. {{ tx.last_name }}<br>
+                                                Email: {{ tx.email }}<br>
+                                                Amount: ₱{{ tx.amount }}<br>
+                                                Date: {{ tx.donation_date }}<br>
+                                                Method: {{ tx.payment_method }}<br>
+                                                Status: {{ tx.status }}
+                                            </li>
+                                        {% endfor %}
+                                    </ul>
+                                {% else %}
+                                    No transactions
+                                {% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
+        {% if pending_transactions %}
+            <h2>Pending Transactions</h2>
+            <div class="table-container">
+                <table class="blockchain-table">
+                    <thead>
+                        <tr>
+                            <th>Transaction ID</th>
+                            <th>Donor</th>
+                            <th>Email</th>
+                            <th>Amount</th>
+                            <th>Date</th>
+                            <th>Method</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for tx in pending_transactions %}
+                            <tr>
+                                <td>{{ tx.transaction_id }}</td>
+                                <td>{{ tx.first_name }} {{ tx.middle_initial }}. {{ tx.last_name }}</td>
+                                <td>{{ tx.email }}</td>
+                                <td>₱{{ tx.amount }}</td>
+                                <td>{{ tx.donation_date }}</td>
+                                <td>{{ tx.payment_method }}</td>
+                                <td>{{ tx.status }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% endif %}
     {% else %}
         <div class="no-data">
             <p>No blocks found in the blockchain.</p>
         </div>
     {% endif %}
-
     <a href="{% url 'donations' %}" class="back-button">Back to Donations</a>
 </div>
+
+<script type="text/javascript">
+    var gk_isXlsx = false;
+    var gk_xlsxFileLookup = {};
+    var gk_fileData = {};
+    function filledCell(cell) {
+        return cell !== '' && cell != null;
+    }
+    function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = jsonData.findIndex((row, index) =>
+                    row.filter(filledCell).length >= jsonData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                    headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+    }
+</script>
 {% endblock %}

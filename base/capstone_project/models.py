@@ -1,15 +1,29 @@
-import hashlib
-import json
-from django.utils import timezone
-import datetime
+from cryptography.hazmat.primitives import serialization, hashes
+from cryptography.hazmat.primitives.asymmetric import padding, rsa
+from cryptography.exceptions import InvalidSignature
 from django.db import models
+from django.db.models.signals import pre_save
+from django.contrib.auth.models import User
+from django.core.validators import MinValueValidator
 from django.contrib.auth.models import AbstractUser
 from django.core.exceptions import ValidationError
+from django.conf import settings
+from django.utils import timezone
+from django.utils.functional import SimpleLazyObject
 from PIL import Image
-import os
+from datetime import date, datetime
 import logging
+import hashlib
+import base64
+import json
+import uuid
+import os
+from decimal import Decimal
 
 logger = logging.getLogger(__name__)
+
+def generate_transaction_id():
+    return f"GCASH-{uuid.uuid4().hex[:8]}"
 
 class Council(models.Model):
     id = models.IntegerField(primary_key=True)
@@ -78,142 +92,300 @@ class Analytics(models.Model):
         return f"Analytics for {self.council.name}"
 
 class Block(models.Model):
-    index = models.IntegerField(default=1)
-    timestamp = models.FloatField()  # Remove default=timezone.now().timestamp()
+    index = models.IntegerField()
+    timestamp = models.DateTimeField()
     transactions = models.JSONField(default=list)
     proof = models.BigIntegerField()
     previous_hash = models.CharField(max_length=64)
-    hash = models.CharField(max_length=64, blank=True)
+    hash = models.CharField(max_length=64)
 
     def calculate_hash(self):
-        block_string = f"{self.index}{self.timestamp}{self.transactions}{self.proof}{self.previous_hash}"
-        return hashlib.sha256(block_string.encode()).hexdigest()
-
-    def __str__(self):
-        return f"Block {self.index}"
-
-class Blockchain:
-    def __init__(self):
-        self._genesis_initialized = False
-
-    def initialize_genesis_block(self):
-        if not self._genesis_initialized and not Block.objects.exists():
-            self.create_block(proof=1, previous_hash='0')
-            logger.info("Genesis block created")
-        self._genesis_initialized = True
-
-    def create_block(self, proof, previous_hash):
-        block = Block(
-            proof=proof,
-            previous_hash=previous_hash,
-            timestamp=timezone.now().timestamp()  # Set timestamp here
-        )
-        if Block.objects.exists():
-            block.index = Block.objects.latest('index').index + 1
-        else:
-            block.index = 1
-        block.save()
-        block.hash = block.calculate_hash()
-        block.save()
-        return block
-
-    def add_transaction(self, amount, payment_method, transaction_id):
-        self.initialize_genesis_block()
-        transaction = f"Amount: ₱{amount}, Method: {payment_method}, Transaction ID: {transaction_id}"
-        latest_block = Block.objects.latest('index')
-        if len(latest_block.transactions) < 10:
-            latest_block.transactions.append(transaction)
-            latest_block.hash = latest_block.calculate_hash()
-            latest_block.save()
-            return latest_block.index
-        else:
-            proof = self.proof_of_work(latest_block.proof)
-            previous_hash = latest_block.hash
-            new_block = self.create_block(proof, previous_hash)
-            new_block.transactions.append(transaction)
-            new_block.hash = new_block.calculate_hash()
-            new_block.save()
-            return new_block.index
-
-    def add_block(self, donation):
-        if donation.status != 'completed':
-            logger.warning(f"Cannot add block for Donation {donation.id}: Status is {donation.status}")
-            return None
-        logger.info(f"Adding block for Donation {donation.id}: Amount {donation.amount}, Method {donation.payment_method}")
-        return self.add_transaction(float(donation.amount), donation.payment_method, donation.transaction_id)
-
-    def proof_of_work(self, last_proof):
-        proof = 0
-        while not self.is_valid_proof(last_proof, proof):
-            proof += 1
-        return proof
-
-    def is_valid_proof(self, last_proof, proof):
-        guess = f"{last_proof}{proof}".encode()
-        guess_hash = hashlib.sha256(guess).hexdigest()
-        return guess_hash[:4] == "0000"
-
-    def get_chain(self):
-        self.initialize_genesis_block()
-        chain = [
+        if not isinstance(self.timestamp, datetime):
+            logger.error(f"Invalid timestamp for Block {self.index}: {self.timestamp}, type={type(self.timestamp)}")
+            self.timestamp = timezone.now()  # Fallback
+        block_string = json.dumps(
             {
-                'index': b.index,
-                'timestamp': datetime.datetime.fromtimestamp(b.timestamp, tz=timezone.get_current_timezone()),
-                'transactions': b.transactions,
-                'proof': b.proof,
-                'previous_hash': b.previous_hash,
-                'hash': b.hash
-            } for b in Block.objects.all()
-        ]
-        logger.info(f"Retrieved blockchain with {len(chain)} blocks")
-        return chain
-
-    def is_chain_valid(self):
-        blocks = Block.objects.all()
-        for i in range(1, len(blocks)):
-            current_block = blocks[i]
-            previous_block = blocks[i - 1]
-            if current_block.previous_hash != previous_block.hash:
-                return False
-            if not self.is_valid_proof(previous_block.proof, current_block.proof):
-                return False
-        return True
-
-blockchain = Blockchain()
-
-class Donation(models.Model):
-    STATUS_CHOICES = [
-        ('pending', 'Pending'),
-        ('pending_manual', 'Pending Manual Review'),
-        ('completed', 'Completed'),
-        ('failed', 'Failed'),
-    ]
-
-    donor_name = models.CharField(max_length=100)
-    donor_email = models.EmailField()
-    amount = models.DecimalField(max_digits=10, decimal_places=2)
-    payment_method = models.CharField(max_length=50, choices=[
-        ('paypal', 'PayPal'),
-        ('gcash', 'GCash'),
-        ('manual', 'Manual'),
-        ('online', 'Online'),
-    ])
-    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-    transaction_id = models.CharField(max_length=100, unique=True)
-    created_at = models.DateTimeField(auto_now_add=True)
-    donation_date = models.DateField(null=True, blank=True)
-    receipt = models.FileField(upload_to='receipts/', null=True, blank=True)
-    notes = models.TextField(blank=True)
-    submitted_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='submitted_donations')
-    block_index = models.IntegerField(null=True, blank=True)
-    source_id = models.CharField(max_length=100, null=True, blank=True)
-
-    def clean(self):
-        if self.amount <= 0:
-            raise ValidationError("Amount must be greater than 0")
+                'index': self.index,
+                'timestamp': self.timestamp.isoformat(),
+                'transactions': self.transactions,
+                'proof': self.proof,
+                'previous_hash': self.previous_hash
+            },
+            sort_keys=True
+        ).encode()
+        calculated_hash = hashlib.sha256(block_string).hexdigest()
+        logger.debug(f"Calculated hash for Block {self.index}: {calculated_hash}")
+        return calculated_hash
 
     def save(self, *args, **kwargs):
+        if self.timestamp is None:
+            self.timestamp = timezone.now()
+        old_hash = self.hash
+        self.hash = self.calculate_hash()
+        logger.info(f"Saving Block {self.index}: Old hash={old_hash}, New hash={self.hash}")
         super().save(*args, **kwargs)
+        logger.info(f"Block {self.index} saved with hash={self.hash}")
+
+def block_pre_save(sender, instance, **kwargs):
+    if instance.pk:  # Block already exists
+        logger.error(f"Attempt to modify Block {instance.index} rejected")
+        raise ValidationError("Block modifications are not allowed")
+pre_save.connect(block_pre_save, sender=Block)
+
+class Blockchain(models.Model):
+    pending_transactions = models.JSONField(default=list)
+
+    def initialize_chain(self):
+        if not Block.objects.exists():
+            logger.info("Initializing blockchain with genesis block")
+            genesis_block = Block(
+                index=1,
+                timestamp=timezone.now(),
+                transactions=[],
+                proof=1,
+                previous_hash='0',
+                hash='0'
+            )
+            genesis_block.save()  # Save will compute hash
+            logger.info("Genesis block created")
+
+    def get_chain(self):
+        try:
+            blocks = Block.objects.all().order_by('index')
+            chain = []
+            for block in blocks:
+                block_data = {
+                    'index': block.index,
+                    'timestamp': block.timestamp.isoformat(),
+                    'transactions': block.transactions if block.transactions else [],
+                    'proof': block.proof,
+                    'previous_hash': block.previous_hash,
+                    'current_hash': block.hash
+                }
+                chain.append(block_data)
+            logger.debug(f"Chain retrieved: {len(chain)} blocks, {len(self.pending_transactions)} pending transactions")
+            return chain
+        except Exception as e:
+            logger.error(f"Error retrieving chain: {str(e)}")
+            raise
+
+    def add_transaction(self, donation, public_key):
+        if not donation.verify_signature(public_key):
+            logger.error(f"Invalid signature for donation {donation.transaction_id}")
+            return None
+        for existing in self.pending_transactions:
+            if existing['transaction_id'] == donation.transaction_id:
+                logger.warning(f"Duplicate transaction {donation.transaction_id} ignored")
+                return None
+        transaction = {
+            'transaction_id': donation.transaction_id,
+            'first_name': donation.first_name,
+            'middle_initial': donation.middle_initial,
+            'last_name': donation.last_name,
+            'email': donation.email,
+            'amount': str(donation.amount),
+            'donation_date': donation.donation_date.isoformat(),
+            'payment_method': donation.payment_method,
+            'status': donation.status,
+            'signature': donation.signature,
+            'submitted_by': donation.submitted_by.username if donation.submitted_by else None
+        }
+        self.pending_transactions.append(transaction)
+        logger.info(f"Transaction {transaction['transaction_id']} added to pending transactions")
+        self.save()
+        return transaction
+        
+    def get_previous_block(self):
+        blocks = Block.objects.all().order_by('-index')
+        if blocks.exists():
+            block = blocks.first()
+            return {
+                'index': block.index,
+                'timestamp': block.timestamp,
+                'transactions': block.transactions,
+                'proof': block.proof,
+                'previous_hash': block.previous_hash,
+                'current_hash': block.hash
+            }
+        return None
+
+    def proof_of_work(self, previous_proof):
+        new_proof = 1
+        check_proof = False
+        while not check_proof:
+            hash_operation = hashlib.sha256(str(new_proof**2 - previous_proof**2).encode()).hexdigest()
+            if hash_operation[:6] == '000000':
+                check_proof = True
+            else:
+                new_proof += 1
+        logger.debug(f"Proof of work found: {new_proof}")
+        return new_proof
+
+    def hash_block(self, block):
+        if block is None:
+            return '0'
+        block_string = json.dumps(
+            {
+                'index': block['index'],
+                'timestamp': block['timestamp'].isoformat() if isinstance(block['timestamp'], datetime) else block['timestamp'],
+                'transactions': block['transactions'],
+                'proof': block['proof'],
+                'previous_hash': block['previous_hash']
+            },
+            sort_keys=True
+        ).encode()
+        return hashlib.sha256(block_string).hexdigest()
+
+    def is_chain_valid(self):
+        chain = self.get_chain()
+        if not chain:
+            logger.debug("Empty blockchain is valid")
+            return True
+        for i, block in enumerate(chain):
+            calculated_hash = self.hash_block(block)
+            logger.debug(f"Block {block['index']}: Stored hash={block['current_hash']}, Calculated hash={calculated_hash}")
+            if block['current_hash'] != calculated_hash:
+                logger.error(f"Invalid hash at block {block['index']}: Expected {calculated_hash}, Got {block['current_hash']}")
+                return False
+            if i > 0:
+                previous_block = chain[i - 1]
+                calculated_previous_hash = previous_block['current_hash']
+                if block['previous_hash'] != calculated_previous_hash:
+                    logger.error(f"Invalid previous hash at block {block['index']}: Expected {calculated_previous_hash}, Got {block['previous_hash']}")
+                    return False
+                previous_proof = previous_block['proof']
+                proof = block['proof']
+                hash_operation = hashlib.sha256(str(proof**2 - previous_proof**2).encode()).hexdigest()
+                if hash_operation[:6] != '000000':
+                    logger.error(f"Invalid proof at block {block['index']}")
+                    return False
+        logger.debug("Blockchain is valid")
+        return True
+        
+    def create_block(self, proof, previous_hash=None):
+        previous_block = self.get_previous_block()
+        if previous_block:
+            previous_hash = previous_block['current_hash']
+        else:
+            previous_hash = '0'
+        block = Block(
+            index=Block.objects.count() + 1,
+            timestamp=timezone.now(),
+            transactions=self.pending_transactions,
+            proof=proof,
+            previous_hash=previous_hash,
+            hash='0'
+        )
+        self.pending_transactions = []
+        try:
+            block.save()
+            logger.info(f"Block {block.index} saved to database with {len(block.transactions)} transactions")
+            self.save()
+            return {
+                'index': block.index,
+                'timestamp': block.timestamp.isoformat(),
+                'transactions': block.transactions,
+                'proof': block.proof,
+                'previous_hash': block.previous_hash,
+                'current_hash': block.hash
+            }
+        except Exception as e:
+            logger.error(f"Failed to save block {block.index}: {str(e)}")
+            raise
+    
+def get_blockchain():
+    try:
+        return Blockchain.objects.first() or Blockchain.objects.create()
+    except Exception as e:
+        import logging
+        logger = logging.getLogger(__name__)
+        logger.error("Failed to initialize Blockchain: {}".format(str(e)))
+        raise
+blockchain = SimpleLazyObject(get_blockchain)
+
+class Donation(models.Model):
+    STATUS_CHOICES = (
+        ('pending', 'Pending'),
+        ('pending_manual', 'Pending Manual'),
+        ('completed', 'Completed'),
+        ('failed', 'Failed'),
+    )
+    PAYMENT_METHOD_CHOICES = (
+        ('gcash', 'GCash'),
+        ('manual', 'Manual'),
+    )
+
+    transaction_id = models.CharField(max_length=100, unique=True, default=generate_transaction_id)
+    first_name = models.CharField(max_length=100)
+    middle_initial = models.CharField(max_length=10, blank=True)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    donation_date = models.DateField(default=timezone.now)
+    payment_method = models.CharField(max_length=20, choices=PAYMENT_METHOD_CHOICES, default='gcash')
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    source_id = models.CharField(max_length=100, blank=True, null=True)
+    signature = models.TextField(blank=True, null=True)
+    submitted_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name='submitted_donations',
+        null=True,
+        blank=True
+    )
+    reviewed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        related_name='reviewed_donations',
+        null=True,
+        blank=True
+    )
+    rejection_reason = models.TextField(blank=True, null=True)
+
+    def sign_donation(self, private_key):
+        try:
+            message = f"{self.transaction_id}{self.first_name}{self.middle_initial}{self.last_name}{self.email}{self.amount}{self.donation_date}{self.payment_method}{self.status}".encode()
+            signature = private_key.sign(
+                message,
+                padding.PSS(
+                    mgf=padding.MGF1(hashes.SHA256()),
+                    salt_length=padding.PSS.MAX_LENGTH
+                ),
+                hashes.SHA256()
+            )
+            self.signature = signature.hex()
+            logger.debug(f"Signature generated for donation {self.transaction_id}: {self.signature}")
+            self.save()
+        except Exception as e:
+            logger.error(f"Failed to sign donation {self.transaction_id}: {str(e)}")
+            raise
+
+    def verify_signature(self, public_key):
+        if not self.signature:
+            logger.warning(f"No signature for donation {self.transaction_id}")
+            return False
+        message = f"{self.transaction_id}{self.first_name}{self.middle_initial}{self.last_name}{self.email}{self.amount}{self.donation_date}{self.payment_method}{self.status}".encode()
+        try:
+            public_key.verify(
+                bytes.fromhex(self.signature),
+                message,
+                padding.PSS(
+                    mgf=padding.MGF1(hashes.SHA256()),
+                    salt_length=padding.PSS.MAX_LENGTH
+                ),
+                hashes.SHA256()
+            )
+            logger.debug(f"Signature verified for donation {self.transaction_id}")
+            return True
+        except InvalidSignature:
+            logger.error(f"Invalid signature for donation {self.transaction_id}")
+            return False
+        except Exception as e:
+            logger.error(f"Signature verification failed for {self.transaction_id}: {str(e)}")
+            return False
 
     def __str__(self):
-        return f"Donation {self.id} - {self.donor_email} ({self.amount} {self.payment_method})"
+        return f"{self.transaction_id} - {self.amount} - {self.status}"
+
+def receipt_upload_path(instance, filename):
+    return f'receipts/{instance.transaction_id}/{filename}'

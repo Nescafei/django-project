@@ -1,35 +1,3 @@
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-        }
-</script>
 {% extends 'base.html' %}
 {% load static %}
 
@@ -39,7 +7,6 @@ Knights of Columbus - Donations
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/donations-style.css' %}?v={% now 'U' %}">
-<script src="{% static 'js/payment.js' %}"></script>
 <div class="background">
     <h1>Support Our Mission</h1>
     <p>Your donation helps us serve those in need and strengthen our communities.</p>
@@ -51,31 +18,46 @@ Knights of Columbus - Donations
             <p>Your generosity supports our charitable initiatives, including disaster relief, support for the disabled, and pro-life programs. Every donation makes a lasting impact.</p>
         </div>
     </section>
-
+    
     <section class="donation-form">
-        <h2>Donate Now</h2>
-        <form id="donation-form" method="post">
+        <h2>Donate Now (GCash)</h2>
+        {% if messages %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
+        {% endif %}
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for field in form %}
+                {% for error in field.errors %}
+                <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        <form method="post" enctype="multipart/form-data">
             {% csrf_token %}
-            <label for="donor_email">Email:</label>
-            <input type="email" id="donor_email" name="donor_email" placeholder="Your Email" required>
-            <label for="amount">Donation Amount (₱):</label>
-            <input type="number" id="amount" name="amount" placeholder="Enter amount" min="1" step="0.01" required>
-            <label>Payment Method:</label>
-            <div>
-                <input type="radio" id="paypal" name="payment_method" value="paypal" required>
-                <label for="paypal">PayPal</label>
-            </div>
-            <div>
-                <input type="radio" id="gcash" name="payment_method" value="gcash" required>
-                <label for="gcash">GCash</label>
-            </div>
-            <button type="submit">Donate</button>
+            <p>{{ form.first_name.label_tag }} {{ form.first_name }} {{ form.first_name.errors }}</p>
+            <p>{{ form.middle_initial.label_tag }} {{ form.middle_initial }} {{ form.middle_initial.errors }}</p>
+            <p>{{ form.last_name.label_tag }} {{ form.last_name }} {{ form.last_name.errors }}</p>
+            <p>{{ form.email.label_tag }} {{ form.email }} {{ form.email.errors }}</p>
+            <p>{{ form.amount.label_tag }} {{ form.amount }} {{ form.amount.errors }}</p>
+            <p>{{ form.donation_date.label_tag }} {{ form.donation_date }} {{ form.donation_date.errors }}</p>
+            <button type="submit" class="btn btn-primary">Donate</button>
         </form>
         {% if show_manual_link %}
-            <p class="manual-donation-text"><a href="{% url 'manual_donation_input' %}" class="manual-donation-link">Add Manual Donation</a></p>
+        <p class="manual-donation-text">
+            <a href="{% url 'manual_donation' %}" class="manual-donation-link">Add Manual Donation</a> |
+            <a href="{% url 'review_manual_donations' %}" class="manual-donation-link">Review Manual Donations</a>
+        </p>
         {% endif %}
-        <button id="view-blockchain">View Blockchain</button>
+        <button id="view-blockchain" class="btn btn-secondary" onclick="window.location.href='{% url 'blockchain' %}'">View Blockchain</button>
     </section>
 </div>
+<script src="{% static 'js/payment.js' %}?v={% now 'U' %}"></script>
 {% endblock %}
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'93f37dd60b1044f3',t:'MTc0NzE1MzMxNC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
