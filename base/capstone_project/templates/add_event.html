@@ -1,0 +1,162 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Add Event
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/event_management.css' %}?v={% now 'U' %}">
+
+<div class="dashboard-container">
+    <div class="event-form-container">
+        <h2 class="event-form-title">Add Event</h2>
+
+        <form method="post" class="event-form">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="name">Name of the said event</label>
+                <input type="text" id="name" name="name" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Details</label>
+                <textarea id="description" name="description" rows="4" required></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category</label>
+                <div class="category-dropdown">
+                    <select id="category" name="category" required>
+                        <option value="" selected disabled>Select a category</option>
+                        <option value="Seminar">Seminar</option>
+                        <option value="Meeting">Meeting</option>
+                        <option value="Trip">Trip</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Location</label>
+                <div class="location-group">
+                    <div class="form-group">
+                        <label for="street">Street</label>
+                        <input type="text" id="street" name="street" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="barangay">Brgy.</label>
+                        <input type="text" id="barangay" name="barangay" required>
+                    </div>
+                </div>
+
+                <div class="location-group">
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" name="city" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="province">Province</label>
+                        <input type="text" id="province" name="province" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Date</label>
+                <div class="date-group">
+                    <div class="form-group">
+                        <label for="date_from">Date From:</label>
+                        <input type="date" id="date_from" name="date_from" required>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="date_until">Date Until:</label>
+                        <input type="date" id="date_until" name="date_until" required>
+                    </div>
+                </div>
+            </div>
+
+            {% if user.role == 'admin' %}
+            <div class="form-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="is_global" name="is_global">
+                    <label for="is_global">Global Event (applies to all councils)</label>
+                </div>
+                <p class="helper-text">If checked, this event will be visible to all councils.</p>
+            </div>
+
+            <div id="council-select-container">
+                <div class="form-group">
+                    <label for="council">Council</label>
+                    <div class="category-dropdown">
+                        <select id="council" name="council_id" required>
+                            <option value="" selected disabled>Select a council</option>
+                            {% for council in councils %}
+                            <option value="{{ council.id }}">{{ council.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+            {% endif %}
+
+            <div class="form-submit">
+                <button type="submit" class="add-event-btn">
+                    {% if user.role == 'admin' %}
+                    Add to list
+                    {% else %}
+                    Submit for Approval
+                    {% endif %}
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Date validation - ensure date_until is after or equal to date_from
+        const dateFromInput = document.getElementById('date_from');
+        const dateUntilInput = document.getElementById('date_until');
+        
+        dateFromInput.addEventListener('change', function() {
+            // Set min date for date_until to be the date_from
+            dateUntilInput.min = dateFromInput.value;
+            
+            // If date_until is already set and is now before date_from, update it
+            if (dateUntilInput.value && dateUntilInput.value < dateFromInput.value) {
+                dateUntilInput.value = dateFromInput.value;
+            }
+        });
+        
+        // Set today as min date for date_from
+        const today = new Date();
+        const year = today.getFullYear();
+        let month = today.getMonth() + 1;
+        let day = today.getDate();
+        
+        month = month < 10 ? '0' + month : month;
+        day = day < 10 ? '0' + day : day;
+        
+        const todayFormatted = `${year}-${month}-${day}`;
+        dateFromInput.min = todayFormatted;
+
+        const globalCheckbox = document.getElementById('is_global');
+        const councilContainer = document.getElementById('council-select-container');
+        const councilSelect = document.getElementById('council');
+        
+        globalCheckbox.addEventListener('change', function() {
+            if (this.checked) {
+                councilContainer.style.display = 'none';
+                councilSelect.required = false;
+            } else {
+                councilContainer.style.display = 'block';
+                councilSelect.required = true;
+            }
+        });
+    });
+</script>
+{% endblock %} 

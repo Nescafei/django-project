@@ -1,0 +1,303 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - {{ event.name }}
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/events.css' %}?v={% now 'U' %}">
+
+<div class="event-detail-container">
+    <div class="event-detail-header">
+        <div class="header-left">
+            <a href="{% url 'events_list' %}" class="back-link">
+                <i class="fas fa-arrow-left"></i> Back to Events
+            </a>
+            <h1>{{ event.name }}</h1>
+        </div>
+        <div class="header-right">
+            {% if user.role == 'admin' or user == event.created_by %}
+            <a href="{% url 'edit_event' event.id %}" class="btn primary-btn">
+                <i class="fas fa-edit"></i> Edit Event
+            </a>
+            {% endif %}
+        </div>
+    </div>
+
+    <div class="event-detail-content">
+        <div class="event-info-section">
+            <div class="event-status">
+                <span class="status-badge status-{{ event.status }}">{{ event.get_status_display }}</span>
+                {% if event.status == 'pending' and user.role == 'admin' %}
+                <div class="status-actions">
+                    <a href="{% url 'approve_event' event.id %}" class="btn approve-btn">
+                        <i class="fas fa-check"></i> Approve
+                    </a>
+                    <a href="{% url 'reject_event' event.id %}" class="btn reject-btn">
+                        <i class="fas fa-times"></i> Reject
+                    </a>
+                </div>
+                {% endif %}
+            </div>
+
+            <div class="event-meta-grid">
+                <div class="meta-item">
+                    <i class="fas fa-calendar"></i>
+                    <div class="meta-content">
+                        <h4>Date</h4>
+                        <p>{{ event.date_from|date:"F j, Y" }}
+                            {% if event.date_until and event.date_until != event.date_from %}
+                            - {{ event.date_until|date:"F j, Y" }}
+                            {% endif %}
+                        </p>
+                    </div>
+                </div>
+                
+                <div class="meta-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="meta-content">
+                        <h4>Location</h4>
+                        <p>{{ event.street }}, {{ event.barangay }}<br>
+                           {{ event.city }}, {{ event.province }}</p>
+                    </div>
+                </div>
+                
+                <div class="meta-item">
+                    <i class="fas fa-tag"></i>
+                    <div class="meta-content">
+                        <h4>Category</h4>
+                        <p>{{ event.category }}</p>
+                    </div>
+                </div>
+                
+                <div class="meta-item">
+                    <i class="fas fa-users"></i>
+                    <div class="meta-content">
+                        <h4>Council</h4>
+                        <p>{% if event.is_global %}All Councils{% else %}{{ event.council.name }}{% endif %}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="event-description">
+                <h3>Description</h3>
+                <p>{{ event.description }}</p>
+            </div>
+
+            <div class="event-creator">
+                <h3>Created By</h3>
+                <div class="creator-info">
+                    {% if event.created_by.profile_picture %}
+                    <img src="{{ event.created_by.profile_picture.url }}" alt="{{ event.created_by.first_name }}" class="creator-avatar">
+                    {% else %}
+                    <div class="creator-avatar-placeholder">
+                        <i class="fas fa-user"></i>
+                    </div>
+                    {% endif %}
+                    <div class="creator-details">
+                        <p class="creator-name">{{ event.created_by.first_name }} {{ event.created_by.last_name }}</p>
+                        <p class="creator-role">{{ event.created_by.get_role_display }}</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        {% if user.role == 'admin' or user.role == 'officer' %}
+        <div class="attendance-section">
+            <h3>Attendance</h3>
+            
+            <div class="attendance-filters">
+                <div class="search-attendance">
+                    <input type="text" id="attendanceSearch" placeholder="Search members..." class="search-input">
+                    <button id="attendanceSearchBtn" class="search-btn">
+                        <i class="fas fa-search"></i>
+                    </button>
+                </div>
+                <div class="filter-attendance">
+                    <label>
+                        <input type="checkbox" id="showPresentOnly"> 
+                        Show Present Only
+                    </label>
+                </div>
+            </div>
+
+            <div class="attendance-list">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Present</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for member in members %}
+                        <tr class="member-row" data-name="{{ member.last_name }}, {{ member.first_name }}">
+                            <td>
+                                <div class="member-info">
+                                    {% if member.profile_picture %}
+                                    <img src="{{ member.profile_picture.url }}" alt="{{ member.first_name }}" class="member-avatar">
+                                    {% else %}
+                                    <div class="member-avatar-placeholder">
+                                        <i class="fas fa-user"></i>
+                                    </div>
+                                    {% endif %}
+                                    <span>{{ member.last_name }}, {{ member.first_name }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <label class="attendance-checkbox">
+                                    <input type="checkbox" name="attendance" value="{{ member.id }}" 
+                                        {% if member.id in attendance %}checked{% endif %}
+                                        onchange="updateAttendance('{{ event.id }}', '{{ member.id }}', this.checked)">
+                                    <span class="checkmark"></span>
+                                </label>
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="2" class="no-members">No members found in this council</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        {% elif user.role == 'member' %}
+        <div class="attendance-section member-view">
+            <h3>Your Attendance</h3>
+            <div class="member-attendance-status">
+                {% if user_attendance %}
+                    {% if user_attendance.is_present %}
+                    <div class="attendance-status-card present">
+                        <i class="fas fa-check-circle"></i>
+                        <div class="status-text">
+                            <h4>Present</h4>
+                            <p>You are marked as present for this event</p>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="attendance-status-card absent">
+                        <i class="fas fa-times-circle"></i>
+                        <div class="status-text">
+                            <h4>Absent</h4>
+                            <p>You are marked as absent for this event</p>
+                        </div>
+                    </div>
+                    {% endif %}
+                {% else %}
+                <div class="attendance-status-card pending">
+                    <i class="fas fa-hourglass-half"></i>
+                    <div class="status-text">
+                        <h4>Pending</h4>
+                        <p>Your attendance has not been recorded yet</p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Attendance search functionality
+    const searchInput = document.getElementById('attendanceSearch');
+    const searchBtn = document.getElementById('attendanceSearchBtn');
+    const showPresentOnly = document.getElementById('showPresentOnly');
+    const memberRows = document.querySelectorAll('.member-row');
+    
+    function filterMembers() {
+        const searchTerm = searchInput.value.toLowerCase();
+        const showOnlyPresent = showPresentOnly.checked;
+        
+        memberRows.forEach(row => {
+            const memberName = row.dataset.name.toLowerCase();
+            const isPresent = row.querySelector('input[name="attendance"]').checked;
+            
+            let showRow = true;
+            
+            if (searchTerm && !memberName.includes(searchTerm)) {
+                showRow = false;
+            }
+            
+            if (showOnlyPresent && !isPresent) {
+                showRow = false;
+            }
+            
+            row.style.display = showRow ? '' : 'none';
+        });
+    }
+    
+    if (searchBtn) searchBtn.addEventListener('click', filterMembers);
+    if (searchInput) searchInput.addEventListener('keyup', function(e) {
+        if (e.key === 'Enter') {
+            filterMembers();
+        }
+    });
+    if (showPresentOnly) showPresentOnly.addEventListener('change', filterMembers);
+    
+    // Make attendance list scrollable while maintaining height
+    const attendanceList = document.querySelector('.attendance-list');
+    if (attendanceList) {
+        const containerHeight = window.innerHeight * 0.6; // 60% of viewport height
+        attendanceList.style.maxHeight = `${containerHeight}px`;
+    }
+});
+
+// Function to update attendance via AJAX
+function updateAttendance(eventId, memberId, isPresent) {
+    fetch('/event/update-attendance/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+            'X-CSRFToken': getCookie('csrftoken')
+        },
+        body: JSON.stringify({
+            event_id: eventId,
+            member_id: memberId,
+            is_present: isPresent
+        })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === 'success') {
+            // Show a brief success indicator
+            const checkbox = document.querySelector(`input[name="attendance"][value="${memberId}"]`);
+            const row = checkbox.closest('tr');
+            row.classList.add('attendance-updated');
+            setTimeout(() => {
+                row.classList.remove('attendance-updated');
+            }, 1000);
+        } else {
+            console.error('Error updating attendance:', data.message);
+            // Revert checkbox if there was an error
+            const checkbox = document.querySelector(`input[name="attendance"][value="${memberId}"]`);
+            checkbox.checked = !isPresent;
+        }
+    })
+    .catch(error => {
+        console.error('Error updating attendance:', error);
+        // Revert checkbox if there was an error
+        const checkbox = document.querySelector(`input[name="attendance"][value="${memberId}"]`);
+        checkbox.checked = !isPresent;
+    });
+}
+
+// Helper function to get CSRF token
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+{% endblock %} 

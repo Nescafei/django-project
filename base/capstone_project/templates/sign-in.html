@@ -7,6 +7,21 @@ Knights of Columbus - Sign In
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/signin-style.css' %}?v={% now 'U' %}">
+<style>
+.pending {
+        color: #721c24;
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        width: 100%;
+        font-size: 16px;
+        padding: 10px;
+        margin-bottom: 15px;
+        border-radius: 5px;
+        text-align: center;
+        justify-items: center;
+}
+</style>
+
 <div class="container">
     <h1>Sign In</h1>
     <p>Access your Knights of Columbus account.</p>
@@ -29,7 +44,6 @@ Knights of Columbus - Sign In
         <p>Not a member? <a href="{% url 'sign-up' %}">Join now</a>.</p>
     </section>
 </div>
-
 <script>
     document.addEventListener('DOMContentLoaded', () => {
         const form = document.querySelector('form');

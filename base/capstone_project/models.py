@@ -40,29 +40,49 @@ class User(AbstractUser):
         ('member', 'Member'),
         ('pending', 'Pending'),
     )
+    DEGREE_CHOICES = [
+        ('1st', '1st Degree'),
+        ('2nd', '2nd Degree'),
+        ('3rd', '3rd Degree'),
+        ('4th', '4th Degree'),
+    ]
+    GENDER_CHOICES = [
+        ('Male', 'Male'),
+    ]
+    RELIGION_CHOICES = [
+        ('Catholic', 'Catholic'),
+        ('Other', 'Other'),
+    ]
     role = models.CharField(max_length=20, choices=ROLE_CHOICES, default='pending')
     council = models.ForeignKey('Council', on_delete=models.SET_NULL, null=True, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
-    address = models.TextField(null=True, blank=True)
+    second_name = models.CharField(max_length=100, null=True, blank=True)
+    middle_name = models.CharField(max_length=100, null=True, blank=True)
+    middle_initial = models.CharField(max_length=5, null=True, blank=True)
+    suffix = models.CharField(max_length=5, null=True, blank=True) 
+    street = models.CharField(max_length=255, null=True, blank=True)
+    barangay = models.CharField(max_length=100, null=True, blank=True)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    province = models.CharField(max_length=100, null=True, blank=True)
     birthday = models.DateField(null=True, blank=True)
     contact_number = models.CharField(max_length=15, null=True, blank=True)
-    current_degree = models.CharField(
-        max_length=10,
-        choices=[
-            ('1st', '1st Degree'),
-            ('2nd', '2nd Degree'),
-            ('3rd', '3rd Degree'),
-            ('4th', '4th Degree'),
-        ],
-        null=True,
-        blank=True
-    )
+    current_degree = models.CharField(max_length=10, choices=DEGREE_CHOICES, null=True, blank=True)
     is_archived = models.BooleanField(default=False)
     profile_picture = models.ImageField(upload_to='profile_pics/', null=True, blank=True)
+    gender = models.CharField(max_length=10, choices=GENDER_CHOICES, null=True, blank=True)
+    religion = models.CharField(max_length=20, choices=RELIGION_CHOICES, null=True, blank=True)
 
     def save(self, *args, **kwargs):
         if self.username == 'Mr_Admin' and self.role != 'admin':
             self.role = 'admin'
+        if self.birthday:  # Calculate age if birthday is set
+            today = timezone.now().date()
+            self.age = today.year - self.birthday.year - ((today.month, today.day) < (self.birthday.month, self.birthday.day))
+            
+        # Generate middle_initial from middle_name if provided
+        if self.middle_name and not self.middle_initial:
+            self.middle_initial = self.middle_name[0] + "."
+            
         super().save(*args, **kwargs)
         if self.profile_picture:
             img = Image.open(self.profile_picture.path)
@@ -70,26 +90,122 @@ class User(AbstractUser):
             img = img.resize(output_size, Image.Resampling.LANCZOS)
             img.save(self.profile_picture.path)
 
-    def __str__(self):
-        return self.username
 
 class Event(models.Model):
+    STATUS_CHOICES = [
+        ('pending', 'Pending Approval'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+    
+    CATEGORY_CHOICES = [
+        ('Seminar', 'Seminar'),
+        ('Meeting', 'Meeting'),
+        ('Trip', 'Trip'),
+    ]
+    
     name = models.CharField(max_length=200)
-    council = models.ForeignKey(Council, on_delete=models.CASCADE)
-    date = models.DateField()
+    council = models.ForeignKey(Council, on_delete=models.CASCADE, null=True, blank=True)
+    is_global = models.BooleanField(default=False, help_text="If checked, this event applies to all councils")
+    date_from = models.DateField()
+    date_until = models.DateField(null=True, blank=True)
     description = models.TextField()
+    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='Meeting')
+    
+    # Location details
+    street = models.CharField(max_length=255, null=True, blank=True)
+    barangay = models.CharField(max_length=100, null=True, blank=True)
+    city = models.CharField(max_length=100, null=True, blank=True)
+    province = models.CharField(max_length=100, null=True, blank=True)
+    
+    # Event status and tracking
+    status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
+    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_events')
+    approved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='approved_events')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
-        return f"{self.name} - {self.council.name}"
+        council_name = self.council.name if self.council else "All Councils"
+        return f"{self.name} - {council_name} ({self.get_status_display()})"
+    
+    class Meta:
+        ordering = ['-date_from']
+
+class EventAttendance(models.Model):
+    event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='attendances')
+    member = models.ForeignKey(User, on_delete=models.CASCADE, related_name='event_attendances')
+    is_present = models.BooleanField(default=False)
+    recorded_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='recorded_attendances')
+    recorded_at = models.DateTimeField(auto_now=True)
+    
+    class Meta:
+        unique_together = ['event', 'member']
+        verbose_name = 'Event Attendance'
+        verbose_name_plural = 'Event Attendances'
+        
+    def __str__(self):
+        status = "Present" if self.is_present else "Absent"
+        return f"{self.member.username} - {self.event.name} - {status}"
+
+class ForumCategory(models.Model):
+    CATEGORY_CHOICES = [
+        ('general', 'General'),
+        ('event_proposals', 'Event Proposals'),
+        ('announcements', 'Announcements'),
+        ('feedback', 'Feedback & Suggestions'),
+        ('questions', 'Questions'),
+        ('urgent', 'Urgent'),
+    ]
+    
+    name = models.CharField(max_length=50, choices=CATEGORY_CHOICES)
+    description = models.TextField(blank=True)
+    
+    def __str__(self):
+        return self.get_name_display()
+    
+    class Meta:
+        verbose_name_plural = "Forum Categories"
+
+class ForumMessage(models.Model):
+    sender = models.ForeignKey(User, on_delete=models.CASCADE, related_name='sent_messages')
+    category = models.ForeignKey(ForumCategory, on_delete=models.CASCADE)
+    content = models.TextField()
+    timestamp = models.DateTimeField(auto_now_add=True)
+    is_pinned = models.BooleanField(default=False)
+    council = models.ForeignKey(Council, on_delete=models.CASCADE)
+    image = models.ImageField(upload_to='forum_images/', null=True, blank=True)
+    is_district_forum = models.BooleanField(default=False)
+    
+    def __str__(self):
+        return f"{self.sender.username} - {self.timestamp.strftime('%Y-%m-%d %H:%M')}"
+    
+    class Meta:
+        ordering = ['-is_pinned', '-timestamp']
 
 class Analytics(models.Model):
     council = models.ForeignKey(Council, on_delete=models.CASCADE)
     events_count = models.IntegerField(default=0)
     donations_amount = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     updated_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True)
+    date_updated = models.DateTimeField(auto_now=True)  
 
     def __str__(self):
-        return f"Analytics for {self.council.name}"
+        return f"Analytics for {self.council.name} on {self.date_updated}"
+    
+class Notification(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
+    message = models.ForeignKey(ForumMessage, on_delete=models.CASCADE)
+    is_read = models.BooleanField(default=False)
+    timestamp = models.DateTimeField(auto_now_add=True)
+    
+    def __str__(self):
+        return f"Notification for {self.user.username} - {self.timestamp.strftime('%Y-%m-%d %H:%M')}"
+    
+    class Meta:
+        ordering = ['-timestamp']
+
+
 
 class Block(models.Model):
     index = models.IntegerField()
@@ -150,158 +266,156 @@ class Blockchain(models.Model):
             logger.info("Genesis block created")
 
     def get_chain(self):
-        try:
-            blocks = Block.objects.all().order_by('index')
-            chain = []
-            for block in blocks:
-                block_data = {
-                    'index': block.index,
-                    'timestamp': block.timestamp.isoformat(),
-                    'transactions': block.transactions if block.transactions else [],
-                    'proof': block.proof,
-                    'previous_hash': block.previous_hash,
-                    'current_hash': block.hash
-                }
-                chain.append(block_data)
-            logger.debug(f"Chain retrieved: {len(chain)} blocks, {len(self.pending_transactions)} pending transactions")
-            return chain
-        except Exception as e:
-            logger.error(f"Error retrieving chain: {str(e)}")
-            raise
-
-    def add_transaction(self, donation, public_key):
-        if not donation.verify_signature(public_key):
-            logger.error(f"Invalid signature for donation {donation.transaction_id}")
-            return None
-        for existing in self.pending_transactions:
-            if existing['transaction_id'] == donation.transaction_id:
-                logger.warning(f"Duplicate transaction {donation.transaction_id} ignored")
-                return None
-        transaction = {
-            'transaction_id': donation.transaction_id,
-            'first_name': donation.first_name,
-            'middle_initial': donation.middle_initial,
-            'last_name': donation.last_name,
-            'email': donation.email,
-            'amount': str(donation.amount),
-            'donation_date': donation.donation_date.isoformat(),
-            'payment_method': donation.payment_method,
-            'status': donation.status,
-            'signature': donation.signature,
-            'submitted_by': donation.submitted_by.username if donation.submitted_by else None
-        }
-        self.pending_transactions.append(transaction)
-        logger.info(f"Transaction {transaction['transaction_id']} added to pending transactions")
-        self.save()
-        return transaction
-        
-    def get_previous_block(self):
-        blocks = Block.objects.all().order_by('-index')
-        if blocks.exists():
-            block = blocks.first()
-            return {
+        blocks = Block.objects.all().order_by('index')
+        chain = []
+        for block in blocks:
+            chain.append({
                 'index': block.index,
-                'timestamp': block.timestamp,
+                'timestamp': block.timestamp.isoformat() if isinstance(block.timestamp, datetime) else str(block.timestamp),
                 'transactions': block.transactions,
                 'proof': block.proof,
                 'previous_hash': block.previous_hash,
-                'current_hash': block.hash
+                'hash': block.hash
+            })
+        return chain
+
+    def add_transaction(self, donation, public_key):
+        try:
+            # Verify donation signature
+            if not donation.verify_signature(public_key):
+                logger.error(f"Invalid signature for donation {donation.transaction_id}")
+                return False
+
+            transaction = {
+                'transaction_id': donation.transaction_id,
+                'donor': f"{donation.first_name} {donation.last_name}",
+                'email': donation.email,
+                'amount': str(donation.amount),
+                'date': donation.donation_date.isoformat() if isinstance(donation.donation_date, date) else str(donation.donation_date),
+                'payment_method': donation.payment_method,
+                'timestamp': timezone.now().isoformat()
             }
-        return None
+            
+            self.pending_transactions.append(transaction)
+            self.save()
+            logger.info(f"Transaction {donation.transaction_id} added to pending transactions")
+            return True
+        except Exception as e:
+            logger.error(f"Error adding transaction: {str(e)}")
+            return False
+
+    def get_previous_block(self):
+        try:
+            latest_block = Block.objects.latest('index')
+            return {
+                'index': latest_block.index,
+                'timestamp': latest_block.timestamp.isoformat() if isinstance(latest_block.timestamp, datetime) else str(latest_block.timestamp),
+                'transactions': latest_block.transactions,
+                'proof': latest_block.proof,
+                'previous_hash': latest_block.previous_hash,
+                'hash': latest_block.hash
+            }
+        except Block.DoesNotExist:
+            return None
 
     def proof_of_work(self, previous_proof):
         new_proof = 1
         check_proof = False
-        while not check_proof:
+        
+        while check_proof is False:
             hash_operation = hashlib.sha256(str(new_proof**2 - previous_proof**2).encode()).hexdigest()
-            if hash_operation[:6] == '000000':
+            if hash_operation[:4] == '0000':
                 check_proof = True
             else:
                 new_proof += 1
-        logger.debug(f"Proof of work found: {new_proof}")
         return new_proof
 
     def hash_block(self, block):
-        if block is None:
-            return '0'
-        block_string = json.dumps(
-            {
-                'index': block['index'],
-                'timestamp': block['timestamp'].isoformat() if isinstance(block['timestamp'], datetime) else block['timestamp'],
-                'transactions': block['transactions'],
-                'proof': block['proof'],
-                'previous_hash': block['previous_hash']
-            },
-            sort_keys=True
-        ).encode()
-        return hashlib.sha256(block_string).hexdigest()
+        if not isinstance(block['timestamp'], str):
+            block['timestamp'] = block['timestamp'].isoformat() if isinstance(block['timestamp'], datetime) else str(block['timestamp'])
+            
+        encoded_block = json.dumps(block, sort_keys=True).encode()
+        return hashlib.sha256(encoded_block).hexdigest()
 
     def is_chain_valid(self):
-        chain = self.get_chain()
-        if not chain:
-            logger.debug("Empty blockchain is valid")
-            return True
-        for i, block in enumerate(chain):
-            calculated_hash = self.hash_block(block)
-            logger.debug(f"Block {block['index']}: Stored hash={block['current_hash']}, Calculated hash={calculated_hash}")
-            if block['current_hash'] != calculated_hash:
-                logger.error(f"Invalid hash at block {block['index']}: Expected {calculated_hash}, Got {block['current_hash']}")
-                return False
-            if i > 0:
-                previous_block = chain[i - 1]
-                calculated_previous_hash = previous_block['current_hash']
-                if block['previous_hash'] != calculated_previous_hash:
-                    logger.error(f"Invalid previous hash at block {block['index']}: Expected {calculated_previous_hash}, Got {block['previous_hash']}")
+        blocks = Block.objects.all().order_by('index')
+        if not blocks:
+            return True  # Empty chain is valid
+            
+        previous_block = None
+        for block in blocks:
+            if previous_block:
+                # Check hash link
+                if block.previous_hash != previous_block.hash:
+                    logger.error(f"Invalid hash link at block {block.index}")
                     return False
-                previous_proof = previous_block['proof']
-                proof = block['proof']
-                hash_operation = hashlib.sha256(str(proof**2 - previous_proof**2).encode()).hexdigest()
-                if hash_operation[:6] != '000000':
-                    logger.error(f"Invalid proof at block {block['index']}")
+                    
+                # Check proof of work
+                hash_operation = hashlib.sha256(str(block.proof**2 - previous_block.proof**2).encode()).hexdigest()
+                if hash_operation[:4] != '0000':
+                    logger.error(f"Invalid proof of work at block {block.index}")
                     return False
-        logger.debug("Blockchain is valid")
+            previous_block = block
+            
         return True
-        
+
     def create_block(self, proof, previous_hash=None):
-        previous_block = self.get_previous_block()
-        if previous_block:
-            previous_hash = previous_block['current_hash']
-        else:
-            previous_hash = '0'
-        block = Block(
-            index=Block.objects.count() + 1,
-            timestamp=timezone.now(),
-            transactions=self.pending_transactions,
-            proof=proof,
-            previous_hash=previous_hash,
-            hash='0'
-        )
-        self.pending_transactions = []
         try:
+            previous_block = self.get_previous_block()
+            if not previous_block:
+                index = 1
+                previous_hash = '0'
+            else:
+                index = previous_block['index'] + 1
+                previous_hash = previous_hash or previous_block['hash']
+                
+            timestamp = timezone.now()
+            
+            block = Block(
+                index=index,
+                timestamp=timestamp,
+                transactions=self.pending_transactions,
+                proof=proof,
+                previous_hash=previous_hash,
+                hash=''  # Will be calculated in save()
+            )
             block.save()
-            logger.info(f"Block {block.index} saved to database with {len(block.transactions)} transactions")
+            
+            # Clear pending transactions after creating a block
+            self.pending_transactions = []
             self.save()
+            
+            logger.info(f"Block {index} created successfully")
             return {
                 'index': block.index,
                 'timestamp': block.timestamp.isoformat(),
                 'transactions': block.transactions,
                 'proof': block.proof,
                 'previous_hash': block.previous_hash,
-                'current_hash': block.hash
+                'hash': block.hash
             }
         except Exception as e:
-            logger.error(f"Failed to save block {block.index}: {str(e)}")
-            raise
-    
-def get_blockchain():
+            logger.error(f"Error creating block: {str(e)}")
+            return None
+
+# Global blockchain instance
+blockchain = Blockchain.objects.first()
+if blockchain is None:
     try:
-        return Blockchain.objects.first() or Blockchain.objects.create()
+        blockchain = Blockchain.objects.create()
     except Exception as e:
-        import logging
-        logger = logging.getLogger(__name__)
-        logger.error("Failed to initialize Blockchain: {}".format(str(e)))
-        raise
-blockchain = SimpleLazyObject(get_blockchain)
+        logger.error(f"Error creating blockchain: {str(e)}")
+        blockchain = SimpleLazyObject(lambda: Blockchain.objects.first() or Blockchain())
+
+def get_blockchain():
+    global blockchain
+    if blockchain is None or (hasattr(blockchain, '_wrapped') and blockchain._wrapped is None):
+        try:
+            blockchain = Blockchain.objects.first() or Blockchain.objects.create()
+        except Exception as e:
+            logger.error(f"Error getting blockchain: {str(e)}")
+            return None
+    return blockchain
 
 class Donation(models.Model):
     STATUS_CHOICES = (
@@ -341,51 +455,68 @@ class Donation(models.Model):
         blank=True
     )
     rejection_reason = models.TextField(blank=True, null=True)
+    receipt = models.ImageField(upload_to='donation_receipts/', null=True, blank=True)
 
     def sign_donation(self, private_key):
+        """Sign the donation data with the provided private key"""
         try:
-            message = f"{self.transaction_id}{self.first_name}{self.middle_initial}{self.last_name}{self.email}{self.amount}{self.donation_date}{self.payment_method}{self.status}".encode()
+            # Create a string representation of the donation data
+            donation_data = f"{self.transaction_id}:{self.first_name}:{self.last_name}:{self.email}:{self.amount}:{self.donation_date.isoformat() if isinstance(self.donation_date, date) else str(self.donation_date)}:{self.payment_method}"
+            
+            # Sign the data
             signature = private_key.sign(
-                message,
+                donation_data.encode(),
                 padding.PSS(
                     mgf=padding.MGF1(hashes.SHA256()),
                     salt_length=padding.PSS.MAX_LENGTH
                 ),
                 hashes.SHA256()
             )
-            self.signature = signature.hex()
-            logger.debug(f"Signature generated for donation {self.transaction_id}: {self.signature}")
-            self.save()
+            
+            # Store the base64 encoded signature
+            self.signature = base64.b64encode(signature).decode('utf-8')
+            return True
         except Exception as e:
-            logger.error(f"Failed to sign donation {self.transaction_id}: {str(e)}")
-            raise
+            logger.error(f"Error signing donation: {str(e)}")
+            return False
 
     def verify_signature(self, public_key):
+        """Verify the donation signature using the provided public key"""
         if not self.signature:
-            logger.warning(f"No signature for donation {self.transaction_id}")
+            logger.error(f"No signature found for donation {self.transaction_id}")
             return False
-        message = f"{self.transaction_id}{self.first_name}{self.middle_initial}{self.last_name}{self.email}{self.amount}{self.donation_date}{self.payment_method}{self.status}".encode()
+            
         try:
+            # Recreate the original data string
+            donation_data = f"{self.transaction_id}:{self.first_name}:{self.last_name}:{self.email}:{self.amount}:{self.donation_date.isoformat() if isinstance(self.donation_date, date) else str(self.donation_date)}:{self.payment_method}"
+            
+            # Decode the stored signature
+            signature = base64.b64decode(self.signature)
+            
+            # Verify the signature
             public_key.verify(
-                bytes.fromhex(self.signature),
-                message,
+                signature,
+                donation_data.encode(),
                 padding.PSS(
                     mgf=padding.MGF1(hashes.SHA256()),
                     salt_length=padding.PSS.MAX_LENGTH
                 ),
                 hashes.SHA256()
             )
-            logger.debug(f"Signature verified for donation {self.transaction_id}")
             return True
         except InvalidSignature:
             logger.error(f"Invalid signature for donation {self.transaction_id}")
             return False
         except Exception as e:
-            logger.error(f"Signature verification failed for {self.transaction_id}: {str(e)}")
+            logger.error(f"Error verifying signature: {str(e)}")
             return False
 
     def __str__(self):
-        return f"{self.transaction_id} - {self.amount} - {self.status}"
+        return f"{self.first_name} {self.last_name} - {self.amount} - {self.get_status_display()}"
 
 def receipt_upload_path(instance, filename):
-    return f'receipts/{instance.transaction_id}/{filename}'
+    # Get file extension
+    ext = filename.split('.')[-1]
+    # Generate a unique filename
+    new_filename = f"{instance.transaction_id}.{ext}"
+    return os.path.join('donation_receipts', new_filename)

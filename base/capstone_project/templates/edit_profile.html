@@ -1,73 +1,163 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Edit Profile
+{% endblock %}
+
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/edit_profile.css' %}?v={% now 'U' %}">
 <div class="container">
     <h1>Edit Your Profile</h1>
-    {% if error %}
-        <p class="message error-message">{{ error }}</p>
+    {% if messages %}
+        {% for message in messages %}
+            {% if message.tags == 'success' %}
+                <p class="message success-message">{{ message }}</p>
+            {% elif message.tags == 'error' %}
+                <p class="message error-message">{{ message }}</p>
+            {% endif %}
+        {% endfor %}
     {% endif %}
-    {% if success %}
-        <p class="message success-message">{{ success }}</p>
-    {% endif %}
-    <form method="post" enctype="multipart/form-data" id="profileForm">
+
+    <!-- Form Section -->
+    <form method="post" enctype="multipart/form-data" id="profileForm" onsubmit="return validateForm()">
         {% csrf_token %}
-        <label for="first_name">First Name:</label>
-        <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" required>
-        <label for="last_name">Last Name:</label>
-        <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}" required>
-        <label for="username">Username:</label>
-        <input type="text" id="username" name="username" value="{{ user.username }}" required>
-        <label for="password">New Password (leave blank to keep current):</label>
-        <input type="password" id="password" name="password" placeholder="Enter new password">
-        <label for="address">Address:</label>
-        <input type="text" id="address" name="address" value="{{ user.address|default:'' }}">
-        <label for="contact_number">Contact Number:</label>
-        <input type="text" id="contact_number" name="contact_number" value="{{ user.contact_number|default:'' }}" maxlength="15">
-        <label for="profile_picture">Profile Picture:</label>
-        <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
-        <div id="imagePreview" style="display: none; margin-top: 10px;">
-            <img id="image" style="max-width: 100%;">
+          <div class="profile-picture-section">
+        {% if user.profile_picture %}
+            <p>Current Picture:</p>
+            <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-pic">
+        {% endif %}
+        <div class="form-group">
+            <label for="profile_picture">Upload New Profile Picture:</label>
+            <div class="input-wrapper">
+                <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
+            </div>
+            <div id="imagePreview" style="display: none; margin-top: 10px;">
+                <img id="image" style="max-width: 100%;">
+            </div>
+            <input type="hidden" id="cropped_image" name="cropped_image">
         </div>
-        <input type="hidden" id="cropped_image" name="cropped_image">
-        <button type="submit">Save Changes</button>
+        </div>
+        <div class="form-group-row">
+            <div class="form-group">
+                <label for="first_name">First Name:</label>
+                <div class="input-wrapper">
+                    <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" required
+                          pattern="[A-Z][a-zA-Z]*" oninput="validateName(this)">
+                </div>
+                <span class="warning" id="first_name_warning"></span>
+            </div>
+            <div class="form-group">
+                <label for="second_name">Second Name:</label>
+                <div class="input-wrapper">
+                    <input type="text" id="second_name" name="second_name" value="{{ user.second_name|default:'' }}"
+                          pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validateName(this)">
+                </div>
+                <span class="warning" id="second_name_warning"></span>
+            </div>
+        </div>
+        <div class="form-group-row">
+            <div class="form-group">
+                <label for="middle_name">Middle Name:</label>
+                <div class="input-wrapper">
+                    <input type="text" id="middle_name" name="middle_name" value="{{ user.middle_name|default:'' }}" required
+                        pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validateName(this)">
+                </div>
+                <span class="warning" id="middle_name_warning"></span>
+            </div>
+            <div class="form-group">
+                <label for="last_name">Last Name:</label>
+                <div class="input-wrapper">
+                    <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}" required
+                        pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validateName(this)">
+                </div>
+                <span class="warning" id="last_name_warning"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="suffix">Suffix:</label>
+            <div class="input-wrapper">
+                <select id="suffix" name="suffix">
+                    <option value="" {% if not user.suffix %}selected{% endif %}>None</option>
+                    <option value="Jr." {% if user.suffix == "Jr." %}selected{% endif %}>Jr.</option>
+                    <option value="Sr." {% if user.suffix == "Sr." %}selected{% endif %}>Sr.</option>
+                    <option value="II" {% if user.suffix == "II" %}selected{% endif %}>II</option>
+                    <option value="III" {% if user.suffix == "III" %}selected{% endif %}>III</option>
+                    <option value="IV" {% if user.suffix == "IV" %}selected{% endif %}>IV</option>
+                </select>
+            </div>
+            <span class="warning" id="suffix_warning"></span>
+        </div>
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <div class="input-wrapper">
+                <input type="text" id="username" name="username" value="{{ user.username }}" required
+                       oninput="validateUsername(this)">
+            </div>
+            <span class="warning" id="username_warning"></span>
+        </div>
+        <div class="form-group">
+            <label for="password">New Password (leave blank to keep current):</label>
+            <div class="input-wrapper">
+                <input type="password" id="password" name="password" placeholder="Enter new password"
+                       oninput="validatePassword(this)">
+            </div>
+            <span class="warning" id="password_warning"></span>
+            <div class="strength-indicator" id="password_strength">
+                <span class="strength-text"></span>
+                <div class="strength-bar"></div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label for="street">Street:</label>
+            <div class="input-wrapper">
+                <input type="text" id="street" name="street" value="{{ user.street|default:'' }}"
+                       pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validatePlace(this)">
+            </div>
+            <span class="warning" id="street_warning"></span>
+        </div>
+        <div class="form-group">
+            <label for="barangay">Barangay:</label>
+            <div class="input-wrapper">
+                <input type="text" id="barangay" name="barangay" value="{{ user.barangay|default:'' }}"
+                       pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validatePlace(this)">
+            </div>
+            <span class="warning" id="barangay_warning"></span>
+        </div>
+        <div class="form-group">
+            <label for="city">City/Municipality:</label>
+            <div class="input-wrapper">
+                <input type="text" id="city" name="city" value="{{ user.city|default:'' }}"
+                       pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validatePlace(this)">
+            </div>
+            <span class="warning" id="city_warning"></span>
+        </div>
+        <div class="form-group">
+            <label for="province">Province:</label>
+            <div class="input-wrapper">
+                <input type="text" id="province" name="province" value="{{ user.province|default:'' }}"
+                       pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validatePlace(this)">
+            </div>
+            <span class="warning" id="province_warning"></span>
+        </div>
+        <div class="form-group">
+            <label for="contact_number">Contact Number:</label>
+            <div class="input-wrapper">
+                <input type="tel" id="contact_number" name="contact_number" value="{{ user.contact_number|default:'' }}"
+                       maxlength="15" pattern="[0-9]+" oninput="validateContactNumber(this)">
+            </div>
+            <span class="warning" id="contact_number_warning"></span>
+        </div>
+        <div class="button-wrapper">
+            <button type="submit" class="styled-button">Save Changes</button>
+        </div>
     </form>
-    {% if user.profile_picture %}
-        <p>Current Picture: <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-pic"></p>
-    {% endif %}
-    <a href="{% url 'dashboard' %}">Back to Dashboard</a>
+    <a href="{% url 'dashboard' %}" class="back-link">Back to Dashboard</a>
 </div>
 
 <!-- Include Cropper.js -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
 
-<style>
-.message {
-    font-size: 16px;
-    padding: 10px;
-    margin-bottom: 15px;
-    border-radius: 5px;
-    text-align: center;
-}
-.success-message {
-    color: #155724;
-    background-color: #d4edda;
-    border: 1px solid #c3e6cb;
-}
-.error-message {
-    color: #721c24;
-    background-color: #f8d7da;
-    border: 1px solid #f5c6cb;
-}
-input[type="file"] {
-    margin-bottom: 10px;
-}
-.profile-pic {
-    width: 100px;
-    height: 100px;
-    object-fit: cover;
-    border-radius: 50%;
-}
-</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
@@ -76,7 +166,21 @@ document.addEventListener('DOMContentLoaded', function () {
     const imagePreview = document.getElementById('imagePreview');
     const croppedImageInput = document.getElementById('cropped_image');
     let cropper;
-
+    
+    // Make notification messages disappear after 5 seconds
+    const messages = document.querySelectorAll('.message');
+    if (messages.length > 0) {
+        setTimeout(function() {
+            messages.forEach(function(message) {
+                message.style.transition = 'opacity 1s ease';
+                message.style.opacity = '0';
+                setTimeout(function() {
+                    message.style.display = 'none';
+                }, 1000);
+            });
+        }, 5000);
+    }
+    
     input.addEventListener('change', function (e) {
         const files = e.target.files;
         if (files && files.length > 0) {
@@ -107,13 +211,169 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    document.getElementById('profileForm').addEventListener('submit', function (e) {
-        if (cropper) {
-            const canvas = cropper.getCroppedCanvas({
-                width: 200,
-                height: 200,
-            });
-            croppedImageInput.value = canvas.toDataURL('image/jpeg');
+    // Make sure validateName and other functions are defined in the global scope
+    window.validateName = function (input) {
+        const warning = document.getElementById(input.id + '_warning');
+        let regex;
+        
+        if (input.id === 'first_name') {
+            // First name: must start with capital and contain only letters
+            regex = /^[A-Z][a-zA-Z]*$/;
+            if (!input.value) {
+                warning.textContent = 'First name is required.';
+                return false;
+            } else if (!regex.test(input.value)) {
+                warning.textContent = 'First name must start with a capital letter and contain only letters.';
+                return false;
+            }
+        } else if (input.id === 'second_name') {
+            // Second name: optional, but if provided must follow pattern (e.g., "De Torres")
+            if (!input.value) {
+                warning.textContent = ''; // Optional field
+                return true;
+            }
+            regex = /^[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*$/;
+            if (!regex.test(input.value)) {
+                warning.textContent = 'Second name must start with a capital letter and can include spaces for compound names.';
+                return false;
+            }
+        } else {
+            // Middle name and last name: must start with capital, can have compound names
+            regex = /^[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*$/;
+            if (!input.value) {
+                warning.textContent = 'This field is required.';
+                return false;
+            } else if (!regex.test(input.value)) {
+                warning.textContent = 'Must start with a capital letter and can include spaces for compound names (e.g., De Torres).';
+                return false;
+            }
+        }
+        
+        warning.textContent = '';
+        return true;
+    };
+
+    window.validateUsername = function (input) {
+        const warning = document.getElementById('username_warning');
+        const regex = /^[a-zA-Z0-9_]+$/;
+        if (!input.value) {
+            warning.textContent = 'Username is required.';
+            return false;
+        } else if (!regex.test(input.value)) {
+            warning.textContent = 'Username can only contain letters, numbers, and underscores.';
+            return false;
+        } else if (input.value.length < 3) {
+            warning.textContent = 'Username must be at least 3 characters long.';
+            return false;
+        } else {
+            warning.textContent = '';
+            return true;
+        }
+    };
+
+    window.validatePlace = function (input) {
+        const warning = document.getElementById(input.id + '_warning');
+        const regex = /^[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*$/;
+        if (!input.value) {
+            warning.textContent = '';
+            return true; // Optional field
+        } else if (!regex.test(input.value)) {
+            warning.textContent = 'Must start with a capital letter and can include spaces for compound names (e.g., De Torres).';
+            return false;
+        } else {
+            warning.textContent = '';
+            return true;
+        }
+    };
+
+    window.validateContactNumber = function (input) {
+        const warning = document.getElementById('contact_number_warning');
+        const regex = /^[0-9]+$/;
+        input.value = input.value.replace(/[^0-9]/g, '');
+        if (!input.value) {
+            warning.textContent = '';
+            return true; // Optional field
+        } else if (!regex.test(input.value)) {
+            warning.textContent = 'Only numbers are allowed.';
+            return false;
+        } else {
+            warning.textContent = '';
+            return true;
+        }
+    };
+
+    window.validatePassword = function (input) {
+        const warning = document.getElementById('password_warning');
+        const strengthIndicator = document.getElementById('password_strength');
+        const strengthText = strengthIndicator.querySelector('.strength-text');
+        const strengthBar = strengthIndicator.querySelector('.strength-bar');
+        const value = input.value;
+
+        if (!value) {
+            warning.textContent = '';
+            strengthIndicator.style.display = 'none';
+            return true; // Password is optional
+        }
+
+        strengthIndicator.style.display = 'block';
+        strengthIndicator.classList.remove('strength-weak', 'strength-medium', 'strength-strong');
+
+        const hasUpper = /[A-Z]/.test(value);
+        const hasLower = /[a-z]/.test(value);
+        const hasNumber = /[0-9]/.test(value);
+        const hasSpecial = /[_=()'",!@#$%^&*,.?":{}|<> ]/.test(value);
+        const typesCount = [hasUpper, hasLower, hasNumber, hasSpecial].filter(Boolean).length;
+        const length = value.length;
+
+        if (length < 8 || typesCount === 0) {
+            strengthIndicator.classList.add('strength-weak');
+            strengthText.textContent = 'Weak';
+            warning.textContent = 'Password must be at least 8 characters with a mix of letters, numbers, or symbols.';
+            return false;
+        } else if (length >= 8 && typesCount >= 2 && length < 12) {
+            strengthIndicator.classList.add('strength-medium');
+            strengthText.textContent = 'Medium';
+            warning.textContent = 'Password is medium. Aim for 12+ characters with all types for strong.';
+            return true;
+        } else if (length >= 12 && typesCount >= 4) {
+            strengthIndicator.classList.add('strength-strong');
+            strengthText.textContent = 'Strong';
+            warning.textContent = '';
+            return true;
+        } else {
+            strengthIndicator.classList.add('strength-weak');
+            strengthText.textContent = 'Weak';
+            warning.textContent = 'Password lacks complexity. Use 12+ characters with uppercase, lowercase, numbers, and symbols.';
+            return false;
+        }
+    };
+
+    window.validateForm = function () {
+        let hasErrors = false;
+
+        const firstNameValid = validateName(document.getElementById('first_name'));
+        const secondNameValid = validateName(document.getElementById('second_name'));
+        const middleNameValid = validateName(document.getElementById('middle_name'));
+        const lastNameValid = validateName(document.getElementById('last_name'));
+        const usernameValid = validateUsername(document.getElementById('username'));
+        const streetValid = validatePlace(document.getElementById('street'));
+        const barangayValid = validatePlace(document.getElementById('barangay'));
+        const cityValid = validatePlace(document.getElementById('city'));
+        const provinceValid = validatePlace(document.getElementById('province'));
+        const contactNumberValid = validateContactNumber(document.getElementById('contact_number'));
+        const passwordValid = validatePassword(document.getElementById('password'));
+
+        if (!firstNameValid || !secondNameValid || !middleNameValid || !lastNameValid || !usernameValid || !streetValid || !barangayValid || !cityValid || !provinceValid || !contactNumberValid || !passwordValid) {
+            hasErrors = true;
+        }
+
+        return !hasErrors;
+    };
+
+    // Manually trigger validation on page load for all fields
+    document.querySelectorAll('input, select').forEach(element => {
+        if (element.oninput) {
+            element.oninput();
         }
     });
 });

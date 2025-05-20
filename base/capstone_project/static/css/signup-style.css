@@ -5,7 +5,6 @@ body {
     font-family: "Roboto", sans-serif;
 }
 
-
 .container {
     display: flex;
     flex-direction: column;
@@ -27,6 +26,13 @@ body {
     margin-bottom: 3rem;
 }
 
+.container p {
+    font-size: 1rem;
+    color: #233178;
+    margin-bottom: 2rem;
+    line-height: 1.5;
+    text-align: center;
+}
 /* Sign-Up Form Section */
 .sign-up-form {
     background-color: #f0f1f6;
@@ -35,7 +41,7 @@ body {
     padding: 2rem;
     width: 100%;
     max-width: 30rem;
-    text-align: center;
+    text-align: left; /* Labels stay left-aligned */
     position: relative;
 }
 
@@ -44,63 +50,91 @@ body {
     display: block;
     width: 5rem;
     height: 5rem;
-    background: url('/static/images/kofc-logo.png') no-repeat center/cover; /* Logo at the top */
+    background: url('/static/images/kofc-logo.png') no-repeat center/cover;
     position: absolute;
     top: -2.5rem;
     left: 50%;
     transform: translateX(-50%);
     border-radius: 50%;
-    border: 3px solid #f4b41a; /* Yellow border to match theme */
-    background-color: #fff; /* White background for the logo */
+    border: 3px solid #f4b41a;
+    background-color: #fff;
 }
 
 .sign-up-form h2 {
     font-size: 2rem;
-    color: #030d4e; /* Dark blue from your theme */
+    color: #030d4e;
     margin: 2rem 0 1.5rem;
     text-transform: uppercase;
     font-weight: 600;
+    text-align: center;
 }
 
 .sign-up-form form {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: center; /* Center inputs and button */
     width: 100%;
+}
+
+.sign-up-form .form-group {
+    margin-bottom: 1rem;
+    width: 100%; /* Ensure form-group takes full width */
+    text-align: left; /* Keep labels left-aligned */
 }
 
 .sign-up-form label {
     font-size: 1.1rem;
-    color: #333; /* Darker text for contrast on white background */
-    margin: 0.5rem 0;
+    color: #333;
+    margin: 0.5rem 0 0.25rem;
     text-align: left;
     width: 100%;
+    display: block;
 }
 
 .sign-up-form input[type="text"],
 .sign-up-form input[type="email"],
-.sign-up-form input[type="password"] {
-    width: 100%;
+.sign-up-form input[type="password"],
+.sign-up-form input[type="date"],
+.sign-up-form input[type="tel"],
+.sign-up-form select {
+    width: 100%; /* Keep 80% width */
     padding: 0.75rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     font-family: "Roboto", sans-serif;
     font-size: 1rem;
-    border: 1px solid #ccc; /* Light gray border like the screenshot */
+    border: 1px solid #ccc;
     border-radius: 5px;
-    background-color: #f5f5f5; /* Light gray background like the screenshot */
+    background-color: #f5f5f5;
     color: #161b5f;
     transition: 0.3s ease-in-out;
+    box-sizing: border-box;
+    display: block; /* Ensure input is block-level for centering */
+    margin-left: auto;
+    margin-right: auto; /* Center the input */
 }
 
 .sign-up-form input[type="text"]:hover,
 .sign-up-form input[type="email"]:hover,
 .sign-up-form input[type="password"]:hover,
+.sign-up-form input[type="date"]:hover,
+.sign-up-form select:hover,
 .sign-up-form input[type="text"]:focus,
 .sign-up-form input[type="email"]:focus,
-.sign-up-form input[type="password"]:focus {
-    border-color: #f4b41a; /* Yellow border on hover/focus */
+.sign-up-form input[type="password"]:focus,
+.sign-up-form input[type="date"]:focus,
+.sign-up-form select:focus {
+    border-color: #f4b41a;
     outline: none;
     background-color: #fff;
+}
+
+.form-group-row {
+    display: flex;
+    gap: 20px;
+}
+
+.form-group-row .form-group {
+    flex: 1;
 }
 
 /* Council Buttons */
@@ -130,7 +164,7 @@ body {
 
 .council-btn.selected {
     border-color: #f4b41a;
-    background-color: #fff8e0; /* Light yellow for selected state */
+    background-color: #fff8e0;
     color: #030d4e;
 }
 
@@ -170,6 +204,9 @@ body {
     transition: 0.2s ease-in-out;
     font-family: "Noto Sans", sans-serif;
     text-transform: uppercase;
+    display: block; /* Ensure button is block-level */
+    margin-left: auto;
+    margin-right: auto; /* Center the button */
 }
 
 .sign-up-form button:hover {
@@ -190,7 +227,7 @@ body {
 
 .modal-content {
     background-color: #0d3471;
-    color: #F0F1F6;
+    color: #f0f1f6;
     margin: 15% auto;
     padding: 20px;
     border: 2px solid #f4b41a;
@@ -215,7 +252,7 @@ body {
 
 .modal-close {
     background-color: #f4b41a;
-    color: #161B5F;
+    color: #161b5f;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
@@ -224,6 +261,131 @@ body {
 
 .modal-close:hover {
     background-color: #e0a317;
+}
+
+/* Message Styles */
+.message {
+    font-size: 16px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border-radius: 5px;
+    text-align: center;
+}
+
+.success-message {
+    color: #155724;
+    background-color: #d4edda;
+    border: 1px solid #c3e6cb;
+}
+
+.error-message {
+    color: #721c24;
+    background-color: #f8d7da;
+    border: 1px solid #f5c6cb;
+}
+
+/* Warning Styles */
+.warning {
+    display: block;
+    color: #721c24;
+    font-size: 12px;
+    margin-top: 5px;
+    min-height: 20px;
+}
+
+/* Styled Input and Select */
+.styled-input,
+.styled-select {
+    background-color: #f9f9f9;
+    border: 2px solid #0d3471;
+    border-radius: 8px;
+    padding: 12px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.styled-input:focus,
+.styled-select:focus {
+    border-color: #1a5ed4;
+    box-shadow: 0 0 5px rgba(26, 94, 212, 0.3);
+    outline: none;
+}
+
+/* Styled Button */
+.styled-button:hover {
+    background-color: #1a5ed4;
+}
+
+/* Strength Indicator */
+.strength-indicator {
+    margin-top: 5px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.strength-text {
+    font-size: 12px;
+    font-weight: bold;
+    position: relative;
+}
+
+.strength-bar {
+    width: 100px;
+    height: 5px;
+    background-color: #e0e0e0;
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.strength-bar::before {
+    content: '';
+    display: block;
+    height: 100%;
+    width: 0;
+    transition: width 0.3s, background-color 0.3s;
+}
+
+.strength-weak .strength-text {
+    color: #721c24;
+}
+
+.strength-weak .strength-bar::before {
+    width: 33%;
+    background-color: #721c24;
+}
+
+.strength-medium .strength-text {
+    color: #d4a017;
+}
+
+.strength-medium .strength-bar::before {
+    width: 66%;
+    background-color: #d4a017;
+}
+
+.strength-strong .strength-text {
+    color: #28a745;
+}
+
+.strength-strong .strength-bar::before {
+    width: 100%;
+    height: 8px;
+    background-color: #28a745;
+    box-shadow: 0 0 8px #28a745;
+    animation: pulse 1.5s infinite;
+}
+
+.strength-strong .strength-text::before {
+    content: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="%2328a745" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6L9 17l-5-5"/></svg>');
+    position: absolute;
+    left: -16px;
+    top: 1px;
+}
+
+@keyframes pulse {
+    0% { box-shadow: 0 0 8px #28a745; }
+    50% { box-shadow: 0 0 12px #28a745; }
+    100% { box-shadow: 0 0 8px #28a745; }
 }
 
 /* Responsive Adjustments */
@@ -254,7 +416,9 @@ body {
 
     .sign-up-form input[type="text"],
     .sign-up-form input[type="email"],
-    .sign-up-form input[type="password"] {
+    .sign-up-form input[type="password"],
+    .sign-up-form input[type="date"],
+    .sign-up-form select {
         padding: 0.5rem;
         font-size: 0.9rem;
     }
@@ -298,7 +462,9 @@ body {
 
     .sign-up-form input[type="text"],
     .sign-up-form input[type="email"],
-    .sign-up-form input[type="password"] {
+    .sign-up-form input[type="password"],
+    .sign-up-form input[type="date"],
+    .sign-up-form select {
         font-size: 0.8rem;
     }
 

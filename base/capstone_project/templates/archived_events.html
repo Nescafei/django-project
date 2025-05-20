@@ -1,0 +1,140 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Archived Events
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/event_management.css' %}?v={% now 'U' %}">
+
+<div class="dashboard-container">
+    <div class="event-form-container">
+        <div class="role-management-header">
+            <h2>Archived Events</h2>
+            <div>
+                <a href="{% url 'dashboard' %}" class="role-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+        {% if past_events %}
+        <table class="event-table">
+            <thead>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Council</th>
+                    <th>Created By</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in past_events %}
+                <tr>
+                    <td>{{ event.name }}</td>
+                    <td>{{ event.category }}</td>
+                    <td>{{ event.date_from|date:"M d, Y" }} {% if event.date_until and event.date_until != event.date_from %} - {{ event.date_until|date:"M d, Y" }}{% endif %}</td>
+                    <td>{% if event.is_global %}All Councils{% else %}{{ event.council.name }}{% endif %}</td>
+                    <td>{{ event.created_by.first_name }} {{ event.created_by.last_name }}</td>
+                    <td><span class="status-badge status-{{ event.status }}">{{ event.get_status_display }}</span></td>
+                    <td>
+                        <a href="#" class="action-btn details-btn" onclick="viewEventDetails('{{ event.id }}')">
+                            <i class="fas fa-eye"></i> View Details
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="no-events-message">
+            <p>There are no past events to display.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Event details modal -->
+<div id="eventDetailsModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Event Details</h3>
+        <div id="eventDetailsContent">
+            <div class="loading">Loading event details...</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Modal functionality for event details
+        window.viewEventDetails = function(eventId) {
+            const modal = document.getElementById('eventDetailsModal');
+            const contentDiv = document.getElementById('eventDetailsContent');
+            modal.style.display = 'block';
+            contentDiv.innerHTML = '<div class="loading">Loading event details...</div>';
+            
+            // Fetch event details via AJAX
+            fetch(`/event/${eventId}/details/`)
+                .then(response => response.json())
+                .then(data => {
+                    let detailsHTML = `
+                        <div class="event-details">
+                            <h4>${data.name}</h4>
+                            <p class="event-category">${data.category}</p>
+                            
+                            <div class="detail-group">
+                                <strong>Date:</strong> 
+                                <span>${data.date_from}${data.date_until ? ' - ' + data.date_until : ''}</span>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Location:</strong>
+                                <address>
+                                    ${data.street}, ${data.barangay}<br>
+                                    ${data.city}, ${data.province}
+                                </address>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Description:</strong>
+                                <p>${data.description}</p>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Created by:</strong>
+                                <p>${data.creator_name}</p>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Council:</strong>
+                                <p>${data.council_name}</p>
+                            </div>
+                        </div>
+                    `;
+                    contentDiv.innerHTML = detailsHTML;
+                })
+                .catch(error => {
+                    contentDiv.innerHTML = '<p>Error loading event details. Please try again later.</p>';
+                });
+        };
+        
+        // Close modal when clicking the close button
+        const closeButton = document.querySelector('.modal .close');
+        closeButton.addEventListener('click', function() {
+            document.getElementById('eventDetailsModal').style.display = 'none';
+        });
+        
+        // Close modal when clicking outside of it
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('eventDetailsModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %} 

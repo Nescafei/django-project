@@ -1,0 +1,241 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Manage Roles
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/role_management.css' %}?v={% now 'U' %}">
+
+<div class="dashboard-container">
+    <div class="role-management-container">
+        <div class="role-management-header">
+            <h2>User Role Management</h2>
+            <div>
+                <a href="{% url 'dashboard' %}" class="role-btn details-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+        {% if messages %}
+        <div class="message-container">
+            {% for message in messages %}
+            <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% else %}alert-info{% endif %}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+
+        <div class="role-search-filter">
+            <input type="text" id="userSearchInput" placeholder="Search users by name, email, or council..." class="role-search-input">
+        </div>
+
+        <div class="role-filters">
+            <button class="role-filter-btn active" data-role="all">All</button>
+            <button class="role-filter-btn" data-role="officer">Officers</button>
+            <button class="role-filter-btn" data-role="member">Members</button>
+        </div>
+
+        <table class="user-role-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Council</th>
+                    <th>Email</th>
+                    <th>Current Role</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                {% if user.role != 'admin' and not user.is_archived %}
+                <tr data-role="{{ user.role }}" data-council="{{ user.council.name|default:'' }}">
+                    <td>{{ user.first_name }} {{ user.last_name }}</td>
+                    <td>{{ user.council.name|default:"No council" }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        <span class="role-badge role-{{ user.role }}">{{ user.get_role_display }}</span>
+                    </td>
+                    <td class="role-action-buttons">
+                        {% if user.role == 'member' %}
+                        <a href="{% url 'promote_user' user.id %}" class="role-btn promote-btn">
+                            <i class="fas fa-arrow-up"></i> Promote to Officer
+                        </a>
+                        {% elif user.role == 'officer' %}
+                        <a href="{% url 'demote_user' user.id %}" class="role-btn demote-btn">
+                            <i class="fas fa-arrow-down"></i> Demote to Member
+                        </a>
+                        {% endif %}
+                        <a href="#" class="role-btn details-btn" onclick="viewUserDetails('{{ user.id }}')">
+                            <i class="fas fa-info-circle"></i> Details
+                        </a>
+                    </td>
+                </tr>
+                {% endif %}
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- User details modal -->
+        <div id="userDetailsModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h3>User Details</h3>
+                <div id="userDetailsContent"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Make notification messages disappear after 5 seconds
+        const alerts = document.querySelectorAll('.alert');
+        if (alerts.length > 0) {
+            setTimeout(function() {
+                alerts.forEach(function(alert) {
+                    alert.style.transition = 'opacity 1s ease';
+                    alert.style.opacity = '0';
+                    setTimeout(function() {
+                        alert.style.display = 'none';
+                    }, 1000);
+                });
+            }, 5000);
+        }
+        
+        // Search functionality
+        const searchInput = document.getElementById('userSearchInput');
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('.user-role-table tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const shouldShow = text.includes(searchTerm);
+                
+                // Check if we need to respect role filter
+                const activeRoleFilter = document.querySelector('.role-filter-btn.active');
+                const filterRole = activeRoleFilter.dataset.role;
+                const rowRole = row.dataset.role;
+                
+                if (filterRole === 'all' || filterRole === rowRole) {
+                    row.style.display = shouldShow ? '' : 'none';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+        });
+        
+        // Role filter functionality
+        const filterButtons = document.querySelectorAll('.role-filter-btn');
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                const role = this.dataset.role;
+                const rows = document.querySelectorAll('.user-role-table tbody tr');
+                
+                rows.forEach(row => {
+                    if (role === 'all') {
+                        // Still respect search term
+                        const searchTerm = searchInput.value.toLowerCase();
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(searchTerm) ? '' : 'none';
+                    } else {
+                        const rowRole = row.dataset.role;
+                        const searchTerm = searchInput.value.toLowerCase();
+                        const text = row.textContent.toLowerCase();
+                        
+                        if (rowRole === role && text.includes(searchTerm)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    }
+                });
+            });
+        });
+        
+        // User details modal functionality
+        window.viewUserDetails = function(userId) {
+            const modal = document.getElementById('userDetailsModal');
+            const contentDiv = document.getElementById('userDetailsContent');
+            modal.style.display = 'block';
+            
+            // Show loading message
+            contentDiv.innerHTML = '<div class="loading">Loading user details...</div>';
+            
+            // In a real implementation, you would fetch user details via AJAX
+            // For demonstration purposes, we'll simulate a fetch with setTimeout
+            setTimeout(function() {
+                // Dummy data - in a real implementation, this would come from the server
+                const userData = {
+                    name: "User #" + userId,
+                    role: "Member", // or Officer
+                    email: "user" + userId + "@example.com",
+                    council: "Council 3469",
+                    joinDate: "January 15, 2023",
+                    degree: "3rd Degree"
+                };
+                
+                // Format the details
+                let detailsHTML = `
+                    <div class="user-details">
+                        <div class="detail-group">
+                            <strong>Name:</strong>
+                            <span>${userData.name}</span>
+                        </div>
+                        
+                        <div class="detail-group">
+                            <strong>Email:</strong>
+                            <span>${userData.email}</span>
+                        </div>
+                        
+                        <div class="detail-group">
+                            <strong>Council:</strong>
+                            <span>${userData.council}</span>
+                        </div>
+                        
+                        <div class="detail-group">
+                            <strong>Role:</strong>
+                            <span>${userData.role}</span>
+                        </div>
+                        
+                        <div class="detail-group">
+                            <strong>Member Since:</strong>
+                            <span>${userData.joinDate}</span>
+                        </div>
+                        
+                        <div class="detail-group">
+                            <strong>Current Degree:</strong>
+                            <span>${userData.degree}</span>
+                        </div>
+                    </div>
+                `;
+                
+                contentDiv.innerHTML = detailsHTML;
+            }, 500); // Simulate network delay
+        };
+        
+        // Close modal when clicking the close button
+        const closeButton = document.querySelector('.modal .close');
+        closeButton.addEventListener('click', function() {
+            document.getElementById('userDetailsModal').style.display = 'none';
+        });
+        
+        // Close modal when clicking outside of it
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('userDetailsModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+</script>
+{% endblock %} 

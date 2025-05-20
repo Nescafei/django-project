@@ -26,7 +26,6 @@ urlpatterns = [
     ), name='password_reset_complete'),
     path('update-degree/<int:user_id>/', views.update_degree, name='update_degree'),
     path('edit-profile/', views.edit_profile, name='edit_profile'),
-    path('search/', views.search_users, name='search'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 # if settings.DEBUG:

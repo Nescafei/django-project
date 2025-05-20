@@ -30,5 +30,21 @@ urlpatterns = [
     path('cancel/', views.cancel_page, name='cancel_page'),
     path('gcash/confirm/', views.confirm_gcash_payment, name='confirm_gcash_payment'),
     path('blockchain/', views.get_blockchain_data, name='blockchain'),
-    path('search-users/', views.search_users, name='search_users'),
+    # path('search-users/', views.search_users, name='search_users'),
+
+    path('forum/', views.forum, name='forum'),
+    path('forum/messages/<int:category_id>/', views.get_messages, name='get_messages'),
+    path('forum/send/', views.send_message, name='send_message'),
+    path('forum/delete/<int:message_id>/', views.delete_message, name='delete_message'),
+    path('forum/pin/<int:message_id>/', views.pin_message, name='pin_message'),
+
+    # URLs for role management and events
+    path('manage-roles/', views.manage_roles, name='manage_roles'),
+    path('add-event/', views.add_event, name='add_event'),
+    path('edit-event/<int:event_id>/', views.edit_event, name='edit_event'),
+    path('event-proposals/', views.event_proposals, name='event_proposals'),
+    path('approve-event/<int:event_id>/', views.approve_event, name='approve_event'),
+    path('reject-event/<int:event_id>/', views.reject_event, name='reject_event'),
+    path('event/<int:event_id>/details/', views.event_details, name='event_details'),
+    path('archived-events/', views.archived_events, name='archived_events'),
 ]

@@ -1,84 +1,3 @@
-{% extends 'base.html' %}
-{% load static %}
-{% block title %}
-Knights of Columbus - Manage Pending Users
-{% endblock %}
-
-{% block content %}
-<div class="container">
-    <h1>Manage Pending Users</h1>
-    {% if pending_users %}
-        <table class="pending-users-table">
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Full Name</th>
-                    <th>Email</th>
-                    <th>Council</th>
-                    <th>Actions</th>
-                </tr>
-            </thead>
-            <tbody>
-                {% for user in pending_users %}
-                    <tr>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.first_name }} {{ user.last_name }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.council.name }}</td>
-                        <td>
-                            <a href="{% url 'approve_user' user.id %}" class="btn approve-btn">Approve</a>
-                            <a href="{% url 'reject_user' user.id %}" class="btn reject-btn">Reject</a>
-                        </td>
-                    </tr>
-                {% endfor %}
-            </tbody>
-        </table>
-    {% else %}
-        <p>No pending users to review.</p>
-    {% endif %}
-    <a href="{% url 'dashboard' %}" class="back-link">Back to Dashboard</a>
-</div>
-
-<style>
-    .pending-users-table {
-        width: 100%;
-        border-collapse: collapse;
-        margin: 20px 0;
-    }
-    .pending-users-table th, .pending-users-table td {
-        padding: 10px;
-        border: 1px solid #ddd;
-        text-align: left;
-    }
-    .pending-users-table th {
-        background-color: #003087;
-        color: white;
-    }
-    .pending-users-table tr:nth-child(even) {
-        background-color: #f9f9f9;
-    }
-    .btn {
-        padding: 5px 10px;
-        text-decoration: none;
-        border-radius: 3px;
-        margin-right: 5px;
-    }
-    .approve-btn {
-        background-color: #28a745;
-        color: white;
-    }
-    .reject-btn {
-        background-color: #dc3545;
-        color: white;
-    }
-    .back-link {
-        display: inline-block;
-        margin-top: 20px;
-        color: #003087;
-        text-decoration: underline;
-    }
-</style>
-
 <script type="text/javascript">
         var gk_isXlsx = false;
         var gk_xlsxFileLookup = {};
@@ -118,5 +37,166 @@ Knights of Columbus - Manage Pending Users
         }
         return gk_fileData[filename] || "";
         }
+        </script>{% extends 'base.html' %}
+
+{% block title %}
+Knights of Columbus - Manage Pending Users
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h1>Manage Pending Users</h1>
+    
+    {% if messages %}
+    <div class="message-container">
+        {% for message in messages %}
+        <div class="alert {% if message.tags == 'success' %}alert-success{% elif message.tags == 'error' %}alert-danger{% else %}alert-info{% endif %}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    {% if pending_users %}
+        <table class="pending-users-table">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Council</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in pending_users %}
+                    <tr>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.first_name }} {{ user.last_name }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.council.name }}</td>
+                        <td>
+                            <form method="post" action="{% url 'approve_user' user.id %}" class="role-selection-form">
+                                {% csrf_token %}
+                                <div class="role-selection">
+                                    <select name="role" class="role-select">
+                                        <option value="member">Approve as Member</option>
+                                        {% if request.user.role == 'admin' %}
+                                        <option value="officer">Approve as Officer</option>
+                                        {% endif %}
+                                    </select>
+                                    <button type="submit" class="btn approve-btn">Approve</button>
+                                </div>
+                            </form>
+                            <a href="{% url 'reject_user' user.id %}" class="btn reject-btn">Reject</a>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <p>No pending users to review.</p>
+    {% endif %}
+    <a href="{% url 'dashboard' %}" class="back-link">Back to Dashboard</a>
+</div>
+
+<style>
+    body {
+        background-color: #0d3471; 
+    }
+    .pending-users-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 20px 0;
+    }
+    .pending-users-table th, .pending-users-table td {
+        padding: 10px;
+        border: 1px solid #ddd;
+        text-align: left;
+    }
+    .pending-users-table th {
+        background-color: #003087;
+        color: white;
+    }
+    .pending-users-table tr:nth-child(even) {
+        background-color: #f9f9f9;
+    }
+    .btn {
+        padding: 5px 10px;
+        text-decoration: none;
+        border-radius: 3px;
+        margin-right: 5px;
+        border: none;
+        cursor: pointer;
+    }
+    .approve-btn {
+        background-color: #28a745;
+        color: white;
+    }
+    .reject-btn {
+        background-color: #dc3545;
+        color: white;
+    }
+    .back-link {
+        display: inline-block;
+        margin-top: 20px;
+        color: #003087;
+        text-decoration: underline;
+    }
+    .role-selection-form {
+        display: inline-block;
+        margin-right: 5px;
+    }
+    .role-selection {
+        display: flex;
+        align-items: center;
+    }
+    .role-select {
+        padding: 4px;
+        margin-right: 5px;
+        border-radius: 3px;
+        border: 1px solid #ccc;
+    }
+    .message-container {
+        margin-bottom: 20px;
+    }
+    .alert {
+        padding: 10px;
+        border-radius: 5px;
+        margin-bottom: 10px;
+    }
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+    .alert-danger {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+    .alert-info {
+        background-color: #d1ecf1;
+        color: #0c5460;
+        border: 1px solid #bee5eb;
+    }
+</style>
+
+<script>
+// Make notifications disappear after 5 seconds
+document.addEventListener('DOMContentLoaded', function() {
+    const alerts = document.querySelectorAll('.alert');
+    if (alerts.length > 0) {
+        setTimeout(function() {
+            alerts.forEach(function(alert) {
+                alert.style.transition = 'opacity 1s ease';
+                alert.style.opacity = '0';
+                setTimeout(function() {
+                    alert.style.display = 'none';
+                }, 1000);
+            });
+        }, 5000);
+    }
+});
 </script>
 {% endblock %}

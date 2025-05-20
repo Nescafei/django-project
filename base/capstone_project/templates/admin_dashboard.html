@@ -5,110 +5,465 @@ Knights of Columbus - Admin Dashboard
 {% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/admin_dashboard_style.css' %}?v={% now 'U' %}">
-<div class="container">
-    <div class="admin">
-        <h1>Knights of Columbus</h1>
-        <h2>Admin Dashboard</h2>
-        <div class="admin-info">
-            <!-- <p>Welcome, {{ user.username }}</p>
-            <p>Role: {{ user.role }}</p>
-            {% if user.council %}
-                <p>Council: {{ user.council.name }}</p>
-            {% else %}
-                <p>No council assigned</p>
-            {% endif %} -->
-            <div class="admin-details">
-                {% if user.profile_picture %}
-                <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-pic">
-                <p>{{ user.username }}</p>
-    
-            {% endif %}
-            </div>
-            <p><a href="{% url 'edit_profile' %}">Edit Profile</a></p>
-            <p><a href="{% url 'archived_users' %}">View Archived Users</a></p>
+<link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
+
+<div class="dashboard-container">
+    <div class="content-card">
+        <div class="dashboard-header">
+            <h1>Knights of Columbus</h1>
+            <h2>Admin Dashboard</h2>
         </div>
-    </div>
-    <!-- <h2>Users</h2>
-    <ul>y
-        {% for u in user_list %}
-            <li>{{ u.username }} - {{ u.role }} - {{ u.council.name|default:"No council" }}</li>
-        {% endfor %}
-    </ul> -->
-    <div class="user-list">
-        <h2>Users</h2>
-        {% for u in user_list %}
-            <p>{{ u.first_name }} {{ u.last_name }} - {{ u.council.name|default:"No council" }} <a href="{% url 'update_degree' u.id %}">Update Degree</a> | <a href="{% url 'archive_user' u.id %}">Archive User</a></p>
-        {% endfor %}
-        <h2>Events</h2>
-        {% for event in events %}
-            <ul>
-                <li>{{ event.name }} - {{ event.date }}</li>
-            </ul>
-        {% endfor %}
-    </div>
-    <div class="analytics">
-        <h2>Analytics</h2>
-        {% for a in analytics %}
-            <ul>
-                <li>{{ a.council.name }}: {{ a.events_count }} events, ${{ a.donations_amount }}</li>
-            </ul>
-        {% endfor %}
+
+        <div class="dashboard-grid">
+            <!-- Profile Card -->
+            <div class="content-card">
+                <h3>Profile Information</h3>
+                <div class="profile-info">
+                    <div class="profile-pic">
+                        {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" alt="Profile Picture">
+                        {% else %}
+                            <i class="fas fa-user" style="font-size: 3rem; color: #0D3471;"></i>
+                        {% endif %}
+                    </div>
+                    <h4>{{ user.first_name }} {{ user.last_name }}</h4>
+                    {% if user.council %}
+                        <p>{{ user.council.name }}</p>
+                    {% else %}
+                        <p>No council assigned</p>
+                    {% endif %}
+                    <div class="action-buttons">
+                        <a href="{% url 'edit_profile' %}" class="dashboard-btn">
+                            <i class="fas fa-user-edit"></i>Edit Profile
+                        </a>
+                        <a href="{% url 'archived_users' %}" class="dashboard-btn">
+                            <i class="fas fa-archive"></i>View Archived Users
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Users Management Card -->
+            <div class="content-card">
+                <div class="card-header collapsible" data-target="usersList">
+                    <h3>
+                        <i class="fas fa-users"></i>
+                        Users Management
+                        <span class="count-badge">{{ user_list|length }} Users
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </span>
+                    </h3>
+                </div>
+                <div id="usersList" class="collapsible-content">
+                    <div class="search-filter">
+                        <input type="text" placeholder="Search users..." class="search-input">
+                    </div>
+                    <div class="action-buttons" style="justify-content: flex-start; margin-bottom: 1rem;">
+                        <a href="{% url 'manage_roles' %}" class="dashboard-btn">
+                            <i class="fas fa-user-tag"></i>Manage Roles
+                        </a>
+                        <a href="{% url 'manage_pending_users' %}" class="dashboard-btn">
+                            <i class="fas fa-user-clock"></i>Pending Users
+                        </a>
+                    </div>
+                    <div class="user-list">
+                        {% for u in user_list %}
+                            <div class="user-item">
+                                <div class="user-info">
+                                    <div class="user-header">
+                                        <h4>{{ u.first_name }} {{ u.last_name }}</h4>
+                                        <span class="role-badge role-{{ u.role }}">{{ u.get_role_display }}</span>
+                                    </div>
+                                    <div class="user-details">
+                                        <div class="detail-column">
+                                            <p><strong>Council:</strong> {{ u.council.name|default:"No council" }}</p>
+                                            <p><strong>Member Since:</strong> {{ u.date_joined|date:"F j, Y" }}</p>
+                                        </div>
+                                        <div class="detail-column">
+                                            <p><strong>Degree:</strong> {{ u.get_current_degree_display }}</p>
+                                            <p><strong>Contact:</strong> {{ u.contact_number }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="action-buttons">
+                                    <a href="{% url 'update_degree' u.id %}" class="dashboard-btn">
+                                        <i class="fas fa-graduation-cap"></i>Update Degree
+                                    </a>
+                                    <a href="{% url 'archive_user' u.id %}" class="dashboard-btn">
+                                        <i class="fas fa-box-archive"></i>Archive
+                                    </a>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <!-- Events Card -->
+            <div class="content-card">
+                <div class="card-header collapsible" data-target="eventsList">
+                    <h3>
+                        <i class="fas fa-calendar-alt"></i>
+                        Upcoming Events
+                        <span class="count-badge">{{ events|length }} Events
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </span>
+                    </h3>
+                </div>
+                <div id="eventsList" class="collapsible-content">
+                    <div class="action-buttons" style="justify-content: flex-start; margin-bottom: 1rem;">
+                        <a href="{% url 'add_event' %}" class="dashboard-btn">
+                            <i class="fas fa-plus"></i>Add Event
+                        </a>
+                        <a href="{% url 'event_proposals' %}" class="dashboard-btn">
+                            <i class="fas fa-clipboard-check"></i>Event Proposals
+                        </a>
+                        <a href="{% url 'archived_events' %}" class="dashboard-btn">
+                            <i class="fas fa-archive"></i>Archived Events
+                        </a>
+                    </div>
+                    <div class="search-filter">
+                        <input type="text" placeholder="Search events..." class="search-input">
+                    </div>
+                    <ul class="dashboard-list">
+                        {% for event in events %}
+                            <li>
+                                <h4>{{ event.name }}</h4>
+                                <p>{{ event.date_from|date:"F d, Y" }} {% if event.date_until and event.date_until != event.date_from %} - {{ event.date_until|date:"F d, Y" }}{% endif %}</p>
+                                <p>Council: {{ event.council.name }}</p>
+                                <p>Category: {{ event.category }}</p>
+                                <div class="action-buttons">
+                                    <a href="#" class="dashboard-btn view-event-btn" data-event-id="{{ event.id }}">
+                                        <i class="fas fa-eye"></i>View
+                                    </a>
+                                    <a href="{% url 'edit_event' event.id %}" class="dashboard-btn">
+                                        <i class="fas fa-edit"></i>Edit
+                                    </a>
+                                </div>
+                            </li>
+                        {% empty %}
+                            <li>
+                                <p>No upcoming events. Click "Add Event" to create one.</p>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <!-- Analytics Card -->
+            <div class="content-card">
+                <div class="card-header collapsible" data-target="analyticsList">
+                    <h3>
+                        <i class="fas fa-chart-bar"></i>
+                        Council Analytics
+                        <span class="count-badge">{{ analytics|length }} Reports
+                            <i class="fas fa-chevron-down toggle-icon"></i>
+                        </span>
+                    </h3>
+                </div>
+                <div id="analyticsList" class="collapsible-content">
+                    <ul class="dashboard-list">
+                        {% for a in analytics %}
+                            <li>
+                                <div class="stat-card">
+                                    <h4>{{ a.council.name }}</h4>
+                                    <div class="stat-grid">
+                                        <div>
+                                            <p class="stat-description">Events</p>
+                                            <div class="stat-value">{{ a.events_count }}</div>
+                                        </div>
+                                        <div>
+                                            <p class="stat-description">Donations</p>
+                                            <div class="stat-value">${{ a.donations_amount }}</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 
-<script type="text/javascript">
-        var gk_isXlsx = false;
-        var gk_xlsxFileLookup = {};
-        var gk_fileData = {};
-        function filledCell(cell) {
-          return cell !== '' && cell != null;
-        }
-        function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
+<!-- Event details modal -->
+<div id="eventDetailsModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Event Details</h3>
+        <div id="eventDetailsContent">
+            <div class="loading">Loading event details...</div>
+        </div>
+    </div>
+</div>
 
-                // Convert sheet to JSON to filter blank rows
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                // Filter out blank rows (rows where all cells are empty, null, or undefined)
-                var filteredData = jsonData.filter(row => row.some(filledCell));
+<style>
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--primary-bg);
+}
 
-                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
-                var headerRowIndex = filteredData.findIndex((row, index) =>
-                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-                );
-                // Fallback
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                  headerRowIndex = 0;
-                }
+.card-header h3 {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
 
-                // Convert filtered JSON back to CSV
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
+.count-badge {
+    font-size: 0.9rem;
+    background: var(--primary-bg);
+    color: var(--secondary-bg);
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    margin-left: 1rem;
+}
+
+.toggle-icon {
+    transition: transform 0.3s ease;
+}
+
+.collapsible.active .toggle-icon {
+    transform: rotate(180deg);
+}
+
+.collapsible-content {
+    display: none;
+    padding-top: 1rem;
+}
+
+.collapsible-content.show {
+    display: block;
+}
+
+.search-filter {
+    margin-bottom: 1rem;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid rgba(13, 52, 113, 0.2);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+}
+
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-bg);
+}
+
+.profile-pic {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    margin: 0 auto 1rem;
+    object-fit: cover;
+    border: 3px solid var(--primary-bg);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    position: relative;
+}
+
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 1.5rem;
+}
+
+.stat-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-top: 1rem;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: var(--secondary-bg);
+    margin: 10% auto;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    max-width: 600px;
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.close {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.close:hover {
+    color: var(--primary-bg);
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--heading-color);
+}
+
+.user-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.user-info {
+    flex: 1;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Collapsible functionality
+    const collapsibles = document.querySelectorAll('.collapsible');
+    collapsibles.forEach(collapsible => {
+        collapsible.addEventListener('click', function() {
+            const target = document.getElementById(this.dataset.target);
+            this.classList.toggle('active');
+            target.classList.toggle('show');
+        });
+    });
+
+    // Search functionality
+    const searchInputs = document.querySelectorAll('.search-input');
+    searchInputs.forEach(input => {
+        input.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const container = this.closest('.collapsible-content');
+            
+            if (container.id === 'usersList') {
+                const items = container.querySelectorAll('.user-item');
+                items.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(searchTerm) ? '' : 'none';
+                });
+            } else {
+                const items = container.querySelectorAll('.dashboard-list li');
+                items.forEach(item => {
+                    const text = item.textContent.toLowerCase();
+                    item.style.display = text.includes(searchTerm) ? '' : 'none';
+                });
             }
+        });
+    });
+    
+    // View event details
+    const viewEventBtns = document.querySelectorAll('.view-event-btn');
+    viewEventBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const eventId = this.getAttribute('data-event-id');
+            const modal = document.getElementById('eventDetailsModal');
+            const contentDiv = document.getElementById('eventDetailsContent');
+            
+            modal.style.display = 'block';
+            contentDiv.innerHTML = '<div class="loading">Loading event details...</div>';
+            
+            fetch(`/event/${eventId}/details/`)
+                .then(response => response.json())
+                .then(data => {
+                    let detailsHTML = `
+                        <div class="event-details">
+                            <h4>${data.name}</h4>
+                            <p class="event-category">${data.category}</p>
+                            
+                            <div class="detail-group">
+                                <strong>Date:</strong> 
+                                <span>${data.date_from}${data.date_until ? ' - ' + data.date_until : ''}</span>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Location:</strong>
+                                <address>
+                                    ${data.street}, ${data.barangay}<br>
+                                    ${data.city}, ${data.province}
+                                </address>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Description:</strong>
+                                <p>${data.description}</p>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Council:</strong>
+                                <p>${data.council_name}</p>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Created by:</strong>
+                                <p>${data.creator_name}</p>
+                            </div>
+                        </div>
+                    `;
+                    contentDiv.innerHTML = detailsHTML;
+                })
+                .catch(error => {
+                    contentDiv.innerHTML = '<p>Error loading event details. Please try again later.</p>';
+                });
+        });
+    });
+    
+    // Close modal when clicking the close button
+    const closeButton = document.querySelector('.modal .close');
+    if (closeButton) {
+        closeButton.addEventListener('click', function() {
+            document.getElementById('eventDetailsModal').style.display = 'none';
+        });
+    }
+    
+    // Close modal when clicking outside of it
+    window.addEventListener('click', function(event) {
+        const modal = document.getElementById('eventDetailsModal');
+        if (modal && event.target === modal) {
+            modal.style.display = 'none';
         }
-        return gk_fileData[filename] || "";
-        }
+    });
+});
 </script>
-<!-- <div class="container">
-    <h1>Admin Dashboard</h1>
-    {% if user.profile_picture %}
-        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-pic">
-    {% endif %}
-    <p>Welcome, {{ user.username }}</p>
-    <h2>Users</h2>
-    {% for u in user_list %}
-        <p>{{ u.username }} - <a href="{% url 'update_degree' u.id %}">Update Degree</a> | <a href="{% url 'archive_user' u.id %}">Archive User</a></p>
-    {% endfor %}
-    <p><a href="{% url 'archived_users' %}">View Archived Users</a></p>
-    <p><a href="{% url 'edit_profile' %}">Edit Profile</a></p>
-    <p><a href="{% url 'logout' %}">Logout</a></p>
-</div> -->
 {% endblock %}

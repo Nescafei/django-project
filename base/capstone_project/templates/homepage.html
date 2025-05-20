@@ -9,7 +9,7 @@ Knights of Columbus
 <link rel="stylesheet" href="{% static 'css/homepage-style.css' %}?v={% now 'U' %}">
 </head>
 <body>
-    <div class="background">
+    <div class="background" style="background: url('{% static 'images/homepage-img.jpg' %}') no-repeat center/cover;">
         <h1>Welcome to the Knights of Columbus</h1>
         <p>Strengthening faith, families, and communities since 1882.</p>
         <a href="/donations/" class="cta-button">Support Our Mission</a>
@@ -68,26 +68,12 @@ Knights of Columbus
                     <textarea name="message" placeholder="Message" required></textarea>
                     <button type="submit">Send</button>
                 </form>
-                <div class="social-icons">
-                    <a href="https://i.pinimg.com/originals/93/b6/45/93b645d9b137732bed2bf050feebfb08.jpg" target="_blank" rel="noopener noreferrer" class="social-link" title="Visit our Facebook page">
-                        <i class="fa fa-facebook"></i>
-                    </a>
-                    <a href="https://youtu.be/xvFZjo5PgG0" target="_blank" rel="noopener noreferrer" class="social-link" title="Visit our Twitter page">
-                        <i class="fa fa-twitter"></i>
-                    </a>
-                    <a href="https://youtu.be/xvFZjo5PgG0" target="_blank" rel="noopener noreferrer" class="social-link" title="Visit our Instagram page">
-                        <i class="fa fa-instagram"></i>
-                    </a>
-                    <a href="https://youtu.be/xvFZjo5PgG0" target="_blank" rel="noopener noreferrer" class="social-link" title="Visit our LinkedIn page">
-                        <i class="fa fa-linkedin"></i>
-                    </a>
-                </div>
             </div>
         </section>
     </div>
-    <footer class="footer">
-        <p>© 2025 Knights of Columbus. All rights reserved.</p>
-    </footer>
 </body>
+<footer class="footer">
+    <p>&copy; 2025 Knights of Columbus. All rights reserved.</p>
+</footer>
 </html> 
 {% endblock %}

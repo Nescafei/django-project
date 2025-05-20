@@ -1,0 +1,378 @@
+/* Event Management Styles */
+:root {
+    --primary-bg: #0D3471;
+    --secondary-bg: #F0F1F6;
+    --accent-color: #F4B41A;
+    --heading-color: #0D3471;
+    --text-color: #000000;
+    --button-text: #F0F1F6;
+    --container-padding: 2rem;
+    --border-radius: 8px;
+    --transition-speed: 0.3s;
+}
+
+.event-form-container {
+    max-width: 800px;
+    margin: 1rem auto;
+    padding: 2rem;
+    background-color: var(--secondary-bg);
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.event-form-title {
+    color: var(--heading-color);
+    text-align: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--primary-bg);
+}
+
+.event-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+.form-group input,
+.form-group textarea,
+.form-group select {
+    padding: 1rem;
+    border: 1px solid rgba(13, 52, 113, 0.2);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    width: 100%;
+}
+
+.form-group input:focus,
+.form-group textarea:focus,
+.form-group select:focus {
+    outline: none;
+    border-color: var(--primary-bg);
+    box-shadow: 0 0 0 2px rgba(13, 52, 113, 0.1);
+}
+
+.location-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.date-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+}
+
+.form-submit {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.category-dropdown {
+    position: relative;
+}
+
+.category-dropdown select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%230D3471' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    padding-right: 2.5rem;
+}
+
+.add-event-btn {
+    display: inline-block;
+    padding: 0.75rem 2.5rem;
+    background-color: var(--accent-color);
+    color: var(--primary-bg);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1.1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+}
+
+.add-event-btn:hover {
+    background-color: var(--primary-bg);
+    color: var(--button-text);
+    transform: translateY(-2px);
+}
+
+/* Event table styles */
+.event-table {
+    width: 100%;
+    border-collapse: collapse;
+    background-color: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-top: 2rem;
+}
+
+.event-table th,
+.event-table td {
+    padding: 1rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(13, 52, 113, 0.1);
+    color: var(--text-color);
+    vertical-align: top;
+}
+
+.event-table th {
+    background-color: rgba(13, 52, 113, 0.05);
+    color: var(--heading-color);
+    font-weight: 600;
+}
+
+.event-table tr:last-child td {
+    border-bottom: none;
+}
+
+.event-table tr:hover {
+    background-color: rgba(13, 52, 113, 0.02);
+}
+
+.action-cell {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 120px;
+}
+
+.action-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+    text-decoration: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    color: white !important;
+}
+
+.approve-btn {
+    background-color: #28a745;
+}
+
+.reject-btn {
+    background-color: #dc3545;
+}
+
+.edit-btn {
+    background-color: var(--primary-bg);
+}
+
+.details-btn {
+    background-color: var(--accent-color);
+    color: var(--primary-bg) !important;
+}
+
+.action-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+/* Status badges */
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-pending {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.status-approved {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-rejected {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Role management header for event proposals */
+.role-management-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--primary-bg);
+}
+
+.role-management-header h2 {
+    color: var(--heading-color);
+    font-size: 1.8rem;
+    margin: 0;
+    padding: 0;
+}
+
+.role-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    background-color: var(--accent-color);
+    color: var(--primary-bg) !important;
+}
+
+.role-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+}
+
+.no-events-message {
+    text-align: center;
+    padding: 2rem;
+    background-color: white;
+    border-radius: var(--border-radius);
+    margin: 1rem 0;
+    color: var(--text-color);
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: var(--secondary-bg);
+    margin: 10% auto;
+    padding: 2rem;
+    border-radius: var(--border-radius);
+    max-width: 600px;
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+}
+
+.modal-content h3 {
+    color: var(--heading-color);
+    margin-top: 0;
+    margin-bottom: 1.5rem;
+    border-bottom: 1px solid rgba(13, 52, 113, 0.2);
+    padding-bottom: 0.75rem;
+}
+
+.modal-content p {
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+.close {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: var(--heading-color);
+}
+
+.close:hover {
+    color: var(--accent-color);
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--heading-color);
+}
+
+.event-details {
+    color: var(--text-color);
+}
+
+/* Responsive design */
+@media (max-width: 768px) {
+    .role-management-header {
+        flex-direction: column;
+        gap: 1rem;
+        text-align: center;
+    }
+
+    .location-group,
+    .date-group {
+        grid-template-columns: 1fr;
+    }
+    
+    .event-table {
+        display: block;
+        overflow-x: auto;
+    }
+    
+    .event-table th,
+    .event-table td {
+        white-space: nowrap;
+    }
+    
+    .action-cell {
+        min-width: 160px;
+    }
+}
+
+/* Checkbox styling for global event */
+.checkbox-group {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 5px;
+}
+
+.checkbox-group input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin: 0;
+    vertical-align: middle;
+}
+
+.checkbox-group label {
+    margin: 0;
+    display: inline-block;
+    vertical-align: middle;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+.helper-text {
+    margin-left: 28px;
+    font-size: 0.85rem;
+    color: #666;
+    margin-top: 0;
+} 

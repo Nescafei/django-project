@@ -1,0 +1,314 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Event Proposals
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/event_management.css' %}?v={% now 'U' %}">
+
+<div class="dashboard-container">
+    <div class="event-form-container">
+        <div class="role-management-header">
+            <h2>Event Proposals</h2>
+            <div>
+                <a href="{% url 'dashboard' %}" class="role-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+        {% if pending_events %}
+        <table class="event-table">
+            <thead>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Council</th>
+                    <th>Proposed By</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in pending_events %}
+                <tr>
+                    <td>{{ event.name }}</td>
+                    <td>{{ event.category }}</td>
+                    <td>{{ event.date_from|date:"M d, Y" }} {% if event.date_until and event.date_until != event.date_from %} - {{ event.date_until|date:"M d, Y" }}{% endif %}</td>
+                    <td>{{ event.council.name }}</td>
+                    <td>{{ event.created_by.first_name }} {{ event.created_by.last_name }}</td>
+                    <td><span class="status-badge status-{{ event.status }}">{{ event.get_status_display }}</span></td>
+                    <td class="action-cell">
+                        <a href="#" class="action-btn details-btn" onclick="viewEventDetails('{{ event.id }}')">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                        <a href="{% url 'approve_event' event.id %}" class="action-btn approve-btn">
+                            <i class="fas fa-check"></i> Approve
+                        </a>
+                        <a href="{% url 'reject_event' event.id %}" class="action-btn reject-btn">
+                            <i class="fas fa-times"></i> Reject
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="no-events-message">
+            <p>There are no pending event proposals at this time.</p>
+        </div>
+        {% endif %}
+
+        <!-- Event history section -->
+        <h3 class="event-form-title" style="margin-top: 2rem;">Previous Event Proposals</h3>
+        {% if previous_events %}
+        <table class="event-table">
+            <thead>
+                <tr>
+                    <th>Event Name</th>
+                    <th>Category</th>
+                    <th>Date</th>
+                    <th>Council</th>
+                    <th>Proposed By</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in previous_events %}
+                <tr>
+                    <td>{{ event.name }}</td>
+                    <td>{{ event.category }}</td>
+                    <td>{{ event.date_from|date:"M d, Y" }} {% if event.date_until and event.date_until != event.date_from %} - {{ event.date_until|date:"M d, Y" }}{% endif %}</td>
+                    <td>{{ event.council.name }}</td>
+                    <td>{{ event.created_by.first_name }} {{ event.created_by.last_name }}</td>
+                    <td><span class="status-badge status-{{ event.status }}">{{ event.get_status_display }}</span></td>
+                    <td class="action-cell">
+                        <a href="#" class="action-btn details-btn" onclick="viewEventDetails('{{ event.id }}')">
+                            <i class="fas fa-eye"></i> View
+                        </a>
+                        {% if event.status == 'pending' %}
+                        <a href="{% url 'approve_event' event.id %}" class="action-btn approve-btn">
+                            <i class="fas fa-check"></i> Approve
+                        </a>
+                        <a href="{% url 'reject_event' event.id %}" class="action-btn reject-btn">
+                            <i class="fas fa-times"></i> Reject
+                        </a>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="no-events-message">
+            <p>There are no previous event proposals.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Event details modal -->
+<div id="eventDetailsModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Event Details</h3>
+        <div id="eventDetailsContent">
+            <div class="loading">Loading event details...</div>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Modal functionality for event details
+        window.viewEventDetails = function(eventId) {
+            const modal = document.getElementById('eventDetailsModal');
+            const contentDiv = document.getElementById('eventDetailsContent');
+            modal.style.display = 'block';
+            contentDiv.innerHTML = '<div class="loading">Loading event details...</div>';
+            
+            // Fetch event details via AJAX
+            fetch(`/event/${eventId}/details/`)
+                .then(response => response.json())
+                .then(data => {
+                    let detailsHTML = `
+                        <div class="event-details">
+                            <h4>${data.name}</h4>
+                            <p class="event-category">${data.category}</p>
+                            
+                            <div class="detail-group">
+                                <strong>Date:</strong> 
+                                <span>${data.date_from}${data.date_until ? ' - ' + data.date_until : ''}</span>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Location:</strong>
+                                <address>
+                                    ${data.street}, ${data.barangay}<br>
+                                    ${data.city}, ${data.province}
+                                </address>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Description:</strong>
+                                <p>${data.description}</p>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Proposed by:</strong>
+                                <p>${data.creator_name}</p>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Council:</strong>
+                                <p>${data.council_name}</p>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Status:</strong>
+                                <span class="status-badge status-${data.status}">${data.status_display}</span>
+                            </div>
+                            
+                            ${data.status === 'pending' ? `
+                            <div class="action-buttons" style="margin-top: 1.5rem; text-align: center;">
+                                <a href="/approve-event/${data.id}/" class="action-btn approve-btn">
+                                    <i class="fas fa-check"></i> Approve Event
+                                </a>
+                                <a href="/reject-event/${data.id}/" class="action-btn reject-btn">
+                                    <i class="fas fa-times"></i> Reject Event
+                                </a>
+                            </div>
+                            ` : ''}
+                        </div>
+                    `;
+                    contentDiv.innerHTML = detailsHTML;
+                })
+                .catch(error => {
+                    contentDiv.innerHTML = '<p>Error loading event details. Please try again later.</p>';
+                });
+        };
+        
+        // Close modal when clicking the close button
+        const closeButton = document.querySelector('.modal .close');
+        closeButton.addEventListener('click', function() {
+            document.getElementById('eventDetailsModal').style.display = 'none';
+        });
+        
+        // Close modal when clicking outside of it
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('eventDetailsModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+    });
+</script>
+
+<style>
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+    }
+    
+    .modal-content {
+        background-color: var(--secondary-bg);
+        margin: 10% auto;
+        padding: 2rem;
+        border-radius: var(--border-radius);
+        max-width: 600px;
+        position: relative;
+        max-height: 80vh;
+        overflow-y: auto;
+    }
+    
+    .close {
+        position: absolute;
+        top: 1rem;
+        right: 1.5rem;
+        font-size: 1.5rem;
+        cursor: pointer;
+    }
+    
+    .close:hover {
+        color: var(--primary-bg);
+    }
+    
+    .event-details {
+        margin-top: 1rem;
+    }
+    
+    .detail-group {
+        margin-bottom: 1rem;
+    }
+    
+    .detail-group strong {
+        display: block;
+        margin-bottom: 0.5rem;
+        color: var(--heading-color);
+    }
+    
+    .event-category {
+        display: inline-block;
+        background-color: var(--primary-bg);
+        color: white;
+        padding: 0.25rem 0.75rem;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        margin-bottom: 1rem;
+    }
+    
+    .loading {
+        text-align: center;
+        padding: 2rem;
+        color: var(--heading-color);
+    }
+    
+    .no-events-message {
+        text-align: center;
+        padding: 2rem;
+        background-color: white;
+        border-radius: var(--border-radius);
+        margin: 1rem 0;
+    }
+
+    .role-management-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 2rem;
+        padding-bottom: 0;
+        border-bottom: none;
+    }
+
+    .role-btn {
+        padding: 0.5rem 1rem;
+        border: none;
+        border-radius: var(--border-radius);
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all var(--transition-speed) ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.5rem;
+        background-color: var(--accent-color);
+        color: var(--primary-bg);
+    }
+
+    .role-btn:hover {
+        opacity: 0.9;
+        transform: translateY(-1px);
+    }
+</style>
+{% endblock %} 

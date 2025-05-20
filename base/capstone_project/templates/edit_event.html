@@ -1,0 +1,128 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Edit Event
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/event_management.css' %}?v={% now 'U' %}">
+
+<div class="dashboard-container">
+    <div class="event-form-container">
+        <div class="role-management-header">
+            <h2 class="event-form-title">Edit Event</h2>
+            <div>
+                <a href="{% url 'dashboard' %}" class="role-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+        <form method="post" class="event-form">
+            {% csrf_token %}
+
+            <div class="form-group">
+                <label for="name">Name of the event</label>
+                <input type="text" id="name" name="name" value="{{ event.name }}" required>
+            </div>
+
+            <div class="form-group">
+                <label for="description">Details</label>
+                <textarea id="description" name="description" rows="4" required>{{ event.description }}</textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="category">Category</label>
+                <div class="category-dropdown">
+                    <select id="category" name="category" required>
+                        <option value="" disabled>Select a category</option>
+                        <option value="Seminar" {% if event.category == 'Seminar' %}selected{% endif %}>Seminar</option>
+                        <option value="Meeting" {% if event.category == 'Meeting' %}selected{% endif %}>Meeting</option>
+                        <option value="Trip" {% if event.category == 'Trip' %}selected{% endif %}>Trip</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="date-group">
+                <div class="form-group">
+                    <label for="date_from">Start Date</label>
+                    <input type="date" id="date_from" name="date_from" value="{{ event.date_from|date:'Y-m-d' }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="date_until">End Date (Optional)</label>
+                    <input type="date" id="date_until" name="date_until" value="{% if event.date_until %}{{ event.date_until|date:'Y-m-d' }}{% endif %}">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="street">Street</label>
+                <input type="text" id="street" name="street" value="{{ event.street }}" required>
+            </div>
+
+            <div class="location-group">
+                <div class="form-group">
+                    <label for="barangay">Barangay</label>
+                    <input type="text" id="barangay" name="barangay" value="{{ event.barangay }}" required>
+                </div>
+                <div class="form-group">
+                    <label for="city">City/Municipality</label>
+                    <input type="text" id="city" name="city" value="{{ event.city }}" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="province">Province</label>
+                <input type="text" id="province" name="province" value="{{ event.province }}" required>
+            </div>
+
+            {% if user.role == 'admin' %}
+            <div class="form-group">
+                <div class="checkbox-group">
+                    <input type="checkbox" id="is_global" name="is_global" {% if event.is_global %}checked{% endif %}>
+                    <label for="is_global">Global Event (applies to all councils)</label>
+                </div>
+                <p class="helper-text">If checked, this event will be visible to all councils.</p>
+            </div>
+
+            <div id="council-select-container" {% if event.is_global %}style="display: none;"{% endif %}>
+                <div class="form-group">
+                    <label for="council">Council</label>
+                    <div class="category-dropdown">
+                        <select id="council" name="council_id" {% if not event.is_global %}required{% endif %}>
+                            <option value="" disabled>Select a council</option>
+                            {% for council in councils %}
+                            <option value="{{ council.id }}" {% if event.council.id == council.id %}selected{% endif %}>{{ council.name }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                const globalCheckbox = document.getElementById('is_global');
+                const councilContainer = document.getElementById('council-select-container');
+                const councilSelect = document.getElementById('council');
+                
+                globalCheckbox.addEventListener('change', function() {
+                    if (this.checked) {
+                        councilContainer.style.display = 'none';
+                        councilSelect.required = false;
+                    } else {
+                        councilContainer.style.display = 'block';
+                        councilSelect.required = true;
+                    }
+                });
+            });
+            </script>
+            {% endif %}
+
+            <div class="form-submit">
+                <button type="submit" class="add-event-btn">
+                    Update Event
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %} 
