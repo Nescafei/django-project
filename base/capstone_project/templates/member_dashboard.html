@@ -83,66 +83,63 @@ Knights of Columbus - Member Dashboard
             </div>
 
             <!-- Upcoming Events Card -->
-            <div class="content-card">
-                <h3>Upcoming Events</h3>
-                <div class="action-buttons" style="margin-bottom: 1rem; justify-content: flex-end;">
+            <div class="content-card dashboard-card">
+                <div class="dashboard-summary">
+                    <div class="summary-icon">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                    <div class="summary-content">
+                        <h3>Upcoming Events</h3>
+                        <div class="summary-count">{{ approved_events_count }}</div>
+                        <p class="summary-label">Events to attend</p>
+                    </div>
+                </div>
+                <div class="action-buttons" style="justify-content: flex-end;">
+                    <a href="{% url 'event_list' %}" class="dashboard-btn">
+                        <i class="fas fa-list"></i>View All Events
+                    </a>
                     <a href="{% url 'archived_events' %}" class="dashboard-btn">
                         <i class="fas fa-archive"></i>Archived Events
                     </a>
                 </div>
-                <ul class="dashboard-list">
-                    {% for event in events %}
-                        <li>
-                            <h4>{{ event.name }}</h4>
-                            <p>{{ event.date_from|date:"M d, Y" }} {% if event.date_until and event.date_until != event.date_from %} - {{ event.date_until|date:"M d, Y" }}{% endif %}</p>
-                            <p>{{ event.description|truncatechars:100 }}</p>
-                            <div class="action-buttons">
-                                <a href="#" class="dashboard-btn view-event-btn" data-event-id="{{ event.id }}">
-                                    <i class="fas fa-info-circle"></i>View Details
-                                </a>
-                            </div>
-                        </li>
-                    {% empty %}
-                        <li>
-                            <p>No upcoming events.</p>
-                        </li>
-                    {% endfor %}
-                </ul>
             </div>
 
             <!-- My Activities Card -->
-            <div class="content-card">
-                <h3>My Activities</h3>
-                <ul class="dashboard-list">
-                    {% for activity in activities %}
-                        <li>
-                            <h4>{{ activity.name }}</h4>
-                            <p>{{ activity.date }}</p>
-                            <div class="stat-card">
-                                <div class="stat-grid">
-                                    <div>
-                                        <p class="stat-description">Hours Contributed</p>
-                                        <div class="stat-value">{{ activity.hours }}</div>
-                                    </div>
-                                </div>
-                            </div>
-                        </li>
-                    {% endfor %}
-                </ul>
+            <div class="content-card dashboard-card">
+                <div class="dashboard-summary">
+                    <div class="summary-icon">
+                        <i class="fas fa-tasks"></i>
+                    </div>
+                    <div class="summary-content">
+                        <h3>My Activities</h3>
+                        <div class="summary-count">{{ activities_count }}</div>
+                        <p class="summary-label">Completed activities</p>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <a href="{% url 'member_activities' %}" class="dashboard-btn">
+                        <i class="fas fa-list"></i>View All Activities
+                    </a>
+                </div>
             </div>
 
             <!-- Council Updates Card -->
-            <div class="content-card">
-                <h3>Council Updates</h3>
-                <ul class="dashboard-list">
-                    {% for update in council_updates %}
-                        <li>
-                            <h4>{{ update.title }}</h4>
-                            <p class="stat-description">{{ update.date }}</p>
-                            <p>{{ update.description }}</p>
-                        </li>
-                    {% endfor %}
-                </ul>
+            <div class="content-card dashboard-card">
+                <div class="dashboard-summary">
+                    <div class="summary-icon">
+                        <i class="fas fa-bullhorn"></i>
+                    </div>
+                    <div class="summary-content">
+                        <h3>Council Updates</h3>
+                        <div class="summary-count">{{ council_updates|length }}</div>
+                        <p class="summary-label">Recent announcements</p>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <a href="#" class="dashboard-btn">
+                        <i class="fas fa-list"></i>View All Updates
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -295,6 +292,61 @@ document.addEventListener('DOMContentLoaded', function() {
     border-radius: 20px;
     font-size: 0.9rem;
     margin-bottom: 1rem;
+}
+
+/* New styles for dashboard cards */
+.dashboard-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(13, 52, 113, 0.15);
+}
+
+.dashboard-summary {
+    display: flex;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+.summary-icon {
+    background-color: var(--primary-bg);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1.5rem;
+}
+
+.summary-icon i {
+    font-size: 1.8rem;
+}
+
+.summary-content {
+    flex: 1;
+}
+
+.summary-content h3 {
+    margin: 0 0 0.5rem 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.summary-count {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-bg);
+    line-height: 1;
+}
+
+.summary-label {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0.25rem 0 0;
 }
 </style>
 {% endblock %}

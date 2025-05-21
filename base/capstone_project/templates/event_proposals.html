@@ -9,10 +9,10 @@ Knights of Columbus - Event Proposals
 
 <div class="dashboard-container">
     <div class="event-form-container">
-        <div class="role-management-header">
-            <h2>Event Proposals</h2>
+        <div class="dashboard-header">
+            <h1>Event Proposals</h1>
             <div>
-                <a href="{% url 'dashboard' %}" class="role-btn">
+                <a href="{% url 'dashboard' %}" class="role-btn secondary back-btn">
                     <i class="fas fa-arrow-left"></i> Back to Dashboard
                 </a>
             </div>
@@ -281,7 +281,7 @@ Knights of Columbus - Event Proposals
         margin: 1rem 0;
     }
 
-    .role-management-header {
+    .dashboard-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
@@ -306,9 +306,19 @@ Knights of Columbus - Event Proposals
         color: var(--primary-bg);
     }
 
+    .role-btn.secondary {
+        background-color: #6c757d;
+        color: white;
+    }
+
     .role-btn:hover {
         opacity: 0.9;
         transform: translateY(-1px);
+    }
+
+    .back-btn:hover {
+        background-color: #f4b41a !important;
+        color: white;
     }
 </style>
 {% endblock %} 

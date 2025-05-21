@@ -100,6 +100,81 @@ nav ul li a.active {
     background-color: #e0a10a;
 }
 
+/* Notification styles */
+.notification-container {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 9999;
+    max-width: 400px;
+    width: calc(100% - 40px);
+}
+
+.notification {
+    background-color: #fff;
+    color: #333;
+    padding: 15px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    animation: slideIn 0.3s ease-out forwards;
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+.notification.fade-out {
+    opacity: 0;
+    transform: translateX(30px);
+}
+
+.notification.success {
+    border-left: 4px solid #28a745;
+}
+
+.notification.error {
+    border-left: 4px solid #dc3545;
+}
+
+.notification.warning {
+    border-left: 4px solid #ffc107;
+}
+
+.notification.info {
+    border-left: 4px solid #17a2b8;
+}
+
+.notification-message {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.notification-close {
+    background: none;
+    border: none;
+    color: #999;
+    cursor: pointer;
+    font-size: 1rem;
+    padding: 0;
+    transition: color 0.2s ease;
+}
+
+.notification-close:hover {
+    color: #333;
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateX(100px);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
 .footer {
     background-color: #0d3471;
     position: relative;
@@ -145,11 +220,11 @@ nav ul li a.active {
         max-height: 0;
         overflow: hidden;
         transition: max-height 0.3s ease-in-out;
+        z-index: 999;
     }
 
     nav.active {
         max-height: 500px;
-        z-index: 999;
     }
 
     nav ul {
@@ -175,17 +250,24 @@ nav ul li a.active {
         width: 5vh;
         height: 5vh;
     }
-    @media (max-width: 768px) {
+
     .search-form {
         width: 100%;
         margin: 10px 0;
     }
+    
     .search-form input[type="text"] {
         width: 70%;
     }
+    
     .search-form button {
         width: 25%;
     }
+    
+    .notification-container {
+        top: 10px;
+        right: 10px;
+        max-width: calc(100% - 20px);
     }
 }
 
@@ -198,5 +280,9 @@ nav ul li a.active {
         width: 20px;
         height: 2px;
         margin: 4px 0;
+    }
+    
+    .notification {
+        padding: 10px;
     }
 }

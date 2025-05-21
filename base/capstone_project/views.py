@@ -1,4 +1,4 @@
-from .models import User, Council, Event, Analytics, Donation, Blockchain, blockchain, Block, ForumCategory, ForumMessage, Notification
+from .models import User, Council, Event, Analytics, Donation, Blockchain, blockchain, Block, ForumCategory, ForumMessage, Notification, EventAttendance
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
@@ -256,41 +256,121 @@ def dashboard(request):
     if user.role == 'pending':
         print(f"User {user.username} is pending, redirecting to sign-in")
         return render(request, 'sign-in.html', {'pending_message': 'Your account is pending approval. Please wait for an officer to review your request.'})
-
-    context = {'user': user}
+    
     if user.role == 'admin':
-        user_list = User.objects.filter(is_archived=False)
-        # Admin sees all current and future events
-        events = Event.objects.filter(date_from__gte=today)
-        analytics = Analytics.objects.all()
-        context.update({'user_list': user_list, 'events': events, 'analytics': analytics})
-        return render(request, 'admin_dashboard.html', context)
+        return admin_dashboard(request)
     elif user.role == 'officer':
-        if not user.council:
-            return redirect('dashboard')  # Redirect if no council assigned
-        user_list = User.objects.filter(council=user.council, is_archived=False)
-        # Officers see their council's current/future events and global events
-        events = Event.objects.filter(
-            (Q(council=user.council) | Q(is_global=True)) & 
-            Q(date_from__gte=today)
-        )
-        analytics = Analytics.objects.filter(council=user.council)
-        context.update({'user_list': user_list, 'events': events, 'analytics': analytics})
-        return render(request, 'officer_dashboard.html', context)
+        return officer_dashboard(request)
     elif user.role == 'member':
-        if not user.council:
-            return redirect('dashboard')
-        # Members see their council's current/future events and global events
-        events = Event.objects.filter(
-            (Q(council=user.council) | Q(is_global=True)) & 
-            Q(date_from__gte=today)
-        )
-        context.update({'events': events})
-        return render(request, 'member_dashboard.html', context)
+        return member_dashboard(request)
     else:
         logout(request)
         return redirect('sign-in')
 
+def admin_dashboard(request):
+    """Dashboard view for admins"""
+    from datetime import date
+    today = date.today()
+    
+    user = request.user
+    user_list = User.objects.filter(is_archived=False)
+    # All events for reference
+    events = Event.objects.filter(date_from__gte=today)
+    # Count only approved events
+    approved_events_count = Event.objects.filter(status='approved', date_from__gte=today).count()
+    analytics = Analytics.objects.all()
+    
+    context = {
+        'user': user,
+        'user_list': user_list, 
+        'events': events, 
+        'approved_events_count': approved_events_count,
+        'analytics': analytics
+    }
+    
+    return render(request, 'admin_dashboard.html', context)
+
+def officer_dashboard(request):
+    """Dashboard view for officers"""
+    from datetime import date
+    today = date.today()
+    
+    user = request.user
+    if not user.council:
+        return redirect('dashboard')  # Redirect if no council assigned
+    
+    user_list = User.objects.filter(council=user.council, is_archived=False)
+    # Officers see their council's current/future events and global events
+    events = Event.objects.filter(
+        (Q(council=user.council) | Q(is_global=True)) & 
+        Q(date_from__gte=today)
+    )
+    # Count only approved events
+    approved_events_count = Event.objects.filter(
+        (Q(council=user.council) | Q(is_global=True)) & 
+        Q(status='approved', date_from__gte=today)
+    ).count()
+    analytics = Analytics.objects.filter(council=user.council)
+    
+    context = {
+        'user': user,
+        'user_list': user_list, 
+        'events': events, 
+        'approved_events_count': approved_events_count,
+        'analytics': analytics
+    }
+    
+    return render(request, 'officer_dashboard.html', context)
+
+def member_dashboard(request):
+    """Dashboard view for members"""
+    from datetime import date
+    today = date.today()
+    
+    user = request.user
+    if not user.council:
+        return redirect('dashboard')
+    
+    # Members see their council's current/future events and global events
+    events = Event.objects.filter(
+        (Q(council=user.council) | Q(is_global=True)) &
+        Q(date_from__gte=today)
+    )
+    # Count only approved events
+    approved_events_count = Event.objects.filter(
+        (Q(council=user.council) | Q(is_global=True)) & 
+        Q(status='approved', date_from__gte=today)
+    ).count()
+    
+    # Get activities (events attended)
+    activities_count = EventAttendance.objects.filter(member=user, is_present=True).count()
+    
+    # Get council announcements
+    announcements = []
+    council_updates = []
+    if user.council:
+        # TODO: Implement council announcements
+        pass
+    
+    # Get forum messages
+    forum_messages = ForumMessage.objects.all().order_by('-timestamp')[:5]
+    
+    context = {
+        'user': user,
+        'events': events, 
+        'approved_events_count': approved_events_count,
+        'activities_count': activities_count,
+        'announcements': announcements,
+        'forum_messages': forum_messages,
+        'council_updates': council_updates,
+    }
+    
+    return render(request, 'member_dashboard.html', context)
+
+def pending_dashboard(request):
+    """Dashboard view for pending users"""
+    logout(request)
+    return redirect('sign-in')
 
 @never_cache
 @login_required
@@ -424,7 +504,7 @@ def update_degree(request, user_id):
     if request.method == 'POST':
         degree = request.POST.get('current_degree')
         print(f"Received degree: {degree}")
-        valid_degrees = [choice[0] for choice in User._meta.get_field('current_degree').choices]
+        valid_degrees = [choice[0] for choice in User.DEGREE_CHOICES]
         print(f"Valid degrees: {valid_degrees}")
         if degree in valid_degrees:
             user.current_degree = degree
@@ -842,10 +922,19 @@ def reject_event(request, event_id):
     event = get_object_or_404(Event, id=event_id)
     
     if event.status == 'pending':
-        event.status = 'rejected'
-        event.save()
-        messages.success(request, f'Event "{event.name}" has been rejected.')
-        
+        if request.method == 'POST':
+            rejection_reason = request.POST.get('rejection_reason', '')
+            event.status = 'rejected'
+            event.rejection_reason = rejection_reason
+            event.save()
+            messages.success(request, f'Event "{event.name}" has been rejected.')
+            return redirect('event_proposals')
+        else:
+            # Show rejection form
+            return render(request, 'reject_event.html', {'event': event})
+    else:
+        messages.error(request, 'Only pending events can be rejected.')
+    
     return redirect('event_proposals')
 
 @never_cache
@@ -881,6 +970,9 @@ def event_details(request, event_id):
     
     if event.date_until and event.date_until != event.date_from:
         data['date_until'] = event.date_until.strftime('%b %d, %Y')
+    
+    if event.status == 'rejected' and event.rejection_reason:
+        data['rejection_reason'] = event.rejection_reason
     
     return JsonResponse(data)
 
@@ -1256,3 +1348,540 @@ def cancel_page(request):
     logger.error("Payment cancelled")
     messages.error(request, "Payment was cancelled or failed.")
     return render(request, 'cancel.html', {'error': 'Payment was cancelled or failed.'})
+
+@never_cache
+@login_required
+def event_list(request):
+    """View for displaying a list of all events with filtering options"""
+    # Filter events based on user role
+    if request.user.role == 'member':
+        # Members can only see approved events
+        events = Event.objects.filter(status='approved').order_by('-date_from')
+    elif request.user.role == 'officer':
+        # Officers can see approved events and their own pending/rejected events
+        events = Event.objects.filter(
+            Q(status='approved') | 
+            Q(created_by=request.user)
+        ).order_by('-date_from')
+    else:
+        # Admins see approved and rejected events (not pending, as those are in event_proposals)
+        events = Event.objects.filter(
+            Q(status='approved') | 
+            Q(status='rejected')
+        ).order_by('-date_from')
+    
+    # Filter by status if specified
+    status_filter = request.GET.get('status', None)
+    if status_filter and status_filter != 'all':
+        events = events.filter(status=status_filter)
+    
+    # Filter by category if specified
+    category_filter = request.GET.get('category', None)
+    if category_filter and category_filter != 'all':
+        events = events.filter(category=category_filter)
+        
+    # Filter by council if specified (for admin users)
+    council_filter = request.GET.get('council', None)
+    if council_filter and council_filter != 'all':
+        events = events.filter(council_id=council_filter)
+    
+    # Get all councils for filter dropdown (admin only)
+    councils = None
+    if request.user.role == 'admin':
+        councils = Council.objects.all()
+    
+    # Check if events are happening today (for officers to manage attendance)
+    today = date.today()
+    for event in events:
+        event.is_today = (event.date_from <= today <= (event.date_until or event.date_from))
+    
+    context = {
+        'events': events,
+        'councils': councils,
+        'status_filter': status_filter,
+        'category_filter': category_filter,
+        'council_filter': council_filter,
+    }
+    
+    return render(request, 'event_list.html', context)
+
+def member_list(request):
+    """View for displaying a list of all members (for admin users)"""
+    if request.user.role != 'admin':
+        return redirect('dashboard')
+    
+    users = User.objects.filter(is_active=True).exclude(role='admin')
+    
+    # Filter by role if specified
+    role_filter = request.GET.get('role', None)
+    if role_filter and role_filter != 'all':
+        users = users.filter(role=role_filter)
+    
+    # Filter by council if specified
+    council_filter = request.GET.get('council', None)
+    if council_filter and council_filter != 'all':
+        users = users.filter(council_id=council_filter)
+    
+    # Filter by degree if specified
+    degree_filter = request.GET.get('degree', None)
+    if degree_filter and degree_filter != 'all':
+        users = users.filter(current_degree=degree_filter)
+    
+    # Search by name if specified
+    search_query = request.GET.get('search', None)
+    if search_query:
+        users = users.filter(
+            Q(first_name__icontains=search_query) | 
+            Q(last_name__icontains=search_query) |
+            Q(email__icontains=search_query)
+        )
+    
+    councils = Council.objects.all()
+    
+    context = {
+        'users': users,
+        'councils': councils,
+        'role_filter': role_filter,
+        'council_filter': council_filter,
+        'degree_filter': degree_filter,
+        'search_query': search_query,
+    }
+    
+    return render(request, 'member_list.html', context)
+
+def council_members(request):
+    """View for displaying members of a specific council (for officer users)"""
+    if request.user.role not in ['admin', 'officer']:
+        return redirect('dashboard')
+    
+    # Officers can only see members of their own council
+    if request.user.role == 'officer':
+        council = request.user.council
+        users = User.objects.filter(council=council, is_active=True)
+    else:
+        # Admin can see all members but can filter by council
+        council_id = request.GET.get('council', None)
+        if council_id:
+            council = Council.objects.get(id=council_id)
+            users = User.objects.filter(council=council, is_active=True)
+        else:
+            users = User.objects.filter(is_active=True)
+            council = None
+    
+    # Filter by role if specified
+    role_filter = request.GET.get('role', None)
+    if role_filter and role_filter != 'all':
+        users = users.filter(role=role_filter)
+    
+    # Filter by degree if specified
+    degree_filter = request.GET.get('degree', None)
+    if degree_filter and degree_filter != 'all':
+        users = users.filter(current_degree=degree_filter)
+    
+    # Search by name if specified
+    search_query = request.GET.get('search', None)
+    if search_query:
+        users = users.filter(
+            Q(first_name__icontains=search_query) | 
+            Q(last_name__icontains=search_query) |
+            Q(email__icontains=search_query)
+        )
+    
+    context = {
+        'users': users,
+        'council': council,
+        'role_filter': role_filter,
+        'degree_filter': degree_filter,
+        'search_query': search_query,
+    }
+    
+    return render(request, 'council_members.html', context)
+
+@never_cache
+@login_required
+def council_events(request):
+    """View for displaying events of a specific council (for officer users)"""
+    if request.user.role not in ['admin', 'officer']:
+        return redirect('dashboard')
+    
+    today = date.today()
+    
+    # Officers can only see events of their own council
+    if request.user.role == 'officer':
+        council = request.user.council
+        # Get events for this council
+        events = Event.objects.filter(council=council)
+    else:
+        # Admin can see all events but can filter by council
+        council_id = request.GET.get('council', None)
+        if council_id:
+            council = Council.objects.get(id=council_id)
+            events = Event.objects.filter(council=council)
+        else:
+            events = Event.objects.all()
+            council = None
+    
+    # Filter by status if specified
+    status_filter = request.GET.get('status', None)
+    if status_filter and status_filter != 'all':
+        events = events.filter(status=status_filter)
+    
+    # Filter by category if specified
+    category_filter = request.GET.get('category', None)
+    if category_filter and category_filter != 'all':
+        events = events.filter(category=category_filter)
+    
+    # Mark events as today, upcoming, or past
+    todays_events = []
+    upcoming_events = []
+    past_events = []
+    
+    for event in events:
+        # Check if the event is happening today
+        event.is_today = (event.date_from <= today <= (event.date_until or event.date_from))
+        
+        if event.is_today:
+            todays_events.append(event)
+        elif event.date_from > today:
+            upcoming_events.append(event)
+        elif (event.date_until or event.date_from) < today:
+            past_events.append(event)
+    
+    # Sort events: approved first, then by proximity to today
+    def sort_key(event):
+        # Primary sort: approved status (True/False)
+        # Secondary sort: date proximity to today
+        is_approved = event.status == 'approved'
+        days_to_event = (event.date_from - today).days if event.date_from >= today else 1000
+        return (-1 if is_approved else 0, days_to_event)
+    
+    # Sort upcoming events
+    upcoming_events.sort(key=sort_key)
+    
+    # Sort today's events (approved first)
+    todays_events.sort(key=lambda event: 0 if event.status == 'approved' else 1)
+    
+    # Combine events: today's events first, then upcoming
+    sorted_events = todays_events + upcoming_events
+    
+    context = {
+        'events': sorted_events,
+        'past_events': past_events,
+        'council': council,
+        'status_filter': status_filter,
+        'category_filter': category_filter,
+        'today': today,
+        'has_todays_events': len(todays_events) > 0,
+    }
+    
+    return render(request, 'council_events.html', context)
+
+def update_degree(request, user_id):
+    """View for updating a member's degree"""
+    if request.user.role not in ['admin', 'officer']:
+        return redirect('dashboard')
+    
+    user = get_object_or_404(User, id=user_id)
+    
+    # Check if officer is trying to update a user from another council
+    if request.user.role == 'officer' and user.council != request.user.council:
+        messages.error(request, "You can only update members from your own council.")
+        return redirect('council_members')
+    
+    if request.method == 'POST':
+        new_degree = request.POST.get('degree')
+        if new_degree in [choice[0] for choice in User.DEGREE_CHOICES]:
+            user.current_degree = new_degree
+            user.save()
+            messages.success(request, f"{user.first_name}'s degree has been updated successfully.")
+            
+            # Redirect based on user role
+            if request.user.role == 'admin':
+                return redirect('member_list')
+            else:
+                return redirect('council_members')
+        else:
+            messages.error(request, "Invalid degree selection.")
+    
+    context = {
+        'user': user,
+        'degree_choices': User.DEGREE_CHOICES,
+    }
+    
+    return render(request, 'update_degree.html', context)
+
+@login_required
+def user_details(request, user_id):
+    """API endpoint for user details"""
+    if not request.user.is_authenticated:
+        return JsonResponse({'error': 'Not authorized'}, status=401)
+        
+    user = get_object_or_404(User, id=user_id)
+    
+    # If officer, they can only see details of users in their council
+    if request.user.role == 'officer' and user.council != request.user.council:
+        return JsonResponse({'error': 'Not authorized'}, status=403)
+    
+    data = {
+        'id': user.id,
+        'username': user.username,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+        'middle_name': user.middle_name,
+        'middle_initial': user.middle_initial,
+        'suffix': user.suffix,
+        'email': user.email,
+        'contact_number': user.contact_number,
+        'birthday': user.birthday.strftime('%b %d, %Y') if user.birthday else None,
+        'age': user.age,
+        'street': user.street,
+        'barangay': user.barangay,
+        'city': user.city,
+        'province': user.province,
+        'role': user.role,
+        'role_display': user.get_role_display(),
+        'council_name': user.council.name if user.council else None,
+        'degree_display': user.get_current_degree_display(),
+        'date_joined': user.date_joined.strftime('%b %d, %Y'),
+    }
+    
+    if user.profile_picture:
+        data['profile_picture'] = user.profile_picture.url
+    
+    return JsonResponse(data)
+
+@never_cache
+@login_required
+def event_attendance(request, event_id):
+    """View for managing event attendance"""
+    # Only officers and admins can manage attendance
+    if request.user.role not in ['admin', 'officer']:
+        return redirect('dashboard')
+    
+    # Get the event
+    event = get_object_or_404(Event, id=event_id)
+    
+    # Check if the event is approved
+    if event.status != 'approved':
+        messages.error(request, 'You can only manage attendance for approved events.')
+        return redirect('event_list')
+    
+    # Check if the officer belongs to the event's council
+    if request.user.role == 'officer' and event.council != request.user.council and not event.is_global:
+        messages.error(request, 'You can only manage attendance for events in your council.')
+        return redirect('event_list')
+    
+    # Check if the event is happening today
+    today = date.today()
+    is_today = (event.date_from <= today <= (event.date_until or event.date_from))
+    
+    # Get members based on the event's council or global status
+    if event.is_global:
+        members = User.objects.filter(role='member', is_active=True, is_archived=False).order_by('first_name', 'last_name')
+    else:
+        members = User.objects.filter(council=event.council, role='member', is_active=True, is_archived=False).order_by('first_name', 'last_name')
+    
+    # Get existing attendance records
+    attendance_records = EventAttendance.objects.filter(event=event)
+    attendance = [record.member.id for record in attendance_records.filter(is_present=True)]
+    present_count = len(attendance)
+    
+    # Create attendance records for members who don't have one yet
+    with transaction.atomic():
+        for member in members:
+            EventAttendance.objects.get_or_create(
+                event=event,
+                member=member,
+                defaults={
+                    'is_present': False,
+                    'recorded_by': request.user
+                }
+            )
+    
+    context = {
+        'event': event,
+        'members': members,
+        'attendance': attendance,
+        'present_count': present_count,
+        'is_today': is_today,
+    }
+    
+    return render(request, 'event_attendance.html', context)
+
+@never_cache
+@login_required
+def update_attendance(request):
+    """API endpoint for updating event attendance"""
+    if request.user.role not in ['admin', 'officer'] or request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': 'Unauthorized'}, status=403)
+    
+    try:
+        data = json.loads(request.body)
+        event_id = data.get('event_id')
+        
+        # Check if this is a batch update or individual update
+        if 'present_members' in data:
+            # Batch update
+            present_members = data.get('present_members', [])
+            
+            # Validate input
+            if not event_id:
+                return JsonResponse({'status': 'error', 'message': 'Missing event ID'}, status=400)
+            
+            try:
+                # Get event
+                event = get_object_or_404(Event, id=event_id)
+                
+                # Check if the event is approved
+                if event.status != 'approved':
+                    return JsonResponse({'status': 'error', 'message': 'Can only update attendance for approved events'}, status=400)
+                
+                # Check if the officer belongs to the event's council
+                if request.user.role == 'officer' and event.council != request.user.council and not event.is_global:
+                    return JsonResponse({'status': 'error', 'message': 'You can only manage attendance for events in your council'}, status=403)
+                
+                # For testing purposes, bypass the date check
+                # Check if the event is happening today
+                today = date.today()
+                if not (event.date_from <= today <= (event.date_until or event.date_from)):
+                    # Temporarily comment out this check for testing
+                    # return JsonResponse({'status': 'error', 'message': 'Can only update attendance on the day of the event'}, status=400)
+                    pass
+                
+                # Get all members for this event
+                if event.is_global:
+                    members = User.objects.filter(role='member', is_active=True, is_archived=False)
+                else:
+                    members = User.objects.filter(council=event.council, role='member', is_active=True, is_archived=False)
+                
+                # Update all attendance records
+                with transaction.atomic():
+                    # First, mark all as absent
+                    EventAttendance.objects.filter(event=event).update(is_present=False)
+                    
+                    # Then mark selected members as present
+                    for member_id in present_members:
+                        try:
+                            member = User.objects.get(id=member_id)
+                            attendance, created = EventAttendance.objects.update_or_create(
+                                event=event,
+                                member=member,
+                                defaults={
+                                    'is_present': True,
+                                    'recorded_by': request.user
+                                }
+                            )
+                        except User.DoesNotExist:
+                            continue
+                
+                # Get updated count
+                present_count = EventAttendance.objects.filter(event=event, is_present=True).count()
+                total_count = members.count()
+                
+                return JsonResponse({
+                    'status': 'success',
+                    'present_count': present_count,
+                    'total_count': total_count
+                })
+            except Event.DoesNotExist:
+                return JsonResponse({'status': 'error', 'message': 'Event not found'}, status=404)
+            except Exception as e:
+                return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+            
+        else:
+            # Individual update
+            member_id = data.get('member_id')
+            is_present = data.get('is_present')
+            
+            # Validate input
+            if not event_id or not member_id:
+                return JsonResponse({'status': 'error', 'message': 'Missing required fields'}, status=400)
+            
+            try:
+                # Get event and member
+                event = get_object_or_404(Event, id=event_id)
+                member = get_object_or_404(User, id=member_id)
+                
+                # Check if the event is approved
+                if event.status != 'approved':
+                    return JsonResponse({'status': 'error', 'message': 'Can only update attendance for approved events'}, status=400)
+                
+                # Check if the officer belongs to the event's council
+                if request.user.role == 'officer' and event.council != request.user.council and not event.is_global:
+                    return JsonResponse({'status': 'error', 'message': 'You can only manage attendance for events in your council'}, status=403)
+                
+                # For testing purposes, bypass the date check
+                # Check if the event is happening today
+                today = date.today()
+                if not (event.date_from <= today <= (event.date_until or event.date_from)):
+                    # Temporarily comment out this check for testing
+                    # return JsonResponse({'status': 'error', 'message': 'Can only update attendance on the day of the event'}, status=400)
+                    pass
+                
+                # Update or create attendance record
+                attendance, created = EventAttendance.objects.update_or_create(
+                    event=event,
+                    member=member,
+                    defaults={
+                        'is_present': is_present,
+                        'recorded_by': request.user
+                    }
+                )
+                
+                # Get updated count
+                present_count = EventAttendance.objects.filter(event=event, is_present=True).count()
+                total_count = User.objects.filter(
+                    council=event.council if not event.is_global else None,
+                    role='member',
+                    is_active=True,
+                    is_archived=False
+                ).count()
+                
+                return JsonResponse({
+                    'status': 'success',
+                    'present_count': present_count,
+                    'total_count': total_count,
+                    'is_present': is_present
+                })
+            except Event.DoesNotExist:
+                return JsonResponse({'status': 'error', 'message': 'Event not found'}, status=404)
+            except User.DoesNotExist:
+                return JsonResponse({'status': 'error', 'message': 'Member not found'}, status=404)
+            except Exception as e:
+                return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+            
+    except json.JSONDecodeError:
+        return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
+    except Exception as e:
+        return JsonResponse({'status': 'error', 'message': f'Unexpected error: {str(e)}'}, status=500)
+
+@never_cache
+@login_required
+def member_activities(request):
+    """View for displaying a member's activities"""
+    if request.user.role not in ['member', 'officer', 'admin']:
+        return redirect('dashboard')
+    
+    # Get the member
+    member_id = request.GET.get('member_id')
+    if member_id and request.user.role in ['admin', 'officer']:
+        # Admins and officers can view any member's activities
+        member = get_object_or_404(User, id=member_id)
+        # Officers can only view members in their council
+        if request.user.role == 'officer' and member.council != request.user.council:
+            messages.error(request, 'You can only view activities for members in your council.')
+            return redirect('dashboard')
+    else:
+        # Members can only view their own activities
+        member = request.user
+    
+    # Get the member's activities (events they attended)
+    activities = EventAttendance.objects.filter(member=member, is_present=True).order_by('-event__date_from')
+    
+    context = {
+        'member': member,
+        'activities': activities,
+        'is_self': member == request.user
+    }
+    
+    return render(request, 'member_activities.html', context)

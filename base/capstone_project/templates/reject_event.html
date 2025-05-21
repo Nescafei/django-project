@@ -1,0 +1,135 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Reject Event
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
+
+<div class="dashboard-container">
+    <div class="content-card">
+        <div class="dashboard-header">
+            <h1>Reject Event</h1>
+            <h2>{{ event.name }}</h2>
+            
+            <div class="header-actions">
+                <a href="{% url 'event_proposals' %}" class="dashboard-btn secondary">
+                    <i class="fas fa-arrow-left"></i>Back to Proposals
+                </a>
+            </div>
+        </div>
+
+        <div class="event-summary">
+            <div class="event-details">
+                <div class="detail-column">
+                    <p><strong>Date:</strong> {{ event.date_from|date:"F d, Y" }} {% if event.date_until and event.date_until != event.date_from %} - {{ event.date_until|date:"F d, Y" }}{% endif %}</p>
+                    <p><strong>Category:</strong> {{ event.category }}</p>
+                </div>
+                <div class="detail-column">
+                    <p><strong>Council:</strong> {{ event.council.name }}</p>
+                    <p><strong>Location:</strong> {{ event.city }}, {{ event.province }}</p>
+                </div>
+            </div>
+            
+            <div class="event-description">
+                <p><strong>Description:</strong> {{ event.description }}</p>
+            </div>
+        </div>
+
+        <div class="rejection-form-container">
+            <form method="post" action="{% url 'reject_event' event.id %}">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="rejection_reason">Rejection Reason:</label>
+                    <textarea id="rejection_reason" name="rejection_reason" rows="4" class="form-control" required placeholder="Please provide a reason for rejecting this event..."></textarea>
+                </div>
+                <div class="form-actions">
+                    <button type="submit" class="dashboard-btn primary">
+                        <i class="fas fa-times"></i> Confirm Rejection
+                    </button>
+                    <a href="{% url 'event_proposals' %}" class="dashboard-btn secondary">
+                        <i class="fas fa-ban"></i> Cancel
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<style>
+    .event-summary {
+        background-color: #f8f9fa;
+        padding: 1.5rem;
+        border-radius: var(--border-radius);
+        margin-bottom: 2rem;
+    }
+    
+    .event-details {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 2rem;
+        margin-bottom: 1rem;
+    }
+    
+    .detail-column {
+        flex: 1;
+        min-width: 200px;
+    }
+    
+    .detail-column p {
+        margin: 0.5rem 0;
+    }
+    
+    .event-description {
+        margin-top: 1rem;
+        padding-top: 1rem;
+        border-top: 1px solid rgba(0,0,0,0.1);
+    }
+    
+    .rejection-form-container {
+        margin-top: 2rem;
+    }
+    
+    .form-group {
+        margin-bottom: 1.5rem;
+    }
+    
+    .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+        color: var(--heading-color);
+    }
+    
+    .form-control {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid rgba(13, 52, 113, 0.2);
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        background-color: white;
+    }
+    
+    .form-control:focus {
+        border-color: var(--primary-bg);
+        box-shadow: 0 0 0 3px rgba(13, 52, 113, 0.1);
+        outline: none;
+    }
+    
+    .form-actions {
+        display: flex;
+        gap: 1rem;
+    }
+    
+    .primary {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+    
+    .primary:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+</style>
+{% endblock %} 

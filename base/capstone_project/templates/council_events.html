@@ -1,0 +1,806 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Council Events
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
+
+<div class="dashboard-container">
+    <div class="content-card">
+        <div class="dashboard-header">
+            <h1>Council Events</h1>
+            <div>
+                <a href="{% url 'dashboard' %}" class="dashboard-btn secondary back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+        
+        <h2>{{ council.name }}</h2>
+
+        <!-- Filters -->
+        <div class="filters-container">
+            <form method="get" class="filter-form">
+                <div class="filter-group">
+                    <label for="status">Status:</label>
+                    <select name="status" id="status" class="filter-select">
+                        <option value="all" {% if status_filter == 'all' or not status_filter %}selected{% endif %}>All Statuses</option>
+                        <option value="pending" {% if status_filter == 'pending' %}selected{% endif %}>Pending</option>
+                        <option value="approved" {% if status_filter == 'approved' %}selected{% endif %}>Approved</option>
+                        <option value="rejected" {% if status_filter == 'rejected' %}selected{% endif %}>Rejected</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="category">Category:</label>
+                    <select name="category" id="category" class="filter-select">
+                        <option value="all" {% if category_filter == 'all' or not category_filter %}selected{% endif %}>All Categories</option>
+                        <option value="Seminar" {% if category_filter == 'Seminar' %}selected{% endif %}>Seminar</option>
+                        <option value="Meeting" {% if category_filter == 'Meeting' %}selected{% endif %}>Meeting</option>
+                        <option value="Trip" {% if category_filter == 'Trip' %}selected{% endif %}>Trip</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <button type="submit" class="dashboard-btn">Apply Filters</button>
+                    <a href="{% url 'council_events' %}" class="dashboard-btn secondary">Clear Filters</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Search -->
+        <div class="search-container">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="eventSearch" class="search-input" placeholder="Search events...">
+                <button id="clearSearch" class="clear-search"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+
+        <!-- Current & Upcoming Events List -->
+        <h3 class="section-title">Current & Upcoming Events</h3>
+        <div class="events-list">
+            {% for event in events %}
+            <div class="event-item {% if event.status == 'rejected' %}rejected-event{% endif %} {% if event.is_today %}today-event{% endif %}">
+                {% if event.is_today %}
+                <div class="today-badge">
+                    <i class="fas fa-calendar-day"></i> Today's Event
+                </div>
+                {% endif %}
+                
+                <div class="event-header">
+                    <h3 {% if event.status == 'rejected' %}class="rejected-title"{% endif %}>{{ event.name }}</h3>
+                    <span class="status-badge status-{{ event.status }}">{{ event.get_status_display }}</span>
+                </div>
+                
+                <div class="event-details">
+                    <div class="detail-column">
+                        <p><strong>Date:</strong> {{ event.date_from|date:"F d, Y" }} {% if event.date_until and event.date_until != event.date_from %} - {{ event.date_until|date:"F d, Y" }}{% endif %}</p>
+                        <p><strong>Category:</strong> {{ event.category }}</p>
+                    </div>
+                    <div class="detail-column">
+                        <p><strong>Location:</strong> {{ event.city }}, {{ event.province }}</p>
+                        <p><strong>Created by:</strong> {{ event.created_by.first_name }} {{ event.created_by.last_name }}</p>
+                    </div>
+                </div>
+                
+                {% if event.status == 'rejected' and event.rejection_reason %}
+                <div class="rejection-reason">
+                    <p><strong>Rejection Reason:</strong> {{ event.rejection_reason }}</p>
+                </div>
+                {% endif %}
+                
+                <div class="event-description">
+                    <p>{{ event.description|truncatechars:150 }}</p>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="dashboard-btn view-event-btn" data-event-id="{{ event.id }}">
+                        <i class="fas fa-eye"></i>View Details
+                    </button>
+                    
+                    {% if user == event.created_by and event.status == 'pending' %}
+                    <a href="{% url 'edit_event' event.id %}" class="dashboard-btn">
+                        <i class="fas fa-edit"></i>Edit
+                    </a>
+                    {% endif %}
+                    
+                    {% if user.role == 'officer' and event.status == 'approved' %}
+                        {% if event.is_today %}
+                        <a href="{% url 'event_attendance' event.id %}" class="dashboard-btn attendance-btn">
+                            <i class="fas fa-clipboard-check"></i>Manage Attendance
+                        </a>
+                        {% else %}
+                        <button class="dashboard-btn attendance-btn disabled" data-event-id="{{ event.id }}">
+                            <i class="fas fa-clipboard-check"></i>Manage Attendance
+                        </button>
+                        {% endif %}
+                    {% endif %}
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-calendar-times"></i>
+                <p>No upcoming events found matching your criteria.</p>
+                <p>Try adjusting your filters or propose a new event.</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <!-- Past Events Section -->
+        {% if past_events %}
+        <div class="past-events-section">
+            <h3 class="section-title">Past Events</h3>
+            <p class="past-events-message">
+                <i class="fas fa-info-circle"></i>
+                Past events are automatically moved to the archives. 
+                <a href="{% url 'archived_events' %}" class="view-archives-link">View All Archived Events</a>
+            </p>
+            
+            <div class="past-events-preview">
+                {% for event in past_events|slice:":3" %}
+                <div class="past-event-item">
+                    <div class="past-event-name">{{ event.name }}</div>
+                    <div class="past-event-date">{{ event.date_from|date:"F d, Y" }}</div>
+                </div>
+                {% endfor %}
+                
+                {% if past_events|length > 3 %}
+                <div class="more-past-events">
+                    <a href="{% url 'archived_events' %}">+ {{ past_events|length|add:"-3" }} more past events</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+        
+        <!-- Add Event button -->
+        <div class="action-buttons-container">
+            <a href="{% url 'add_event' %}" class="dashboard-btn">
+                <i class="fas fa-plus"></i>Propose New Event
+            </a>
+        </div>
+    </div>
+</div>
+
+<!-- Event details modal -->
+<div id="eventDetailsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Event Details</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div id="eventDetailsContent">
+            <div class="loading">Loading event details...</div>
+        </div>
+        <div class="modal-footer">
+            <button id="okButton" class="dashboard-btn">OK</button>
+        </div>
+    </div>
+</div>
+
+<!-- Attendance warning modal -->
+<div id="attendanceWarningModal" class="modal">
+    <div class="modal-content warning-modal">
+        <div class="modal-header">
+            <h3>Attendance Not Available</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <div class="warning-message">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p>Attendance can only be managed on the day of the event.</p>
+                <p>Please return on the scheduled event date.</p>
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button id="warningOkButton" class="dashboard-btn">OK</button>
+        </div>
+    </div>
+</div>
+
+<style>
+.filters-container {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 2rem;
+}
+
+.filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--heading-color);
+}
+
+.filter-select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid rgba(13, 52, 113, 0.2);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    background-color: white;
+}
+
+/* Improved search container */
+.search-container {
+    margin-bottom: 2rem;
+}
+
+.search-wrapper {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 2.5rem;
+    border: 2px solid rgba(13, 52, 113, 0.2);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    background-color: white;
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: var(--primary-bg);
+    box-shadow: 0 0 0 3px rgba(13, 52, 113, 0.1);
+    outline: none;
+}
+
+.clear-search {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    display: none;
+}
+
+.clear-search:hover {
+    color: var(--primary-bg);
+}
+
+.section-title {
+    margin: 2rem 0 1rem;
+    color: var(--heading-color);
+    border-bottom: 2px solid rgba(13, 52, 113, 0.1);
+    padding-bottom: 0.5rem;
+}
+
+.events-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.event-item {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+}
+
+.event-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.today-event {
+    border-left: 4px solid #28a745;
+}
+
+.today-badge {
+    position: absolute;
+    top: -10px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.event-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.event-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--heading-color);
+}
+
+.event-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 1rem;
+}
+
+.detail-column {
+    flex: 1;
+    min-width: 200px;
+}
+
+.detail-column p {
+    margin: 0.5rem 0;
+}
+
+.event-description {
+    margin-bottom: 1.5rem;
+    color: #555;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.status-pending {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.status-approved {
+    background-color: #28a745;
+    color: white;
+}
+
+.status-rejected {
+    background-color: #dc3545;
+    color: white;
+}
+
+/* Rejected event styles */
+.rejected-event {
+    opacity: 0.8;
+    border-left: 4px solid #dc3545;
+}
+
+.rejected-title {
+    text-decoration: line-through;
+    color: #6c757d;
+}
+
+.rejection-reason {
+    background-color: #f8d7da;
+    color: #721c24;
+    padding: 0.75rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1rem;
+    font-size: 0.9rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6c757d;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #adb5bd;
+}
+
+.action-buttons-container {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+/* Past events section */
+.past-events-section {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background-color: #f8f9fa;
+    border-radius: var(--border-radius);
+}
+
+.past-events-message {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 1.5rem;
+    color: #6c757d;
+}
+
+.past-events-message i {
+    color: var(--primary-bg);
+}
+
+.view-archives-link {
+    color: var(--primary-bg);
+    font-weight: 500;
+    margin-left: auto;
+}
+
+.past-events-preview {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+}
+
+.past-event-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.past-event-name {
+    font-weight: 500;
+    color: var(--heading-color);
+}
+
+.past-event-date {
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.more-past-events {
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.more-past-events a {
+    color: var(--primary-bg);
+    font-weight: 500;
+}
+
+/* Attendance button */
+.attendance-btn {
+    background-color: #28a745;
+}
+
+.attendance-btn:hover {
+    background-color: #218838;
+}
+
+.attendance-btn.disabled {
+    background-color: #6c757d;
+    cursor: pointer;
+}
+
+/* Warning modal */
+.warning-modal .modal-header {
+    border-bottom-color: #ffc107;
+}
+
+.warning-message {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem 1rem;
+    text-align: center;
+}
+
+.warning-message i {
+    font-size: 3rem;
+    color: #ffc107;
+    margin-bottom: 1.5rem;
+}
+
+.warning-message p {
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+    color: #495057;
+}
+
+/* Improved Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.show {
+    opacity: 1;
+}
+
+.modal-content {
+    background-color: var(--secondary-bg);
+    margin: 10% auto;
+    border-radius: var(--border-radius);
+    max-width: 700px;
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.modal.show .modal-content {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--heading-color);
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+#eventDetailsContent {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: right;
+}
+
+.close {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #aaa;
+    transition: color 0.2s ease;
+}
+
+.close:hover {
+    color: var(--primary-bg);
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--heading-color);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .action-buttons-container {
+        flex-direction: column;
+    }
+    
+    .modal-content {
+        margin: 10% 1rem;
+        max-height: 90vh;
+    }
+}
+
+.back-btn:hover {
+    background-color: #f4b41a !important;
+    color: white;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Search functionality with clear button
+    const searchInput = document.getElementById('eventSearch');
+    const clearButton = document.getElementById('clearSearch');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const eventItems = document.querySelectorAll('.event-item');
+            
+            // Show/hide clear button
+            clearButton.style.display = searchTerm ? 'block' : 'none';
+            
+            eventItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+        
+        // Focus effect
+        searchInput.addEventListener('focus', function() {
+            this.parentElement.style.boxShadow = '0 0 0 3px rgba(13, 52, 113, 0.1)';
+        });
+        
+        searchInput.addEventListener('blur', function() {
+            this.parentElement.style.boxShadow = 'none';
+        });
+    }
+    
+    // Clear search
+    if (clearButton) {
+        clearButton.addEventListener('click', function() {
+            searchInput.value = '';
+            searchInput.dispatchEvent(new Event('input'));
+            searchInput.focus();
+        });
+    }
+    
+    // View event details
+    const viewEventBtns = document.querySelectorAll('.view-event-btn');
+    const eventModal = document.getElementById('eventDetailsModal');
+    const contentDiv = document.getElementById('eventDetailsContent');
+    const okButton = document.getElementById('okButton');
+    
+    // Attendance warning modal
+    const attendanceWarningModal = document.getElementById('attendanceWarningModal');
+    const warningOkButton = document.getElementById('warningOkButton');
+    const disabledAttendanceBtns = document.querySelectorAll('.attendance-btn.disabled');
+    
+    function openModal(modal) {
+        modal.style.display = 'block';
+        // Trigger reflow to allow animation to work
+        modal.offsetHeight;
+        modal.classList.add('show');
+    }
+    
+    function closeModal(modal) {
+        modal.classList.remove('show');
+        setTimeout(function() {
+            modal.style.display = 'none';
+        }, 300); // Match the transition duration
+    }
+    
+    viewEventBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const eventId = this.getAttribute('data-event-id');
+            
+            openModal(eventModal);
+            contentDiv.innerHTML = '<div class="loading">Loading event details...</div>';
+            
+            fetch(`/event/${eventId}/details/`)
+                .then(response => response.json())
+                .then(data => {
+                    let statusClass = data.status === 'rejected' ? 'rejected-title' : '';
+                    let detailsHTML = `
+                        <div class="event-details">
+                            <h4 ${data.status === 'rejected' ? 'class="rejected-title"' : ''}>${data.name}</h4>
+                            <p class="event-category">${data.category}</p>
+                            
+                            <div class="detail-group">
+                                <strong>Date:</strong> 
+                                <span>${data.date_from}${data.date_until ? ' - ' + data.date_until : ''}</span>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Location:</strong>
+                                <address>
+                                    ${data.street}, ${data.barangay}<br>
+                                    ${data.city}, ${data.province}
+                                </address>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Description:</strong>
+                                <p>${data.description}</p>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Council:</strong>
+                                <p>${data.council_name}</p>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Status:</strong>
+                                <span class="status-badge status-${data.status}">${data.status_display}</span>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Created by:</strong>
+                                <p>${data.creator_name}</p>
+                            </div>
+                    `;
+                    
+                    if (data.status === 'rejected' && data.rejection_reason) {
+                        detailsHTML += `
+                            <div class="detail-group rejection-reason">
+                                <strong>Rejection Reason:</strong>
+                                <p>${data.rejection_reason}</p>
+                            </div>
+                        `;
+                    }
+                    
+                    detailsHTML += `</div>`;
+                    contentDiv.innerHTML = detailsHTML;
+                })
+                .catch(error => {
+                    contentDiv.innerHTML = '<p>Error loading event details. Please try again later.</p>';
+                });
+        });
+    });
+    
+    // Disabled attendance buttons
+    disabledAttendanceBtns.forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            openModal(attendanceWarningModal);
+        });
+    });
+    
+    // Close modals when clicking the close button
+    document.querySelectorAll('.modal .close').forEach(closeBtn => {
+        closeBtn.addEventListener('click', function() {
+            const modal = this.closest('.modal');
+            closeModal(modal);
+        });
+    });
+    
+    // Close modals when clicking the OK button
+    if (okButton) {
+        okButton.addEventListener('click', function() {
+            closeModal(eventModal);
+        });
+    }
+    
+    if (warningOkButton) {
+        warningOkButton.addEventListener('click', function() {
+            closeModal(attendanceWarningModal);
+        });
+    }
+    
+    // Close modals when clicking outside of them
+    window.addEventListener('click', function(event) {
+        if (event.target === eventModal) {
+            closeModal(eventModal);
+        } else if (event.target === attendanceWarningModal) {
+            closeModal(attendanceWarningModal);
+        }
+    });
+});
+</script>
+{% endblock %} 

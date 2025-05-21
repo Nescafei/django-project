@@ -105,134 +105,78 @@ Knights of Columbus - Officer Dashboard
             </div>
 
             <!-- Members Management Card -->
-            <div class="content-card">
-                <div class="card-header collapsible" data-target="membersList">
-                    <h3>
+            <div class="content-card dashboard-card">
+                <div class="dashboard-summary">
+                    <div class="summary-icon">
                         <i class="fas fa-users"></i>
-                        Members Management 
-                        <span class="count-badge">{{ user_list|length }} Members
-                            <i class="fas fa-chevron-down toggle-icon"></i>
-                        </span>
-                    </h3>
-                </div>
-                <div id="membersList" class="collapsible-content">
-                    <div class="search-filter">
-                        <input type="text" placeholder="Search members..." class="search-input">
                     </div>
-                    <ul class="dashboard-list">
-                        {% for u in user_list %}
-                            <li>
-                                <div class="user-info">
-                                    <div class="user-header">
-                                        <h4>{{ u.first_name }} {{ u.last_name }}</h4>
-                                        <span class="role-badge role-{{ u.role }}">{{ u.get_role_display }}</span>
-                                    </div>
-                                    <div class="user-details">
-                                        <div class="detail-column">
-                                            <p><strong>Member Since:</strong> {{ u.date_joined|date:"F j, Y" }}</p>
-                                            <p><strong>Degree:</strong> {{ u.get_current_degree_display }}</p>
-                                        </div>
-                                        <div class="detail-column">
-                                            <p><strong>Contact:</strong> {{ u.contact_number }}</p>
-                                            <p><strong>Email:</strong> {{ u.email }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="action-buttons">
-                                    <a href="#" class="dashboard-btn">
-                                        <i class="fas fa-user"></i>View Details
-                                    </a>
-                                    <a href="#" class="dashboard-btn">
-                                        <i class="fas fa-edit"></i>Update
-                                    </a>
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
+                    <div class="summary-content">
+                        <h3>Members Management</h3>
+                        <div class="summary-count">{{ user_list|length }}</div>
+                        <p class="summary-label">Active Members</p>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <a href="{% url 'council_members' %}" class="dashboard-btn">
+                        <i class="fas fa-list"></i>View Member List
+                    </a>
                 </div>
             </div>
 
             <!-- Event Management Card -->
-            <div class="content-card">
-                <div class="card-header collapsible" data-target="eventsList">
-                    <h3>
+            <div class="content-card dashboard-card">
+                <div class="dashboard-summary">
+                    <div class="summary-icon">
                         <i class="fas fa-calendar-alt"></i>
-                        Event Management
-                        <span class="count-badge">{{ events|length }} Events
-                            <i class="fas fa-chevron-down toggle-icon"></i>
-                        </span>
-                    </h3>
+                    </div>
+                    <div class="summary-content">
+                        <h3>Event Management</h3>
+                        <div class="summary-count">{{ events|length }}</div>
+                        <p class="summary-label">Upcoming Events</p>
+                    </div>
                 </div>
-                <div id="eventsList" class="collapsible-content">
-                    <div class="action-buttons" style="margin-bottom: 1rem;">
-                        <a href="{% url 'add_event' %}" class="dashboard-btn">
-                            <i class="fas fa-plus"></i>Propose New Event
-                        </a>
-                        <a href="{% url 'archived_events' %}" class="dashboard-btn">
-                            <i class="fas fa-archive"></i>Archived Events
-                        </a>
-                    </div>
-                    <div class="search-filter">
-                        <input type="text" placeholder="Search events..." class="search-input">
-                    </div>
-                    <ul class="dashboard-list">
-                        {% for event in events %}
-                            <li>
-                                <h4>{{ event.name }}</h4>
-                                <p>{{ event.date_from|date:"F d, Y" }} {% if event.date_until and event.date_until != event.date_from %} - {{ event.date_until|date:"F d, Y" }}{% endif %}</p>
-                                <p>Category: {{ event.category }}</p>
-                                <p>Status: <span class="status-badge status-{{ event.status }}">{{ event.get_status_display }}</span></p>
-                                <div class="action-buttons">
-                                    <a href="#" class="dashboard-btn view-event-btn" data-event-id="{{ event.id }}">
-                                        <i class="fas fa-eye"></i>View Details
-                                    </a>
-                                    {% if event.status == 'approved' %}
-                                    
-                                    {% endif %}
-                                </div>
-                            </li>
-                        {% empty %}
-                            <li>
-                                <p>No events found. Click "Propose New Event" to create one.</p>
-                            </li>
-                        {% endfor %}
-                    </ul>
+                <div class="action-buttons">
+                    <a href="{% url 'add_event' %}" class="dashboard-btn">
+                        <i class="fas fa-plus"></i>Propose New Event
+                    </a>
+                    <a href="{% url 'council_events' %}" class="dashboard-btn">
+                        <i class="fas fa-list"></i>View All Events
+                    </a>
+                    <a href="{% url 'archived_events' %}" class="dashboard-btn">
+                        <i class="fas fa-archive"></i>Archived Events
+                    </a>
                 </div>
             </div>
 
             <!-- Analytics History Card -->
-            <div class="content-card">
-                <div class="card-header collapsible" data-target="analyticsList">
-                    <h3>
+            <div class="content-card dashboard-card">
+                <div class="dashboard-summary">
+                    <div class="summary-icon">
                         <i class="fas fa-chart-bar"></i>
-                        Analytics History
-                        <span class="count-badge">{{ analytics|length }} Reports
-                            <i class="fas fa-chevron-down toggle-icon"></i>
-                        </span>
-                    </h3>
+                    </div>
+                    <div class="summary-content">
+                        <h3>Analytics History</h3>
+                        <div class="summary-count">{{ analytics|length }}</div>
+                        <p class="summary-label">Monthly Reports</p>
+                    </div>
                 </div>
-                <div id="analyticsList" class="collapsible-content">
-                    <ul class="dashboard-list">
-                        {% for a in analytics %}
-                            <li>
-                                <div class="stat-card">
-                                    <h4>{{ a.date|date:"F Y" }}</h4>
-                                    <div class="stat-grid">
-                                        <div>
-                                            <p class="stat-description">Events</p>
-                                            <div class="stat-value">{{ a.events_count }}</div>
-                                        </div>
-                                        <div>
-                                            <p class="stat-description">Donations</p>
-                                            <div class="stat-value">${{ a.donations_amount }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
+                <div class="action-buttons">
+                    <a href="{% url 'analytics_view' %}" class="dashboard-btn">
+                        <i class="fas fa-chart-line"></i>View Analytics
+                    </a>
                 </div>
             </div>
+        </div>
+    </div>
+</div>
+
+<!-- Event details modal -->
+<div id="eventDetailsModal" class="modal">
+    <div class="modal-content">
+        <span class="close">&times;</span>
+        <h3>Event Details</h3>
+        <div id="eventDetailsContent">
+            <div class="loading">Loading event details...</div>
         </div>
     </div>
 </div>
@@ -387,20 +331,65 @@ Knights of Columbus - Officer Dashboard
     background-color: #dc3545;
     color: white;
 }
+
+/* New styles for dashboard cards */
+.dashboard-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(13, 52, 113, 0.15);
+}
+
+.dashboard-summary {
+    display: flex;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+.summary-icon {
+    background-color: var(--primary-bg);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1.5rem;
+}
+
+.summary-icon i {
+    font-size: 1.8rem;
+}
+
+.summary-content {
+    flex: 1;
+}
+
+.summary-content h3 {
+    margin: 0 0 0.5rem 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.summary-count {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-bg);
+    line-height: 1;
+}
+
+.summary-label {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0.25rem 0 0;
+}
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Collapsible functionality
-    const collapsibles = document.querySelectorAll('.collapsible');
-    collapsibles.forEach(collapsible => {
-        collapsible.addEventListener('click', function() {
-            const target = document.getElementById(this.dataset.target);
-            this.classList.toggle('active');
-            target.classList.toggle('show');
-        });
-    });
-
     // Search functionality
     const searchInputs = document.querySelectorAll('.search-input');
     searchInputs.forEach(input => {

@@ -9910,3 +9910,795 @@ DEBUG 2025-05-21 02:59:52,617 views User Mr_Admin (role=admin, council=Council 3
 DEBUG 2025-05-21 02:59:54,505 views User Mr_Admin (role=admin, council=Council 3469): Found 0 pending manual donations
 DEBUG 2025-05-21 03:00:14,009 views User Mr_Admin (role=admin, council=Council 3469): Found 0 pending manual donations
 DEBUG 2025-05-21 03:00:16,499 views User Mr_Admin (role=admin, council=Council 3469): Found 0 pending manual donations
+DEBUG 2025-05-21 13:43:25,068 views show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-05-21 13:43:25,181 views Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donation_date">Donation date:</label>
+    <input type="date" name="donation_date" value="2025-05-21" required id="id_donation_date"><input type="hidden" name="initial-donation_date" value="2025-05-21" id="initial-id_donation_date">
+    
+    
+      
+    
+  </p>
+DEBUG 2025-05-21 13:43:58,638 views User Mr_Admin (role=admin, council=Council 3469): Found 0 pending manual donations
+DEBUG 2025-05-21 13:44:16,017 views show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-05-21 13:44:16,020 views Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donation_date">Donation date:</label>
+    <input type="date" name="donation_date" value="2025-05-21" required id="id_donation_date"><input type="hidden" name="initial-donation_date" value="2025-05-21" id="initial-id_donation_date">
+    
+    
+      
+    
+  </p>
+DEBUG 2025-05-21 13:44:23,933 views Fetching blockchain data
+INFO 2025-05-21 13:44:23,937 views Blockchain data retrieved: 4 blocks, 0 pending transactions
+DEBUG 2025-05-21 20:08:13,990 views User Mr_Admin (role=admin, council=Council 3469): Found 0 pending manual donations
+DEBUG 2025-05-21 20:26:57,878 views User Mr_Admin (role=admin, council=Council 3469): Found 0 pending manual donations
+DEBUG 2025-05-21 22:24:28,559 views show_manual_link: False, User: xxhunterxx, Role: member
+DEBUG 2025-05-21 22:24:28,600 views Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donation_date">Donation date:</label>
+    <input type="date" name="donation_date" value="2025-05-21" required id="id_donation_date"><input type="hidden" name="initial-donation_date" value="2025-05-21" id="initial-id_donation_date">
+    
+    
+      
+    
+  </p>
+DEBUG 2025-05-21 22:24:30,048 views show_manual_link: False, User: xxhunterxx, Role: member
+DEBUG 2025-05-21 22:24:30,053 views Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donation_date">Donation date:</label>
+    <input type="date" name="donation_date" value="2025-05-21" required id="id_donation_date"><input type="hidden" name="initial-donation_date" value="2025-05-21" id="initial-id_donation_date">
+    
+    
+      
+    
+  </p>
+DEBUG 2025-05-21 22:26:39,077 views User Mr_Admin (role=admin, council=Council 3469): Found 0 pending manual donations
+DEBUG 2025-05-21 22:30:26,815 views show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-05-21 22:30:26,830 views Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donation_date">Donation date:</label>
+    <input type="date" name="donation_date" value="2025-05-21" required id="id_donation_date"><input type="hidden" name="initial-donation_date" value="2025-05-21" id="initial-id_donation_date">
+    
+    
+      
+    
+  </p>
+DEBUG 2025-05-21 22:32:48,776 views show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-05-21 22:32:48,789 views Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donation_date">Donation date:</label>
+    <input type="date" name="donation_date" value="2025-05-21" required id="id_donation_date"><input type="hidden" name="initial-donation_date" value="2025-05-21" id="initial-id_donation_date">
+    
+    
+      
+    
+  </p>
+DEBUG 2025-05-21 22:35:06,319 views show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-05-21 22:35:06,324 views Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donation_date">Donation date:</label>
+    <input type="date" name="donation_date" value="2025-05-21" required id="id_donation_date"><input type="hidden" name="initial-donation_date" value="2025-05-21" id="initial-id_donation_date">
+    
+    
+      
+    
+  </p>
+DEBUG 2025-05-21 22:35:48,998 views show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-05-21 22:35:49,002 views Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donation_date">Donation date:</label>
+    <input type="date" name="donation_date" value="2025-05-21" required id="id_donation_date"><input type="hidden" name="initial-donation_date" value="2025-05-21" id="initial-id_donation_date">
+    
+    
+      
+    
+  </p>
+DEBUG 2025-05-21 22:35:52,359 views show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-05-21 22:35:52,364 views Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donation_date">Donation date:</label>
+    <input type="date" name="donation_date" value="2025-05-21" required id="id_donation_date"><input type="hidden" name="initial-donation_date" value="2025-05-21" id="initial-id_donation_date">
+    
+    
+      
+    
+  </p>
+DEBUG 2025-05-21 22:36:30,439 views show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-05-21 22:36:30,444 views Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donation_date">Donation date:</label>
+    <input type="date" name="donation_date" value="2025-05-21" required id="id_donation_date"><input type="hidden" name="initial-donation_date" value="2025-05-21" id="initial-id_donation_date">
+    
+    
+      
+    
+  </p>
+DEBUG 2025-05-21 22:44:49,049 views show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-05-21 22:44:49,068 views Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donation_date">Donation date:</label>
+    <input type="date" name="donation_date" value="2025-05-21" required id="id_donation_date"><input type="hidden" name="initial-donation_date" value="2025-05-21" id="initial-id_donation_date">
+    
+    
+      
+    
+  </p>
+DEBUG 2025-05-21 22:44:54,067 views show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-05-21 22:44:54,072 views Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donation_date">Donation date:</label>
+    <input type="date" name="donation_date" value="2025-05-21" required id="id_donation_date"><input type="hidden" name="initial-donation_date" value="2025-05-21" id="initial-id_donation_date">
+    
+    
+      
+    
+  </p>
+DEBUG 2025-05-21 22:44:55,217 views show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-05-21 22:44:55,220 views Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donation_date">Donation date:</label>
+    <input type="date" name="donation_date" value="2025-05-21" required id="id_donation_date"><input type="hidden" name="initial-donation_date" value="2025-05-21" id="initial-id_donation_date">
+    
+    
+      
+    
+  </p>
+DEBUG 2025-05-21 22:54:57,230 views show_manual_link: False, User: xxhunterxx, Role: member
+DEBUG 2025-05-21 22:54:57,245 views Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donation_date">Donation date:</label>
+    <input type="date" name="donation_date" value="2025-05-21" required id="id_donation_date"><input type="hidden" name="initial-donation_date" value="2025-05-21" id="initial-id_donation_date">
+    
+    
+      
+    
+  </p>
+DEBUG 2025-05-21 22:59:11,084 views show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-05-21 22:59:11,098 views Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donation_date">Donation date:</label>
+    <input type="date" name="donation_date" value="2025-05-21" required id="id_donation_date"><input type="hidden" name="initial-donation_date" value="2025-05-21" id="initial-id_donation_date">
+    
+    
+      
+    
+  </p>
+DEBUG 2025-05-22 02:14:30,822 views User Mr_Admin (role=admin, council=Council 3469): Found 0 pending manual donations
+DEBUG 2025-05-22 02:14:39,208 views show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-05-22 02:14:39,230 views Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donation_date">Donation date:</label>
+    <input type="date" name="donation_date" value="2025-05-22" required id="id_donation_date"><input type="hidden" name="initial-donation_date" value="2025-05-22" id="initial-id_donation_date">
+    
+    
+      
+    
+  </p>
+DEBUG 2025-05-22 02:16:08,142 views User Mr_Admin (role=admin, council=Council 3469): Found 0 pending manual donations

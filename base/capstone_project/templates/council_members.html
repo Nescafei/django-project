@@ -1,0 +1,623 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Council Members
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
+
+<div class="dashboard-container">
+    <div class="content-card">
+        <div class="dashboard-header">
+            <h1>Council Members</h1>
+            <div>
+                <a href="{% url 'dashboard' %}" class="dashboard-btn secondary back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Filters -->
+        <div class="filters-container">
+            <form method="get" class="filter-form">
+                <div class="filter-group">
+                    <label for="role">Role:</label>
+                    <select name="role" id="role" class="filter-select">
+                        <option value="all" {% if role_filter == 'all' or not role_filter %}selected{% endif %}>All Roles</option>
+                        <option value="officer" {% if role_filter == 'officer' %}selected{% endif %}>Officer</option>
+                        <option value="member" {% if role_filter == 'member' %}selected{% endif %}>Member</option>
+                        <option value="pending" {% if role_filter == 'pending' %}selected{% endif %}>Pending</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="degree">Degree:</label>
+                    <select name="degree" id="degree" class="filter-select">
+                        <option value="all" {% if degree_filter == 'all' or not degree_filter %}selected{% endif %}>All Degrees</option>
+                        <option value="1st" {% if degree_filter == '1st' %}selected{% endif %}>1st Degree</option>
+                        <option value="2nd" {% if degree_filter == '2nd' %}selected{% endif %}>2nd Degree</option>
+                        <option value="3rd" {% if degree_filter == '3rd' %}selected{% endif %}>3rd Degree</option>
+                        <option value="4th" {% if degree_filter == '4th' %}selected{% endif %}>4th Degree</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <button type="submit" class="dashboard-btn">Apply Filters</button>
+                    <a href="{% url 'council_members' %}" class="dashboard-btn secondary">Clear Filters</a>
+                </div>
+            </form>
+        </div>
+
+        <!-- Search -->
+        <div class="search-container">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="memberSearch" class="search-input" placeholder="Search members by name or email...">
+                <button id="clearSearch" class="clear-search"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+
+        <!-- Members List -->
+        <div class="members-list">
+            {% for user in users %}
+            <div class="member-item">
+                <div class="member-header">
+                    <div class="member-name-section">
+                        {% if user.profile_picture %}
+                            <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="member-pic">
+                        {% else %}
+                            <div class="member-pic">
+                                <i class="fas fa-user"></i>
+                            </div>
+                        {% endif %}
+                        <div>
+                            <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+                            <span class="role-badge role-{{ user.role }}">{{ user.get_role_display }}</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="member-details">
+                    <div class="detail-column">
+                        <p><strong>Member Since:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+                        <p><strong>Degree:</strong> {{ user.get_current_degree_display }}</p>
+                    </div>
+                    <div class="detail-column">
+                        <p><strong>Email:</strong> {{ user.email }}</p>
+                        <p><strong>Contact:</strong> {{ user.contact_number|default:"Not provided" }}</p>
+                    </div>
+                </div>
+                
+                <div class="action-buttons">
+                    <button class="dashboard-btn view-member-btn" data-user-id="{{ user.id }}">
+                        <i class="fas fa-eye"></i>View Details
+                    </button>
+                </div>
+            </div>
+            {% empty %}
+            <div class="empty-state">
+                <i class="fas fa-users-slash"></i>
+                <p>No members found matching your criteria.</p>
+                <p>Try adjusting your filters.</p>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+
+<!-- Member details modal -->
+<div id="memberDetailsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Member Details</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div id="memberDetailsContent">
+            <div class="loading">Loading member details...</div>
+        </div>
+        <div class="modal-footer">
+            <button id="okButton" class="dashboard-btn">OK</button>
+        </div>
+    </div>
+</div>
+
+<style>
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid rgba(13, 52, 113, 0.1);
+}
+
+.filters-container {
+    background-color: #f8f9fa;
+    padding: 1.5rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 2rem;
+}
+
+.filter-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.filter-group {
+    flex: 1;
+    min-width: 200px;
+}
+
+.filter-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--heading-color);
+}
+
+.filter-select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid rgba(13, 52, 113, 0.2);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    background-color: white;
+}
+
+.search-container {
+    margin-bottom: 2rem;
+}
+
+.search-wrapper {
+    position: relative;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6c757d;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.75rem 1rem 0.75rem 2.5rem;
+    border: 2px solid rgba(13, 52, 113, 0.2);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    background-color: white;
+    transition: box-shadow 0.2s ease;
+}
+
+.clear-search {
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    display: none;
+    padding: 0;
+    font-size: 1rem;
+}
+
+.members-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.member-item {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.member-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.member-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.member-name-section {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.member-pic {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.member-pic i {
+    font-size: 1.8rem;
+    color: #0D3471;
+}
+
+.member-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.member-header h3 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: var(--heading-color);
+}
+
+.member-details {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2rem;
+    margin-bottom: 1rem;
+}
+
+.detail-column {
+    flex: 1;
+    min-width: 200px;
+}
+
+.detail-column p {
+    margin: 0.5rem 0;
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.role-admin {
+    background-color: #0D3471;
+    color: white;
+}
+
+.role-officer {
+    background-color: #28a745;
+    color: white;
+}
+
+.role-member {
+    background-color: #17a2b8;
+    color: white;
+}
+
+.role-pending {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6c757d;
+}
+
+.empty-state i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: #adb5bd;
+}
+
+/* Improved Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+.modal.show {
+    opacity: 1;
+}
+
+.modal-content {
+    background-color: var(--secondary-bg);
+    margin: 10% auto;
+    border-radius: var(--border-radius);
+    max-width: 700px;
+    position: relative;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    transform: translateY(-20px);
+    opacity: 0;
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.modal.show .modal-content {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--heading-color);
+}
+
+#memberDetailsContent {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: right;
+}
+
+.close {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #aaa;
+    transition: color 0.2s ease;
+}
+
+.close:hover {
+    color: var(--primary-bg);
+}
+
+.loading {
+    text-align: center;
+    padding: 2rem;
+    color: var(--heading-color);
+}
+
+.detail-group {
+    margin-bottom: 1rem;
+}
+
+.detail-group strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: #0D3471;
+}
+
+.profile-image-container {
+    text-align: center;
+    margin-bottom: 1.5rem;
+}
+
+.profile-image {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid #0D3471;
+}
+
+.profile-placeholder {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 3rem;
+    color: #0D3471;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .modal-content {
+        margin: 10% 1rem;
+        max-height: 90vh;
+    }
+}
+
+.back-btn:hover {
+    background-color: #f4b41a !important;
+    color: white;
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Search functionality with clear button
+    const searchInput = document.getElementById('memberSearch');
+    const clearButton = document.getElementById('clearSearch');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const memberItems = document.querySelectorAll('.member-item');
+            
+            // Show/hide clear button
+            clearButton.style.display = searchTerm ? 'block' : 'none';
+            
+            memberItems.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                item.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+        
+        // Focus effect
+        searchInput.addEventListener('focus', function() {
+            this.parentElement.style.boxShadow = '0 0 0 3px rgba(13, 52, 113, 0.1)';
+        });
+        
+        searchInput.addEventListener('blur', function() {
+            this.parentElement.style.boxShadow = 'none';
+        });
+    }
+    
+    // Clear search
+    if (clearButton) {
+        clearButton.addEventListener('click', function() {
+            searchInput.value = '';
+            searchInput.dispatchEvent(new Event('input'));
+            searchInput.focus();
+        });
+    }
+    
+    // View member details
+    const viewMemberBtns = document.querySelectorAll('.view-member-btn');
+    const modal = document.getElementById('memberDetailsModal');
+    const contentDiv = document.getElementById('memberDetailsContent');
+    const okButton = document.getElementById('okButton');
+    
+    function openModal() {
+        modal.style.display = 'block';
+        // Trigger reflow to allow animation to work
+        modal.offsetHeight;
+        modal.classList.add('show');
+    }
+    
+    function closeModal() {
+        modal.classList.remove('show');
+        setTimeout(function() {
+            modal.style.display = 'none';
+        }, 300); // Match the transition duration
+    }
+    
+    viewMemberBtns.forEach(btn => {
+        btn.addEventListener('click', function() {
+            const userId = this.getAttribute('data-user-id');
+            
+            openModal();
+            contentDiv.innerHTML = '<div class="loading">Loading member details...</div>';
+            
+            fetch(`/user/${userId}/details/`)
+                .then(response => response.json())
+                .then(data => {
+                    let detailsHTML = `
+                        <div class="member-full-details">
+                            <div class="profile-image-container">
+                                ${data.profile_picture ? 
+                                    `<img src="${data.profile_picture}" alt="Profile Picture" class="profile-image">` : 
+                                    `<div class="profile-placeholder"><i class="fas fa-user"></i></div>`
+                                }
+                            </div>
+                            
+                            <h4>${data.first_name} ${data.middle_name ? data.middle_name + ' ' : ''}${data.last_name} ${data.suffix || ''}</h4>
+                            <span class="role-badge role-${data.role}">${data.role_display}</span>
+                            
+                            <div class="detail-group">
+                                <strong>Username:</strong>
+                                <p>${data.username}</p>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Email:</strong>
+                                <p>${data.email || 'Not provided'}</p>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Contact Number:</strong>
+                                <p>${data.contact_number || 'Not provided'}</p>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Council:</strong>
+                                <p>${data.council_name || 'Not assigned'}</p>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Degree:</strong>
+                                <p>${data.degree_display || 'Not specified'}</p>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Birthday:</strong>
+                                <p>${data.birthday || 'Not specified'}</p>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Age:</strong>
+                                <p>${data.age || 'Not specified'}</p>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Address:</strong>
+                                <address>
+                                    ${data.street ? data.street + '<br>' : ''}
+                                    ${data.barangay ? data.barangay + '<br>' : ''}
+                                    ${data.city ? data.city + ', ' : ''}${data.province || ''}
+                                </address>
+                            </div>
+                            
+                            <div class="detail-group">
+                                <strong>Member Since:</strong>
+                                <p>${data.date_joined}</p>
+                            </div>
+                        </div>
+                    `;
+                    
+                    contentDiv.innerHTML = detailsHTML;
+                })
+                .catch(error => {
+                    contentDiv.innerHTML = '<p>Error loading member details. Please try again later.</p>';
+                });
+        });
+    });
+    
+    // Close modal when clicking the close button
+    const closeButton = document.querySelector('.modal .close');
+    if (closeButton) {
+        closeButton.addEventListener('click', closeModal);
+    }
+    
+    // Close modal when clicking the OK button
+    if (okButton) {
+        okButton.addEventListener('click', closeModal);
+    }
+    
+    // Close modal when clicking outside of it
+    window.addEventListener('click', function(event) {
+        if (event.target === modal) {
+            closeModal();
+        }
+    });
+});
+</script>
+{% endblock %} 

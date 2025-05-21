@@ -36,151 +36,76 @@ Knights of Columbus - Admin Dashboard
                         <a href="{% url 'edit_profile' %}" class="dashboard-btn">
                             <i class="fas fa-user-edit"></i>Edit Profile
                         </a>
-                        <a href="{% url 'archived_users' %}" class="dashboard-btn">
-                            <i class="fas fa-archive"></i>View Archived Users
-                        </a>
                     </div>
                 </div>
             </div>
 
             <!-- Users Management Card -->
-            <div class="content-card">
-                <div class="card-header collapsible" data-target="usersList">
-                    <h3>
+            <div class="content-card dashboard-card">
+                <div class="dashboard-summary">
+                    <div class="summary-icon">
                         <i class="fas fa-users"></i>
-                        Users Management
-                        <span class="count-badge">{{ user_list|length }} Users
-                            <i class="fas fa-chevron-down toggle-icon"></i>
-                        </span>
-                    </h3>
+                    </div>
+                    <div class="summary-content">
+                        <h3>Users Management</h3>
+                        <div class="summary-count">{{ user_list|length }}</div>
+                        <p class="summary-label">Active Users</p>
+                    </div>
                 </div>
-                <div id="usersList" class="collapsible-content">
-                    <div class="search-filter">
-                        <input type="text" placeholder="Search users..." class="search-input">
-                    </div>
-                    <div class="action-buttons" style="justify-content: flex-start; margin-bottom: 1rem;">
-                        <a href="{% url 'manage_roles' %}" class="dashboard-btn">
-                            <i class="fas fa-user-tag"></i>Manage Roles
-                        </a>
-                        <a href="{% url 'manage_pending_users' %}" class="dashboard-btn">
-                            <i class="fas fa-user-clock"></i>Pending Users
-                        </a>
-                    </div>
-                    <div class="user-list">
-                        {% for u in user_list %}
-                            <div class="user-item">
-                                <div class="user-info">
-                                    <div class="user-header">
-                                        <h4>{{ u.first_name }} {{ u.last_name }}</h4>
-                                        <span class="role-badge role-{{ u.role }}">{{ u.get_role_display }}</span>
-                                    </div>
-                                    <div class="user-details">
-                                        <div class="detail-column">
-                                            <p><strong>Council:</strong> {{ u.council.name|default:"No council" }}</p>
-                                            <p><strong>Member Since:</strong> {{ u.date_joined|date:"F j, Y" }}</p>
-                                        </div>
-                                        <div class="detail-column">
-                                            <p><strong>Degree:</strong> {{ u.get_current_degree_display }}</p>
-                                            <p><strong>Contact:</strong> {{ u.contact_number }}</p>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="action-buttons">
-                                    <a href="{% url 'update_degree' u.id %}" class="dashboard-btn">
-                                        <i class="fas fa-graduation-cap"></i>Update Degree
-                                    </a>
-                                    <a href="{% url 'archive_user' u.id %}" class="dashboard-btn">
-                                        <i class="fas fa-box-archive"></i>Archive
-                                    </a>
-                                </div>
-                            </div>
-                        {% endfor %}
-                    </div>
+                <div class="action-buttons" style="justify-content: flex-start; margin-bottom: 1rem;">
+                    <a href="{% url 'manage_roles' %}" class="dashboard-btn">
+                        <i class="fas fa-user-tag"></i>Manage Roles
+                    </a>
+                    <a href="{% url 'manage_pending_users' %}" class="dashboard-btn">
+                        <i class="fas fa-user-clock"></i>Pending Users
+                    </a>
+                    <a href="{% url 'member_list' %}" class="dashboard-btn">
+                        <i class="fas fa-list"></i>View All Users
+                    </a>
                 </div>
             </div>
 
             <!-- Events Card -->
-            <div class="content-card">
-                <div class="card-header collapsible" data-target="eventsList">
-                    <h3>
+            <div class="content-card dashboard-card">
+                <div class="dashboard-summary">
+                    <div class="summary-icon">
                         <i class="fas fa-calendar-alt"></i>
-                        Upcoming Events
-                        <span class="count-badge">{{ events|length }} Events
-                            <i class="fas fa-chevron-down toggle-icon"></i>
-                        </span>
-                    </h3>
+                    </div>
+                    <div class="summary-content">
+                        <h3>Upcoming Events</h3>
+                        <div class="summary-count">{{ approved_events_count }}</div>
+                        <p class="summary-label">Approved Events</p>
+                    </div>
                 </div>
-                <div id="eventsList" class="collapsible-content">
-                    <div class="action-buttons" style="justify-content: flex-start; margin-bottom: 1rem;">
-                        <a href="{% url 'add_event' %}" class="dashboard-btn">
-                            <i class="fas fa-plus"></i>Add Event
-                        </a>
-                        <a href="{% url 'event_proposals' %}" class="dashboard-btn">
-                            <i class="fas fa-clipboard-check"></i>Event Proposals
-                        </a>
-                        <a href="{% url 'archived_events' %}" class="dashboard-btn">
-                            <i class="fas fa-archive"></i>Archived Events
-                        </a>
-                    </div>
-                    <div class="search-filter">
-                        <input type="text" placeholder="Search events..." class="search-input">
-                    </div>
-                    <ul class="dashboard-list">
-                        {% for event in events %}
-                            <li>
-                                <h4>{{ event.name }}</h4>
-                                <p>{{ event.date_from|date:"F d, Y" }} {% if event.date_until and event.date_until != event.date_from %} - {{ event.date_until|date:"F d, Y" }}{% endif %}</p>
-                                <p>Council: {{ event.council.name }}</p>
-                                <p>Category: {{ event.category }}</p>
-                                <div class="action-buttons">
-                                    <a href="#" class="dashboard-btn view-event-btn" data-event-id="{{ event.id }}">
-                                        <i class="fas fa-eye"></i>View
-                                    </a>
-                                    <a href="{% url 'edit_event' event.id %}" class="dashboard-btn">
-                                        <i class="fas fa-edit"></i>Edit
-                                    </a>
-                                </div>
-                            </li>
-                        {% empty %}
-                            <li>
-                                <p>No upcoming events. Click "Add Event" to create one.</p>
-                            </li>
-                        {% endfor %}
-                    </ul>
+                <div class="action-buttons" style="justify-content: flex-start; margin-bottom: 1rem;">
+                    <a href="{% url 'add_event' %}" class="dashboard-btn">
+                        <i class="fas fa-plus"></i>Add Event
+                    </a>
+                    <a href="{% url 'event_proposals' %}" class="dashboard-btn">
+                        <i class="fas fa-clipboard-check"></i>Event Proposals
+                    </a>
+                    <a href="{% url 'event_list' %}" class="dashboard-btn">
+                        <i class="fas fa-list"></i>View All Events
+                    </a>
                 </div>
             </div>
 
             <!-- Analytics Card -->
-            <div class="content-card">
-                <div class="card-header collapsible" data-target="analyticsList">
-                    <h3>
+            <div class="content-card dashboard-card">
+                <div class="dashboard-summary">
+                    <div class="summary-icon">
                         <i class="fas fa-chart-bar"></i>
-                        Council Analytics
-                        <span class="count-badge">{{ analytics|length }} Reports
-                            <i class="fas fa-chevron-down toggle-icon"></i>
-                        </span>
-                    </h3>
+                    </div>
+                    <div class="summary-content">
+                        <h3>Council Analytics</h3>
+                        <div class="summary-count">{{ analytics|length }}</div>
+                        <p class="summary-label">Council Reports</p>
+                    </div>
                 </div>
-                <div id="analyticsList" class="collapsible-content">
-                    <ul class="dashboard-list">
-                        {% for a in analytics %}
-                            <li>
-                                <div class="stat-card">
-                                    <h4>{{ a.council.name }}</h4>
-                                    <div class="stat-grid">
-                                        <div>
-                                            <p class="stat-description">Events</p>
-                                            <div class="stat-value">{{ a.events_count }}</div>
-                                        </div>
-                                        <div>
-                                            <p class="stat-description">Donations</p>
-                                            <div class="stat-value">${{ a.donations_amount }}</div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </li>
-                        {% endfor %}
-                    </ul>
+                <div class="action-buttons" style="justify-content: flex-start; margin-bottom: 1rem;">
+                    <a href="{% url 'analytics_view' %}" class="dashboard-btn">
+                        <i class="fas fa-chart-line"></i>View Analytics
+                    </a>
                 </div>
             </div>
         </div>
@@ -355,20 +280,65 @@ Knights of Columbus - Admin Dashboard
 .user-info {
     flex: 1;
 }
+
+/* New styles for dashboard cards */
+.dashboard-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(13, 52, 113, 0.15);
+}
+
+.dashboard-summary {
+    display: flex;
+    align-items: center;
+    padding: 1rem 0;
+}
+
+.summary-icon {
+    background-color: var(--primary-bg);
+    color: white;
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1.5rem;
+}
+
+.summary-icon i {
+    font-size: 1.8rem;
+}
+
+.summary-content {
+    flex: 1;
+}
+
+.summary-content h3 {
+    margin: 0 0 0.5rem 0;
+    border-bottom: none;
+    padding-bottom: 0;
+}
+
+.summary-count {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: var(--primary-bg);
+    line-height: 1;
+}
+
+.summary-label {
+    font-size: 0.9rem;
+    color: #666;
+    margin: 0.25rem 0 0;
+}
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Collapsible functionality
-    const collapsibles = document.querySelectorAll('.collapsible');
-    collapsibles.forEach(collapsible => {
-        collapsible.addEventListener('click', function() {
-            const target = document.getElementById(this.dataset.target);
-            this.classList.toggle('active');
-            target.classList.toggle('show');
-        });
-    });
-
     // Search functionality
     const searchInputs = document.querySelectorAll('.search-input');
     searchInputs.forEach(input => {

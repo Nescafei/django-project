@@ -1,18 +1,200 @@
 {% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Update Member Degree
+{% endblock %}
+
 {% block content %}
-<div class="container">
-    <h1>Update Degree for {{ user.username }}</h1>
-    <form method="post">
-        {% csrf_token %}
-        <label for="current_degree">Current Degree:</label>
-        <select id="current_degree" name="current_degree" required>
-            <option value="" disabled {% if not user.current_degree %}selected{% endif %}>Select a degree</option>
-            <option value="1st" {% if user.current_degree == '1st' %}selected{% endif %}>1st Degree</option>
-            <option value="2nd" {% if user.current_degree == '2nd' %}selected{% endif %}>2nd Degree</option>
-            <option value="3rd" {% if user.current_degree == '3rd' %}selected{% endif %}>3rd Degree</option>
-            <option value="4th" {% if user.current_degree == '4th' %}selected{% endif %}>4th Degree</option>
-        </select>
-        <button type="submit">Save Degree</button>
-    </form>
+<link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
+
+<div class="dashboard-container">
+    <div class="content-card">
+        <div class="dashboard-header">
+            <h1>Update Member Degree</h1>
+            <h2>{{ user.first_name }} {{ user.last_name }}</h2>
+        </div>
+
+        <div class="form-container">
+            <div class="member-info">
+                <div class="member-name-section">
+                    {% if user.profile_picture %}
+                        <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="member-pic">
+                    {% else %}
+                        <div class="member-pic">
+                            <i class="fas fa-user"></i>
+                        </div>
+                    {% endif %}
+                    <div>
+                        <h3>{{ user.first_name }} {{ user.last_name }}</h3>
+                        <span class="role-badge role-{{ user.role }}">{{ user.get_role_display }}</span>
+                    </div>
+                </div>
+                
+                <div class="current-info">
+                    <p><strong>Current Degree:</strong> {{ user.get_current_degree_display }}</p>
+                    <p><strong>Council:</strong> {{ user.council.name|default:"No council" }}</p>
+                    <p><strong>Member Since:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
+                </div>
+            </div>
+            
+            <form method="post" class="degree-form">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="degree">New Degree:</label>
+                    <select name="degree" id="degree" class="form-select" required>
+                        {% for degree_value, degree_name in degree_choices %}
+                            <option value="{{ degree_value }}" {% if user.current_degree == degree_value %}selected{% endif %}>{{ degree_name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="dashboard-btn">
+                        <i class="fas fa-save"></i>Update Degree
+                    </button>
+                    {% if request.user.role == 'admin' %}
+                    <a href="{% url 'member_list' %}" class="dashboard-btn secondary">
+                        <i class="fas fa-times"></i>Cancel
+                    </a>
+                    {% else %}
+                    <a href="{% url 'council_members' %}" class="dashboard-btn secondary">
+                        <i class="fas fa-times"></i>Cancel
+                    </a>
+                    {% endif %}
+                </div>
+            </form>
+        </div>
+    </div>
 </div>
+
+<style>
+.form-container {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.member-info {
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.member-name-section {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.member-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.member-pic i {
+    font-size: 2.5rem;
+    color: #0D3471;
+}
+
+.member-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.member-name-section h3 {
+    margin: 0;
+    font-size: 1.8rem;
+    color: var(--heading-color);
+}
+
+.current-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.5rem;
+}
+
+.current-info p {
+    margin: 0;
+    font-size: 1.1rem;
+}
+
+.role-badge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 0.5rem;
+}
+
+.role-admin {
+    background-color: #dc3545;
+    color: white;
+}
+
+.role-officer {
+    background-color: #0D3471;
+    color: white;
+}
+
+.role-member {
+    background-color: #28a745;
+    color: white;
+}
+
+.role-pending {
+    background-color: #ffc107;
+    color: #212529;
+}
+
+.degree-form {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--heading-color);
+    font-size: 1.1rem;
+}
+
+.form-select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid rgba(13, 52, 113, 0.2);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    background-color: white;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 2rem;
+}
+
+.dashboard-btn.secondary {
+    background-color: #6c757d;
+}
+
+.dashboard-btn.secondary:hover {
+    background-color: #5a6268;
+}
+</style>
 {% endblock %}

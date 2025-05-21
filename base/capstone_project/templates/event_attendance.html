@@ -1,0 +1,898 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load custom_filters %}
+{% block title %}
+Knights of Columbus - Event Attendance
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
+
+<div class="dashboard-container">
+    <div class="content-card">
+        <div class="dashboard-header">
+            <h1>Event Attendance</h1>
+            <div class="header-actions">
+                <a href="{% url 'event_list' %}" class="dashboard-btn secondary back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Events
+                </a>
+            </div>
+        </div>
+
+        {% if not is_today %}
+        <div class="alert-message">
+            <i class="fas fa-exclamation-circle"></i>
+            <p>Note: This event is not scheduled for today. Attendance can only be recorded on the day of the event.</p>
+        </div>
+        {% endif %}
+
+        <div class="attendance-container">
+            <!-- Event Details Column -->
+            <div class="event-details-column">
+                <div class="event-card">
+                    <h2>{{ event.name }}</h2>
+                    <span class="status-badge status-{{ event.status }}">{{ event.get_status_display }}</span>
+                    
+                    <div class="event-meta">
+                        <div class="meta-item">
+                            <i class="fas fa-calendar"></i>
+                            <div>
+                                <strong>Date</strong>
+                                <p>{{ event.date_from|date:"F j, Y" }}
+                                {% if event.date_until and event.date_until != event.date_from %}
+                                - {{ event.date_until|date:"F j, Y" }}
+                                {% endif %}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="meta-item">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <div>
+                                <strong>Location</strong>
+                                <p>{{ event.street }}, {{ event.barangay }}<br>
+                                {{ event.city }}, {{ event.province }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="meta-item">
+                            <i class="fas fa-tag"></i>
+                            <div>
+                                <strong>Category</strong>
+                                <p>{{ event.category }}</p>
+                            </div>
+                        </div>
+                        
+                        <div class="meta-item">
+                            <i class="fas fa-users"></i>
+                            <div>
+                                <strong>Council</strong>
+                                <p>{% if event.is_global %}All Councils{% else %}{{ event.council.name }}{% endif %}</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="event-description">
+                        <h3>Description</h3>
+                        <p>{{ event.description }}</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Attendance List Column -->
+            <div class="attendance-list-column">
+                <div class="attendance-card">
+                    <div class="attendance-header">
+                        <h2>Member Attendance</h2>
+                        <div class="attendance-actions">
+                            <div class="search-wrapper">
+                                <input type="text" id="searchMembers" placeholder="Search members..." class="search-input">
+                                <button id="clearSearch" class="clear-search"><i class="fas fa-times"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="attendance-stats">
+                        <div class="stat-item">
+                            <span class="stat-value" id="totalMembers">{{ members|length }}</span>
+                            <span class="stat-label">Total Members</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="presentCount">{{ present_count }}</span>
+                            <span class="stat-label">Present</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-value" id="absentCount">{{ members|length|subtract:present_count }}</span>
+                            <span class="stat-label">Absent</span>
+                        </div>
+                    </div>
+                    
+                    <form id="attendanceForm" method="post">
+                        {% csrf_token %}
+                        <div class="attendance-list">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Member</th>
+                                        <th class="attendance-column">Present</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for member in members %}
+                                    <tr class="member-row" data-name="{{ member.first_name }} {{ member.last_name }}" data-id="{{ member.id }}">
+                                        <td class="member-info-cell">
+                                            <div class="member-info">
+                                                {% if member.profile_picture %}
+                                                <img src="{{ member.profile_picture.url }}" alt="{{ member.first_name }}" class="member-avatar">
+                                                {% else %}
+                                                <div class="member-avatar-placeholder">
+                                                    <i class="fas fa-user"></i>
+                                                </div>
+                                                {% endif %}
+                                                <div class="member-details">
+                                                    <span class="member-name">{{ member.first_name }} {{ member.last_name }}</span>
+                                                    <span class="member-role">{{ member.get_current_degree_display|default:"" }}</span>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td class="attendance-column">
+                                            <label class="attendance-checkbox">
+                                                <input type="checkbox" class="attendance-check" name="attendance" value="{{ member.id }}" 
+                                                    {% if member.id in attendance %}checked{% endif %}
+                                                    {% if not is_today %}disabled{% endif %}>
+                                                <span class="checkmark"></span>
+                                            </label>
+                                        </td>
+                                    </tr>
+                                    {% empty %}
+                                    <tr>
+                                        <td colspan="2" class="no-members">No members found for this event</td>
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                        
+                        {% if is_today %}
+                        <div class="save-attendance-container">
+                            <button type="button" id="saveAttendance" class="dashboard-btn">
+                                <i class="fas fa-save"></i> Save Attendance
+                            </button>
+                        </div>
+                        {% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="notification" class="notification">
+    <div class="notification-content">
+        <i class="fas fa-check-circle success-icon"></i>
+        <span id="notification-message">Attendance updated successfully</span>
+    </div>
+    <button id="closeNotification" class="close-notification"><i class="fas fa-times"></i></button>
+</div>
+
+<!-- Confirmation Modal -->
+<div id="confirmationModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Save Attendance?</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body">
+            <p>Are you sure you want to save the attendance? This will update attendance records for all members.</p>
+        </div>
+        <div class="modal-footer">
+            <button id="cancelButton" class="dashboard-btn secondary">Cancel</button>
+            <button id="confirmButton" class="dashboard-btn">Save</button>
+        </div>
+    </div>
+</div>
+
+<style>
+.dashboard-header {
+    position: relative;
+    padding-bottom: 1rem;
+    margin-bottom: 2rem;
+    border-bottom: 1px solid rgba(13, 52, 113, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.alert-message {
+    background-color: #fff3cd;
+    color: #856404;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+    margin-bottom: 1.5rem;
+    border: 1px solid #ffeeba;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.alert-message i {
+    font-size: 1.5rem;
+}
+
+.attendance-container {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+}
+
+.event-details-column, .attendance-list-column {
+    flex: 1;
+    min-width: 300px;
+}
+
+.event-card, .attendance-card {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.event-card h2 {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    color: var(--heading-color);
+}
+
+.event-meta {
+    margin: 1.5rem 0;
+}
+
+.meta-item {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    align-items: flex-start;
+}
+
+.meta-item i {
+    color: var(--primary-bg);
+    font-size: 1.2rem;
+    margin-top: 0.2rem;
+}
+
+.meta-item strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    color: var(--heading-color);
+}
+
+.meta-item p {
+    margin: 0;
+}
+
+.event-description h3 {
+    margin-top: 1rem;
+    margin-bottom: 0.5rem;
+    color: var(--heading-color);
+}
+
+.event-description p {
+    margin-top: 0;
+}
+
+.attendance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.attendance-header h2 {
+    margin: 0;
+    color: var(--heading-color);
+}
+
+.search-wrapper {
+    position: relative;
+    width: 100%;
+    max-width: 300px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 0.5rem 2rem 0.5rem 0.75rem;
+    border: 1px solid rgba(13, 52, 113, 0.2);
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+}
+
+.clear-search {
+    position: absolute;
+    right: 0.5rem;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #6c757d;
+    cursor: pointer;
+    display: none;
+}
+
+.attendance-stats {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    background-color: #f8f9fa;
+    padding: 1rem;
+    border-radius: var(--border-radius);
+}
+
+.stat-item {
+    text-align: center;
+    flex: 1;
+}
+
+.stat-value {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-bg);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.attendance-list {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.attendance-list table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.attendance-list th {
+    text-align: left;
+    padding: 0.75rem;
+    border-bottom: 2px solid #dee2e6;
+    color: var(--heading-color);
+}
+
+.attendance-list td {
+    padding: 0.75rem;
+    border-bottom: 1px solid #dee2e6;
+}
+
+.attendance-column {
+    width: 80px;
+    text-align: center;
+}
+
+.member-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.member-avatar, .member-avatar-placeholder {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+
+.member-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.member-avatar-placeholder {
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.member-avatar-placeholder i {
+    color: #6c757d;
+}
+
+.member-details {
+    display: flex;
+    flex-direction: column;
+}
+
+.member-name {
+    font-weight: 500;
+    color: var(--heading-color);
+}
+
+.member-role {
+    font-size: 0.85rem;
+    color: #6c757d;
+}
+
+.attendance-checkbox {
+    position: relative;
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    cursor: pointer;
+}
+
+.attendance-checkbox input {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+    height: 0;
+    width: 0;
+    z-index: 1; /* Ensure the input is clickable */
+}
+
+.checkmark {
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 24px;
+    width: 24px;
+    background-color: #eee;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+}
+
+.attendance-checkbox:hover input ~ .checkmark {
+    background-color: #ccc;
+}
+
+.attendance-checkbox input:checked ~ .checkmark {
+    background-color: var(--primary-bg);
+}
+
+.attendance-checkbox input:disabled ~ .checkmark {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.checkmark:after {
+    content: "";
+    position: absolute;
+    display: none;
+}
+
+.attendance-checkbox input:checked ~ .checkmark:after {
+    display: block;
+}
+
+.attendance-checkbox .checkmark:after {
+    left: 9px;
+    top: 5px;
+    width: 5px;
+    height: 10px;
+    border: solid white;
+    border-width: 0 2px 2px 0;
+    transform: rotate(45deg);
+}
+
+.no-members {
+    text-align: center;
+    color: #6c757d;
+    padding: 2rem 0;
+}
+
+.save-attendance-container {
+    margin-top: 1.5rem;
+    text-align: right;
+}
+
+.notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background-color: #28a745;
+    color: white;
+    padding: 1rem 1.5rem;
+    border-radius: var(--border-radius);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    z-index: 1000;
+    max-width: 350px;
+    transform: translateX(400px);
+    transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    opacity: 0;
+}
+
+.notification.show {
+    transform: translateX(0);
+    opacity: 1;
+}
+
+.notification-content {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.notification i {
+    font-size: 1.5rem;
+}
+
+.notification-message {
+    font-weight: 500;
+}
+
+.close-notification {
+    background: none;
+    border: none;
+    color: white;
+    cursor: pointer;
+    padding: 0;
+    font-size: 1rem;
+    margin-left: 1rem;
+}
+
+/* Success animation */
+@keyframes checkmark {
+    0% {
+        transform: scale(0);
+        opacity: 0;
+    }
+    50% {
+        transform: scale(1.2);
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+.success-icon {
+    animation: checkmark 0.5s cubic-bezier(0.65, 0, 0.45, 1) forwards;
+}
+
+/* Modal styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+    background-color: var(--secondary-bg);
+    margin: 10% auto;
+    border-radius: var(--border-radius);
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+}
+
+.modal-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.modal-header h3 {
+    margin: 0;
+    color: var(--heading-color);
+}
+
+.modal-body {
+    padding: 1.5rem;
+}
+
+.modal-footer {
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.1);
+    text-align: right;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+.close {
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #aaa;
+    transition: color 0.2s ease;
+}
+
+.close:hover {
+    color: var(--primary-bg);
+}
+
+.back-btn:hover {
+    background-color: #f4b41a !important;
+    color: white;
+}
+
+.dashboard-btn.loading {
+    opacity: 0.8;
+    pointer-events: none;
+    background-color: #6c757d;
+}
+
+@media (max-width: 768px) {
+    .attendance-container {
+        flex-direction: column;
+    }
+    
+    .attendance-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .search-wrapper {
+        max-width: 100%;
+        margin-top: 1rem;
+    }
+    
+    .dashboard-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .dashboard-header h1 {
+        margin-bottom: 0;
+    }
+    
+    .attendance-list {
+        max-height: 400px;
+    }
+    
+    .member-info {
+        gap: 0.5rem;
+    }
+    
+    .member-avatar, .member-avatar-placeholder {
+        width: 32px;
+        height: 32px;
+    }
+    
+    .member-name {
+        font-size: 0.9rem;
+    }
+    
+    .member-role {
+        font-size: 0.8rem;
+    }
+    
+    .save-attendance-container {
+        text-align: center;
+    }
+}
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Search functionality
+    const searchInput = document.getElementById('searchMembers');
+    const clearButton = document.getElementById('clearSearch');
+    const memberRows = document.querySelectorAll('.member-row');
+    
+    if (searchInput) {
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            
+            // Show/hide clear button
+            clearButton.style.display = searchTerm ? 'block' : 'none';
+            
+            let visibleCount = 0;
+            
+            memberRows.forEach(row => {
+                const memberName = row.getAttribute('data-name').toLowerCase();
+                const isVisible = memberName.includes(searchTerm);
+                
+                row.style.display = isVisible ? '' : 'none';
+                
+                if (isVisible) visibleCount++;
+            });
+            
+            // Update the displayed count
+            document.getElementById('totalMembers').textContent = visibleCount;
+        });
+    }
+    
+    // Clear search
+    if (clearButton) {
+        clearButton.addEventListener('click', function() {
+            searchInput.value = '';
+            searchInput.dispatchEvent(new Event('input'));
+            document.getElementById('totalMembers').textContent = "{{ members|length }}";
+        });
+    }
+    
+    // Close notification
+    const closeNotification = document.getElementById('closeNotification');
+    if (closeNotification) {
+        closeNotification.addEventListener('click', function() {
+            document.getElementById('notification').classList.remove('show');
+        });
+    }
+    
+    // Track attendance changes
+    const attendanceCheckboxes = document.querySelectorAll('.attendance-check');
+    let presentCount = parseInt("{{ present_count }}");
+    const totalMembers = parseInt("{{ members|length }}");
+    
+    attendanceCheckboxes.forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            // Update counts immediately for UI responsiveness
+            if (this.checked) {
+                presentCount++;
+            } else {
+                presentCount--;
+            }
+            
+            // Update the displayed counts
+            document.getElementById('presentCount').textContent = presentCount;
+            document.getElementById('absentCount').textContent = totalMembers - presentCount;
+        });
+    });
+    
+    // Confirmation modal
+    const confirmationModal = document.getElementById('confirmationModal');
+    const confirmButton = document.getElementById('confirmButton');
+    const cancelButton = document.getElementById('cancelButton');
+    const closeModalBtn = confirmationModal.querySelector('.close');
+    
+    // Function to open modal
+    function openModal(modal) {
+        modal.style.display = 'block';
+    }
+    
+    // Function to close modal
+    function closeModal(modal) {
+        modal.style.display = 'none';
+    }
+    
+    // Close modal when clicking close button or cancel
+    closeModalBtn.addEventListener('click', function() {
+        closeModal(confirmationModal);
+    });
+    
+    cancelButton.addEventListener('click', function() {
+        closeModal(confirmationModal);
+    });
+    
+    // Close modal when clicking outside
+    window.addEventListener('click', function(event) {
+        if (event.target === confirmationModal) {
+            closeModal(confirmationModal);
+        }
+    });
+    
+    // Function to show notification
+    function showNotification(message, type = 'success') {
+        const notification = document.getElementById('notification');
+        const notificationMessage = document.getElementById('notification-message');
+        const notificationIcon = notification.querySelector('.notification-content i');
+        
+        // Set notification color based on type
+        if (type === 'success') {
+            notification.style.backgroundColor = '#28a745';
+            notificationIcon.className = 'fas fa-check-circle success-icon';
+        } else if (type === 'error') {
+            notification.style.backgroundColor = '#dc3545';
+            notificationIcon.className = 'fas fa-exclamation-circle';
+        } else if (type === 'warning') {
+            notification.style.backgroundColor = '#ffc107';
+            notificationIcon.className = 'fas fa-exclamation-triangle';
+        }
+        
+        notificationMessage.textContent = message;
+        notification.classList.add('show');
+        
+        // Auto-hide notification after 4 seconds
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 4000);
+    }
+    
+    // Save attendance button
+    const saveButton = document.getElementById('saveAttendance');
+    if (saveButton) {
+        saveButton.addEventListener('click', function() {
+            // Show confirmation modal
+            openModal(confirmationModal);
+        });
+        
+        // Handle confirmation
+        confirmButton.addEventListener('click', function() {
+            // Close the modal
+            closeModal(confirmationModal);
+            
+            // Collect all checked members
+            const checkedMembers = [];
+            const checkboxes = document.querySelectorAll('input[name="attendance"]:checked');
+            
+            checkboxes.forEach(checkbox => {
+                checkedMembers.push(checkbox.value);
+            });
+            
+            // Get CSRF token
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            
+            // Show saving indicator
+            saveButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Saving...';
+            saveButton.disabled = true;
+            saveButton.classList.add('loading');
+            
+            // Send all attendance data at once
+            fetch('/event/update-attendance/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken
+                },
+                body: JSON.stringify({
+                    event_id: '{{ event.id }}',
+                    present_members: checkedMembers
+                })
+            })
+            .then(response => {
+                // Ensure we always restore the button after a short delay
+                setTimeout(() => {
+                    saveButton.innerHTML = '<i class="fas fa-save"></i> Save Attendance';
+                    saveButton.disabled = false;
+                    saveButton.classList.remove('loading');
+                }, 1000);
+                
+                return response.json();
+            })
+            .then(data => {
+                if (data.status === 'success') {
+                    // Update the attendance counts with server data
+                    document.getElementById('presentCount').textContent = data.present_count;
+                    document.getElementById('absentCount').textContent = data.total_count - data.present_count;
+                    presentCount = data.present_count;
+                    
+                    // Show success notification
+                    showNotification(`Attendance saved successfully! ${data.present_count} members marked present.`, 'success');
+                } else {
+                    console.error('Error updating attendance:', data.message);
+                    // Show error notification
+                    showNotification('Error saving attendance: ' + data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error updating attendance:', error);
+                // Show error notification
+                showNotification('Error saving attendance. Please try again.', 'error');
+                
+                // Make sure the button is restored even if there's an error
+                saveButton.innerHTML = '<i class="fas fa-save"></i> Save Attendance';
+                saveButton.disabled = false;
+                saveButton.classList.remove('loading');
+            });
+            
+            // Failsafe: Ensure button returns to normal state after 5 seconds
+            setTimeout(() => {
+                if (saveButton.classList.contains('loading')) {
+                    saveButton.innerHTML = '<i class="fas fa-save"></i> Save Attendance';
+                    saveButton.disabled = false;
+                    saveButton.classList.remove('loading');
+                    
+                    // Show notification about potential issue
+                    showNotification('Attendance may have been saved. Please check the list.', 'warning');
+                }
+            }, 5000);
+        });
+    }
+});
+</script>
+{% endblock %} 

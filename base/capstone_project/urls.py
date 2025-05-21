@@ -47,4 +47,21 @@ urlpatterns = [
     path('reject-event/<int:event_id>/', views.reject_event, name='reject_event'),
     path('event/<int:event_id>/details/', views.event_details, name='event_details'),
     path('archived-events/', views.archived_events, name='archived_events'),
+    
+    # New URLs for member and event lists
+    path('event-list/', views.event_list, name='event_list'),
+    path('member-list/', views.member_list, name='member_list'),
+    path('council-members/', views.council_members, name='council_members'),
+    path('council-events/', views.council_events, name='council_events'),
+    path('update-degree/<int:user_id>/', views.update_degree, name='update_degree'),
+    
+    # User details endpoint
+    path('user/<int:user_id>/details/', views.user_details, name='user_details'),
+    
+    # Event attendance management
+    path('event/<int:event_id>/attendance/', views.event_attendance, name='event_attendance'),
+    path('event/update-attendance/', views.update_attendance, name='update_attendance'),
+    
+    # Member activities
+    path('member-activities/', views.member_activities, name='member_activities'),
 ]

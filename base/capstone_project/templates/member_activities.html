@@ -1,0 +1,322 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - {% if is_self %}My Activities{% else %}{{ member.first_name }}'s Activities{% endif %}
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
+
+<div class="dashboard-container">
+    <div class="content-card">
+        <div class="dashboard-header">
+            <h1>{% if is_self %}My Activities{% else %}{{ member.first_name }}'s Activities{% endif %}</h1>
+            <div>
+                <a href="{% if is_self %}{% url 'dashboard' %}{% else %}{% url 'member_list' %}{% endif %}" class="dashboard-btn secondary back-btn">
+                    <i class="fas fa-arrow-left"></i> {% if is_self %}Back to Dashboard{% else %}Back to Members{% endif %}
+                </a>
+            </div>
+        </div>
+
+        <div class="member-profile-summary">
+            <div class="member-profile-header">
+                {% if member.profile_picture %}
+                <img src="{{ member.profile_picture.url }}" alt="{{ member.first_name }}" class="profile-pic">
+                {% else %}
+                <div class="profile-pic">
+                    <i class="fas fa-user"></i>
+                </div>
+                {% endif %}
+                <div class="member-info">
+                    <h2>{{ member.first_name }} {{ member.last_name }}</h2>
+                    <p><span class="role-badge role-{{ member.role }}">{{ member.get_role_display }}</span></p>
+                    <p>{{ member.council.name }}</p>
+                </div>
+            </div>
+            
+            <div class="activity-stats">
+                <div class="stat-card">
+                    <div class="stat-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <div class="stat-content">
+                        <span class="stat-value">{{ activities|length }}</span>
+                        <span class="stat-label">Events Attended</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="activities-container">
+            <h2>Event Participation History</h2>
+            
+            {% if activities %}
+            <div class="activities-list">
+                {% for activity in activities %}
+                <div class="activity-item">
+                    <div class="activity-date">
+                        <span class="date">{{ activity.event.date_from|date:"M d" }}</span>
+                        <span class="year">{{ activity.event.date_from|date:"Y" }}</span>
+                    </div>
+                    <div class="activity-content">
+                        <h3>{{ activity.event.name }}</h3>
+                        <div class="activity-meta">
+                            <span class="activity-category">{{ activity.event.category }}</span>
+                            <span class="activity-location">
+                                <i class="fas fa-map-marker-alt"></i> {{ activity.event.city }}, {{ activity.event.province }}
+                            </span>
+                        </div>
+                        <p class="activity-description">{{ activity.event.description|truncatechars:150 }}</p>
+                        <div class="activity-footer">
+                            <span class="recorded-by">Recorded by: {{ activity.recorded_by.first_name }} {{ activity.recorded_by.last_name }}</span>
+                            <span class="recorded-at">on {{ activity.recorded_at|date:"F j, Y" }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div class="empty-state">
+                <i class="fas fa-calendar-times"></i>
+                <p>{% if is_self %}You haven't{% else %}{{ member.first_name }} hasn't{% endif %} attended any events yet.</p>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+.member-profile-summary {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.member-profile-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.profile-pic {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    overflow: hidden;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.profile-pic img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.profile-pic i {
+    font-size: 3rem;
+    color: var(--primary-bg);
+}
+
+.member-info h2 {
+    margin: 0 0 0.5rem 0;
+    color: var(--heading-color);
+}
+
+.member-info p {
+    margin: 0.25rem 0;
+}
+
+.activity-stats {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+}
+
+.stat-card {
+    background-color: #f8f9fa;
+    border-radius: var(--border-radius);
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    min-width: 200px;
+    flex: 1;
+}
+
+.stat-icon {
+    background-color: var(--primary-bg);
+    color: white;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-icon i {
+    font-size: 1.5rem;
+}
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+}
+
+.stat-value {
+    font-size: 1.8rem;
+    font-weight: 700;
+    line-height: 1;
+    color: var(--heading-color);
+}
+
+.stat-label {
+    font-size: 0.9rem;
+    color: #6c757d;
+}
+
+.activities-container {
+    margin-top: 2rem;
+}
+
+.activities-container h2 {
+    margin-bottom: 1.5rem;
+    color: var(--heading-color);
+}
+
+.activities-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.activity-item {
+    background-color: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    display: flex;
+    gap: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.activity-item:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+}
+
+.activity-date {
+    min-width: 80px;
+    text-align: center;
+    padding-right: 1.5rem;
+    border-right: 2px solid #e9ecef;
+}
+
+.activity-date .date {
+    display: block;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--primary-bg);
+}
+
+.activity-date .year {
+    display: block;
+    font-size: 1rem;
+    color: #6c757d;
+}
+
+.activity-content {
+    flex: 1;
+}
+
+.activity-content h3 {
+    margin: 0 0 0.75rem 0;
+    color: var(--heading-color);
+}
+
+.activity-meta {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    flex-wrap: wrap;
+}
+
+.activity-category {
+    background-color: var(--primary-bg);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+}
+
+.activity-location {
+    color: #6c757d;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.activity-description {
+    margin: 0 0 1rem 0;
+    color: #555;
+}
+
+.activity-footer {
+    font-size: 0.85rem;
+    color: #6c757d;
+    border-top: 1px solid #e9ecef;
+    padding-top: 0.75rem;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem 1rem;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.empty-state i {
+    font-size: 3rem;
+    color: #adb5bd;
+    margin-bottom: 1rem;
+}
+
+.empty-state p {
+    margin: 0;
+    color: #6c757d;
+    font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+    .member-profile-header {
+        flex-direction: column;
+        text-align: center;
+    }
+    
+    .activity-item {
+        flex-direction: column;
+    }
+    
+    .activity-date {
+        min-width: auto;
+        padding-right: 0;
+        padding-bottom: 1rem;
+        border-right: none;
+        border-bottom: 2px solid #e9ecef;
+        margin-bottom: 1rem;
+    }
+}
+</style>
+{% endblock %} 

@@ -92,45 +92,32 @@ class User(AbstractUser):
 
 
 class Event(models.Model):
-    STATUS_CHOICES = [
-        ('pending', 'Pending Approval'),
+    STATUS_CHOICES = (
+        ('pending', 'Pending'),
         ('approved', 'Approved'),
         ('rejected', 'Rejected'),
-    ]
+    )
     
-    CATEGORY_CHOICES = [
-        ('Seminar', 'Seminar'),
-        ('Meeting', 'Meeting'),
-        ('Trip', 'Trip'),
-    ]
-    
-    name = models.CharField(max_length=200)
-    council = models.ForeignKey(Council, on_delete=models.CASCADE, null=True, blank=True)
-    is_global = models.BooleanField(default=False, help_text="If checked, this event applies to all councils")
+    name = models.CharField(max_length=255)
+    description = models.TextField()
+    category = models.CharField(max_length=100)
+    council = models.ForeignKey('Council', on_delete=models.CASCADE, null=True, blank=True)
+    is_global = models.BooleanField(default=False)
+    street = models.CharField(max_length=255)
+    barangay = models.CharField(max_length=255)
+    city = models.CharField(max_length=255)
+    province = models.CharField(max_length=255)
     date_from = models.DateField()
     date_until = models.DateField(null=True, blank=True)
-    description = models.TextField()
-    category = models.CharField(max_length=50, choices=CATEGORY_CHOICES, default='Meeting')
-    
-    # Location details
-    street = models.CharField(max_length=255, null=True, blank=True)
-    barangay = models.CharField(max_length=100, null=True, blank=True)
-    city = models.CharField(max_length=100, null=True, blank=True)
-    province = models.CharField(max_length=100, null=True, blank=True)
-    
-    # Event status and tracking
     status = models.CharField(max_length=20, choices=STATUS_CHOICES, default='pending')
-    created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='created_events')
-    approved_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='approved_events')
+    created_by = models.ForeignKey('User', on_delete=models.SET_NULL, null=True, related_name='created_events')
+    approved_by = models.ForeignKey('User', on_delete=models.SET_NULL, null=True, blank=True, related_name='approved_events')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
-
-    def __str__(self):
-        council_name = self.council.name if self.council else "All Councils"
-        return f"{self.name} - {council_name} ({self.get_status_display()})"
+    rejection_reason = models.TextField(blank=True, null=True)
     
-    class Meta:
-        ordering = ['-date_from']
+    def __str__(self):
+        return self.name
 
 class EventAttendance(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='attendances')

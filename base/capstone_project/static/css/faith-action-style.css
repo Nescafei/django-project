@@ -30,20 +30,20 @@ main {
     font-family: "Cardo", serif;
     font-size: 3rem;
     font-weight: 600;
-    color: #000;
+    color: #F0F1F6;
     margin-bottom: 1vh;
 }
 
 .faith-n-action .tagline {
     font-size: 1.5rem;
     font-style: italic;
-    color: #333;
+    color: #bed8ff;
     margin-bottom: 3vh;
 }
 
 .faith-n-action p {
     font-size: 1.1rem;
-    color: #333;
+    color: #F0F1F6;
     line-height: 1.6;
     max-width: 80%;
     margin: 0 auto;
