@@ -113,9 +113,11 @@ class Event(models.Model):
         ('rejected', 'Rejected'),
     )
     
+    id = models.AutoField(primary_key=True)
     name = models.CharField(max_length=255)
     description = models.TextField()
     category = models.CharField(max_length=100)
+    subcategory = models.CharField(max_length=100, null=True, blank=True)
     council = models.ForeignKey('Council', on_delete=models.CASCADE, null=True, blank=True)
     is_global = models.BooleanField(default=False)
     street = models.CharField(max_length=255)

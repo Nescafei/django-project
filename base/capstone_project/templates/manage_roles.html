@@ -12,7 +12,7 @@ Knights of Columbus - Manage Roles
         <div class="role-management-header">
             <h2>User Role Management</h2>
             <div>
-                <a href="{% url 'dashboard' %}" class="role-btn details-btn">
+                <a href="{% url 'dashboard' %}" class="role-btn">
                     <i class="fas fa-arrow-left"></i> Back to Dashboard
                 </a>
             </div>
@@ -161,56 +161,105 @@ Knights of Columbus - Manage Roles
             // Show loading message
             contentDiv.innerHTML = '<div class="loading">Loading user details...</div>';
             
-            // In a real implementation, you would fetch user details via AJAX
-            // For demonstration purposes, we'll simulate a fetch with setTimeout
-            setTimeout(function() {
-                // Dummy data - in a real implementation, this would come from the server
-                const userData = {
-                    name: "User #" + userId,
-                    role: "Member", // or Officer
-                    email: "user" + userId + "@example.com",
-                    council: "Council 3469",
-                    joinDate: "January 15, 2023",
-                    degree: "3rd Degree"
-                };
-                
-                // Format the details
-                let detailsHTML = `
-                    <div class="user-details">
-                        <div class="detail-group">
-                            <strong>Name:</strong>
-                            <span>${userData.name}</span>
+            // Fetch user details via AJAX
+            fetch(`/user/${userId}/details/`)
+                .then(response => response.json())
+                .then(data => {
+                    // Format the details with profile picture
+                    let detailsHTML = `
+                        <div class="user-details">
+                            <div class="user-profile-header">
+                                <div class="profile-picture-container">
+                                    ${data.profile_picture ? 
+                                        `<img src="${data.profile_picture}" alt="Profile Picture" class="profile-picture">` : 
+                                        `<div class="profile-picture-placeholder">
+                                            <i class="fas fa-user"></i>
+                                        </div>`
+                                    }
+                                </div>
+                                <div class="user-basic-info">
+                                    <h4 class="user-name">${data.first_name} ${data.middle_name ? data.middle_name + ' ' : ''}${data.last_name}${data.suffix ? ' ' + data.suffix : ''}</h4>
+                                    <span class="role-badge role-${data.role}">${data.role_display}</span>
+                                </div>
+                            </div>
+                            
+                            <div class="user-details-grid">
+                                <div class="detail-group">
+                                    <strong>Email:</strong>
+                                    <span>${data.email}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Contact Number:</strong>
+                                    <span>${data.contact_number || 'Not provided'}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Council:</strong>
+                                    <span>${data.council_name || 'No council assigned'}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Username:</strong>
+                                    <span>${data.username}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Birthday:</strong>
+                                    <span>${data.birthday || 'Not provided'}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Age:</strong>
+                                    <span>${data.age || 'Not provided'}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Address:</strong>
+                                    <span>${data.street ? `${data.street}, ${data.barangay}, ${data.city}, ${data.province} ${data.zip_code}` : 'Not provided'}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Current Degree:</strong>
+                                    <span>${data.degree_display || 'Not specified'}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Member Since:</strong>
+                                    <span>${data.date_joined}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Marital Status:</strong>
+                                    <span>${data.marital_status || 'Not provided'}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Occupation:</strong>
+                                    <span>${data.occupation || 'Not provided'}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Recruiter:</strong>
+                                    <span>${data.recruiter_name || (data.voluntary_join ? 'Voluntary Join' : 'Not specified')}</span>
+                                </div>
+                                
+                                ${data.join_reason ? `
+                                <div class="detail-group full-width">
+                                    <strong>Join Reason:</strong>
+                                    <span>${data.join_reason}</span>
+                                </div>
+                                ` : ''}
+                            </div>
                         </div>
-                        
-                        <div class="detail-group">
-                            <strong>Email:</strong>
-                            <span>${userData.email}</span>
-                        </div>
-                        
-                        <div class="detail-group">
-                            <strong>Council:</strong>
-                            <span>${userData.council}</span>
-                        </div>
-                        
-                        <div class="detail-group">
-                            <strong>Role:</strong>
-                            <span>${userData.role}</span>
-                        </div>
-                        
-                        <div class="detail-group">
-                            <strong>Member Since:</strong>
-                            <span>${userData.joinDate}</span>
-                        </div>
-                        
-                        <div class="detail-group">
-                            <strong>Current Degree:</strong>
-                            <span>${userData.degree}</span>
-                        </div>
-                    </div>
-                `;
-                
-                contentDiv.innerHTML = detailsHTML;
-            }, 500); // Simulate network delay
+                    `;
+                    
+                    contentDiv.innerHTML = detailsHTML;
+                })
+                .catch(error => {
+                    contentDiv.innerHTML = '<p class="error-message">Error loading user details. Please try again later.</p>';
+                    console.error('Error fetching user details:', error);
+                });
         };
         
         // Close modal when clicking the close button

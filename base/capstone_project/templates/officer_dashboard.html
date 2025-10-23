@@ -124,32 +124,6 @@ Knights of Columbus - Officer Dashboard
                 </div>
             </div>
 
-            <!-- Council Analytics Card -->
-            <div class="content-card">
-                <h3>Council Analytics</h3>
-                <div class="stat-card">
-                    <div class="stat-grid">
-                        <div>
-                            <p class="stat-description">Active Members</p>
-                            <div class="stat-value">{{ user_list|length }}</div>
-                        </div>
-                        <div>
-                            <p class="stat-description">Events This Month</p>
-                            <div class="stat-value">{{ approved_events_count }}</div>
-                        </div>
-                        <div>
-                            <p class="stat-description">Total Donations</p>
-                            <div class="stat-value">${{ total_donations }}</div>
-                        </div>
-                    </div>
-                    <div class="action-buttons">
-                        <a href="{% url 'analytics_form' %}" class="dashboard-btn">
-                            <i class="fas fa-chart-line"></i>Update Analytics
-                        </a>
-                    </div>
-                </div>
-            </div>
-
             <!-- Members Management Card -->
             <div class="content-card dashboard-card">
                 <div class="dashboard-summary">

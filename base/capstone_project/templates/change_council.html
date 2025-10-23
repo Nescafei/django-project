@@ -35,7 +35,7 @@ Knights of Columbus - Change Council
                 </div>
                 <div class="user-details">
                     <h2>{{ user_to_change.first_name }} {{ user_to_change.last_name }}</h2>
-                    <p class="role-badge role-{{ user_to_change.role }}">{{ user_to_change.get_role_display }}</p>
+                    <p class="role-badge role-{{ user_to_change.role }}" style="color: white;">{{ user_to_change.get_role_display }}</p>
                     <p>Current Council: <strong>{{ user_to_change.council.name }}</strong></p>
                 </div>
             </div>

@@ -135,12 +135,12 @@
                                 <li><a href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
                                 <li><a href="{% url 'review_manual_donations' %}"><i class="fas fa-file-invoice"></i>Review Donations</a></li>
                                 <li><a href="{% url 'analytics_view' %}"><i class="fas fa-chart-line"></i>View Analytics</a></li>
-                                <li><a href="{% url 'archived_users' %}"><i class="fas fa-archive"></i>View Archived Users</a></li>
+                                <!-- <li><a href="{% url 'archived_users' %}"><i class="fas fa-archive"></i>View Archived Users</a></li> -->
                             {% elif user.role == 'officer' %}
                                 <li><a href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
                                 <li><a href="{% url 'review_manual_donations' %}"><i class="fas fa-file-invoice"></i>Review Donations</a></li>
                                 <li><a href="{% url 'manage_pending_users' %}"><i class="fas fa-user-clock"></i>Manage Pending Users</a></li>
-                                <li><a href="{% url 'analytics_form' %}"><i class="fas fa-chart-bar"></i>Update Analytics</a></li>
+                                <li><a href="{% url 'analytics_view' %}"><i class="fas fa-chart-line"></i>View Analytics</a></li>
                             {% elif user.role == 'member' %}
                                 <li><a href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
                             {% endif %}

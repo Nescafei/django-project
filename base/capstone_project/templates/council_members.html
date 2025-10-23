@@ -5,607 +5,244 @@ Knights of Columbus - Council Members
 {% endblock %}
 
 {% block content %}
-<link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/role_management.css' %}?v={% now 'U' %}">
 
 <div class="dashboard-container">
-    <div class="content-card">
-        <div class="dashboard-header">
-            <h1>Council Members</h1>
+    <div class="role-management-container">
+        <div class="role-management-header">
+            <h2>Council Members</h2>
             <div>
-                <a href="{% url 'dashboard' %}" class="dashboard-btn secondary back-btn">
+                <a href="{% url 'dashboard' %}" class="role-btn">
                     <i class="fas fa-arrow-left"></i> Back to Dashboard
                 </a>
             </div>
         </div>
 
-        <!-- Filters -->
-        <div class="filters-container">
-            <form method="get" class="filter-form">
-                <div class="filter-group">
-                    <label for="role">Role:</label>
-                    <select name="role" id="role" class="filter-select">
-                        <option value="all" {% if role_filter == 'all' or not role_filter %}selected{% endif %}>All Roles</option>
-                        <option value="officer" {% if role_filter == 'officer' %}selected{% endif %}>Officer</option>
-                        <option value="member" {% if role_filter == 'member' %}selected{% endif %}>Member</option>
-                        <option value="pending" {% if role_filter == 'pending' %}selected{% endif %}>Pending</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <label for="degree">Degree:</label>
-                    <select name="degree" id="degree" class="filter-select">
-                        <option value="all" {% if degree_filter == 'all' or not degree_filter %}selected{% endif %}>All Degrees</option>
-                        <option value="1st" {% if degree_filter == '1st' %}selected{% endif %}>1st Degree</option>
-                        <option value="2nd" {% if degree_filter == '2nd' %}selected{% endif %}>2nd Degree</option>
-                        <option value="3rd" {% if degree_filter == '3rd' %}selected{% endif %}>3rd Degree</option>
-                        <option value="4th" {% if degree_filter == '4th' %}selected{% endif %}>4th Degree</option>
-                    </select>
-                </div>
-
-                <div class="filter-group">
-                    <button type="submit" class="dashboard-btn">Apply Filters</button>
-                    <a href="{% url 'council_members' %}" class="dashboard-btn secondary">Clear Filters</a>
-                </div>
-            </form>
+        <div class="role-search-filter">
+            <input type="text" id="userSearchInput" placeholder="Search members by name, email, or council..." class="role-search-input">
         </div>
 
-        <!-- Search -->
-        <div class="search-container">
-            <div class="search-wrapper">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" id="memberSearch" class="search-input" placeholder="Search members by name or email...">
-                <button id="clearSearch" class="clear-search"><i class="fas fa-times"></i></button>
-            </div>
+        <div class="role-filters">
+            <button class="role-filter-btn active" data-role="all">All</button>
+            <button class="role-filter-btn" data-role="officer">Officers</button>
+            <button class="role-filter-btn" data-role="member">Members</button>
+            <button class="role-filter-btn" data-role="pending">Pending</button>
         </div>
 
-        <!-- Members List -->
-        <div class="members-list">
-            {% for user in users %}
-            <div class="member-item">
-                <div class="member-header">
-                    <div class="member-name-section">
-                        {% if user.profile_picture %}
-                            <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="member-pic">
-                        {% else %}
-                            <div class="member-pic">
-                                <i class="fas fa-user"></i>
-                            </div>
+        <table class="user-role-table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Email</th>
+                    <th>Current Role</th>
+                    <th>Degree</th>
+                    <th>Member Since</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in users %}
+                {% if not user.is_archived %}
+                <tr data-role="{{ user.role }}">
+                    <td>{{ user.first_name }} {{ user.last_name }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>
+                        <span class="role-badge role-{{ user.role }}">{{ user.get_role_display }}</span>
+                    </td>
+                    <td>{{ user.get_current_degree_display }}</td>
+                    <td>{{ user.date_joined|date:"F j, Y" }}</td>
+                    <td class="role-action-buttons">
+                        <a href="#" class="role-btn details-btn" onclick="viewUserDetails('{{ user.id }}')">
+                            <i class="fas fa-info-circle"></i> Details
+                        </a>
+                        {% if request.user.role == 'admin' or request.user.role == 'officer' and user.role == 'member' %}
+                        <a href="{% url 'change_council' user_id=user.id %}" class="role-btn promote-btn">
+                            <i class="fas fa-exchange-alt"></i> Change Council
+                        </a>
                         {% endif %}
-                        <div>
-                            <h3>
-                                {{ user.first_name }}
-                                {% if user.second_name %} {{ user.second_name }}{% endif %}
-                                <!-- {% if user.middle_name %} {{ user.middle_name }}{% endif %} -->
-                                {{ user.last_name }}
-                                {% if user.suffix %} {{ user.suffix }}{% endif %}
-                            </h3>
-                            <span class="role-badge role-{{ user.role }}">{{ user.get_role_display }}</span>
+                    </td>
+                </tr>
+                {% endif %}
+                {% empty %}
+                <tr>
+                    <td colspan="6" style="text-align: center; padding: 2rem;">
+                        <div class="no-events-message">
+                            <p>No members found matching your criteria.</p>
                         </div>
-                    </div>
-                </div>
-                
-                <div class="member-details">
-                    <div class="detail-column">
-                        <p><strong>Member Since:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
-                        <p><strong>Degree:</strong> {{ user.get_current_degree_display }}</p>
-                    </div>
-                    <div class="detail-column">
-                        <p><strong>Email:</strong> {{ user.email }}</p>
-                        <p><strong>Contact:</strong> {{ user.contact_number|default:"Not provided" }}</p>
-                    </div>
-                </div>
-                
-                <div class="action-buttons">
-                    <button class="dashboard-btn view-member-btn" data-user-id="{{ user.id }}">
-                        <i class="fas fa-eye"></i>View Details
-                    </button>
-                    {% if request.user.role == 'admin' or request.user.role == 'officer' and user.role == 'member' %}
-                    <a href="{% url 'change_council' user_id=user.id %}" class="dashboard-btn">
-                        <i class="fas fa-exchange-alt"></i>Change Council
-                    </a>
-                    {% endif %}
-                </div>
-            </div>
-            {% empty %}
-            <div class="empty-state">
-                <i class="fas fa-users-slash"></i>
-                <p>No members found matching your criteria.</p>
-                <p>Try adjusting your filters.</p>
-            </div>
-            {% endfor %}
-        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
     </div>
 </div>
 
-<!-- Member details modal -->
-<div id="memberDetailsModal" class="modal">
+<!-- User details modal -->
+<div id="userDetailsModal" class="modal">
     <div class="modal-content">
-        <div class="modal-header">
-            <h3>Member Details</h3>
-            <span class="close">&times;</span>
-        </div>
-        <div id="memberDetailsContent">
-            <div class="loading">Loading member details...</div>
-        </div>
-        <div class="modal-footer">
-            <button id="okButton" class="dashboard-btn">OK</button>
-        </div>
+        <span class="close">&times;</span>
+        <h3>User Details</h3>
+        <div id="userDetailsContent"></div>
     </div>
 </div>
-
-<style>
-.dashboard-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 2rem;
-    padding-bottom: 1rem;
-    border-bottom: 1px solid rgba(13, 52, 113, 0.1);
-}
-
-.filters-container {
-    background-color: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: var(--border-radius);
-    margin-bottom: 2rem;
-}
-
-.filter-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    align-items: flex-end;
-}
-
-.filter-group {
-    flex: 1;
-    min-width: 200px;
-}
-
-.filter-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: var(--heading-color);
-}
-
-.filter-select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid rgba(13, 52, 113, 0.2);
-    border-radius: var(--border-radius);
-    font-size: 1rem;
-    background-color: white;
-}
-
-.search-container {
-    margin-bottom: 2rem;
-}
-
-.search-wrapper {
-    position: relative;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.search-icon {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #6c757d;
-}
-
-.search-input {
-    width: 100%;
-    padding: 0.75rem 1rem 0.75rem 2.5rem;
-    border: 2px solid rgba(13, 52, 113, 0.2);
-    border-radius: var(--border-radius);
-    font-size: 1rem;
-    background-color: white;
-    transition: box-shadow 0.2s ease;
-}
-
-.clear-search {
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: #6c757d;
-    cursor: pointer;
-    display: none;
-    padding: 0;
-    font-size: 1rem;
-}
-
-.members-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.member-item {
-    background-color: white;
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.member-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-.member-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.member-name-section {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.member-pic {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.member-pic i {
-    font-size: 1.8rem;
-    color: #0D3471;
-}
-
-.member-pic img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.member-header h3 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: var(--heading-color);
-}
-
-.member-details {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    margin-bottom: 1rem;
-}
-
-.detail-column {
-    flex: 1;
-    min-width: 200px;
-}
-
-.detail-column p {
-    margin: 0.5rem 0;
-}
-
-.role-badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    margin-top: 0.5rem;
-}
-
-.role-admin {
-    background-color: #0D3471;
-    color: white;
-}
-
-.role-officer {
-    background-color: #28a745;
-    color: white;
-}
-
-.role-member {
-    background-color: #17a2b8;
-    color: white;
-}
-
-.role-pending {
-    background-color: #ffc107;
-    color: #212529;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 3rem 1rem;
-    color: #6c757d;
-}
-
-.empty-state i {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    color: #adb5bd;
-}
-
-/* Improved Modal styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.modal.show {
-    opacity: 1;
-}
-
-.modal-content {
-    background-color: var(--secondary-bg);
-    margin: 10% auto;
-    border-radius: var(--border-radius);
-    max-width: 700px;
-    position: relative;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transform: translateY(-20px);
-    opacity: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.modal.show .modal-content {
-    transform: translateY(0);
-    opacity: 1;
-}
-
-.modal-header {
-    padding: 1.5rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.modal-header h3 {
-    margin: 0;
-    color: var(--heading-color);
-}
-
-#memberDetailsContent {
-    padding: 1.5rem;
-}
-
-.modal-footer {
-    padding: 1rem 1.5rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    text-align: right;
-}
-
-.close {
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #aaa;
-    transition: color 0.2s ease;
-}
-
-.close:hover {
-    color: var(--primary-bg);
-}
-
-.loading {
-    text-align: center;
-    padding: 2rem;
-    color: var(--heading-color);
-}
-
-.detail-group {
-    margin-bottom: 1rem;
-}
-
-.detail-group strong {
-    display: block;
-    margin-bottom: 0.25rem;
-    color: #0D3471;
-}
-
-.profile-image-container {
-    text-align: center;
-    margin-bottom: 1.5rem;
-}
-
-.profile-image {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 3px solid #0D3471;
-}
-
-.profile-placeholder {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    background-color: #f0f0f0;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 3rem;
-    color: #0D3471;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .dashboard-header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 1rem;
-    }
-    
-    .modal-content {
-        margin: 10% 1rem;
-        max-height: 90vh;
-    }
-}
-
-.back-btn:hover {
-    background-color: #f4b41a !important;
-    color: white;
-}
-</style>
 
 <script>
-document.addEventListener('DOMContentLoaded', function() {
-    // Search functionality with clear button
-    const searchInput = document.getElementById('memberSearch');
-    const clearButton = document.getElementById('clearSearch');
-    
-    if (searchInput) {
+    document.addEventListener('DOMContentLoaded', function() {
+        // Search functionality
+        const searchInput = document.getElementById('userSearchInput');
         searchInput.addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
-            const memberItems = document.querySelectorAll('.member-item');
+            const rows = document.querySelectorAll('.user-role-table tbody tr');
             
-            // Show/hide clear button
-            clearButton.style.display = searchTerm ? 'block' : 'none';
-            
-            memberItems.forEach(item => {
-                const text = item.textContent.toLowerCase();
-                item.style.display = text.includes(searchTerm) ? '' : 'none';
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const shouldShow = text.includes(searchTerm);
+                
+                // Check if we need to respect role filter
+                const activeRoleFilter = document.querySelector('.role-filter-btn.active');
+                const filterRole = activeRoleFilter.dataset.role;
+                const rowRole = row.dataset.role;
+                
+                if (filterRole === 'all' || filterRole === rowRole) {
+                    row.style.display = shouldShow ? '' : 'none';
+                } else {
+                    row.style.display = 'none';
+                }
             });
         });
         
-        // Focus effect
-        searchInput.addEventListener('focus', function() {
-            this.parentElement.style.boxShadow = '0 0 0 3px rgba(13, 52, 113, 0.1)';
+        // Role filter functionality
+        const filterButtons = document.querySelectorAll('.role-filter-btn');
+        filterButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                // Remove active class from all buttons
+                filterButtons.forEach(btn => btn.classList.remove('active'));
+                
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                const role = this.dataset.role;
+                const rows = document.querySelectorAll('.user-role-table tbody tr');
+                
+                rows.forEach(row => {
+                    if (role === 'all') {
+                        // Still respect search term
+                        const searchTerm = searchInput.value.toLowerCase();
+                        const text = row.textContent.toLowerCase();
+                        row.style.display = text.includes(searchTerm) ? '' : 'none';
+                    } else {
+                        const rowRole = row.dataset.role;
+                        const searchTerm = searchInput.value.toLowerCase();
+                        const text = row.textContent.toLowerCase();
+                        
+                        if (rowRole === role && text.includes(searchTerm)) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    }
+                });
+            });
         });
         
-        searchInput.addEventListener('blur', function() {
-            this.parentElement.style.boxShadow = 'none';
-        });
-    }
-    
-    // Clear search
-    if (clearButton) {
-        clearButton.addEventListener('click', function() {
-            searchInput.value = '';
-            searchInput.dispatchEvent(new Event('input'));
-            searchInput.focus();
-        });
-    }
-    
-    // View member details
-    const viewMemberBtns = document.querySelectorAll('.view-member-btn');
-    const modal = document.getElementById('memberDetailsModal');
-    const contentDiv = document.getElementById('memberDetailsContent');
-    const okButton = document.getElementById('okButton');
-    
-    function openModal() {
-        modal.style.display = 'block';
-        // Trigger reflow to allow animation to work
-        modal.offsetHeight;
-        modal.classList.add('show');
-    }
-    
-    function closeModal() {
-        modal.classList.remove('show');
-        setTimeout(function() {
-            modal.style.display = 'none';
-        }, 300); // Match the transition duration
-    }
-    
-    viewMemberBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const userId = this.getAttribute('data-user-id');
+        // User details modal functionality
+        window.viewUserDetails = function(userId) {
+            const modal = document.getElementById('userDetailsModal');
+            const contentDiv = document.getElementById('userDetailsContent');
+            modal.style.display = 'block';
             
-            openModal();
-            contentDiv.innerHTML = '<div class="loading">Loading member details...</div>';
+            // Show loading message
+            contentDiv.innerHTML = '<div class="loading">Loading user details...</div>';
             
+            // Fetch user details via AJAX
             fetch(`/user/${userId}/details/`)
                 .then(response => response.json())
                 .then(data => {
+                    // Format the details with profile picture
                     let detailsHTML = `
-                        <div class="member-full-details">
-                            <div class="profile-image-container">
-                                ${data.profile_picture ? 
-                                    `<img src="${data.profile_picture}" alt="Profile Picture" class="profile-image">` : 
-                                    `<div class="profile-placeholder"><i class="fas fa-user"></i></div>`
-                                }
+                        <div class="user-details">
+                            <div class="user-profile-header">
+                                <div class="profile-picture-container">
+                                    ${data.profile_picture ? 
+                                        `<img src="${data.profile_picture}" alt="Profile Picture" class="profile-picture">` : 
+                                        `<div class="profile-picture-placeholder">
+                                            <i class="fas fa-user"></i>
+                                        </div>`
+                                    }
+                                </div>
+                                <div class="user-basic-info">
+                                    <h4 class="user-name">${data.first_name} ${data.middle_name ? data.middle_name + ' ' : ''}${data.last_name}${data.suffix ? ' ' + data.suffix : ''}</h4>
+                                    <span class="role-badge role-${data.role}">${data.role_display}</span>
+                                </div>
                             </div>
                             
-                            <h4>
-                                ${data.first_name}
-                                ${data.second_name ? data.second_name + ' ' : ''}
-                                ${data.middle_name ? data.middle_name + ' ' : ''}
-                                ${data.last_name}
-                                ${data.suffix ? ' ' + data.suffix : ''}
-                            </h4>
-                            <span class="role-badge role-${data.role}">${data.role_display}</span>
-                            
-                            <div class="detail-group">
-                                <strong>Username:</strong>
-                                <p>${data.username}</p>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Email:</strong>
-                                <p>${data.email || 'Not provided'}</p>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Contact Number:</strong>
-                                <p>${data.contact_number || 'Not provided'}</p>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Council:</strong>
-                                <p>${data.council_name || 'Not assigned'}</p>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Degree:</strong>
-                                <p>${data.degree_display || 'Not specified'}</p>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Birthday:</strong>
-                                <p>${data.birthday || 'Not specified'}</p>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Age:</strong>
-                                <p>${data.age || 'Not specified'}</p>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Address:</strong>
-                                <address>
-                                    ${data.street ? data.street + '<br>' : ''}
-                                    ${data.barangay ? data.barangay + '<br>' : ''}
-                                    ${data.city ? data.city + ', ' : ''}${data.province || ''}
-                                </address>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Member Since:</strong>
-                                <p>${data.date_joined}</p>
+                            <div class="user-details-grid">
+                                <div class="detail-group">
+                                    <strong>Email:</strong>
+                                    <span>${data.email}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Contact Number:</strong>
+                                    <span>${data.contact_number || 'Not provided'}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Council:</strong>
+                                    <span>${data.council_name || 'No council assigned'}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Username:</strong>
+                                    <span>${data.username}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Birthday:</strong>
+                                    <span>${data.birthday || 'Not provided'}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Age:</strong>
+                                    <span>${data.age || 'Not provided'}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Address:</strong>
+                                    <span>${data.street ? `${data.street}, ${data.barangay}, ${data.city}, ${data.province} ${data.zip_code}` : 'Not provided'}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Current Degree:</strong>
+                                    <span>${data.degree_display || 'Not specified'}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Member Since:</strong>
+                                    <span>${data.date_joined}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Marital Status:</strong>
+                                    <span>${data.marital_status || 'Not provided'}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Occupation:</strong>
+                                    <span>${data.occupation || 'Not provided'}</span>
+                                </div>
+                                
+                                <div class="detail-group">
+                                    <strong>Recruiter:</strong>
+                                    <span>${data.recruiter_name || (data.voluntary_join ? 'Voluntary Join' : 'Not specified')}</span>
+                                </div>
+                                
+                                ${data.join_reason ? `
+                                <div class="detail-group full-width">
+                                    <strong>Join Reason:</strong>
+                                    <span>${data.join_reason}</span>
+                                </div>
+                                ` : ''}
                             </div>
                         </div>
                     `;
@@ -613,28 +250,25 @@ document.addEventListener('DOMContentLoaded', function() {
                     contentDiv.innerHTML = detailsHTML;
                 })
                 .catch(error => {
-                    contentDiv.innerHTML = '<p>Error loading member details. Please try again later.</p>';
+                    contentDiv.innerHTML = '<p class="error-message">Error loading user details. Please try again later.</p>';
+                    console.error('Error fetching user details:', error);
                 });
+        };
+        
+        // Close modal when clicking the close button
+        const closeButton = document.querySelector('.modal .close');
+        closeButton.addEventListener('click', function() {
+            document.getElementById('userDetailsModal').style.display = 'none';
+        });
+        
+        // Close modal when clicking outside of it
+        window.addEventListener('click', function(event) {
+            const modal = document.getElementById('userDetailsModal');
+            if (event.target === modal) {
+                modal.style.display = 'none';
+            }
         });
     });
-    
-    // Close modal when clicking the close button
-    const closeButton = document.querySelector('.modal .close');
-    if (closeButton) {
-        closeButton.addEventListener('click', closeModal);
-    }
-    
-    // Close modal when clicking the OK button
-    if (okButton) {
-        okButton.addEventListener('click', closeModal);
-    }
-    
-    // Close modal when clicking outside of it
-    window.addEventListener('click', function(event) {
-        if (event.target === modal) {
-            closeModal();
-        }
-    });
-});
 </script>
+
 {% endblock %} 

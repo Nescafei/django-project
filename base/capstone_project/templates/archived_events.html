@@ -37,13 +37,14 @@ Knights of Columbus - Archived Events
                     <label for="category">Category:</label>
                     <select name="category" id="category" class="filter-select">
                         <option value="all" {% if category_filter == 'all' or not category_filter %}selected{% endif %}>All Categories</option>
-                        <option value="Seminar" {% if category_filter == 'Seminar' %}selected{% endif %}>Seminar</option>
-                        <option value="Meeting" {% if category_filter == 'Meeting' %}selected{% endif %}>Meeting</option>
-                        <option value="Trip" {% if category_filter == 'Trip' %}selected{% endif %}>Trip</option>
+                        <option value="Exemplification" {% if category_filter == 'Exemplification' %}selected{% endif %}>Exemplification</option>
+                        <option value="Service Program" {% if category_filter == 'Service Program' %}selected{% endif %}>Service Program</option>
+                        <option value="Council Meeting" {% if category_filter == 'Council Meeting' %}selected{% endif %}>Council Meeting</option>
+                        <option value="Assembly Meeting" {% if category_filter == 'Assembly Meeting' %}selected{% endif %}>Assembly Meeting</option>
                     </select>
                 </div>
 
-                {% if user.role == 'admin' %}
+                {% if user.role != 'member' %}
                 <div class="filter-group">
                     <label for="status">Status:</label>
                     <select name="status" id="status" class="filter-select">
@@ -54,7 +55,7 @@ Knights of Columbus - Archived Events
                     </select>
                 </div>
 
-                {% if councils %}
+                {% if user.role == 'admin' and councils %}
                 <div class="filter-group">
                     <label for="council">Council:</label>
                     <select name="council" id="council" class="filter-select">
@@ -94,8 +95,9 @@ Knights of Columbus - Archived Events
                 
                 <div class="event-details">
                     <div class="detail-column">
+                        <p><strong>Event ID:</strong> #{{ event.id }}</p>
                         <p><strong>Date:</strong> {{ event.date_from|date:"F d, Y" }} {% if event.date_until and event.date_until != event.date_from %} - {{ event.date_until|date:"F d, Y" }}{% endif %}</p>
-                        <p><strong>Category:</strong> {{ event.category }}</p>
+                        <p><strong>Category:</strong> {{ event.category }}{% if event.subcategory and event.subcategory != 'N/A' %} - {{ event.subcategory }}{% endif %}</p>
                     </div>
                     <div class="detail-column">
                         <p><strong>Council:</strong> {{ event.council.name }}</p>

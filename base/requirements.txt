@@ -6,6 +6,7 @@ cryptography==44.0.3
 Django==5.2.1
 django-paypal==2.1
 idna==3.10
+pandas==2.2.2
 pillow==11.2.1
 pycparser==2.22
 python-decouple==3.8

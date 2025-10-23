@@ -24,7 +24,7 @@ Knights of Columbus - Reject Event
             <div class="event-details">
                 <div class="detail-column">
                     <p><strong>Date:</strong> {{ event.date_from|date:"F d, Y" }} {% if event.date_until and event.date_until != event.date_from %} - {{ event.date_until|date:"F d, Y" }}{% endif %}</p>
-                    <p><strong>Category:</strong> {{ event.category }}</p>
+                    <p><strong>Category:</strong> {{ event.category }}{% if event.subcategory and event.subcategory != 'N/A' %} - {{ event.subcategory }}{% endif %}</p>
                 </div>
                 <div class="detail-column">
                     <p><strong>Council:</strong> {{ event.council.name }}</p>
@@ -41,8 +41,33 @@ Knights of Columbus - Reject Event
             <form method="post" action="{% url 'reject_event' event.id %}">
                 {% csrf_token %}
                 <div class="form-group">
-                    <label for="rejection_reason">Rejection Reason:</label>
-                    <textarea id="rejection_reason" name="rejection_reason" rows="4" class="form-control" required placeholder="Please provide a reason for rejecting this event..."></textarea>
+                    <label for="rejection_category">Rejection Category:</label>
+                    <select id="rejection_category" name="rejection_category" class="form-control" required onchange="toggleCustomReason()">
+                        <option value="" disabled selected>Select a rejection reason</option>
+                        <option value="Insufficient Budget">Insufficient Budget</option>
+                        <option value="Scheduling Conflict">Scheduling Conflict</option>
+                        <option value="Inadequate Planning">Inadequate Planning</option>
+                        <option value="Resource Unavailability">Resource Unavailability</option>
+                        <option value="Policy Violation">Policy Violation</option>
+                        <option value="Safety Concerns">Safety Concerns</option>
+                        <option value="Venue Issues">Venue Issues</option>
+                        <option value="Low Expected Attendance">Low Expected Attendance</option>
+                        <option value="Duplicate Event">Duplicate Event</option>
+                        <option value="Inappropriate Content">Inappropriate Content</option>
+                        <option value="Missing Required Documentation">Missing Required Documentation</option>
+                        <option value="Timing Issues">Timing Issues</option>
+                        <option value="Others">Others (Please specify)</option>
+                    </select>
+                </div>
+                
+                <div class="form-group" id="custom-reason-group" style="display: none;">
+                    <label for="custom_reason">Please specify the reason:</label>
+                    <textarea id="custom_reason" name="custom_reason" rows="3" class="form-control" placeholder="Please provide specific details for the rejection..."></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="additional_notes">Additional Notes (Optional):</label>
+                    <textarea id="additional_notes" name="additional_notes" rows="2" class="form-control" placeholder="Any additional comments or suggestions for improvement..."></textarea>
                 </div>
                 <div class="form-actions">
                     <button type="submit" class="dashboard-btn primary">
@@ -131,5 +156,42 @@ Knights of Columbus - Reject Event
         background-color: #c82333;
         border-color: #bd2130;
     }
+    
+    #custom-reason-group {
+        transition: all 0.3s ease;
+    }
+    
+    .form-control select {
+        appearance: none;
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%230D3471' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 1.2em;
+        cursor: pointer;
+    }
 </style>
+
+<script>
+function toggleCustomReason() {
+    const categorySelect = document.getElementById('rejection_category');
+    const customReasonGroup = document.getElementById('custom-reason-group');
+    const customReasonTextarea = document.getElementById('custom_reason');
+    
+    if (categorySelect.value === 'Others') {
+        customReasonGroup.style.display = 'block';
+        customReasonTextarea.required = true;
+    } else {
+        customReasonGroup.style.display = 'none';
+        customReasonTextarea.required = false;
+        customReasonTextarea.value = '';
+    }
+}
+
+// Initialize on page load
+document.addEventListener('DOMContentLoaded', function() {
+    toggleCustomReason();
+});
+</script>
 {% endblock %} 

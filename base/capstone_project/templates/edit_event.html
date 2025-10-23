@@ -34,11 +34,21 @@ Knights of Columbus - Edit Event
             <div class="form-group">
                 <label for="category">Category</label>
                 <div class="category-dropdown">
-                    <select id="category" name="category" required>
+                    <select id="category" name="category" required onchange="loadSubcategories()">
                         <option value="" disabled>Select a category</option>
-                        <option value="Seminar" {% if event.category == 'Seminar' %}selected{% endif %}>Seminar</option>
-                        <option value="Meeting" {% if event.category == 'Meeting' %}selected{% endif %}>Meeting</option>
-                        <option value="Trip" {% if event.category == 'Trip' %}selected{% endif %}>Trip</option>
+                        <option value="Exemplification" {% if event.category == 'Exemplification' %}selected{% endif %}>Exemplification</option>
+                        <option value="Service Program" {% if event.category == 'Service Program' %}selected{% endif %}>Service Program</option>
+                        <option value="Council Meeting" {% if event.category == 'Council Meeting' %}selected{% endif %}>Council Meeting</option>
+                        <option value="Assembly Meeting" {% if event.category == 'Assembly Meeting' %}selected{% endif %}>Assembly Meeting</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="subcategory">Subcategory</label>
+                <div class="category-dropdown">
+                    <select id="subcategory" name="subcategory" disabled>
+                        <option value="" disabled selected>Select a subcategory</option>
                     </select>
                 </div>
             </div>
@@ -99,20 +109,81 @@ Knights of Columbus - Edit Event
             </div>
 
             <script>
+            // Category and Subcategory Data
+            const categoryData = {
+                "Exemplification": {
+                    "subcategories": ["1st", "2nd", "3rd", "4th"]
+                },
+                "Service Program": {
+                    "subcategories": ["Faith", "Family", "Life", "Community"]
+                },
+                "Council Meeting": {
+                    "subcategories": []
+                },
+                "Assembly Meeting": {
+                    "subcategories": ["Renewal of Obligation", "Meeting"]
+                }
+            };
+
+            // Function to load subcategories based on category selection
+            function loadSubcategories() {
+                const categorySelect = document.getElementById('category');
+                const subcategorySelect = document.getElementById('subcategory');
+                
+                // Reset subcategory dropdown
+                subcategorySelect.innerHTML = '<option value="" disabled selected>Select a subcategory</option>';
+                subcategorySelect.disabled = true;
+                
+                const selectedCategory = categorySelect.value;
+                
+                // If a category is selected and has subcategories, populate them
+                if (selectedCategory && categoryData[selectedCategory]) {
+                    const subcategories = categoryData[selectedCategory].subcategories;
+                    
+                    if (subcategories.length > 0) {
+                        subcategorySelect.disabled = false;
+                        
+                        subcategories.forEach(subcategory => {
+                            const option = document.createElement('option');
+                            option.value = subcategory;
+                            option.textContent = subcategory;
+                            // Check if this subcategory should be selected
+                            if (subcategory === '{{ event.subcategory }}') {
+                                option.selected = true;
+                            }
+                            subcategorySelect.appendChild(option);
+                        });
+                    } else {
+                        // For categories without subcategories, add a default option and select it
+                        const option = document.createElement('option');
+                        option.value = 'N/A';
+                        option.textContent = 'N/A';
+                        option.selected = true;
+                        subcategorySelect.appendChild(option);
+                        subcategorySelect.disabled = false;
+                    }
+                }
+            }
+
             document.addEventListener('DOMContentLoaded', function() {
                 const globalCheckbox = document.getElementById('is_global');
                 const councilContainer = document.getElementById('council-select-container');
                 const councilSelect = document.getElementById('council');
                 
-                globalCheckbox.addEventListener('change', function() {
-                    if (this.checked) {
-                        councilContainer.style.display = 'none';
-                        councilSelect.required = false;
-                    } else {
-                        councilContainer.style.display = 'block';
-                        councilSelect.required = true;
-                    }
-                });
+                if (globalCheckbox) {
+                    globalCheckbox.addEventListener('change', function() {
+                        if (this.checked) {
+                            councilContainer.style.display = 'none';
+                            councilSelect.required = false;
+                        } else {
+                            councilContainer.style.display = 'block';
+                            councilSelect.required = true;
+                        }
+                    });
+                }
+                
+                // Load subcategories on page load if category is already selected
+                loadSubcategories();
             });
             </script>
             {% endif %}

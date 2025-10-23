@@ -10,6 +10,7 @@ Knights of Columbus - Analytics
 
 <div class="container">
     <h1>Analytics Overview</h1>
+    {% if not is_officer %}
     <div class="filter-section">
         <form method="get" action="{% url 'analytics_view' %}">
             <label for="council_id">Filter by Council:</label>
@@ -23,6 +24,11 @@ Knights of Columbus - Analytics
             </select>
         </form>
     </div>
+    {% else %}
+    <div class="filter-section">
+        <h3>Analytics for {{ councils.first.name }}</h3>
+    </div>
+    {% endif %}
 
     <div class="summary-section">
         <h2>Summary Statistics</h2>

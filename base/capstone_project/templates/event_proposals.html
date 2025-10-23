@@ -22,6 +22,7 @@ Knights of Columbus - Event Proposals
         <table class="event-table">
             <thead>
                 <tr>
+                    <th>Event ID</th>
                     <th>Event Name</th>
                     <th>Category</th>
                     <th>Date</th>
@@ -34,8 +35,9 @@ Knights of Columbus - Event Proposals
             <tbody>
                 {% for event in pending_events %}
                 <tr>
+                    <td>{{ event.id }}</td>
                     <td>{{ event.name }}</td>
-                    <td>{{ event.category }}</td>
+                    <td>{{ event.category }}{% if event.subcategory and event.subcategory != 'N/A' %} - {{ event.subcategory }}{% endif %}</td>
                     <td>{{ event.date_from|date:"M d, Y" }} {% if event.date_until and event.date_until != event.date_from %} - {{ event.date_until|date:"M d, Y" }}{% endif %}</td>
                     <td>{{ event.council.name }}</td>
                     <td>{{ event.created_by.first_name }} {{ event.created_by.last_name }}</td>
@@ -67,6 +69,7 @@ Knights of Columbus - Event Proposals
         <table class="event-table">
             <thead>
                 <tr>
+                    <th>Event ID</th>
                     <th>Event Name</th>
                     <th>Category</th>
                     <th>Date</th>
@@ -79,8 +82,9 @@ Knights of Columbus - Event Proposals
             <tbody>
                 {% for event in previous_events %}
                 <tr>
+                    <td>{{ event.id }}</td>
                     <td>{{ event.name }}</td>
-                    <td>{{ event.category }}</td>
+                    <td>{{ event.category }}{% if event.subcategory and event.subcategory != 'N/A' %} - {{ event.subcategory }}{% endif %}</td>
                     <td>{{ event.date_from|date:"M d, Y" }} {% if event.date_until and event.date_until != event.date_from %} - {{ event.date_until|date:"M d, Y" }}{% endif %}</td>
                     <td>{{ event.council.name }}</td>
                     <td>{{ event.created_by.first_name }} {{ event.created_by.last_name }}</td>
@@ -222,12 +226,12 @@ Knights of Columbus - Event Proposals
     
     .modal-content {
         background-color: var(--secondary-bg);
-        margin: 10% auto;
+        margin: 3% auto;
         padding: 2rem;
         border-radius: var(--border-radius);
         max-width: 600px;
         position: relative;
-        max-height: 80vh;
+        max-height: 100vh;
         overflow-y: auto;
     }
     
@@ -240,7 +244,7 @@ Knights of Columbus - Event Proposals
     }
     
     .close:hover {
-        color: var(--primary-bg);
+        color: white;
     }
     
     .event-details {
@@ -291,7 +295,7 @@ Knights of Columbus - Event Proposals
     }
 
     .role-btn {
-        padding: 0.5rem 1rem;
+        padding: 1rem 1rem;
         border: none;
         border-radius: var(--border-radius);
         font-size: 0.9rem;
@@ -302,23 +306,24 @@ Knights of Columbus - Event Proposals
         align-items: center;
         justify-content: center;
         gap: 0.5rem;
-        background-color: var(--accent-color);
-        color: var(--primary-bg);
+        background-color: var(--primary-bg);
+        color: white;
     }
 
     .role-btn.secondary {
-        background-color: #6c757d;
+        background-color: var(--primary-bg);
         color: white;
     }
 
     .role-btn:hover {
         opacity: 0.9;
         transform: translateY(-1px);
+        color: var(--accent-color);
     }
 
     .back-btn:hover {
-        background-color: #f4b41a !important;
-        color: white;
+        background-color: var(--accent-color) !important;
+        color: var(--primary-bg);
     }
 </style>
 {% endblock %} 

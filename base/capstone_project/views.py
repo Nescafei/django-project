@@ -21,6 +21,8 @@ from django.urls import reverse
 from io import BytesIO
 from datetime import datetime, date, timezone, timedelta
 from base64 import b64encode, b64decode
+from cryptography.hazmat.primitives import serialization
+from cryptography.hazmat.backends import default_backend
 PRIVATE_KEY = getattr(settings, 'PRIVATE_KEY', None)
 PUBLIC_KEY = getattr(settings, 'PUBLIC_KEY', None)
 import base64
@@ -31,11 +33,8 @@ import uuid
 import logging
 import requests
 import json
-<<<<<<< HEAD
 from django.db.models import Q
 from django.core.mail import send_mail
-
-
 
 def load_keys():
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -44,9 +43,8 @@ def load_keys():
     with open(os.path.join(base_dir, 'public_key.pem'), 'rb') as f:
         public_key = serialization.load_pem_public_key(f.read(), backend=default_backend())
     return private_key, public_key
+
 PRIVATE_KEY, PUBLIC_KEY = load_keys()
-=======
->>>>>>> main
 
 logger = logging.getLogger(__name__)
 @receiver(pre_save, sender=Block)
@@ -662,11 +660,16 @@ def archived_users(request):
 @never_cache
 @login_required
 def analytics_view(request):
-    if request.user.role != 'admin':
+    if request.user.role not in ['admin', 'officer']:
         return redirect('dashboard')
     
-    council_id = request.GET.get('council_id')
-    councils = Council.objects.all()
+    # Admin can select any council, officers are restricted to their own council
+    if request.user.role == 'officer':
+        council_id = str(request.user.council.id) if request.user.council else None
+        councils = Council.objects.filter(id=council_id) if council_id else Council.objects.none()
+    else:  # Admin
+        council_id = request.GET.get('council_id')
+        councils = Council.objects.all()
 
     # 1. Events Done Data
     events_qs = Event.objects.filter(status='approved')
@@ -774,6 +777,7 @@ def analytics_view(request):
         'donation_sources_data': json.dumps(donation_sources_data),
         'member_activity_data': json.dumps(member_activity_data),
         'summary_stats': summary_stats,
+        'is_officer': request.user.role == 'officer'
     }
     return render(request, 'analytics_view.html', context)
 @never_cache
@@ -1052,6 +1056,7 @@ def add_event(request):
         name = request.POST.get('name')
         description = request.POST.get('description')
         category = request.POST.get('category')
+        subcategory = request.POST.get('subcategory')
         street = request.POST.get('street')
         barangay = request.POST.get('barangay')
         city = request.POST.get('city')
@@ -1093,6 +1098,7 @@ def add_event(request):
                 name=name,
                 description=description,
                 category=category,
+                subcategory=subcategory,
                 council=council,
                 is_global=is_global,
                 street=street,
@@ -1138,6 +1144,7 @@ def edit_event(request, event_id):
         event.name = request.POST.get('name')
         event.description = request.POST.get('description')
         event.category = request.POST.get('category')
+        event.subcategory = request.POST.get('subcategory')
         event.street = request.POST.get('street')
         event.barangay = request.POST.get('barangay')
         event.city = request.POST.get('city')
@@ -1229,9 +1236,22 @@ def reject_event(request, event_id):
     
     if event.status == 'pending':
         if request.method == 'POST':
-            rejection_reason = request.POST.get('rejection_reason', '')
+            rejection_category = request.POST.get('rejection_category', '')
+            custom_reason = request.POST.get('custom_reason', '')
+            additional_notes = request.POST.get('additional_notes', '')
+            
+            # Build the final rejection reason
+            if rejection_category == 'Others':
+                final_reason = f"Others: {custom_reason}"
+            else:
+                final_reason = rejection_category
+            
+            # Add additional notes if provided
+            if additional_notes:
+                final_reason += f"\n\nAdditional Notes: {additional_notes}"
+            
             event.status = 'rejected'
-            event.rejection_reason = rejection_reason
+            event.rejection_reason = final_reason
             event.save()
             messages.success(request, f'Event "{event.name}" has been rejected.')
             return redirect('event_proposals')
@@ -1776,7 +1796,6 @@ def cancel_page(request):
     logger.error("Payment cancelled")
     messages.error(request, "Payment was cancelled or failed.")
     return render(request, 'cancel.html', {'error': 'Payment was cancelled or failed.'})
-<<<<<<< HEAD
 
 @never_cache
 @login_required
@@ -1788,6 +1807,9 @@ def event_list(request):
     # Only show current and future events, past events should be in archived_events
     base_query = Q(date_from__gte=today) | Q(date_until__gte=today)
     
+    # Get status filter first
+    status_filter = request.GET.get('status', None)
+    
     # Filter events based on user role
     if request.user.role == 'member':
         # Members can only see approved events from their own council or global events
@@ -1797,25 +1819,39 @@ def event_list(request):
             (Q(council=request.user.council) | Q(is_global=True))
         )
     elif request.user.role == 'officer':
-        # Officers can see approved events and their own pending/rejected events
-        events = Event.objects.filter(
-            base_query & (Q(status='approved') | Q(created_by=request.user))
-        )
-        
-        # Officers should only see events from their own council or global events
-        events = events.filter(
-            Q(council=request.user.council) | Q(is_global=True)
-        )
+        # Officers can see events from their own council or global events
+        # They can see all statuses for their own events, but only approved for others
+        if status_filter and status_filter != 'all':
+            if status_filter == 'approved':
+                events = Event.objects.filter(
+                    base_query & 
+                    Q(status='approved') & 
+                    (Q(council=request.user.council) | Q(is_global=True))
+                )
+            else:
+                # For pending/rejected, only show their own events
+                events = Event.objects.filter(
+                    base_query & 
+                    Q(status=status_filter) & 
+                    Q(created_by=request.user) &
+                    (Q(council=request.user.council) | Q(is_global=True))
+                )
+        else:
+            # Default: show approved events from their council + their own events of any status
+            events = Event.objects.filter(
+                base_query & 
+                (
+                    (Q(status='approved') & (Q(council=request.user.council) | Q(is_global=True))) |
+                    Q(created_by=request.user)
+                )
+            )
     else:
-        # Admins see only approved events (not rejected or pending)
-        events = Event.objects.filter(
-            base_query & Q(status='approved')
-        )
-    
-    # Filter by status if specified
-    status_filter = request.GET.get('status', None)
-    if status_filter and status_filter != 'all':
-        events = events.filter(status=status_filter)
+        # Admins see all events from all councils
+        events = Event.objects.filter(base_query)
+        
+        # Apply status filter for admins
+        if status_filter and status_filter != 'all':
+            events = events.filter(status=status_filter)
     
     # Filter by category if specified
     category_filter = request.GET.get('category', None)
@@ -1976,15 +2012,13 @@ def council_events(request):
             events = Event.objects.all()
             council = None
     
-    # Filter by status if specified
-    status_filter = request.GET.get('status', None)
-    if status_filter and status_filter != 'all':
-        events = events.filter(status=status_filter)
-    
     # Filter by category if specified
     category_filter = request.GET.get('category', None)
     if category_filter and category_filter != 'all':
         events = events.filter(category=category_filter)
+    
+    # Get status filter
+    status_filter = request.GET.get('status', None)
     
     # Mark events as today, upcoming, or past
     todays_events = []
@@ -1996,12 +2030,14 @@ def council_events(request):
         # Check if the event is happening today
         event.is_today = (event.date_from <= today <= (event.date_until or event.date_from))
         
-        # Rejected events go straight to archives regardless of date
-        if event.status == 'rejected':
-            rejected_events.append(event)
+        # If filtering by status, only include matching events
+        if status_filter and status_filter != 'all' and event.status != status_filter:
             continue
             
-        if event.is_today:
+        # Categorize events by date and status
+        if event.status == 'rejected':
+            rejected_events.append(event)
+        elif event.is_today:
             todays_events.append(event)
         elif event.date_from > today:
             upcoming_events.append(event)
@@ -2022,8 +2058,12 @@ def council_events(request):
     # Sort today's events (approved first)
     todays_events.sort(key=lambda event: 0 if event.status == 'approved' else 1)
     
-    # Combine events: today's events first, then upcoming
-    sorted_events = todays_events + upcoming_events
+    # If filtering by rejected status, show rejected events in main list
+    if status_filter == 'rejected':
+        sorted_events = rejected_events
+    else:
+        # Combine events: today's events first, then upcoming
+        sorted_events = todays_events + upcoming_events
     
     context = {
         'events': sorted_events,
@@ -2764,5 +2804,3 @@ def recalculate_degree(user):
             print(f"Error creating degree change notification: {str(e)}")
     
     return True
-=======
->>>>>>> main

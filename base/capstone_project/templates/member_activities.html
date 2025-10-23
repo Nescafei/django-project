@@ -61,7 +61,7 @@ Knights of Columbus - {% if is_self %}My Activities{% else %}{{ member.first_nam
                     <div class="activity-content">
                         <h3>{{ activity.event.name }}</h3>
                         <div class="activity-meta">
-                            <span class="activity-category">{{ activity.event.category }}</span>
+                            <span class="activity-category">{{ activity.event.category }}{% if activity.event.subcategory and activity.event.subcategory != 'N/A' %} - {{ activity.event.subcategory }}{% endif %}</span>
                             <span class="activity-location">
                                 <i class="fas fa-map-marker-alt"></i> {{ activity.event.city }}, {{ activity.event.province }}
                             </span>

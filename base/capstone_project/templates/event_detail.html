@@ -49,6 +49,14 @@ Knights of Columbus - {{ event.name }}
 
             <div class="event-meta-grid">
                 <div class="meta-item">
+                    <i class="fas fa-hashtag"></i>
+                    <div class="meta-content">
+                        <h4>Event ID</h4>
+                        <p>#{{ event.id }}</p>
+                    </div>
+                </div>
+                
+                <div class="meta-item">
                     <i class="fas fa-calendar"></i>
                     <div class="meta-content">
                         <h4>Date</h4>
@@ -73,7 +81,7 @@ Knights of Columbus - {{ event.name }}
                     <i class="fas fa-tag"></i>
                     <div class="meta-content">
                         <h4>Category</h4>
-                        <p>{{ event.category }}</p>
+                        <p>{{ event.category }}{% if event.subcategory and event.subcategory != 'N/A' %} - {{ event.subcategory }}{% endif %}</p>
                     </div>
                 </div>
                 
