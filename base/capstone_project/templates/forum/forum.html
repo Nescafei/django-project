@@ -14,7 +14,7 @@
     
     <div class="forum-sidebar">
         <div class="forum-header">
-            <h2>Community Forums</h2>
+            <h2>Community Chat</h2>
             <p>Council {{ user_council.id }}</p>
         </div>
 
@@ -23,11 +23,11 @@
                 {% if current_user.profile_picture %}
                     <img src="{{ current_user.profile_picture.url }}" alt="Profile Picture">
                 {% else %}
-                    <div class="default-avatar">{{ current_user.username|first }}</div>
+                    <div class="default-avatar">{{ current_user.first_name|first }}</div>
                 {% endif %}
             </div>
             <div class="user-details">
-                <h3>{{ current_user.username }}</h3>
+                <h3>{{ current_user.first_name }} {{ current_user.last_name }}</h3>
                 <span class="user-role">
                     {% if current_user.role == 'admin' %}
                         District Director
@@ -83,7 +83,7 @@
         
         <div class="message-input">
             <div class="image-upload">
-                <label for="imageUpload" title="Upload image (Max: 10MB)">
+                <label for="imageUpload" title="Upload image (Max: 5MB)">
                     <i class="fas fa-image"></i>
                 </label>
                 <input type="file" id="imageUpload" accept="image/*" style="display: none;">
@@ -94,7 +94,7 @@
             </button>
         </div>
         <div id="selectedImagePreview" class="image-preview"></div>
-        <div id="imageError" class="image-error" style="display: none;">File size exceeds 10MB limit. Please choose a smaller image.</div>
+        <div id="imageError" class="image-error" style="display: none;">File size exceeds 5MB limit. Please choose a smaller image.</div>
     </div>
 </div>
 
@@ -1011,7 +1011,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const forumSidebar = document.querySelector('.forum-sidebar');
     const mobileOverlay = document.querySelector('.mobile-overlay');
     
-    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
     
     // Handle mobile sidebar toggle
     mobileNavToggle.addEventListener('click', function(e) {

@@ -52,13 +52,13 @@ nav ul li a {
 }
 
 nav ul li a:hover {
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 nav ul li a.active {
     color: #f4b41a;
     font-weight: 500;
-    text-decoration: underline;
+    text-decoration: none;
 }
 
 .hamburger {

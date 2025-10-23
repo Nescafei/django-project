@@ -5,161 +5,168 @@ Knights of Columbus - Edit Profile
 {% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
 <link rel="stylesheet" href="{% static 'css/edit_profile.css' %}?v={% now 'U' %}">
-<div class="container">
-    <h1>Edit Your Profile</h1>
-    <!-- Messages block removed - now using popup notifications from base.html -->
+<link rel="stylesheet" href="{% static 'css/event_management.css' %}?v={% now 'U' %}">
 
-    <!-- Form Section -->
+<div class="profile-container">
+    <div class="profile-header">
+        <h1>Edit Your Profile</h1>
+        <a href="{% url 'dashboard' %}" class="dashboard-btn secondary back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
     <form method="post" enctype="multipart/form-data" id="profileForm" onsubmit="return validateForm()">
         {% csrf_token %}
-          <div class="profile-picture-section">
-        {% if user.profile_picture %}
-            <p>Current Picture:</p>
-            <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-pic">
-        {% endif %}
-        <div class="form-group">
-            <label for="profile_picture">Upload New Profile Picture: <small>(Max size: 10MB)</small></label>
-            <div class="input-wrapper">
-                <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
-            </div>
-            <span class="warning" id="profile_picture_warning"></span>
-            <div id="imagePreview" style="display: none; margin-top: 10px;">
-                <img id="image" style="max-width: 100%;">
-            </div>
-            <input type="hidden" id="cropped_image" name="cropped_image">
-        </div>
-        </div>
-        <div class="form-group-row">
+
+        <div class="profile-picture-section">
+            {% if user.profile_picture %}
+                <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="profile-pic">
+            {% endif %}
             <div class="form-group">
-                <label for="first_name">First Name:</label>
+                <label for="profile_picture">Upload New Profile Picture <small>(Max 5MB)</small></label>
                 <div class="input-wrapper">
-                    <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" required
-                          pattern="[A-Z][a-zA-Z]*" oninput="validateName(this)">
+                    <input type="file" id="profile_picture" name="profile_picture" accept="image/*">
+                </div>
+                <span class="warning" id="profile_picture_warning"></span>
+                <div id="imagePreview" style="display: none; margin-top: 10px;">
+                    <img id="image" style="max-width: 100%;">
+                </div>
+                <input type="hidden" id="cropped_image" name="cropped_image">
+                <p>Navigate your desired image angle then click save below.</p>
+            </div>
+        </div>
+
+        <div class="form-section">
+            <h2>Personal Information</h2>
+            <div class="form-group">
+                <label for="first_name">First Name</label>
+                <div class="input-wrapper">
+                    <input type="text" id="first_name" name="first_name" value="{{ user.first_name }}" required pattern="[A-Z][a-zA-Z]*" oninput="validateName(this)">
                 </div>
                 <span class="warning" id="first_name_warning"></span>
             </div>
             <div class="form-group">
-                <label for="second_name">Second Name:</label>
+                <label for="second_name">Second Name</label>
                 <div class="input-wrapper">
-                    <input type="text" id="second_name" name="second_name" value="{{ user.second_name|default:'' }}"
-                          pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validateName(this)">
+                    <input type="text" id="second_name" name="second_name" value="{{ user.second_name|default:'' }}" pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validateName(this)">
                 </div>
                 <span class="warning" id="second_name_warning"></span>
             </div>
-        </div>
-        <div class="form-group-row">
             <div class="form-group">
-                <label for="middle_name">Middle Name:</label>
+                <label for="middle_name">Middle Name</label>
                 <div class="input-wrapper">
-                    <input type="text" id="middle_name" name="middle_name" value="{{ user.middle_name|default:'' }}" required
-                        pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validateName(this)">
+                    <input type="text" id="middle_name" name="middle_name" value="{{ user.middle_name|default:'' }}" required pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validateName(this)">
                 </div>
                 <span class="warning" id="middle_name_warning"></span>
             </div>
             <div class="form-group">
-                <label for="last_name">Last Name:</label>
+                <label for="last_name">Last Name</label>
                 <div class="input-wrapper">
-                    <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}" required
-                        pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validateName(this)">
+                    <input type="text" id="last_name" name="last_name" value="{{ user.last_name }}" required pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validateName(this)">
                 </div>
                 <span class="warning" id="last_name_warning"></span>
             </div>
-        </div>
-        <div class="form-group">
-            <label for="suffix">Suffix:</label>
-            <div class="input-wrapper">
-                <select id="suffix" name="suffix">
-                    <option value="" {% if not user.suffix %}selected{% endif %}>None</option>
-                    <option value="Jr." {% if user.suffix == "Jr." %}selected{% endif %}>Jr.</option>
-                    <option value="Sr." {% if user.suffix == "Sr." %}selected{% endif %}>Sr.</option>
-                    <option value="II" {% if user.suffix == "II" %}selected{% endif %}>II</option>
-                    <option value="III" {% if user.suffix == "III" %}selected{% endif %}>III</option>
-                    <option value="IV" {% if user.suffix == "IV" %}selected{% endif %}>IV</option>
-                </select>
+            <div class="form-group">
+                <label for="suffix">Suffix</label>
+                <div class="input-wrapper">
+                    <select id="suffix" name="suffix">
+                        <option value="" {% if not user.suffix %}selected{% endif %}>None</option>
+                        <option value="Jr." {% if user.suffix == "Jr." %}selected{% endif %}>Jr.</option>
+                        <option value="Sr." {% if user.suffix == "Sr." %}selected{% endif %}>Sr.</option>
+                        <option value="II" {% if user.suffix == "II" %}selected{% endif %}>II</option>
+                        <option value="III" {% if user.suffix == "III" %}selected{% endif %}>III</option>
+                        <option value="IV" {% if user.suffix == "IV" %}selected{% endif %}>IV</option>
+                    </select>
+                </div>
+                <span class="warning" id="suffix_warning"></span>
             </div>
-            <span class="warning" id="suffix_warning"></span>
         </div>
-        <div class="form-group">
-            <label for="username">Username:</label>
-            <div class="input-wrapper">
-                <input type="text" id="username" name="username" value="{{ user.username }}" required
-                       oninput="validateUsername(this)">
+
+        <div class="form-section">
+            <h2>Account Credentials</h2>
+            <div class="form-group">
+                <label for="username">Username</label>
+                <div class="input-wrapper">
+                    <input type="text" id="username" name="username" value="{{ user.username }}" required oninput="validateUsername(this)">
+                </div>
+                <span class="warning" id="username_warning"></span>
             </div>
-            <span class="warning" id="username_warning"></span>
-        </div>
-        <div class="form-group">
-            <label for="password">New Password (leave blank to keep current):</label>
-            <div class="input-wrapper">
-                <input type="password" id="password" name="password" placeholder="Enter new password"
-                       oninput="validatePassword(this)">
-                <span class="warning" id="password_warning"></span>
-                <div class="strength-indicator" id="password_strength">
-                    <span class="strength-text"></span>
-                    <div class="strength-bar"></div>
+            <div class="form-group">
+                <label for="password">New Password</label>
+                <div class="input-wrapper">
+                    <input type="password" id="password" name="password" placeholder="Leave blank to keep current" oninput="validatePassword(this)">
+                    <span class="warning" id="password_warning"></span>
+                    <div class="strength-indicator" id="password_strength">
+                        <span class="strength-text"></span>
+                        <div class="strength-bar"></div>
+                    </div>
                 </div>
             </div>
         </div>
-        <div class="form-group">
-            <label for="street">Street:</label>
-            <div class="input-wrapper">
-                <input type="text" id="street" name="street" value="{{ user.street|default:'' }}"
-                       pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validatePlace(this)">
+
+        <div class="form-section">
+            <h2>Address & Contact</h2>
+            <div class="form-group full-width">
+                <label for="street">Street</label>
+                <div class="input-wrapper">
+                    <input type="text" id="street" name="street" value="{{ user.street|default:'' }}" pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validatePlace(this)">
+                </div>
+                <span class="warning" id="street_warning"></span>
             </div>
-            <span class="warning" id="street_warning"></span>
-        </div>
-        <div class="form-group">
-            <label for="province">Province:</label>
-            <div class="input-wrapper">
-                <select id="province" name="province" class="styled-select" onchange="loadCities()">
-                    <option value="" {% if not user.province %}selected{% endif %}>Select a province</option>
-                    <option value="Batangas" {% if user.province == "Batangas" %}selected{% endif %}>Batangas</option>
-                    <option value="Cavite" {% if user.province == "Cavite" %}selected{% endif %}>Cavite</option>
-                    <option value="Laguna" {% if user.province == "Laguna" %}selected{% endif %}>Laguna</option>
-                    <option value="Quezon" {% if user.province == "Quezon" %}selected{% endif %}>Quezon</option>
-                    <option value="Rizal" {% if user.province == "Rizal" %}selected{% endif %}>Rizal</option>
-                </select>
+            <div class="form-group">
+                <label for="province">Province</label>
+                <div class="input-wrapper">
+                    <select id="province" name="province" onchange="loadCities()">
+                        <option value="" {% if not user.province %}selected{% endif %}>Select a province</option>
+                        <option value="Batangas" {% if user.province == "Batangas" %}selected{% endif %}>Batangas</option>
+                        <option value="Cavite" {% if user.province == "Cavite" %}selected{% endif %}>Cavite</option>
+                        <option value="Laguna" {% if user.province == "Laguna" %}selected{% endif %}>Laguna</option>
+                        <option value="Quezon" {% if user.province == "Quezon" %}selected{% endif %}>Quezon</option>
+                        <option value="Rizal" {% if user.province == "Rizal" %}selected{% endif %}>Rizal</option>
+                    </select>
+                </div>
+                <span class="warning" id="province_warning"></span>
             </div>
-            <span class="warning" id="province_warning"></span>
-        </div>
-        <div class="form-group">
-            <label for="city">City/Municipality:</label>
-            <div class="input-wrapper">
-                <select id="city" name="city" class="styled-select" onchange="loadBarangays(); updateZipCode();">
-                    <option value="" selected>Select a city/municipality</option>
-                </select>
+            <div class="form-group">
+                <label for="city">City/Municipality</label>
+                <div class="input-wrapper">
+                    <select id="city" name="city" onchange="loadBarangays(); updateZipCode();">
+                        <option value="" selected>Select a city/municipality</option>
+                    </select>
+                </div>
+                <span class="warning" id="city_warning"></span>
             </div>
-            <span class="warning" id="city_warning"></span>
-        </div>
-        <div class="form-group">
-            <label for="barangay">Barangay:</label>
-            <div class="input-wrapper">
-                <select id="barangay" name="barangay" class="styled-select">
-                    <option value="" selected>Select a barangay</option>
-                </select>
+            <div class="form-group">
+                <label for="barangay">Barangay</label>
+                <div class="input-wrapper">
+                    <select id="barangay" name="barangay">
+                        <option value="" selected>Select a barangay</option>
+                    </select>
+                </div>
+                <span class="warning" id="barangay_warning"></span>
             </div>
-            <span class="warning" id="barangay_warning"></span>
-        </div>
-        <div class="form-group">
-            <label for="zip_code">ZIP Code:</label>
-            <div class="input-wrapper">
-                <input type="text" id="zip_code" name="zip_code" value="{{ user.zip_code|default:'' }}" readonly>
+            <div class="form-group">
+                <label for="zip_code">ZIP Code</label>
+                <div class="input-wrapper">
+                    <input type="text" id="zip_code" name="zip_code" value="{{ user.zip_code|default:'' }}" readonly>
+                </div>
+                <span class="warning" id="zip_code_warning"></span>
             </div>
-            <span class="warning" id="zip_code_warning"></span>
-        </div>
-        <div class="form-group">
-            <label for="contact_number">Contact Number:</label>
-            <div class="input-wrapper">
-                <input type="tel" id="contact_number" name="contact_number" value="{{ user.contact_number|default:'' }}"
-                       maxlength="15" pattern="[0-9]+" oninput="validateContactNumber(this)">
+            <div class="form-group full-width">
+                <label for="contact_number">Contact Number</label>
+                <div class="input-wrapper">
+                    <input type="tel" id="contact_number" name="contact_number" value="{{ user.contact_number|default:'' }}" maxlength="15" pattern="[0-9]+" oninput="validateContactNumber(this)">
+                </div>
+                <span class="warning" id="contact_number_warning"></span>
             </div>
-            <span class="warning" id="contact_number_warning"></span>
         </div>
+
         <div class="button-wrapper">
-            <button type="submit" class="styled-button">Save Changes</button>
+            <button type="submit" class="dashboard-btn">Save Changes</button>
         </div>
     </form>
-    <a href="{% url 'dashboard' %}" class="back-link">Back to Dashboard</a>
 </div>
 
 <!-- Include Cropper.js -->
@@ -174,7 +181,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const imagePreview = document.getElementById('imagePreview');
     const croppedImageInput = document.getElementById('cropped_image');
     const profilePictureWarning = document.getElementById('profile_picture_warning');
-    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB in bytes
+    const MAX_FILE_SIZE = 5 * 1024 * 1024; // 5MB in bytes
     let cropper;
     
     // Make notification messages disappear after 5 seconds
@@ -198,7 +205,7 @@ document.addEventListener('DOMContentLoaded', function () {
             
             // Check file size
             if (file.size > MAX_FILE_SIZE) {
-                profilePictureWarning.textContent = 'File size exceeds the 10MB limit. Please choose a smaller image.';
+                profilePictureWarning.textContent = 'File size exceeds the 5MB limit. Please choose a smaller image.';
                 input.value = ''; // Clear the input
                 return;
             } else {

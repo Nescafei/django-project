@@ -1,0 +1,375 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Take Attendance
+{% endblock %}
+
+{% block content %}
+<link rel="icon" type="image/png" href="{% static 'images/favicon.png' %}" />
+<link rel="stylesheet" href="{% static 'css/event_management.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
+
+<div class="dashboard-container">
+    <div class="event-form-container">
+        <div class="dashboard-header">
+            <h1>Take Attendance</h1>
+            <div>
+                <a href="{% url 'dashboard' %}" class="dashboard-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+        <div class="attendance-info">
+            <div class="event-selection-section">
+                <h2>Select an Event</h2>
+                <select id="eventSelect" class="filter-select">
+                    <option value="">Choose an event...</option>
+                    {% for event in events %}
+                    <option value="{{ event.id }}" data-event-name="{{ event.name }}">{{ event.name }} ({{ event.date_from|date:"M d, Y" }})</option>
+                    {% endfor %}
+                </select>
+            </div>
+            <div class="scanner-section" style="display: none;">
+                <h2>Scan Member QR Code</h2>
+                <video id="scannerVideo" width="300" height="300" autoplay playsinline></video>
+                <canvas id="scannerCanvas" width="300" height="300" style="display: none;"></canvas>
+                <button id="startScanner" class="dashboard-btn">Start Scanner</button>
+                <div id="scanResult" class="scan-result"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    // Define the local jsQR path using Django static template tag
+    var localJsQRPath = "{% static 'js/jsQR.min.js' %}";
+</script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.min.js" 
+        onload="console.log('jsQR loaded successfully from CDN')" 
+        onerror="console.error('Failed to load jsQR from CDN, falling back to local'); 
+                var localScript = document.createElement('script'); 
+                localScript.src = localJsQRPath; 
+                localScript.onload = function() { console.log('jsQR loaded successfully from local'); }; 
+                localScript.onerror = function() { console.error('Failed to load jsQR from local'); }; 
+                document.body.appendChild(localScript);">
+</script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const eventSelect = document.getElementById('eventSelect');
+    const scannerSection = document.querySelector('.scanner-section');
+    const startScannerBtn = document.getElementById('startScanner');
+    const video = document.getElementById('scannerVideo');
+    let canvas = document.getElementById('scannerCanvas');
+    let canvasContext = canvas ? canvas.getContext('2d') : null;
+    const scanResult = document.getElementById('scanResult');
+    let scanning = false;
+    let stream = null;
+    let lastQrData = null; // Track the last scanned QR data to avoid duplicates
+
+    // Validate all elements
+    if (!eventSelect || !scannerSection || !startScannerBtn || !video || !scanResult) {
+        console.error('Missing DOM elements:', {
+            eventSelect, scannerSection, startScannerBtn, video, scanResult
+        });
+        return;
+    }
+
+    // Fallback if canvas is null
+    if (!canvas) {
+        console.error('Canvas element not found. Creating fallback canvas.');
+        canvas = document.createElement('canvas');
+        canvas.id = 'scannerCanvas';
+        canvas.width = 300;
+        canvas.height = 300;
+        canvas.style.display = 'none';
+        document.body.appendChild(canvas);
+        canvasContext = canvas.getContext('2d');
+    } else if (!canvasContext) {
+        console.error('Failed to get canvas context.');
+        return;
+    }
+
+    eventSelect.addEventListener('change', function() {
+        if (this.value) {
+            scannerSection.style.display = 'block';
+            scanResult.textContent = 'Select an event and start the scanner.';
+        } else {
+            scannerSection.style.display = 'none';
+        }
+    });
+
+    startScannerBtn.addEventListener('click', function() {
+        if (!scanning) {
+            startScanner();
+        } else {
+            stopScanner();
+        }
+    });
+
+    function startScanner() {
+        const eventId = eventSelect.value;
+        if (!eventId) {
+            scanResult.textContent = 'Please select an event first.';
+            return;
+        }
+
+        navigator.mediaDevices.getUserMedia({ 
+            video: { 
+                facingMode: 'user', 
+                width: { ideal: 640 },
+                height: { ideal: 480 }
+            } 
+        })
+        .then(function(mediaStream) {
+            stream = mediaStream;
+            video.srcObject = stream;
+            video.onloadedmetadata = function() {
+                console.log(`Video loaded: ${video.videoWidth}x${video.videoHeight}`);
+                if (video.videoWidth === 0 || video.videoHeight === 0) {
+                    video.width = 640;
+                    video.height = 480;
+                }
+                video.play();
+                scanning = true;
+                startScannerBtn.textContent = 'Stop Scanner';
+                scanResult.textContent = 'Scanning for QR codes...';
+                requestAnimationFrame(scan);
+            };
+        })
+        .catch(function(err) {
+            console.error("Camera Error: " + err);
+            scanResult.textContent = `Error: ${err.message}. Check camera permissions.`;
+        });
+    }
+
+    function stopScanner() {
+        scanning = false;
+        startScannerBtn.textContent = 'Start Scanner';
+        scanResult.textContent = 'Scanner stopped.';
+        if (stream) {
+            stream.getTracks().forEach(track => track.stop());
+            stream = null;
+        }
+        video.srcObject = null;
+        video.style.background = 'none';
+        if (canvasContext) {
+            canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+        }
+        // Clear any existing notifications on stop
+        const notificationContainer = document.querySelector('.notification-container');
+        if (notificationContainer) {
+            notificationContainer.innerHTML = '';
+        }
+    }
+
+    function scan() {
+        if (scanning && video.readyState === video.HAVE_ENOUGH_DATA && canvasContext) {
+            if (typeof jsQR === 'undefined') {
+                console.error('jsQR library not loaded. Scanning aborted.');
+                scanResult.textContent = 'Error: QR library failed to load.';
+                return;
+            }
+
+            canvas.width = video.videoWidth || 640;
+            canvas.height = video.videoHeight || 480;
+            if (canvas.width === 0 || canvas.height === 0) {
+                canvas.width = 640;
+                canvas.height = 480;
+            }
+            canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
+            const imageData = canvasContext.getImageData(0, 0, canvas.width, canvas.height);
+            console.log(`Scanning frame: ${canvas.width}x${canvas.height}`);
+
+            const code = jsQR(imageData.data, imageData.width, imageData.height, {
+                inversionAttempts: 'attemptBoth',
+                quietZone: 20
+            });
+
+            if (code && code.data !== lastQrData) {
+                console.log("QR Code detected: " + code.data);
+                lastQrData = code.data; // Update last scanned QR data
+                canvasContext.beginPath();
+                canvasContext.rect(code.location.topLeftCorner.x, code.location.topLeftCorner.y,
+                    code.location.bottomRightCorner.x - code.location.topLeftCorner.x,
+                    code.location.bottomRightCorner.y - code.location.topLeftCorner.y);
+                canvasContext.lineWidth = 2;
+                canvasContext.strokeStyle = 'green';
+                canvasContext.stroke();
+                scanResult.textContent = `Detected QR: ${code.data}`;
+
+                // Extract user name from QR code (e.g., "member:{id}-attendance-{full_name}")
+                const match = code.data.match(/member:\d+-attendance-(.+)/);
+                const userName = match ? match[1] : 'Unknown User';
+                const eventName = eventSelect.options[eventSelect.selectedIndex].dataset.eventName;
+
+                // Clear existing notifications
+                const notificationContainer = document.querySelector('.notification-container');
+                if (notificationContainer) {
+                    notificationContainer.innerHTML = ''; // Remove all existing notifications
+                    console.log('Notification container cleared and found');
+
+                    // Check if user is unknown
+                    if (userName === 'Unknown User') {
+                        // Invalid/unknown user
+                        const notification = document.createElement('div');
+                        notification.className = 'notification error';
+                        notification.innerHTML = `
+                            <i class="fas fa-times"></i>
+                            <span class="notification-message">Invalid user: QR code not recognized for this event</span>
+                            <button class="notification-close">&times;</button>
+                        `;
+                        notificationContainer.appendChild(notification);
+
+                        // Auto-remove after 3 seconds
+                        setTimeout(() => {
+                            notification.classList.add('fade-out');
+                            setTimeout(() => notification.remove(), 300); // Match animation duration
+                        }, 3000);
+
+                        // Close button functionality
+                        const closeButton = notification.querySelector('.notification-close');
+                        closeButton.addEventListener('click', () => {
+                            notification.classList.add('fade-out');
+                            setTimeout(() => notification.remove(), 300);
+                        });
+                    } else {
+                        // Valid user
+                        const notification = document.createElement('div');
+                        notification.className = 'notification success';
+                        notification.innerHTML = `
+                            <i class="fas fa-check-circle"></i>
+                            <span class="notification-message">${userName} has been marked present for ${eventName}</span>
+                            <button class="notification-close">&times;</button>
+                        `;
+                        notificationContainer.appendChild(notification);
+
+                        // Auto-remove after 3 seconds
+                        setTimeout(() => {
+                            notification.classList.add('fade-out');
+                            setTimeout(() => notification.remove(), 300); // Match animation duration
+                        }, 3000);
+
+                        // Close button functionality
+                        const closeButton = notification.querySelector('.notification-close');
+                        closeButton.addEventListener('click', () => {
+                            notification.classList.add('fade-out');
+                            setTimeout(() => notification.remove(), 300);
+                        });
+                    }
+                } else {
+                    console.error('Notification container not found');
+                }
+
+                // Proceed with backend call only for valid users
+                if (userName !== 'Unknown User') {
+                    markAttendance(code.data);
+                }
+            } else if (!code) {
+                console.log("No QR code detected.");
+                scanResult.textContent = 'Scanning...';
+                canvasContext.clearRect(0, 0, canvas.width, canvas.height);
+                canvasContext.drawImage(video, 0, 0, canvas.width, canvas.height);
+                lastQrData = null; // Reset last QR data if no code is detected
+            }
+        } else if (!canvasContext) {
+            console.error('Canvas context is null. Scanning aborted.');
+            scanResult.textContent = 'Error: Canvas not available.';
+        }
+        if (scanning) {
+            requestAnimationFrame(scan);
+        }
+    }
+
+    function markAttendance(qrData) {
+        const eventId = eventSelect.value;
+        const eventName = eventSelect.options[eventSelect.selectedIndex].dataset.eventName;
+
+        fetch('/scan-qr/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': '{{ csrf_token }}'
+            },
+            body: JSON.stringify({ qr_data: qrData, event_id: eventId })
+        })
+        .then(response => {
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            return response.json();
+        })
+        .then(data => {
+            scanResult.textContent = '';
+            console.log('Backend response:', data);
+            if (data.status !== 'success') {
+                scanResult.textContent = data.message || 'Unknown error.';
+            }
+        })
+        .catch(error => {
+            console.error('Error marking attendance:', error);
+            scanResult.textContent = `Error: ${error.message}. Check console.`;
+        });
+    }
+});
+</script>
+
+<style>
+.scan-result {
+    margin-top: 1rem;
+    font-weight: bold;
+    color: var(--primary-bg);
+}
+
+.attendance-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+}
+
+.event-selection-section, .scanner-section {
+    margin-bottom: 2rem;
+}
+
+.event-selection-section h2, .scanner-section h2 {
+    color: var(--primary-bg);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+#scannerVideo {
+    border: 2px solid var(--primary-bg);
+    border-radius: 10px;
+    background: white;
+}
+
+.filter-select {
+    width: 100%;
+    max-width: 300px;
+    padding: 0.75rem;
+    border: 1px solid rgba(13, 52, 113, 0.2);
+    border-radius: var(--border-radius);
+    font-size: 1rem;
+    background-color: white;
+}
+
+.notification-message {
+    margin-left: 0.5rem; /* Space between icon and text */
+}
+
+@media (max-width: 768px) {
+    .attendance-info {
+        padding: 1.5rem;
+    }
+
+    #scannerVideo {
+        width: 250px;
+        height: 250px;
+    }
+}
+</style>
+{% endblock %}

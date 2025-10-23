@@ -82,7 +82,7 @@ Knights of Columbus - Event Attendance
             <div class="attendance-list-column">
                 <div class="attendance-card">
                     <div class="attendance-header">
-                        <h2>Member Attendance</h2>
+                        <h2>Attendance</h2>
                         <div class="attendance-actions">
                             <div class="search-wrapper">
                                 <input type="text" id="searchMembers" placeholder="Search members..." class="search-input">
@@ -94,7 +94,7 @@ Knights of Columbus - Event Attendance
                     <div class="attendance-stats">
                         <div class="stat-item">
                             <span class="stat-value" id="totalMembers">{{ members|length }}</span>
-                            <span class="stat-label">Total Members</span>
+                            <span class="stat-label">Total Attendees</span>
                         </div>
                         <div class="stat-item">
                             <span class="stat-value" id="presentCount">{{ present_count }}</span>
@@ -112,7 +112,7 @@ Knights of Columbus - Event Attendance
                             <table>
                                 <thead>
                                     <tr>
-                                        <th>Member</th>
+                                        <th>Name</th>
                                         <th class="attendance-column">Present</th>
                                     </tr>
                                 </thead>
@@ -130,7 +130,7 @@ Knights of Columbus - Event Attendance
                                                 {% endif %}
                                                 <div class="member-details">
                                                     <span class="member-name">{{ member.first_name }} {{ member.last_name }}</span>
-                                                    <span class="member-role">{{ member.get_current_degree_display|default:"" }}</span>
+                                                    <span class="member-role">{{ member.get_role_display|capfirst }} - {{ member.get_current_degree_display|default:"" }}</span>
                                                 </div>
                                             </div>
                                         </td>
@@ -145,7 +145,7 @@ Knights of Columbus - Event Attendance
                                     </tr>
                                     {% empty %}
                                     <tr>
-                                        <td colspan="2" class="no-members">No members found for this event</td>
+                                        <td colspan="2" class="no-members">No attendees found for this event</td>
                                     </tr>
                                     {% endfor %}
                                 </tbody>
@@ -154,6 +154,7 @@ Knights of Columbus - Event Attendance
                         
                         {% if is_today %}
                         <div class="save-attendance-container">
+                            <a href="{% url 'officer_take_attendance' %}" class="dashboard-btn"><i class="fa-solid fa-camera"></i>Scan QR Code</a>
                             <button type="button" id="saveAttendance" class="dashboard-btn">
                                 <i class="fas fa-save"></i> Save Attendance
                             </button>
@@ -194,6 +195,18 @@ Knights of Columbus - Event Attendance
 </div>
 
 <style>
+:root {
+    --primary-bg: #0D3471;
+    --secondary-bg: #F0F1F6;
+    --accent-color: #F4B41A;
+    --heading-color: #0D3471;
+    --text-color: #000000;
+    --button-text: #F0F1F6;
+    --container-padding: 2rem;
+    --border-radius: 8px;
+    --transition-speed: 0.3s;
+}
+
 .dashboard-header {
     position: relative;
     padding-bottom: 1rem;
@@ -648,11 +661,8 @@ Knights of Columbus - Event Attendance
 
 .dashboard-btn:hover {
     background-color: #f4b41a;
+    color: var(--primary-bg);
     transform: translateY(-2px);
-}
-
-.dashboard-btn.secondary {
-    background-color: #6c757d;
 }
 
 .dashboard-btn.secondary:hover {

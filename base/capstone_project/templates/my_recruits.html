@@ -7,11 +7,12 @@ Knights of Columbus - My Recruits
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/event_management.css' %}?v={% now 'U' %}">
 
 <div class="dashboard-container">
     <div class="content-card">
         <div class="dashboard-header">
-            <h1>My Recruits</h1>
+            <h1 style="color: var(--primary-bg);">My Recruits</h1>
             <div>
                 <a href="{% url 'dashboard' %}" class="dashboard-btn secondary back-btn">
                     <i class="fas fa-arrow-left"></i> Back to Dashboard

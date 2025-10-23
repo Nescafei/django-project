@@ -8,18 +8,32 @@ Knights of Columbus - Admin Dashboard
 <link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
 
 <div class="dashboard-container">
-    <div class="content-card">
-        <div class="dashboard-header">
-            <h1>Knights of Columbus</h1>
-            <h2>Admin Dashboard</h2>
+    <div class="dashboard-title">
+        <div class="title-section">
+            <h1>Admin Dashboard</h1>
+            <h2>Welcome, {{ user.first_name }} {{ user.last_name }}</h2>
         </div>
+        <div class="bible-verse-section">
+            <div class="verse-header">
+                <i class="fas fa-book-open"></i>
+                <span>Daily Inspiration</span>
+            </div>
+            <blockquote class="bible-verse-inline">
+                <p>"{{ daily_verse.verse }}"</p>
+                <cite>- {{ daily_verse.reference }}</cite>
+            </blockquote>
+        </div>
+    </div>
 
-        <div class="dashboard-grid">
-            <!-- Profile Card -->
-            <div class="content-card">
+    <div class="dashboard-grid">
+        <!-- Profile Card -->
+        <div class="dashboard-card" style="animation-delay: 0.1s;">
+            <div class="card-header">
                 <h3>Profile Information</h3>
+            </div>
+            <div class="card-content">
                 <div class="profile-info">
-                    <div class="profile-pic">
+                    <div class="profile-pic{% if user.is_inactive_member %} inactive{% endif %}">
                         {% if user.profile_picture %}
                             <img src="{{ user.profile_picture.url }}" alt="Profile Picture">
                         {% else %}
@@ -27,436 +41,226 @@ Knights of Columbus - Admin Dashboard
                         {% endif %}
                     </div>
                     <h4>{{ user.first_name }} {{ user.last_name }}</h4>
-                    {% if user.council %}
-                        <p>{{ user.council.name }}</p>
-                    {% else %}
-                        <p>No council assigned</p>
-                    {% endif %}
+                    <p>{{ user.council.name|default:"No council assigned" }}</p>
                     <p>Degree: <span class="degree-badge degree-{{ user.current_degree|default:'1st' }}">{{ user.get_current_degree_display }}</span></p>
-                    <div class="action-buttons">
-                        <a href="{% url 'edit_profile' %}" class="dashboard-btn">
-                            <i class="fas fa-user-edit"></i>Edit Profile
-                        </a>
+                </div>
+            </div>
+            <div class="action-buttons">
+                <a href="{% url 'edit_profile' %}" class="dashboard-btn">
+                    <i class="fas fa-user-edit"></i>Edit Profile
+                </a>
+            </div>
+        </div>
+
+        <!-- My Recruits Card -->
+        <div class="dashboard-card" style="animation-delay: 0.2s;">
+            <div class="card-header">
+                <h3>My Recruits</h3>
+            </div>
+            <div class="card-content">
+                <p>Track your recruitment progress.</p>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" data-target="{{ user_recruitment_count|default:0 }}">0</div>
+                        <div class="stat-label">Your Recruits</div>
                     </div>
                 </div>
             </div>
+            <div class="action-buttons">
+                <a href="{% url 'my_recruits' %}" class="dashboard-btn">
+                    <i class="fas fa-users"></i>View My Recruits
+                </a>
+            </div>
+        </div>
 
-            <!-- My Recruits Card -->
-            <div class="content-card dashboard-card">
-                <div class="dashboard-summary">
-                    <div class="summary-icon">
-                        <i class="fas fa-user-plus"></i>
+        <!-- Users Management Card -->
+        <div class="dashboard-card" style="animation-delay: 0.3s;">
+            <div class="card-header">
+                <h3>Users Management</h3>
+            </div>
+            <div class="card-content">
+                <p>Manage user roles and pending applications.</p>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" data-target="{{ user_list|length }}">0</div>
+                        <div class="stat-label">Active</div>
                     </div>
-                    <div class="summary-content">
-                        <h3>My Recruits</h3>
-                        <p class="summary-label">Track your recruitment progress and degree advancement</p>
+                    <div class="stat-card">
+                        <div class="stat-value" data-target="{{ inactive_users_count|default:0 }}">0</div>
+                        <div class="stat-label">Inactive</div>
                     </div>
-                </div>
-                <div class="action-buttons">
-                    <a href="{% url 'my_recruits' %}" class="dashboard-btn">
-                        <i class="fas fa-users"></i>View My Recruits
-                    </a>
+                    <div class="stat-card">
+                        <div class="stat-value" data-target="{{ pending_users_count|default:0 }}">0</div>
+                        <div class="stat-label">Pending</div>
+                    </div>
                 </div>
             </div>
+            <div class="action-buttons">
+                <a href="{% url 'manage_roles' %}" class="dashboard-btn"><i class="fas fa-user-tag"></i>Roles</a>
+                <a href="{% url 'manage_pending_users' %}" class="dashboard-btn"><i class="fas fa-user-clock"></i>Pending</a>
+                <a href="{% url 'member_list' %}" class="dashboard-btn"><i class="fas fa-list"></i>All Users</a>
+            </div>
+        </div>
 
-            <!-- Users Management Card -->
-            <div class="content-card dashboard-card">
-                <div class="dashboard-summary">
-                    <div class="summary-icon">
-                        <i class="fas fa-users"></i>
+        <!-- Events Card -->
+        <div class="dashboard-card" style="animation-delay: 0.4s;">
+            <div class="card-header">
+                <h3>Events</h3>
+            </div>
+            <div class="card-content">
+                <p>Manage event proposals and view upcoming events.</p>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" data-target="{{ approved_events_count }}">0</div>
+                        <div class="stat-label">Approved / Incoming</div>
                     </div>
-                    <div class="summary-content">
-                        <h3>Users Management</h3>
-                        <div class="summary-count">{{ user_list|length }}</div>
-                        <p class="summary-label">Active Users</p>
+                    <div class="stat-card">
+                        <div class="stat-value" data-target="{{ pending_events_count|default:0 }}">0</div>
+                        <div class="stat-label">Pending</div>
                     </div>
-                </div>
-                <div class="action-buttons" style="justify-content: center; margin-bottom: 1rem;">
-                    <a href="{% url 'manage_roles' %}" class="dashboard-btn">
-                        <i class="fas fa-user-tag"></i>Manage Roles
-                    </a>
-                    <a href="{% url 'manage_pending_users' %}" class="dashboard-btn">
-                        <i class="fas fa-user-clock"></i>Pending Users
-                    </a>
-                    <a href="{% url 'member_list' %}" class="dashboard-btn">
-                        <i class="fas fa-list"></i>View All Users
-                    </a>
                 </div>
             </div>
+            <div class="action-buttons">
+                <a href="{% url 'add_event' %}" class="dashboard-btn"><i class="fas fa-plus"></i>Add</a>
+                <a href="{% url 'event_proposals' %}" class="dashboard-btn"><i class="fas fa-clipboard-check"></i>Proposals</a>
+                <a href="{% url 'event_list' %}" class="dashboard-btn"><i class="fas fa-list"></i>Events</a>
+                <a href="{% url 'archived_events' %}" class="dashboard-btn"><i class="fas fa-archive"></i>Archived</a>
+            </div>
+        </div>
 
-            <!-- Events Card -->
-            <div class="content-card dashboard-card">
-                <div class="dashboard-summary">
-                    <div class="summary-icon">
-                        <i class="fas fa-calendar-alt"></i>
+         <!-- Council Settings Card -->
+         <div class="dashboard-card" style="animation-delay: 0.8s;">
+            <div class="card-header">
+                <h3>Council Settings</h3>
+            </div>
+            <div class="card-content">
+                <p>Manage councils - add new councils or remove existing ones.</p>
+                <div class="stat-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" data-target="{{ councils_count|default:0 }}">0</div>
+                        <div class="stat-label">Total Councils</div>
                     </div>
-                    <div class="summary-content">
-                        <h3>Upcoming Events</h3>
-                        <div class="summary-count">{{ approved_events_count }}</div>
-                        <p class="summary-label">Approved Events</p>
-                    </div>
-                </div>
-                <div class="action-buttons" style="justify-content: center; margin-bottom: 1rem;">
-                    <a href="{% url 'add_event' %}" class="dashboard-btn">
-                        <i class="fas fa-plus"></i>Add Event
-                    </a>
-                    <a href="{% url 'event_proposals' %}" class="dashboard-btn">
-                        <i class="fas fa-clipboard-check"></i>Event Proposals
-                    </a>
-                    <a href="{% url 'event_list' %}" class="dashboard-btn">
-                        <i class="fas fa-list"></i>View All Events
-                    </a>
-                    </a>
-                    <a href="{% url 'archived_events' %}" class="dashboard-btn">
-                        <i class="fas fa-archive"></i>Archived Events
-                    </a>
                 </div>
             </div>
+            <div class="action-buttons">
+                <a href="{% url 'manage_councils' %}" class="dashboard-btn">
+                    <i class="fas fa-cogs"></i>Manage Councils
+                </a>
+            </div>
+        </div>
 
-            <!-- Analytics Card -->
-            <div class="content-card dashboard-card">
-                <div class="dashboard-summary">
-                    <div class="summary-icon">
-                        <i class="fas fa-chart-bar"></i>
-                    </div>
-                    <div class="summary-content">
-                        <h3>Council Analytics</h3>
-                        <div class="summary-count">{{ analytics|length }}</div>
-                        <p class="summary-label">Council Reports</p>
-                    </div>
-                </div>
-                <div class="action-buttons" style="justify-content: center; margin-bottom: 1rem;">
-                    <a href="{% url 'analytics_view' %}" class="dashboard-btn">
-                        <i class="fas fa-chart-line"></i>View Analytics
-                    </a>
-                </div>
+        <!-- Analytics Card -->
+        <div class="dashboard-card" style="animation-delay: 0.5s;">
+            <div class="card-header">
+                <h3>Council Analytics</h3>
+            </div>
+            <div class="card-content">
+                <p>View council reports and performance metrics.</p>
+            </div>
+            <div class="action-buttons">
+                <a href="{% url 'analytics_view' %}" class="dashboard-btn">
+                    <i class="fas fa-chart-line"></i>View Analytics
+                </a>
+            </div>
+        </div>
+
+        <!-- Leaderboard Card -->
+        <div class="dashboard-card" style="animation-delay: 0.6s;">
+            <div class="card-header">
+                <h3>Leaderboard</h3>
+            </div>
+            <div class="card-content">
+                <p>See top recruiters and your rank.</p>
+            </div>
+            <div class="action-buttons">
+                <a href="{% url 'leaderboard' %}" class="dashboard-btn">
+                    <i class="fas fa-trophy"></i>View Leaderboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Community Chat Button -->
+        <div class="dashboard-card" style="animation-delay: 0.7s;">
+            <div class="card-header">
+                <h3>Community Chat</h3>
+            </div>
+            <div class="card-content">
+                <p>Join our community chat to connect with other members.</p>
+            </div>
+            <div class="action-buttons">
+                <a href="{% url 'forum' %}" class="dashboard-btn">
+                    <i class="fas fa-comments"></i>Community Chat
+                </a>
             </div>
         </div>
     </div>
 </div>
-
-<!-- Event details modal -->
-<div id="eventDetailsModal" class="modal">
-    <div class="modal-content">
-        <span class="close">&times;</span>
-        <h3>Event Details</h3>
-        <div id="eventDetailsContent">
-            <div class="loading">Loading event details...</div>
-        </div>
-    </div>
-</div>
-
-<style>
-.card-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    cursor: pointer;
-    padding-bottom: 1rem;
-    border-bottom: 2px solid var(--primary-bg);
-}
-
-.card-header h3 {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    margin: 0;
-    border-bottom: none;
-    padding-bottom: 0;
-}
-
-.count-badge {
-    font-size: 0.9rem;
-    background: var(--primary-bg);
-    color: var(--secondary-bg);
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    margin-left: 1rem;
-}
-
-.toggle-icon {
-    transition: transform 0.3s ease;
-}
-
-.collapsible.active .toggle-icon {
-    transform: rotate(180deg);
-}
-
-.collapsible-content {
-    display: none;
-    padding-top: 1rem;
-}
-
-.collapsible-content.show {
-    display: block;
-}
-
-.search-filter {
-    margin-bottom: 1rem;
-}
-
-.search-input {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid rgba(13, 52, 113, 0.2);
-    border-radius: var(--border-radius);
-    font-size: 1rem;
-}
-
-.search-input:focus {
-    outline: none;
-    border-color: var(--primary-bg);
-}
-
-.profile-pic {
-    width: 120px;
-    height: 120px;
-    border-radius: 50%;
-    margin: 0 auto 1rem;
-    object-fit: cover;
-    border: 3px solid var(--primary-bg);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    position: relative;
-}
-
-.profile-pic img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-}
-
-.profile-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 1.5rem;
-}
-
-.stat-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-    margin-top: 1rem;
-}
-
-/* Modal styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-}
-
-.modal-content {
-    background-color: var(--secondary-bg);
-    margin: 10% auto;
-    padding: 2rem;
-    border-radius: var(--border-radius);
-    max-width: 600px;
-    position: relative;
-    max-height: 80vh;
-    overflow-y: auto;
-}
-
-.close {
-    position: absolute;
-    top: 1rem;
-    right: 1.5rem;
-    font-size: 1.5rem;
-    cursor: pointer;
-}
-
-.close:hover {
-    color: var(--primary-bg);
-}
-
-.loading {
-    text-align: center;
-    padding: 2rem;
-    color: var(--heading-color);
-}
-
-.user-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 1rem;
-    margin-bottom: 1rem;
-    background-color: white;
-    border-radius: var(--border-radius);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.user-info {
-    flex: 1;
-}
-
-/* New styles for dashboard cards */
-.dashboard-card {
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.dashboard-card:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(13, 52, 113, 0.15);
-}
-
-.dashboard-summary {
-    display: flex;
-    align-items: center;
-    padding: 1rem 0;
-}
-
-.summary-icon {
-    background-color: var(--primary-bg);
-    color: white;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    margin-right: 1.5rem;
-}
-
-.summary-icon i {
-    font-size: 1.8rem;
-}
-
-.summary-content {
-    flex: 1;
-}
-
-.summary-content h3 {
-    margin: 0 0 0.5rem 0;
-    border-bottom: none;
-    padding-bottom: 0;
-}
-
-.summary-count {
-    font-size: 2.5rem;
-    font-weight: 700;
-    color: var(--primary-bg);
-    line-height: 1;
-}
-
-.summary-label {
-    font-size: 0.9rem;
-    color: #666;
-    margin: 0.25rem 0 0;
-}
-</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Search functionality
-    const searchInputs = document.querySelectorAll('.search-input');
-    searchInputs.forEach(input => {
-        input.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const container = this.closest('.collapsible-content');
-            
-            if (container.id === 'usersList') {
-                const items = container.querySelectorAll('.user-item');
-                items.forEach(item => {
-                    const text = item.textContent.toLowerCase();
-                    item.style.display = text.includes(searchTerm) ? '' : 'none';
-                });
+    // Animate cards with staggered entrance
+    const cards = document.querySelectorAll('.dashboard-card');
+    cards.forEach((card, index) => {
+        setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0)';
+        }, 100 + (index * 100));
+    });
+
+    // Animate counters
+    const counters = document.querySelectorAll('.stat-value');
+    counters.forEach(counter => {
+        const target = parseInt(counter.getAttribute('data-target'));
+        if (isNaN(target)) return;
+
+        let current = 0;
+        const duration = 1500; // 1.5 seconds
+        const stepTime = 20; // update every 20ms
+        const totalSteps = duration / stepTime;
+        const increment = target / totalSteps;
+
+        const timer = setInterval(() => {
+            current += increment;
+            if (current >= target) {
+                counter.textContent = target;
+                clearInterval(timer);
             } else {
-                const items = container.querySelectorAll('.dashboard-list li');
-                items.forEach(item => {
-                    const text = item.textContent.toLowerCase();
-                    item.style.display = text.includes(searchTerm) ? '' : 'none';
-                });
+                counter.textContent = Math.floor(current);
             }
-        });
-    });
-    
-    // View event details
-    const viewEventBtns = document.querySelectorAll('.view-event-btn');
-    viewEventBtns.forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const eventId = this.getAttribute('data-event-id');
-            const modal = document.getElementById('eventDetailsModal');
-            const contentDiv = document.getElementById('eventDetailsContent');
-            
-            modal.style.display = 'block';
-            contentDiv.innerHTML = '<div class="loading">Loading event details...</div>';
-            
-            fetch(`/event/${eventId}/details/`)
-                .then(response => response.json())
-                .then(data => {
-                    let detailsHTML = `
-                        <div class="event-details">
-                            <h4>${data.name}</h4>
-                            <p class="event-category">${data.category}</p>
-                            
-                            <div class="detail-group">
-                                <strong>Date:</strong> 
-                                <span>${data.date_from}${data.date_until ? ' - ' + data.date_until : ''}</span>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Location:</strong>
-                                <address>
-                                    ${data.street}, ${data.barangay}<br>
-                                    ${data.city}, ${data.province}
-                                </address>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Description:</strong>
-                                <p>${data.description}</p>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Council:</strong>
-                                <p>${data.council_name}</p>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Created by:</strong>
-                                <p>${data.creator_name}</p>
-                            </div>
-                        </div>
-                    `;
-                    contentDiv.innerHTML = detailsHTML;
-                })
-                .catch(error => {
-                    contentDiv.innerHTML = '<p>Error loading event details. Please try again later.</p>';
-                });
-        });
-    });
-    
-    // Close modal when clicking the close button
-    const closeButton = document.querySelector('.modal .close');
-    if (closeButton) {
-        closeButton.addEventListener('click', function() {
-            document.getElementById('eventDetailsModal').style.display = 'none';
-        });
-    }
-    
-    // Close modal when clicking outside of it
-    window.addEventListener('click', function(event) {
-        const modal = document.getElementById('eventDetailsModal');
-        if (modal && event.target === modal) {
-            modal.style.display = 'none';
-        }
+        }, stepTime);
     });
 });
+
+// Function to close inactive warning popup
+function closeInactiveWarning() {
+    const overlay = document.getElementById('inactiveWarningOverlay');
+    if (overlay) {
+        overlay.style.animation = 'fadeOut 0.3s ease-out';
+        setTimeout(() => {
+            overlay.remove();
+        }, 300);
+    }
+}
 </script>
+
+<!-- Inactive Warning Popup -->
+{% if show_inactive_warning %}
+<div class="inactive-warning-overlay" id="inactiveWarningOverlay">
+    <div class="inactive-warning-popup">
+        <div class="warning-icon">
+            <i class="fas fa-exclamation-triangle"></i>
+        </div>
+        <h3>Activity Warning</h3>
+        <p>Your account has been inactive for more than 30 days. To maintain your active status, please participate in council events or recruitment activities.</p>
+        <button class="warning-btn" onclick="closeInactiveWarning()">I Understand</button>
+    </div>
+</div>
+{% endif %}
+
+<style>
+@keyframes fadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+</style>
 {% endblock %}

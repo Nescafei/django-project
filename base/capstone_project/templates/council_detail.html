@@ -20,7 +20,7 @@ Knights of Columbus - {{ council.name }} Details
                 <h2>District Deputy</h2>
                 <div class="member-card admin-card">
                     <div class="member-info">
-                        <img src="{% if admin.profile_picture %}{{ admin.profile_picture.url }}{% else %}{% static 'images/default-profile.png' %}{% endif %}" alt="Profile Picture" class="profile-pic">
+                        <img src="{% if admin.profile_picture %}{{ admin.profile_picture.url }}{% else %}data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23f0f0f0'/%3E%3Ccircle cx='50' cy='40' r='15' fill='%23666'/%3E%3Cpath d='M20 80 Q20 65 35 65 L65 65 Q80 65 80 80 Z' fill='%23666'/%3E%3C/svg%3E{% endif %}" alt="Profile Picture" class="profile-pic">
                         <div class="member-details">
                             <h3>{{ admin.first_name }} {{ admin.last_name }}</h3>
                             <p>{{ admin.get_current_degree_display|default:"" }}</p>
@@ -37,7 +37,7 @@ Knights of Columbus - {{ council.name }} Details
                     {% for officer in officers %}
                     <div class="member-card officer-card">
                         <div class="member-info">
-                            <img src="{% if officer.profile_picture %}{{ officer.profile_picture.url }}{% else %}{% static 'images/default-profile.png' %}{% endif %}" alt="Profile Picture" class="profile-pic">
+                            <img src="{% if officer.profile_picture %}{{ officer.profile_picture.url }}{% else %}data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%23f0f0f0'/%3E%3Ccircle cx='50' cy='40' r='15' fill='%23666'/%3E%3Cpath d='M20 80 Q20 65 35 65 L65 65 Q80 65 80 80 Z' fill='%23666'/%3E%3C/svg%3E{% endif %}" alt="Profile Picture" class="profile-pic">
                             <div class="member-details">
                                 <h3>{{ officer.first_name }} {{ officer.last_name }}</h3>
                                 <p>{{ officer.get_current_degree_display|default:"" }}</p>
@@ -49,26 +49,7 @@ Knights of Columbus - {{ council.name }} Details
             </div>
             {% endif %}
 
-            {% if members %}
-            <div class="member-section">
-                <h2>Members</h2>
-                <div class="members-grid">
-                    {% for member in members %}
-                    <div class="member-card member-card-regular">
-                        <div class="member-info">
-                            <img src="{% if member.profile_picture %}{{ member.profile_picture.url }}{% else %}{% static 'images/default-profile.png' %}{% endif %}" alt="Profile Picture" class="profile-pic">
-                            <div class="member-details">
-                                <h3>{{ member.first_name }} {{ member.last_name }}</h3>
-                                <p>{{ member.get_current_degree_display|default:"" }}</p>
-                            </div>
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-            {% endif %}
-
-            {% if not admin and not officers and not members %}
+            {% if not admin and not officers %}
             <div class="no-members">
                 <p>No members found for this council.</p>
             </div>

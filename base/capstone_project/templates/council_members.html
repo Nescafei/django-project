@@ -6,60 +6,92 @@ Knights of Columbus - Council Members
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/role_management.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/event_management.css' %}?v={% now 'U' %}">
 
 <div class="dashboard-container">
     <div class="role-management-container">
         <div class="role-management-header">
-            <h2>Council Members</h2>
-            <div>
+            <h2>{{ council.name }} Members</h2>
+            <div class="header-actions">
                 <a href="{% url 'dashboard' %}" class="role-btn">
                     <i class="fas fa-arrow-left"></i> Back to Dashboard
                 </a>
             </div>
         </div>
 
+
         <div class="role-search-filter">
-            <input type="text" id="userSearchInput" placeholder="Search members by name, email, or council..." class="role-search-input">
+            <input type="text" id="memberSearchInput" placeholder="Search members by name, email, or role..." class="role-search-input">
         </div>
 
-        <div class="role-filters">
-            <button class="role-filter-btn active" data-role="all">All</button>
-            <button class="role-filter-btn" data-role="officer">Officers</button>
-            <button class="role-filter-btn" data-role="member">Members</button>
-            <button class="role-filter-btn" data-role="pending">Pending</button>
+        <div class="role-filters-container">
+            <div class="role-filters">
+                <button class="role-filter-btn active" data-role="all">All</button>
+                <button class="role-filter-btn" data-role="officer">Officers</button>
+                <button class="role-filter-btn" data-role="member">Members</button>
+            </div>
+            <div class="sort-filter">
+                <select id="sortSelect" class="sort-dropdown">
+                    <option value="alphabetical">Alphabetical (A-Z)</option>
+                    <option value="reverse-alphabetical">Reverse Alphabetical (Z-A)</option>
+                    <option value="newest">Newest Members</option>
+                    <option value="oldest">Oldest Members</option>
+                    <option value="role">By Role</option>
+                </select>
+            </div>
         </div>
 
-        <table class="user-role-table">
+        <table class="event-table">
             <thead>
                 <tr>
                     <th>Name</th>
                     <th>Email</th>
-                    <th>Current Role</th>
+                    <th>Role</th>
                     <th>Degree</th>
                     <th>Member Since</th>
-                    <th>Actions</th>
+                    <th class="action-header">Actions</th>
                 </tr>
             </thead>
             <tbody>
                 {% for user in users %}
-                {% if not user.is_archived %}
-                <tr data-role="{{ user.role }}">
-                    <td>{{ user.first_name }} {{ user.last_name }}</td>
+                {% if user.role != 'pending' %}
+                <tr data-role="{{ user.role }}" data-name="{{ user.first_name }} {{ user.last_name }}" data-joined="{{ user.date_joined|date:'Y-m-d' }}">
+                    <td>
+                        <div class="table-profile-container">
+                            {% if user.profile_picture %}
+                                <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="table-profile-picture">
+                            {% else %}
+                                <div class="table-profile-placeholder">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                            {% endif %}
+                            <span class="table-name">{{ user.first_name }} {{ user.last_name }}</span>
+                        </div>
+                    </td>
                     <td>{{ user.email }}</td>
                     <td>
                         <span class="role-badge role-{{ user.role }}">{{ user.get_role_display }}</span>
+                        {% with activity_status=user.get_activity_status %}
+                            {% if activity_status.warning %}
+                                <span class="{{ activity_status.class }}" title="{{ activity_status.message }}">
+                                    <i class="fas fa-exclamation-triangle"></i> Inactive
+                                </span>
+                            {% endif %}
+                        {% endwith %}
                     </td>
                     <td>{{ user.get_current_degree_display }}</td>
-                    <td>{{ user.date_joined|date:"F j, Y" }}</td>
-                    <td class="role-action-buttons">
-                        <a href="#" class="role-btn details-btn" onclick="viewUserDetails('{{ user.id }}')">
-                            <i class="fas fa-info-circle"></i> Details
-                        </a>
-                        {% if request.user.role == 'admin' or request.user.role == 'officer' and user.role == 'member' %}
-                        <a href="{% url 'change_council' user_id=user.id %}" class="role-btn promote-btn">
-                            <i class="fas fa-exchange-alt"></i> Change Council
-                        </a>
-                        {% endif %}
+                    <td>{{ user.date_joined|date:"M d, Y" }}</td>
+                    <td>
+                        <div class="action-cell">
+                            <button class="action-btn details-btn" onclick="viewMemberDetails('{{ user.id }}'); return false;">
+                                <i class="fas fa-info-circle"></i> Details
+                            </button>
+                            {% if request.user.role == 'admin' or request.user.role == 'officer' and user.role == 'member' %}
+                            <a href="{% url 'change_council' user_id=user.id %}" class="action-btn promote-btn">
+                                <i class="fas fa-exchange-alt"></i> Change Council
+                            </a>
+                            {% endif %}
+                        </div>
                     </td>
                 </tr>
                 {% endif %}
@@ -67,32 +99,40 @@ Knights of Columbus - Council Members
                 <tr>
                     <td colspan="6" style="text-align: center; padding: 2rem;">
                         <div class="no-events-message">
-                            <p>No members found matching your criteria.</p>
+                            <p>No members found in this council.</p>
                         </div>
                     </td>
                 </tr>
                 {% endfor %}
             </tbody>
         </table>
+        
     </div>
 </div>
 
-<!-- User details modal -->
-<div id="userDetailsModal" class="modal">
+<!-- Member details modal -->
+<div id="memberDetailsModal" class="modal">
     <div class="modal-content">
-        <span class="close">&times;</span>
-        <h3>User Details</h3>
-        <div id="userDetailsContent"></div>
+        <div class="modal-header">
+            <h3>Member Details</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div id="memberDetailsContent">
+            <div class="loading">Loading member details...</div>
+        </div>
+        <div class="modal-footer">
+            <button id="okButton" class="dashboard-btn">OK</button>
+        </div>
     </div>
 </div>
 
 <script>
     document.addEventListener('DOMContentLoaded', function() {
         // Search functionality
-        const searchInput = document.getElementById('userSearchInput');
+        const searchInput = document.getElementById('memberSearchInput');
         searchInput.addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
-            const rows = document.querySelectorAll('.user-role-table tbody tr');
+            const rows = document.querySelectorAll('.event-table tbody tr');
             
             rows.forEach(row => {
                 const text = row.textContent.toLowerCase();
@@ -122,7 +162,7 @@ Knights of Columbus - Council Members
                 this.classList.add('active');
                 
                 const role = this.dataset.role;
-                const rows = document.querySelectorAll('.user-role-table tbody tr');
+                const rows = document.querySelectorAll('.event-table tbody tr');
                 
                 rows.forEach(row => {
                     if (role === 'all') {
@@ -145,130 +185,599 @@ Knights of Columbus - Council Members
             });
         });
         
-        // User details modal functionality
-        window.viewUserDetails = function(userId) {
-            const modal = document.getElementById('userDetailsModal');
-            const contentDiv = document.getElementById('userDetailsContent');
-            modal.style.display = 'block';
+        // Sort functionality
+        const sortSelect = document.getElementById('sortSelect');
+        
+        function sortTable(sortType) {
+            const tbody = document.querySelector('.event-table tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+            
+            rows.sort((a, b) => {
+                switch(sortType) {
+                    case 'alphabetical':
+                        const nameA = a.dataset.name.toLowerCase();
+                        const nameB = b.dataset.name.toLowerCase();
+                        return nameA.localeCompare(nameB);
+                    case 'reverse-alphabetical':
+                        const nameA2 = a.dataset.name.toLowerCase();
+                        const nameB2 = b.dataset.name.toLowerCase();
+                        return nameB2.localeCompare(nameA2);
+                    case 'newest':
+                        const dateA = new Date(a.dataset.joined);
+                        const dateB = new Date(b.dataset.joined);
+                        return dateB - dateA;
+                    case 'oldest':
+                        const dateA2 = new Date(a.dataset.joined);
+                        const dateB2 = new Date(b.dataset.joined);
+                        return dateA2 - dateB2;
+                    case 'role':
+                        const roleA = a.dataset.role;
+                        const roleB = b.dataset.role;
+                        const roleOrder = { 'admin': 0, 'officer': 1, 'member': 2, 'pending': 3 };
+                        return (roleOrder[roleA] || 4) - (roleOrder[roleB] || 4);
+                    default:
+                        return 0;
+                }
+            });
+            
+            // Re-append sorted rows
+            rows.forEach(row => tbody.appendChild(row));
+        }
+        
+        // Initialize with alphabetical sort
+        sortTable('alphabetical');
+        
+        sortSelect.addEventListener('change', function() {
+            sortTable(this.value);
+        });
+        
+        // Member details modal functionality
+        window.viewMemberDetails = function(memberId) {
+            const modal = document.getElementById('memberDetailsModal');
+            const contentDiv = document.getElementById('memberDetailsContent');
+            
+            openModal(modal);
             
             // Show loading message
-            contentDiv.innerHTML = '<div class="loading">Loading user details...</div>';
+            contentDiv.innerHTML = '<div class="loading">Loading member details...</div>';
             
-            // Fetch user details via AJAX
-            fetch(`/user/${userId}/details/`)
+            // Fetch member details via AJAX
+            fetch(`/user/${memberId}/details/`)
                 .then(response => response.json())
                 .then(data => {
                     // Format the details with profile picture
                     let detailsHTML = `
-                        <div class="user-details">
-                            <div class="user-profile-header">
-                                <div class="profile-picture-container">
-                                    ${data.profile_picture ? 
-                                        `<img src="${data.profile_picture}" alt="Profile Picture" class="profile-picture">` : 
-                                        `<div class="profile-picture-placeholder">
-                                            <i class="fas fa-user"></i>
-                                        </div>`
-                                    }
-                                </div>
-                                <div class="user-basic-info">
-                                    <h4 class="user-name">${data.first_name} ${data.middle_name ? data.middle_name + ' ' : ''}${data.last_name}${data.suffix ? ' ' + data.suffix : ''}</h4>
-                                    <span class="role-badge role-${data.role}">${data.role_display}</span>
-                                </div>
+                        <div class="user-profile-header">
+                            <div class="profile-picture-container${data.is_inactive ? ' inactive' : ''}">
+                                ${data.profile_picture ? 
+                                    `<img src="${data.profile_picture}" alt="Profile Picture" class="profile-picture">` : 
+                                    `<div class="profile-picture-placeholder">
+                                        <i class="fas fa-user"></i>
+                                    </div>`
+                                }
+                            </div>
+                            <div class="user-basic-info">
+                                <h4 class="user-name">${data.first_name} ${data.middle_name ? data.middle_name + ' ' : ''}${data.last_name}${data.suffix ? ' ' + data.suffix : ''}</h4>
+                                <span class="role-badge role-${data.role}">${data.role_display}</span>
+                            </div>
+                        </div>
+                        <div class="modal-event-details-grid">                            
+                            <div class="modal-detail-item">
+                                <strong>Email:</strong>
+                                <span>${data.email}</span>
                             </div>
                             
-                            <div class="user-details-grid">
-                                <div class="detail-group">
-                                    <strong>Email:</strong>
-                                    <span>${data.email}</span>
-                                </div>
-                                
-                                <div class="detail-group">
-                                    <strong>Contact Number:</strong>
-                                    <span>${data.contact_number || 'Not provided'}</span>
-                                </div>
-                                
-                                <div class="detail-group">
-                                    <strong>Council:</strong>
-                                    <span>${data.council_name || 'No council assigned'}</span>
-                                </div>
-                                
-                                <div class="detail-group">
-                                    <strong>Username:</strong>
-                                    <span>${data.username}</span>
-                                </div>
-                                
-                                <div class="detail-group">
-                                    <strong>Birthday:</strong>
-                                    <span>${data.birthday || 'Not provided'}</span>
-                                </div>
-                                
-                                <div class="detail-group">
-                                    <strong>Age:</strong>
-                                    <span>${data.age || 'Not provided'}</span>
-                                </div>
-                                
-                                <div class="detail-group">
-                                    <strong>Address:</strong>
-                                    <span>${data.street ? `${data.street}, ${data.barangay}, ${data.city}, ${data.province} ${data.zip_code}` : 'Not provided'}</span>
-                                </div>
-                                
-                                <div class="detail-group">
-                                    <strong>Current Degree:</strong>
-                                    <span>${data.degree_display || 'Not specified'}</span>
-                                </div>
-                                
-                                <div class="detail-group">
-                                    <strong>Member Since:</strong>
-                                    <span>${data.date_joined}</span>
-                                </div>
-                                
-                                <div class="detail-group">
-                                    <strong>Marital Status:</strong>
-                                    <span>${data.marital_status || 'Not provided'}</span>
-                                </div>
-                                
-                                <div class="detail-group">
-                                    <strong>Occupation:</strong>
-                                    <span>${data.occupation || 'Not provided'}</span>
-                                </div>
-                                
-                                <div class="detail-group">
-                                    <strong>Recruiter:</strong>
-                                    <span>${data.recruiter_name || (data.voluntary_join ? 'Voluntary Join' : 'Not specified')}</span>
-                                </div>
-                                
-                                ${data.join_reason ? `
-                                <div class="detail-group full-width">
-                                    <strong>Join Reason:</strong>
-                                    <span>${data.join_reason}</span>
-                                </div>
-                                ` : ''}
+                            <div class="modal-detail-item">
+                                <strong>Contact Number:</strong>
+                                <span>${data.contact_number || 'Not provided'}</span>
                             </div>
+                            
+                            <div class="modal-detail-item">
+                                <strong>Council:</strong>
+                                <span>${data.council_name || 'No council assigned'}</span>
+                            </div>
+                            
+                            <div class="modal-detail-item">
+                                <strong>Username:</strong>
+                                <span>${data.username}</span>
+                            </div>
+                            
+                            <div class="modal-detail-item">
+                                <strong>Birthday:</strong>
+                                <span>${data.birthday || 'Not provided'}</span>
+                            </div>
+                            
+                            <div class="modal-detail-item">
+                                <strong>Age:</strong>
+                                <span>${data.age || 'Not provided'}</span>
+                            </div>
+                            
+                            <div class="modal-detail-item full-width">
+                                <strong>Address:</strong>
+                                <span>${data.street ? `${data.street}, ${data.barangay}, ${data.city}, ${data.province} ${data.zip_code}` : 'Not provided'}</span>
+                            </div>
+                            
+                            <div class="modal-detail-item">
+                                <strong>Current Degree:</strong>
+                                <span>${data.degree_display || 'Not specified'}</span>
+                            </div>
+                            
+                            <div class="modal-detail-item">
+                                <strong>Member Since:</strong>
+                                <span>${data.date_joined}</span>
+                            </div>
+                            
+                            <div class="modal-detail-item">
+                                <strong>Marital Status:</strong>
+                                <span>${data.marital_status || 'Not provided'}</span>
+                            </div>
+                            
+                            <div class="modal-detail-item">
+                                <strong>Occupation:</strong>
+                                <span>${data.occupation || 'Not provided'}</span>
+                            </div>
+                            
+                            <div class="modal-detail-item">
+                                <strong>Recruiter:</strong>
+                                <span>${data.recruiter_name || (data.voluntary_join ? 'Voluntary Join' : 'Not specified')}</span>
+                            </div>
+                            
+                            ${data.join_reason ? `
+                            <div class="modal-detail-item full-width">
+                                <strong>Join Reason:</strong>
+                                <span>${data.join_reason}</span>
+                            </div>
+                            ` : ''}
                         </div>
                     `;
                     
                     contentDiv.innerHTML = detailsHTML;
                 })
                 .catch(error => {
-                    contentDiv.innerHTML = '<p class="error-message">Error loading user details. Please try again later.</p>';
-                    console.error('Error fetching user details:', error);
+                    contentDiv.innerHTML = '<p class="error-message">Error loading member details. Please try again later.</p>';
+                    console.error('Error fetching member details:', error);
                 });
         };
         
+        function openModal(modal) {
+            modal.style.display = 'block';
+            // Trigger reflow to allow animation to work
+            modal.offsetHeight;
+            modal.classList.add('show');
+        }
+        
+        function closeModal(modal) {
+            modal.classList.remove('show');
+            setTimeout(function() {
+                modal.style.display = 'none';
+            }, 300); // Match the transition duration
+        }
+        
         // Close modal when clicking the close button
         const closeButton = document.querySelector('.modal .close');
-        closeButton.addEventListener('click', function() {
-            document.getElementById('userDetailsModal').style.display = 'none';
-        });
+        if (closeButton) {
+            closeButton.addEventListener('click', function() {
+                const modal = this.closest('.modal');
+                closeModal(modal);
+            });
+        }
+        
+        // Close modal when clicking the OK button
+        const okButton = document.getElementById('okButton');
+        if (okButton) {
+            okButton.addEventListener('click', function() {
+                const modal = document.getElementById('memberDetailsModal');
+                closeModal(modal);
+            });
+        }
         
         // Close modal when clicking outside of it
         window.addEventListener('click', function(event) {
-            const modal = document.getElementById('userDetailsModal');
+            const modal = document.getElementById('memberDetailsModal');
             if (event.target === modal) {
-                modal.style.display = 'none';
+                closeModal(modal);
             }
         });
     });
 </script>
 
-{% endblock %} 
+<style>
+    /* Council Info Card */
+    .council-info-card {
+        background: linear-gradient(135deg, var(--secondary-bg), white);
+        border-radius: 12px;
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: 0 4px 12px rgba(13, 52, 113, 0.1);
+        border-left: 4px solid var(--primary-bg);
+    }
+    
+    .council-info-card h3 {
+        color: var(--heading-color);
+        margin-bottom: 1rem;
+        font-size: 1.3rem;
+    }
+    
+    .council-info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 1rem;
+    }
+    
+    .info-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .info-item strong {
+        color: var(--primary-bg);
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+    
+    .info-item span {
+        color: var(--text-color);
+        font-size: 1rem;
+    }
+
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0; top: 0;
+        width: 100%; height: 100%;
+        background-color: rgba(13, 52, 113, 0.8);
+        backdrop-filter: blur(5px);
+    }
+    .modal.show { display: block; }
+    .modal-content {
+        background: linear-gradient(135deg, var(--secondary-bg), white);
+        margin: 5% auto;
+        padding: 2rem;
+        border-radius: 16px;
+        max-width: 700px;
+        position: relative;
+        max-height: 85vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(13, 52, 113, 0.3);
+        animation: modalSlideIn 0.4s ease-out;
+    }
+    @keyframes modalSlideIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+    .modal-header h3 { color: var(--heading-color); margin-bottom: 1.5rem; border-bottom: 2px solid var(--primary-bg); padding-bottom: 1rem; font-size: 1.8rem; }
+    .close {
+        position: absolute;
+        top: 1.5rem; right: 2rem;
+        font-size: 2rem;
+        cursor: pointer;
+        color: var(--heading-color);
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all var(--transition-speed) ease;
+    }
+    .close:hover {
+        background-color: var(--primary-bg);
+        color: var(--secondary-bg);
+        transform: rotate(90deg);
+    }
+    .modal-footer { padding-top: 1.5rem; text-align: right; border-top: 1px solid rgba(13, 52, 113, 0.1); }
+    .modal-footer .dashboard-btn {
+        background: linear-gradient(135deg, var(--primary-bg), #1e5a96);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(13, 52, 113, 0.3);
+    }
+    .modal-footer .dashboard-btn:hover {
+        background: linear-gradient(135deg, #1e5a96, var(--primary-bg));
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(13, 52, 113, 0.4);
+    }
+
+    .warning-badge.inactive {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    background-color: #f39c12;
+    color: #212529;
+    margin-top: 0.25rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+    
+    /* Table Styles */
+    .event-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background-color: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--table-shadow);
+        margin-top: 2rem;
+        position: relative;
+    }
+    .event-table::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+    }
+    .event-table th {
+        padding: 1.5rem 1.25rem;
+        text-align: left;
+        background-color: var(--primary-bg);
+        color: white;
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+    }
+    .event-table td {
+        padding: 1.25rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(13, 52, 113, 0.08);
+        vertical-align: middle;
+    }
+    .event-table tbody tr:hover {
+        background-color: rgba(13, 52, 113, 0.06);
+    }
+    .event-table tr:last-child td {
+        border-bottom: none;
+    }
+    .action-header { text-align: center !important; }
+    .action-cell {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+    .action-btn {
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition-speed) ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    .action-btn:hover { 
+        transform: translateY(-2px); 
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25); 
+    }
+    .details-btn {
+        background-color: var(--accent-color);
+        color: var(--primary-bg) !important;
+    }
+    .promote-btn {
+        background-color: #28a745;
+        color: white !important;
+    }
+    
+    /* Table Profile Picture Styles */
+    .table-profile-container {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .table-profile-picture {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        object-fit: cover;
+        border: 1px solid var(--primary-bg);
+        flex-shrink: 0;
+    }
+
+    .table-profile-placeholder {
+        width: 32px;
+        height: 32px;
+        border-radius: 50%;
+        background-color: var(--primary-bg);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1rem;
+        flex-shrink: 0;
+        border: 1px solid var(--primary-bg);
+    }
+
+    .table-name {
+        font-weight: 600;
+        color: var(--heading-color);
+    }
+    
+    /* Filter and Sort Styles */
+    .role-filters-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        flex-wrap: wrap;
+    }
+    
+    .sort-filter {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
+    
+    .sort-dropdown {
+        padding: 0.75rem 1rem;
+        border: 2px solid rgba(13, 52, 113, 0.2);
+        border-radius: 8px;
+        background: white;
+        color: var(--primary-bg);
+        font-size: 0.9rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(13, 52, 113, 0.1);
+        min-width: 200px;
+    }
+    
+    .sort-dropdown:hover {
+        border-color: var(--primary-bg);
+        box-shadow: 0 4px 12px rgba(13, 52, 113, 0.2);
+    }
+    
+    .sort-dropdown:focus {
+        outline: none;
+        border-color: var(--primary-bg);
+        box-shadow: 0 0 0 3px rgba(13, 52, 113, 0.1);
+    }
+    
+    @media (max-width: 768px) {
+        .event-table { display: block; overflow-x: auto; }
+        .action-cell { flex-direction: column; gap: 0.5rem; }
+        .role-filters-container { flex-direction: column; align-items: stretch; }
+        .sort-dropdown { min-width: auto; width: 100%; }
+        .council-info-grid { grid-template-columns: 1fr; }
+    }
+
+    /* Profile picture container styling for modal */
+    .profile-picture-container {
+        width: 120px;
+        height: 120px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 1px solid var(--primary-bg);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: var(--secondary-bg);
+        margin: 0 auto 1rem;
+    }
+
+    .profile-picture-container.inactive {
+        position: relative;
+        border-color: var(--accent-color);
+        box-shadow: 0 0 0 2px rgba(244, 180, 26, 0.3);
+        animation: pulse-inactive 2s infinite;
+    }
+
+    .profile-picture-container.inactive::after {
+        content: '\f071';
+        font-family: 'Font Awesome 5 Free';
+        font-weight: 900;
+        position: absolute;
+        bottom: -5px;
+        right: -5px;
+        background: var(--accent-color);
+        color: var(--primary-bg);
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 10px;
+        border: 2px solid white;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+    }
+
+    .profile-picture {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
+
+    .profile-picture-placeholder {
+        color: white;
+        font-size: 3.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .user-profile-header {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid rgba(13, 52, 113, 0.1);
+    }
+
+    .user-basic-info {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 0.5rem;
+    }
+
+    .user-name {
+        color: var(--heading-color);
+        margin: 0;
+        font-size: 1.5rem;
+        text-align: center;
+    }
+
+    /* Grid layout for modal details */
+    .modal-event-details-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1.25rem;
+        margin-top: 1.5rem;
+    }
+
+    .modal-detail-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        padding: 1rem;
+        background: rgba(13, 52, 113, 0.03);
+        border-radius: 8px;
+    }
+
+    .modal-detail-item.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .modal-detail-item strong {
+        color: var(--primary-bg);
+        font-weight: 600;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .modal-detail-item span {
+        color: var(--text-color);
+        font-size: 1rem;
+        word-break: break-word;
+    }
+
+    @media (max-width: 768px) {
+        .modal-event-details-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+{% endblock %}

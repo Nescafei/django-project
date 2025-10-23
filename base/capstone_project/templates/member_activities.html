@@ -10,9 +10,9 @@ Knights of Columbus - {% if is_self %}My Activities{% else %}{{ member.first_nam
 <div class="dashboard-container">
     <div class="content-card">
         <div class="dashboard-header">
-            <h1>{% if is_self %}My Activities{% else %}{{ member.first_name }}'s Activities{% endif %}</h1>
+            <h1 style="color: var(--primary-bg);">{% if is_self %}My Activities{% else %}{{ member.first_name }}'s Activities{% endif %}</h1>
             <div>
-                <a href="{% if is_self %}{% url 'dashboard' %}{% else %}{% url 'member_list' %}{% endif %}" class="dashboard-btn secondary back-btn">
+                <a href="{% if is_self %}{% url 'dashboard' %}{% else %}{% url 'member_list' %}{% endif %}" class="dashboard-btn">
                     <i class="fas fa-arrow-left"></i> {% if is_self %}Back to Dashboard{% else %}Back to Members{% endif %}
                 </a>
             </div>

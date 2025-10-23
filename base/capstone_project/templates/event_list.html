@@ -5,20 +5,22 @@ Knights of Columbus - Event List
 {% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/event_management.css' %}?v={% now 'U' %}">
 <link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/event_management.css' %}?v={% now 'U' %}">
 
 <div class="dashboard-container">
-    <div class="content-card">
+    <div class="event-form-container">
         <div class="dashboard-header">
             <h1>Event List</h1>
             <div>
-                <a href="{% url 'dashboard' %}" class="dashboard-btn secondary back-btn">
+                <a href="{% url 'dashboard' %}" class="back-btn">
                     <i class="fas fa-arrow-left"></i> Back to Dashboard
                 </a>
             </div>
         </div>
         
-        <h2>All Scheduled Events</h2>
+        <h2 style="color: var(--primary-bg);">All Scheduled Events</h2>
 
         <!-- Filters (visible only for admin and officers) -->
         {% if user.role != 'member' %}
@@ -57,7 +59,7 @@ Knights of Columbus - Event List
                 </div>
                 {% endif %}
 
-                <div class="filter-group filter-buttons">
+                <div class="filter-buttons">
                     <button type="submit" class="dashboard-btn">Apply Filters</button>
                     <a href="{% url 'event_list' %}" class="dashboard-btn secondary">Clear Filters</a>
                 </div>
@@ -69,83 +71,74 @@ Knights of Columbus - Event List
         <div class="search-container">
             <div class="search-wrapper">
                 <i class="fas fa-search search-icon"></i>
-                <input type="text" id="eventSearch" class="search-input" placeholder="Search events...">
-                <button id="clearSearch" class="clear-search"><i class="fas fa-times"></i></button>
+                <input type="text" id="eventSearch" class="search-input" placeholder="Search by event name, council, or status...">
+                <button type="button" id="clearSearch" class="clear-search"><i class="fas fa-times"></i></button>
             </div>
         </div>
 
-        <!-- Events List -->
-        <div class="events-list">
-            {% for event in events %}
-            <div class="event-item {% if event.status == 'rejected' %}rejected-event{% endif %} {% if event.is_today %}today-event{% endif %}">
-                {% if event.is_today %}
-                <div class="today-badge">
-                    <i class="fas fa-calendar-day"></i> Today's Event
-                </div>
-                {% endif %}
-                {% if event.is_global %}
-                <div class="global-badge">
-                    <i class="fas fa-globe"></i> Global Event
-                </div>
-                {% endif %}
-                <div class="event-header">
-                    <h3 {% if event.status == 'rejected' %}class="rejected-title"{% endif %}>{{ event.name }}</h3>
-                    <span class="status-badge status-{{ event.status }}">{{ event.get_status_display }}</span>
-                </div>
-                
-                <div class="event-details">
-                    <div class="detail-column">
-                        <p><strong>Event ID:</strong> #{{ event.id }}</p>
-                        <p><strong>Date:</strong> {{ event.date_from|date:"F d, Y" }} {% if event.date_until and event.date_until != event.date_from %} - {{ event.date_until|date:"F d, Y" }}{% endif %}</p>
-                        <p><strong>Category:</strong> {{ event.category }}{% if event.subcategory and event.subcategory != 'N/A' %} - {{ event.subcategory }}{% endif %}</p>
-                    </div>
-                    <div class="detail-column">
-                        <p><strong>Council:</strong> {{ event.council.name }}</p>
-                        <p><strong>Location:</strong> {{ event.city }}, {{ event.province }}</p>
-                    </div>
-                </div>
-                
-                {% if event.status == 'rejected' and event.rejection_reason %}
-                <div class="rejection-reason">
-                    <p><strong>Rejection Reason:</strong> {{ event.rejection_reason }}</p>
-                </div>
-                {% endif %}
-                
-                <div class="event-description">
-                    <p>{{ event.description|truncatechars:150 }}</p>
-                </div>
-                
-                <div class="action-buttons">
-                    <button class="dashboard-btn view-event-btn" data-event-id="{{ event.id }}">
-                        <i class="fas fa-eye"></i>View Details
-                    </button>
-                    {% if user.role == 'admin' or user == event.created_by %}
-                        {% if event.status != 'rejected' %}
-                        <a href="{% url 'edit_event' event.id %}" class="dashboard-btn">
-                            <i class="fas fa-edit"></i>Edit
-                        </a>
-                        {% endif %}
-                    {% endif %}
-                    {% if user.role == 'officer' and event.status == 'approved' %}
-                        {% if event.is_today %}
-                        <a href="{% url 'event_attendance' event.id %}" class="dashboard-btn attendance-btn">
-                            <i class="fas fa-clipboard-check"></i>Attendance
-                        </a>
-                        {% else %}
-                        <button class="dashboard-btn attendance-btn disabled" data-event-id="{{ event.id }}">
-                            <i class="fas fa-clipboard-check"></i>Attendance
-                        </button>
-                        {% endif %}
-                    {% endif %}
-                </div>
-            </div>
-            {% empty %}
-            <div class="empty-state">
-                <i class="fas fa-calendar-times"></i>
-                <p>No events found matching your criteria.</p>
-                <p>Try adjusting your filters or add a new event.</p>
-            </div>
-            {% endfor %}
+        <!-- Events Table -->
+        <div class="event-table-container">
+            <table class="event-table">
+                <thead>
+                    <tr>
+                        <th>Event ID</th>
+                        <th>Event Name</th>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Council</th>
+                        <th>Status</th>
+                        <th class="action-header">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in events %}
+                    <tr>
+                        <td>{{ event.id }}</td>
+                        <td>{{ event.name }}</td>
+                        <td>{{ event.date_from|date:"M. d, Y" }}</td>
+                        <td>{{ event.category }}</td>
+                        <td>
+                            {{ event.council.name }}
+                            {% if event.is_global %}<span class="global-badge"><i class="fas fa-globe"></i> Global</span>{% endif %}
+                        </td>
+                        <td><span class="status-badge status-{{ event.status }}">{{ event.get_status_display }}</span></td>
+                        <td>
+                            <div class="action-cell">
+                            <a href="#" class="action-btn details-btn" onclick="viewEventDetails('{{ event.id }}'); return false;">
+                                <i class="fas fa-eye"></i> View
+                            </a>
+                            {% if user.role == 'admin' or user == event.created_by %}
+                                {% if event.status != 'rejected' %}
+                                <a href="{% url 'edit_event' event.id %}" class="action-btn edit-btn">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                {% endif %}
+                            {% endif %}
+                            {% if user.role == 'officer' and event.status == 'approved' %}
+                                {% if event.is_today %}
+                                <a href="{% url 'event_attendance' event.id %}" class="action-btn approve-btn">
+                                    <i class="fas fa-clipboard-check"></i> Attendance
+                                </a>
+                                {% else %}
+                                <button class="action-btn approve-btn disabled" data-event-id="{{ event.id }}">
+                                    <i class="fas fa-clipboard-check"></i> Attendance
+                                </button>
+                                {% endif %}
+                            {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="empty-state">
+                            <i class="fas fa-calendar-times"></i>
+                            <p>No events found matching your criteria.</p>
+                            <p>Try adjusting your filters.</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
     </div>
 </div>
@@ -186,457 +179,6 @@ Knights of Columbus - Event List
     </div>
 </div>
 
-<style>
-/* Dashboard header with actions */
-
-.dashboard-header {
-    position: relative;
-    padding-bottom: 1rem;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid rgba(13, 52, 113, 0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.filters-container {
-    background-color: #f8f9fa;
-    padding: 1.5rem;
-    border-radius: var(--border-radius);
-    margin-bottom: 2rem;
-}
-
-.filter-form {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1rem;
-    align-items: flex-end;
-}
-
-.filter-group {
-    flex: 1;
-    min-width: 200px;
-}
-
-.filter-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 500;
-    color: var(--heading-color);
-}
-
-.filter-select {
-    width: 100%;
-    padding: 0.75rem;
-    border: 1px solid rgba(13, 52, 113, 0.2);
-    border-radius: var(--border-radius);
-    font-size: 1rem;
-    background-color: white;
-}
-
-.filter-buttons {
-    display: flex;
-    gap: 1rem;
-    flex-direction: row;
-    justify-content: flex-start;
-    min-width: auto;
-}
-
-/* Improved search container */
-.search-container {
-    margin-bottom: 2rem;
-}
-
-.search-wrapper {
-    position: relative;
-    max-width: 600px;
-    margin: 0 auto;
-}
-
-.search-icon {
-    position: absolute;
-    left: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    color: #6c757d;
-}
-
-.search-input {
-    width: 100%;
-    padding: 0.75rem 2.5rem;
-    border: 2px solid rgba(13, 52, 113, 0.2);
-    border-radius: var(--border-radius);
-    font-size: 1rem;
-    background-color: white;
-    transition: all 0.3s ease;
-}
-
-.search-input:focus {
-    border-color: var(--primary-bg);
-    box-shadow: 0 0 0 3px rgba(13, 52, 113, 0.1);
-    outline: none;
-}
-
-.clear-search {
-    position: absolute;
-    right: 1rem;
-    top: 50%;
-    transform: translateY(-50%);
-    background: none;
-    border: none;
-    color: #0c1216;
-    cursor: pointer;
-    display: none;
-}
-
-.clear-search:hover {
-    color: var(--primary-bg);
-}
-
-.events-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.event-item {
-    background-color: white;
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    position: relative;
-}
-
-.event-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-.event-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.event-header h3 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: var(--heading-color);
-}
-
-.event-details {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    margin-bottom: 1rem;
-}
-
-.detail-column {
-    flex: 1;
-    min-width: 200px;
-}
-
-.detail-column p {
-    margin: 0.5rem 0;
-}
-
-.event-description {
-    margin-bottom: 1.5rem;
-    color: #555;
-}
-
-.status-badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-}
-
-.status-pending {
-    background-color: #030D4E;
-    color: white;
-}
-
-.status-approved {
-    background-color: #28a745;
-    color: white;
-}
-
-.status-rejected {
-    background-color: #dc3545;
-    color: white;
-}
-
-.rejected-event {
-    position: relative;
-    opacity: 0.85;
-    border-left: 4px solid #dc3545 !important;
-}
-
-.rejected-title {
-    text-decoration: line-through;
-    color: #6c757d;
-}
-
-.rejection-reason {
-    margin: 0.5rem 0;
-    padding: 0.75rem;
-    background-color: rgba(220, 53, 69, 0.1);
-    border-left: 3px solid #dc3545;
-    border-radius: 0.25rem;
-    color: #6c757d;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 3rem 1rem;
-    color: #6c757d;
-}
-
-.empty-state i {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    color: #adb5bd;
-}
-
-.back-button-container {
-    display: flex;
-    gap: 1rem;
-    justify-content: flex-end;
-    margin-top: 2rem;
-}
-
-.dashboard-btn {
-    background-color: #030D4E;
-    color: white;
-    border: none;
-    padding: 0.75rem 1.25rem;
-    border-radius: var(--border-radius);
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.3s ease, transform 0.2s ease;
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    text-decoration: none;
-}
-
-.dashboard-btn:hover {
-    background-color: #f4b41a;
-    transform: translateY(-2px);
-}
-
-.dashboard-btn.secondary {
-    background-color: #6c757d;
-}
-
-.dashboard-btn.secondary:hover {
-    background-color: #f4b41a;
-}
-
-/* Rejected event styles */
-.rejected-event {
-    opacity: 0.8;
-    border-left: 4px solid #dc3545;
-}
-
-.rejected-title {
-    text-decoration: line-through;
-    color: #6c757d;
-}
-
-.rejection-reason {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 0.75rem;
-    border-radius: var(--border-radius);
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-}
-
-/* Improved Modal styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.modal.show {
-    opacity: 1;
-}
-
-.modal-content {
-    background-color: var(--secondary-bg);
-    margin: 10% auto;
-    border-radius: var(--border-radius);
-    max-width: 700px;
-    position: relative;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transform: translateY(-20px);
-    opacity: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.modal.show .modal-content {
-    transform: translateY(0);
-    opacity: 1;
-}
-
-.modal-header {
-    padding: 1.5rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.modal-header h3 {
-    margin: 0;
-    color: var(--heading-color);
-}
-
-#eventDetailsContent {
-    padding: 1.5rem;
-}
-
-.modal-footer {
-    padding: 1rem 1.5rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    text-align: right;
-}
-
-.close {
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #212229;
-    transition: color 0.2s ease;
-}
-
-.close:hover {
-    color: var(--primary-bg);
-}
-
-.loading {
-    text-align: center;
-    padding: 2rem;
-    color: var(--heading-color);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .header-actions {
-        position: static;
-        margin-top: 1rem;
-        text-align: center;
-    }
-    
-    .modal-content {
-        margin: 10% 1rem;
-        max-height: 90vh;
-    }
-    
-    .back-button-container {
-        flex-direction: column;
-    }
-}
-
-.back-btn:hover {
-    background-color: #f4b41a !important;
-    color: white;
-}
-
-.today-event {
-    border-left: 4px solid #28a745;
-}
-
-.today-badge {
-    position: absolute;
-    top: -10px;
-    right: 20px;
-    background-color: #030D4E;
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.global-badge {
-    position: absolute;
-    top: -10px;
-    right: 200px;
-    background-color: #f4b41a;
-    color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-}
-
-.modal-body {
-    padding: 1.5rem;
-}
-
-/* Warning modal */
-.warning-modal .modal-header {
-    border-bottom-color: #ffc107;
-}
-
-.warning-message {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 1rem;
-    text-align: center;
-}
-
-.warning-message i {
-    font-size: 3rem;
-    color: #030D4E;
-    margin-bottom: 1.5rem;
-}
-
-.warning-message p {
-    margin: 0.5rem 0;
-    font-size: 1.1rem;
-    color: #495057;
-}
-
-/* Attendance button */
-.attendance-btn {
-    background-color: #030D4E;
-}
-
-.attendance-btn:hover {
-    background-color: #f4b41a;
-}
-
-.attendance-btn.disabled {
-    background-color: #6c757d;
-    cursor: pointer;
-}
-</style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
@@ -644,31 +186,38 @@ document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('eventSearch');
     const clearButton = document.getElementById('clearSearch');
     
-    if (searchInput) {
-        searchInput.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const eventItems = document.querySelectorAll('.event-item');
-            
-            // Show/hide clear button
+        if (searchInput) {
+        const filterEvents = () => {
+            const searchTerm = searchInput.value.toLowerCase();
+            const eventRows = document.querySelectorAll('.event-table tbody tr');
+            const emptyState = document.querySelector('.empty-state');
+            let visibleRows = 0;
+
             clearButton.style.display = searchTerm ? 'block' : 'none';
-            
-            eventItems.forEach(item => {
-                const text = item.textContent.toLowerCase();
-                item.style.display = text.includes(searchTerm) ? '' : 'none';
+
+            eventRows.forEach(row => {
+                if (row.classList.contains('empty-state')) return;
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                    visibleRows++;
+                } else {
+                    row.style.display = 'none';
+                }
             });
-        });
-        
-        // Focus effect
-        searchInput.addEventListener('focus', function() {
-            this.parentElement.style.boxShadow = '0 0 0 3px rgba(13, 52, 113, 0.1)';
-        });
-        
-        searchInput.addEventListener('blur', function() {
-            this.parentElement.style.boxShadow = 'none';
-        });
+
+            if (emptyState) {
+                emptyState.closest('tr').style.display = visibleRows === 0 ? '' : 'none';
+            }
+        };
+
+        searchInput.addEventListener('input', filterEvents);
+        filterEvents(); // Run on page load
+
+        searchInput.addEventListener('focus', () => searchInput.parentElement.style.boxShadow = '0 0 0 3px rgba(13, 52, 113, 0.1)');
+        searchInput.addEventListener('blur', () => searchInput.parentElement.style.boxShadow = 'none');
     }
     
-    // Clear search
     if (clearButton) {
         clearButton.addEventListener('click', function() {
             searchInput.value = '';
@@ -676,142 +225,261 @@ document.addEventListener('DOMContentLoaded', function() {
             searchInput.focus();
         });
     }
-    
-    // View event details
-    const viewEventBtns = document.querySelectorAll('.view-event-btn');
+
+    // Modal handling
     const eventModal = document.getElementById('eventDetailsModal');
-    const contentDiv = document.getElementById('eventDetailsContent');
     const okButton = document.getElementById('okButton');
-    
-    // Attendance warning modal
     const attendanceWarningModal = document.getElementById('attendanceWarningModal');
     const warningOkButton = document.getElementById('warningOkButton');
-    const disabledAttendanceBtns = document.querySelectorAll('.attendance-btn.disabled');
-    
+
     function openModal(modal) {
         modal.style.display = 'block';
-        // Trigger reflow to allow animation to work
-        modal.offsetHeight;
+        modal.offsetHeight; // Trigger reflow
         modal.classList.add('show');
     }
-    
+
     function closeModal(modal) {
         modal.classList.remove('show');
-        setTimeout(function() {
-            modal.style.display = 'none';
-        }, 300); // Match the transition duration
+        setTimeout(() => { modal.style.display = 'none'; }, 300);
     }
-    
-    viewEventBtns.forEach(btn => {
-        btn.addEventListener('click', function() {
-            const eventId = this.getAttribute('data-event-id');
-            
-            openModal(eventModal);
-            contentDiv.innerHTML = '<div class="loading">Loading event details...</div>';
-            
-            fetch(`/event/${eventId}/details/`)
-                .then(response => response.json())
-                .then(data => {
-                    let statusClass = data.status === 'rejected' ? 'rejected-title' : '';
-                    let detailsHTML = `
-                        <div class="event-details">
-                            <h4 ${data.status === 'rejected' ? 'class="rejected-title"' : ''}>${data.name}</h4>
-                            <p class="event-category">${data.category}</p>
-                            
-                            <div class="detail-group">
-                                <strong>Date:</strong> 
-                                <span>${data.date_from}${data.date_until ? ' - ' + data.date_until : ''}</span>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Location:</strong>
-                                <address>
-                                    ${data.street}, ${data.barangay}<br>
-                                    ${data.city}, ${data.province}
-                                </address>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Description:</strong>
-                                <p>${data.description}</p>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Council:</strong>
-                                <p>${data.council_name}</p>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Status:</strong>
-                                <span class="status-badge status-${data.status}">${data.status_display}</span>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Event Type:</strong>
-                                <p>${data.is_global ? '<span class="global-tag"><i class="fas fa-globe"></i> Global Event</span>' : 'Council-specific Event'}</p>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Created by:</strong>
-                                <p>${data.creator_name}</p>
-                            </div>
-                    `;
-                    
-                    if (data.status === 'rejected' && data.rejection_reason) {
-                        detailsHTML += `
-                            <div class="detail-group rejection-reason">
-                                <strong>Rejection Reason:</strong>
-                                <p>${data.rejection_reason}</p>
-                            </div>
-                        `;
-                    }
-                    
-                    detailsHTML += `</div>`;
-                    contentDiv.innerHTML = detailsHTML;
-                })
-                .catch(error => {
-                    contentDiv.innerHTML = '<p>Error loading event details. Please try again later.</p>';
-                });
-        });
-    });
-    
-    // Disabled attendance buttons
-    disabledAttendanceBtns.forEach(btn => {
-        btn.addEventListener('click', function(e) {
+
+    window.viewEventDetails = function(eventId) {
+        const contentDiv = document.getElementById('eventDetailsContent');
+        openModal(eventModal);
+        contentDiv.innerHTML = '<div class="loading">Loading event details...</div>';
+        
+        fetch(`/event/${eventId}/details/`)
+            .then(response => response.json())
+            .then(data => {
+                let detailsHTML = `
+                    <h4 class="modal-event-title ${data.status === 'rejected' ? 'rejected-title' : ''}">${data.name}</h4>
+                    <div class="modal-event-details-grid">
+                        <div class="modal-detail-item"><strong>Date:</strong> <span>${data.date_from}${data.date_until ? ' - ' + data.date_until : ''}</span></div>
+                        <div class="modal-detail-item"><strong>Location:</strong> <address>${data.street}, ${data.barangay}<br>${data.city}, ${data.province}</address></div>
+                        <div class="modal-detail-item"><strong>Council:</strong> <p>${data.council_name}</p></div>
+                        <div class="modal-detail-item"><strong>Status:</strong> <span class="status-badge status-${data.status}">${data.status_display}</span></div>
+                        <div class="modal-detail-item"><strong>Created by:</strong> <p>${data.creator_name}</p></div>
+                        <div class="modal-detail-item full-width"><strong>Description:</strong> <p>${data.description}</p></div>
+                `;
+                if (data.status === 'rejected' && data.rejection_reason) {
+                    detailsHTML += `<div class="modal-detail-item full-width rejection-reason"><strong>Rejection Reason:</strong> <p>${data.rejection_reason}</p></div>`;
+                }
+                detailsHTML += `</div>`;
+                contentDiv.innerHTML = detailsHTML;
+            })
+            .catch(error => {
+                contentDiv.innerHTML = '<p>Error loading event details. Please try again later.</p>';
+            });
+    };
+
+    document.querySelectorAll('.attendance-btn.disabled').forEach(btn => {
+        btn.addEventListener('click', e => {
             e.preventDefault();
             openModal(attendanceWarningModal);
         });
     });
-    
-    // Close modals when clicking the close button
-    document.querySelectorAll('.modal .close').forEach(closeBtn => {
-        closeBtn.addEventListener('click', function() {
-            const modal = this.closest('.modal');
-            closeModal(modal);
-        });
-    });
-    
-    // Close modals when clicking the OK button
-    if (okButton) {
-        okButton.addEventListener('click', function() {
-            closeModal(eventModal);
-        });
-    }
-    
-    if (warningOkButton) {
-        warningOkButton.addEventListener('click', function() {
-            closeModal(attendanceWarningModal);
-        });
-    }
-    
-    // Close modals when clicking outside of them
-    window.addEventListener('click', function(event) {
-        if (event.target === eventModal) {
-            closeModal(eventModal);
-        } else if (event.target === attendanceWarningModal) {
-            closeModal(attendanceWarningModal);
-        }
+
+    document.querySelectorAll('.modal .close').forEach(btn => btn.addEventListener('click', () => closeModal(btn.closest('.modal'))));
+    if (okButton) okButton.addEventListener('click', () => closeModal(eventModal));
+    if (warningOkButton) warningOkButton.addEventListener('click', () => closeModal(attendanceWarningModal));
+
+    window.addEventListener('click', e => {
+        if (e.target === eventModal) closeModal(eventModal);
+        if (e.target === attendanceWarningModal) closeModal(attendanceWarningModal);
     });
 });
 </script>
-{% endblock %} 
+
+<style>
+    /* Archived Events Table Styles */
+    .event-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background-color: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--table-shadow);
+        margin-top: 2rem;
+        position: relative;
+    }
+    .event-table::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+    }
+    .event-table th {
+        padding: 1.5rem 1.25rem;
+        text-align: left;
+        background-color: var(--primary-bg);
+        color: white;
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+    }
+    .event-table td {
+        padding: 1.25rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(13, 52, 113, 0.08);
+        vertical-align: middle;
+    }
+    .event-table tbody tr:hover {
+        background-color: rgba(13, 52, 113, 0.06);
+    }
+    .event-table tr:last-child td {
+        border-bottom: none;
+    }
+    .action-header { text-align: center !important; }
+    .action-cell {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+        flex-wrap: wrap;
+    }
+    .action-btn {
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition-speed) ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    .action-btn:hover { 
+        transform: translateY(-2px); 
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25); 
+    }
+    .details-btn {
+        background-color: var(--accent-color);
+        color: var(--primary-bg) !important;
+    }
+    .edit-btn {
+        background-color: var(--primary-bg);
+        color: white !important;
+    }
+    .approve-btn {
+        background-color: #28a745;
+        color: white !important;
+    }
+    .action-btn.disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        background: linear-gradient(135deg, #6c757d, #adb5bd);
+    }
+    .status-badge {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    .status-pending { background-color: #ffc107; }
+    .status-approved { background-color: #28a745; }
+    .status-rejected { background-color: #dc3545; }
+    
+    .global-badge {
+        display: inline-block;
+        background: linear-gradient(135deg, var(--primary-bg), #1e5a96);
+        color: white;
+        padding: 0.3rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 600;
+        margin-left: 0.5rem;
+        box-shadow: 0 2px 6px rgba(13, 52, 113, 0.3);
+        animation: globalPulse 2s infinite;
+    }
+    .global-badge i {
+        margin-right: 0.3rem;
+        animation: spin 3s linear infinite;
+    }
+    @keyframes globalPulse {
+        0%, 100% { box-shadow: 0 2px 6px rgba(13, 52, 113, 0.3); }
+        50% { box-shadow: 0 4px 12px rgba(13, 52, 113, 0.5); }
+    }
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+    }
+    
+    /* Modal styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0; top: 0;
+        width: 100%; height: 100%;
+        background-color: rgba(13, 52, 113, 0.8);
+        backdrop-filter: blur(5px);
+    }
+    .modal.show { display: block; }
+    .modal-content {
+        background: linear-gradient(135deg, var(--secondary-bg), white);
+        margin: 5% auto;
+        padding: 2rem;
+        border-radius: 16px;
+        max-width: 700px;
+        position: relative;
+        max-height: 85vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(13, 52, 113, 0.3);
+        animation: modalSlideIn 0.4s ease-out;
+    }
+    @keyframes modalSlideIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+    .modal-header h3 { color: var(--heading-color); margin-bottom: 1.5rem; border-bottom: 2px solid var(--primary-bg); padding-bottom: 1rem; font-size: 1.8rem; }
+    .close {
+        position: absolute;
+        top: 1.5rem; right: 2rem;
+        font-size: 2rem;
+        cursor: pointer;
+        color: var(--heading-color);
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all var(--transition-speed) ease;
+    }
+    .close:hover {
+        background-color: var(--primary-bg);
+        color: var(--secondary-bg);
+        transform: rotate(90deg);
+    }
+    .modal-footer { padding-top: 1.5rem; text-align: right; border-top: 1px solid rgba(13, 52, 113, 0.1); }
+    .modal-footer .dashboard-btn {
+        background: linear-gradient(135deg, var(--primary-bg), #1e5a96);
+        color: white;
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(13, 52, 113, 0.3);
+    }
+    .modal-footer .dashboard-btn:hover {
+        background: linear-gradient(135deg, #1e5a96, var(--primary-bg));
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(13, 52, 113, 0.4);
+    }
+    
+    @media (max-width: 768px) {
+        .event-table { display: block; overflow-x: auto; }
+        .action-cell { flex-direction: column; gap: 0.5rem; }
+    }
+</style>
+{% endblock %}

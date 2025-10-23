@@ -7,34 +7,47 @@ Knights of Columbus
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/homepage-style.css' %}?v={% now 'U' %}">
-</head>
-<body>
-    <div class="background" style="background: url('{% static 'images/homepage-img.jpeg' %}') no-repeat center/cover;">
-        <h1>Welcome to the Knights of Columbus</h1>
-        <p>Strengthening faith, families, and communities since 1882.</p>
-        <a href="/donations/" class="cta-button">Support Our Mission</a>
+
+<div class="knights-homepage">
+
+    <!-- Hero Section -->
+    <div class="hero-section" style="background: url('{% static 'images/homepage-img.jpeg' %}') no-repeat center/cover;">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+            <h1 class="hero-title">Welcome to the Knights of Columbus</h1>
+            <p class="hero-subtitle">Strengthening faith, families, and communities since 1882.</p>
+            <a href="/donations/" class="cta-button hero-cta">Support Our Mission</a>
+        </div>
     </div>
+
+    <!-- Main Container -->
     <div class="container">
-        <section class="highlights">
-            <h2>Why Join the Knights of Columbus?</h2>
+        <!-- Highlights Section -->
+        <section class="highlights section" id="about">
+            <h2 class="section-title">Why Join the Knights of Columbus?</h2>
             <div class="highlight-grid">
                 <div class="highlight">
+                    <div class="highlight-icon">⛪</div>
                     <h3>Faith in Action</h3>
-                    <p>Participate in programs that deepen your faith and serve the Church.</p>
+                    <p>Participate in programs that deepen your faith and serve the Church through meaningful community engagement and spiritual growth.</p>
                 </div>
                 <div class="highlight">
+                    <div class="highlight-icon">🤝</div>
                     <h3>Community Service</h3>
-                    <p>Make a difference through charity and volunteer work in your local community.</p>
+                    <p>Make a lasting difference through charity work and volunteer service, building stronger communities for future generations.</p>
                 </div>
                 <div class="highlight">
+                    <div class="highlight-icon">👥</div>
                     <h3>Brotherhood</h3>
-                    <p>Join a global network of over 2 million Catholic men dedicated to fraternity.</p>
+                    <p>Join a global network of over 2 million Catholic men dedicated to fraternity, unity, and charitable service worldwide.</p>
                 </div>
             </div>
         </section>
 
-        <section class="impact">
-            <h2>Our Impact</h2>
+        <!-- Impact Section -->
+        <section class="impact section" id="impact">
+            <h2 class="section-title">Our Global Impact</h2>
+            <p class="section-subtitle">Together, we create meaningful change in communities around the world</p>
             <div class="impact-stats">
                 <div class="stat">
                     <h3>2M+</h3>
@@ -51,37 +64,103 @@ Knights of Columbus
             </div>
         </section>
 
-        <section class="cta-section">
-            <h2>Join Us Today</h2>
-            <p>Become a Knight and make a lasting impact in your community.</p>
-            <a href="/sign-in/" class="cta-button">Join Now</a>
+        <!-- CTA Section -->
+        <section class="cta-section section" id="join">
+            <div class="cta-content">
+                <h2>Join Us Today</h2>
+                <p>Become a Knight and make a lasting impact in your community. Experience the brotherhood of faith, charity, and service.</p>
+                <a href="/sign-in/" class="submit-button">Join Now</a>
+            </div>
         </section>
 
-        <section class="contact-us">
-            <div class="user-input">
+        <!-- Contact Section -->
+        <section class="contact-us section" id="contact">
+            <div class="contact-content">
                 <h2>Contact Us</h2>
-                <p>Have questions? Reach out to learn more about the Knights of Columbus.</p>
+                <p>Have questions? Reach out to learn more about the Knights of Columbus and how you can be part of our mission.</p>
 
-                {% if success %}
-                    <p style="color: rgb(255, 205, 56);">{{ success }}</p>
-                {% endif %}
-                {% if error %}
-                    <p style="color: red;">{{ error }}</p>
-                {% endif %}
-
-                <form method="post">
-                    {% csrf_token %}
-                    <input type="text" name="name" placeholder="Name" required>
-                    <input type="email" name="email" placeholder="Email" required>
-                    <textarea name="message" placeholder="Message" required></textarea>
-                    <button type="submit">Send</button>
-                </form>
+                <div class="contact-form-container">
+                    {% if success %}
+                        <p style="color: #f0a500; font-weight: bold;">{{ success }}</p>
+                    {% endif %}
+                    {% if error %}
+                        <p style="color: red;">{{ error }}</p>
+                    {% endif %}
+                    <form class="contact-form" method="post">
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input type="text" name="name" placeholder="Your Name" required />
+                        </div>
+                        <div class="form-group">
+                            <input type="email" name="email" placeholder="Your Email" required />
+                        </div>
+                        <div class="form-group">
+                            <textarea name="message" placeholder="Your Message" required></textarea>
+                        </div>
+                        <button type="submit" class="submit-button">Send Message</button>
+                    </form>
+                </div>
             </div>
         </section>
     </div>
-</body>
-<footer class="footer">
-    <p>&copy; 2025 Knights of Columbus. All rights reserved.</p>
-</footer>
-</html> 
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <p>&copy; 2025 Knights of Columbus. All rights reserved.</p>
+        </div>
+    </footer>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Animate elements on scroll
+    const observerOptions = {
+        threshold: 0.1,
+        rootMargin: '0px 0px -50px 0px'
+    };
+
+    const observer = new IntersectionObserver((entries) => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('animate-in');
+                if (entry.target.classList.contains('impact-stats')) {
+                    startCounters();
+                }
+                observer.unobserve(entry.target);
+            }
+        });
+    }, observerOptions);
+
+    const sections = document.querySelectorAll('.section, .highlight, .stat');
+    sections.forEach(section => observer.observe(section));
+
+    let countersStarted = false;
+    function startCounters() {
+        if (countersStarted) return;
+        countersStarted = true;
+
+        const counters = document.querySelectorAll('.stat-number');
+        counters.forEach(counter => {
+            const end = parseInt(counter.getAttribute('data-end'));
+            const suffix = counter.getAttribute('data-suffix') || '';
+            const duration = 2000;
+            let startTime = null;
+
+            function animate(currentTime) {
+                if (!startTime) startTime = currentTime;
+                const progress = Math.min((currentTime - startTime) / duration, 1);
+                const currentCount = Math.floor(progress * end);
+                counter.textContent = (counter.textContent.startsWith('$') ? '$' : '') + currentCount + suffix;
+                if (progress < 1) {
+                    requestAnimationFrame(animate);
+                }
+            }
+            requestAnimationFrame(animate);
+        });
+    }
+});
+</script>
+
 {% endblock %}
+

@@ -1,0 +1,455 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Leaderboard
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/leaderboard.css' %}?v={% now 'U' %}">
+
+<div class="leaderboard-container">
+    <div class="leaderboard-header">
+        <div class="header-content">
+            <h1><i class="fas fa-trophy"></i> Recruitment Leaderboard</h1>
+            <p class="header-subtitle">Ranks are just numbers. True faith with God makes you a true <strong style="color: var(--accent-color);">Knight of Columbus</strong>. <br><span style="font-style: italic;">"In the same way, faith by itself, if it is not accompanied by action, is dead."</span> (James 2:17)</p>
+        </div>
+        <div class="council-filter">
+            <label for="councilSelect" class="filter-label">
+                <i class="fas fa-filter"></i> Filter by Council:
+            </label>
+            <select id="councilSelect" class="council-dropdown" onchange="filterByCouncil()">
+                <option value="all">All Councils</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="leaderboard-layout">
+        <!-- Top Recruiters Card (Left) -->
+        <div class="top-recruiters-card">
+            <div class="card-header">
+                <h3>Top Recruiters</h3>
+            </div>
+            <div class="recruiters-table-container scrollable-table">
+                {% if top_recruiters %}
+                <table class="recruiters-table">
+                    <thead>
+                        <tr>
+                            <th>Rank</th>
+                            <th>Name</th>
+                            <th>Council</th>
+                            <th>Recruits</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for recruiter in top_recruiters %}
+                        <tr class="recruiter-row {% if recruiter == user %}current-user{% endif %}">
+                            <td>
+                                {% if forloop.counter == 1 %}
+                                    <i class="fas fa-crown rank-icon gold"></i>
+                                {% elif forloop.counter == 2 %}
+                                    <i class="fas fa-medal rank-icon silver"></i>
+                                {% elif forloop.counter == 3 %}
+                                    <i class="fas fa-award rank-icon bronze"></i>
+                                {% else %}
+                                    <span class="rank-number">#{{ forloop.counter }}</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="recruiter-info">
+                                    <div class="recruiter-avatar">
+                                        {% if recruiter.profile_picture %}
+                                            <img src="{{ recruiter.profile_picture.url }}" alt="Avatar">
+                                        {% else %}
+                                            <i class="fas fa-user"></i>
+                                        {% endif %}
+                                    </div>
+                                    <span class="recruiter-name">{{ recruiter.first_name }} {{ recruiter.last_name }}</span>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="council-name">{{ recruiter.council.name|default:"No Council" }}</span>
+                            </td>
+                            <td>
+                                <span class="recruit-count">{{ recruiter.recruitment_count }}</span>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <div class="empty-recruiters">
+                    <i class="fas fa-users-slash"></i>
+                    <p>No recruiters found</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Right Column -->
+        <div class="right-column">
+            <!-- User Stats Card -->
+            <div class="user-stats-card">
+                <div class="council-header">
+                    <i class="fas fa-shield-alt council-icon"></i>
+                    <span class="stats-title">Recruits</span>
+                </div>
+                
+                <div class="user-stats">
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-value">{{ user_recruitment_count }}</div>
+                        <div class="stat-label">Your Recruits</div>
+                    </div>
+                    
+                    <div class="rank-section">
+                        <div class="rank-display">
+                            {% if user_rank %}
+                                <span class="rank-hash">#</span><span class="rank-value">{{ user_rank }}</span>
+                            {% else %}
+                                <span class="rank-value no-rank">None</span>
+                            {% endif %}
+                        </div>
+                        <div class="rank-label">Your Rank</div>
+                    </div>
+                    
+                    {% if council_stats %}
+                    <div class="stat-item">
+                        <div class="stat-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="stat-value" id="councilTotalStat">{{ council_stats.total_recruitments }}</div>
+                        <div class="stat-label">Global Total</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Council Statistics Card -->
+            {% if council_stats %}
+            <div class="council-stats-card">
+                <div class="council-stats-header">
+                    <i class="fas fa-trophy stats-icon"></i>
+                    <span class="stats-title">Global Statistics</span>
+                </div>
+                
+                <div class="council-stats-content">
+                    <div class="large-stat">
+                        <div class="large-number" id="activeRecruitersCount">{{ council_stats.total_recruiters }}</div>
+                        <div class="large-label">Active Recruiters</div>
+                    </div>
+                    
+                    <div class="council-stat">
+                        <div class="stat-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-value" id="totalRecruitmentsCount">{{ council_stats.total_recruitments }}</div>
+                        <div class="stat-label">Total Recruitments</div>
+                    </div>
+                    
+                    {% if council_stats.top_recruiter %}
+                    <div class="top-recruiter">
+                        <div class="top-recruiter-name">{{ council_stats.top_recruiter.first_name }} {{ council_stats.top_recruiter.last_name }}</div>
+                        <div class="top-recruiter-title">Top Recruiter</div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+
+    <!-- Recent Recruitment Section (Bottom) -->
+    <div class="recent-recruitment-card">
+        <div class="card-header">
+            <h3>Recent Recruitment</h3>
+        </div>
+        
+        <div class="recent-content scrollable-recent">
+            {% for recruitment in recent_recruitments %}
+                <div class="recruitment-entry">
+                    <span class="recruiter-name">{{ recruitment.recruiter.first_name }} {{ recruitment.recruiter.last_name }}</span>
+                    <span class="action-text">recruited</span>
+                    <span class="recruited-name">{{ recruitment.recruited.first_name }} {{ recruitment.recruited.last_name }}</span>
+                    <span class="council-info">({{ recruitment.recruiter.council.name|default:"No Council" }})</span>
+                    <span class="time-ago">{{ recruitment.date_recruited|timesince }} ago</span>
+                </div>
+            {% empty %}
+                <div class="empty-recent">
+                    <i class="fas fa-history"></i>
+                    <p>No recent recruitment activity</p>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-section">
+        <a href="{% url 'my_recruits' %}" class="action-btn primary">
+            <i class="fas fa-users"></i>
+            View My Recruits
+        </a>
+        <a href="{% url 'dashboard' %}" class="action-btn secondary">
+            <i class="fas fa-arrow-left"></i>
+            Back to Dashboard
+        </a>
+    </div>
+
+    <script>
+        // Animate elements on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate cards with staggered entrance
+            const cards = document.querySelectorAll('.top-recruiters-card, .user-stats-card, .council-stats-card, .recent-recruitment-card');
+            cards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, 200 + (index * 150));
+            });
+
+            // Animate table rows
+            const rows = document.querySelectorAll('.recruiter-row');
+            rows.forEach((row, index) => {
+                setTimeout(() => {
+                    row.style.opacity = '1';
+                    row.style.transform = 'translateX(0)';
+                }, 500 + (index * 100));
+            });
+
+            // Animate stat items
+            const statItems = document.querySelectorAll('.stat-item, .rank-section, .large-stat, .council-stat');
+            statItems.forEach((item, index) => {
+                setTimeout(() => {
+                    item.style.opacity = '1';
+                    item.style.transform = 'translateY(0)';
+                }, 600 + (index * 80));
+            });
+
+            // Animate recruitment entries
+            const entries = document.querySelectorAll('.recruitment-entry');
+            entries.forEach((entry, index) => {
+                setTimeout(() => {
+                    entry.style.opacity = '1';
+                    entry.style.transform = 'translateX(0)';
+                }, 800 + (index * 100));
+            });
+
+            // Animate counters
+            const counters = document.querySelectorAll('.stat-value, .large-number, .recruit-count');
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent);
+                if (isNaN(target)) return;
+                
+                let current = 0;
+                const increment = target / 30;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.floor(current);
+                    }
+                }, 50);
+            });
+
+            // Handle rank value separately (don't animate "None")
+            const rankValues = document.querySelectorAll('.rank-value:not(.no-rank)');
+            rankValues.forEach(counter => {
+                const target = parseInt(counter.textContent);
+                if (isNaN(target)) return;
+                
+                let current = 0;
+                const increment = target / 30;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = target;
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.floor(current);
+                    }
+                }, 50);
+            });
+        });
+
+        // Council filtering functionality
+        let allCouncils = new Set();
+        let filteredStats = {};
+        let threeMonthsAgo = new Date('{{ three_months_ago }}');
+        let allCouncilsStats = JSON.parse('{{ all_councils_stats|safe }}');
+        let globalStats = JSON.parse('{{ global_stats|safe }}');
+
+        // Populate council dropdown and collect stats
+        document.addEventListener('DOMContentLoaded', function() {
+            const councilSelect = document.getElementById('councilSelect');
+            
+            // Use backend-provided council stats to populate dropdown
+            console.log('Available councils from backend:', Object.keys(allCouncilsStats));
+            
+            // Populate dropdown with councils from backend stats
+            const sortedCouncils = Object.keys(allCouncilsStats).sort();
+            sortedCouncils.forEach(council => {
+                const option = document.createElement('option');
+                option.value = council;
+                option.textContent = council;
+                councilSelect.appendChild(option);
+                console.log(`Added council option: ${council}`);
+            });
+
+            // Also collect councils from table rows for additional validation
+            const rows = document.querySelectorAll('.recruiter-row');
+            rows.forEach((row, index) => {
+                const councilCell = row.querySelector('td:nth-child(3)');
+                if (councilCell) {
+                    const councilSpan = councilCell.querySelector('.council-name');
+                    const councilName = councilSpan ? 
+                        councilSpan.textContent.trim() : 
+                        councilCell.textContent.trim();
+                    if (councilName && councilName !== '' && councilName !== 'No Council') {
+                        allCouncils.add(councilName);
+                        // Add to dropdown if not already present
+                        if (!sortedCouncils.includes(councilName)) {
+                            const option = document.createElement('option');
+                            option.value = councilName;
+                            option.textContent = councilName;
+                            councilSelect.appendChild(option);
+                            console.log(`Added additional council option: ${councilName}`);
+                        }
+                    }
+                }
+            });
+
+            // Use backend-provided stats
+            filteredStats = allCouncilsStats;
+            
+            // Initialize stats display
+            updateCouncilStats('all');
+        });
+
+        // This function is no longer needed as we use backend-provided stats
+        function calculateCouncilStats() {
+            // Stats are now provided by the backend with proper 3-month active recruiter logic
+            filteredStats = allCouncilsStats;
+        }
+
+        function filterByCouncil() {
+            const select = document.getElementById('councilSelect');
+            const selectedCouncil = select.value;
+            const rows = document.querySelectorAll('.recruiter-row');
+            const recruitmentEntries = document.querySelectorAll('.recruitment-entry');
+            
+            // Filter leaderboard table
+            let visibleCount = 0;
+            rows.forEach(row => {
+                const councilCell = row.querySelector('td:nth-child(3)');
+                let councilName = 'No Council';
+                
+                if (councilCell) {
+                    const councilSpan = councilCell.querySelector('.council-name');
+                    councilName = councilSpan ? 
+                        councilSpan.textContent.trim() : 
+                        councilCell.textContent.trim();
+                }
+                
+                if (selectedCouncil === 'all' || councilName === selectedCouncil) {
+                    row.style.display = '';
+                    visibleCount++;
+                    // Update rank numbers
+                    const rankCell = row.querySelector('td:first-child');
+                    if (rankCell && !rankCell.querySelector('.rank-icon')) {
+                        rankCell.innerHTML = `<span class="rank-number">#${visibleCount}</span>`;
+                    }
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            // Filter recent recruitment entries
+            recruitmentEntries.forEach(entry => {
+                const councilInfo = entry.querySelector('.council-info');
+                if (councilInfo) {
+                    const councilText = councilInfo.textContent.trim();
+                    // Extract council name from "(Council Name)" format
+                    const councilMatch = councilText.match(/\(([^)]+)\)/);
+                    const councilName = councilMatch ? councilMatch[1] : 'No Council';
+                    
+                    if (selectedCouncil === 'all' || councilName === selectedCouncil) {
+                        entry.style.display = '';
+                    } else {
+                        entry.style.display = 'none';
+                    }
+                }
+            });
+            
+            // Update council statistics based on filter
+            updateCouncilStats(selectedCouncil);
+        }
+
+        function updateCouncilStats(selectedCouncil) {
+            let totalRecruits = 0;
+            let activeRecruiters = 0;
+            let topRecruiter = null;
+            
+            if (selectedCouncil === 'all') {
+                // Use global stats from backend
+                totalRecruits = globalStats.total_recruitments;
+                activeRecruiters = globalStats.total_recruiters;
+                topRecruiter = globalStats.top_recruiter ? 
+                    `${globalStats.top_recruiter.first_name} ${globalStats.top_recruiter.last_name}` : 
+                    null;
+            } else {
+                // Use council-specific stats from backend
+                if (filteredStats[selectedCouncil]) {
+                    totalRecruits = filteredStats[selectedCouncil].total_recruitments;
+                    activeRecruiters = filteredStats[selectedCouncil].total_recruiters;
+                    topRecruiter = filteredStats[selectedCouncil].top_recruiter ? 
+                        `${filteredStats[selectedCouncil].top_recruiter.first_name} ${filteredStats[selectedCouncil].top_recruiter.last_name}` : 
+                        null;
+                }
+            }
+            
+            // Update the UI elements with animation
+            animateCounter('councilTotalStat', totalRecruits);
+            animateCounter('activeRecruitersCount', activeRecruiters);
+            animateCounter('totalRecruitmentsCount', totalRecruits);
+            
+            // Update top recruiter name
+            const topRecruiterElement = document.querySelector('.top-recruiter-name');
+            if (topRecruiterElement) {
+                if (topRecruiter) {
+                    topRecruiterElement.textContent = topRecruiter;
+                } else {
+                    topRecruiterElement.textContent = 'No recruiter';
+                }
+            }
+        }
+
+        function animateCounter(elementId, targetValue) {
+            const element = document.getElementById(elementId);
+            if (!element) return;
+            
+            const startValue = parseInt(element.textContent) || 0;
+            const duration = 500;
+            const startTime = performance.now();
+            
+            function updateCounter(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                const currentValue = Math.floor(startValue + (targetValue - startValue) * progress);
+                element.textContent = currentValue;
+                
+                if (progress < 1) {
+                    requestAnimationFrame(updateCounter);
+                }
+            }
+            
+            requestAnimationFrame(updateCounter);
+        }
+
+    </script>
+</div>
+{% endblock %}

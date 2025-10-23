@@ -7,17 +7,18 @@ Knights of Columbus - Manage Pending Users
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/event_management.css' %}?v={% now 'U' %}">
 
 <div class="dashboard-container">
     <div class="content-card">
         <div class="dashboard-header">
-            <h1>Pending User Requests</h1>
+            <h1 style="color: var(--primary-bg);">Pending User Requests</h1>
             <div>
                 <a href="{% url 'dashboard' %}" class="dashboard-btn secondary back-btn">
                     <i class="fas fa-arrow-left"></i> Back to Dashboard
                 </a>
                 {% if request.user.role == 'admin' %}
-                <a href="{% url 'my_recruits' %}" class="dashboard-btn">
+                <a href="{% url 'my_recruits' %}" class="dashboard-btn secondary back-btn">
                     <i class="fas fa-users"></i> View My Recruits
                 </a>
                 {% endif %}
@@ -26,7 +27,7 @@ Knights of Columbus - Manage Pending Users
     
     <!-- Messages block removed - now using popup notifications from base.html -->
     
-        <!-- Search -->
+        <!-- Search and Filters -->
         <div class="search-container">
             <div class="search-wrapper">
                 <i class="fas fa-search search-icon"></i>
@@ -35,57 +36,66 @@ Knights of Columbus - Manage Pending Users
             </div>
         </div>
         
-        <!-- Pending Users List -->
-        <div class="members-list">
-                {% for user in pending_users %}
-            <div class="member-item">
-                <div class="member-header">
-                    <div class="member-name-section">
-                        {% if user.profile_picture %}
-                            <img src="{{ user.profile_picture.url }}" alt="Profile Picture" class="member-pic">
-                        {% else %}
-                            <div class="member-pic">
-                                <i class="fas fa-user"></i>
-                            </div>
-                                        {% endif %}
-                        <div>
-                            <h3>
-                                {{ user.first_name }}
-                                {% if user.second_name %} {{ user.second_name }}{% endif %}
-                                {% if user.middle_name %} {{ user.middle_name }}{% endif %}
-                                {{ user.last_name }}
-                                {% if user.suffix %} {{ user.suffix }}{% endif %}
-                            </h3>
-                            <span class="role-badge role-pending">Pending</span>
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="member-details">
-                    <div class="detail-column">
-                        <p><strong>Username:</strong> {{ user.username }}</p>
-                        <p><strong>Email:</strong> {{ user.email }}</p>
-                    </div>
-                    <div class="detail-column">
-                        <p><strong>Council:</strong> {{ user.council.name }}</p>
-                        <p><strong>Applied On:</strong> {{ user.date_joined|date:"F j, Y" }}</p>
-                    </div>
-                </div>
-                
-                <div class="action-buttons">
-                    <button class="dashboard-btn view-member-btn" data-user-id="{{ user.id }}">
-                        <i class="fas fa-eye"></i> View Details
-                    </button>
-                </div>
+        <div class="sort-filter-container">
+            <div class="sort-filter">
+                <select id="sortSelect" class="sort-dropdown">
+                    <option value="alphabetical">Alphabetical (A-Z)</option>
+                    <option value="reverse-alphabetical">Reverse Alphabetical (Z-A)</option>
+                    <option value="newest">Newest Applications</option>
+                    <option value="oldest">Oldest Applications</option>
+                </select>
             </div>
-            {% empty %}
-            <div class="empty-state">
-                <i class="fas fa-user-check"></i>
-                <p>No pending users to review.</p>
-                <p>All membership requests have been processed.</p>
-                                </div>
-                {% endfor %}
         </div>
+        
+        <!-- Pending Users Table -->
+        {% if pending_users %}
+        <div class="event-table-container">
+            <table class="event-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Council</th>
+                        <th>Applied On</th>
+                        <th>Status</th>
+                        <th class="action-header">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in pending_users %}
+                    <tr data-role="pending" data-name="{{ user.first_name }} {{ user.last_name }}" data-joined="{{ user.date_joined|date:'Y-m-d' }}">
+                        <td>
+                            {{ user.first_name }}
+                            {% if user.second_name %} {{ user.second_name }}{% endif %}
+                            {% if user.middle_name %} {{ user.middle_name }}{% endif %}
+                            {{ user.last_name }}
+                            {% if user.suffix %} {{ user.suffix }}{% endif %}
+                        </td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.council.name }}</td>
+                        <td>{{ user.date_joined|date:"F j, Y" }}</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td>
+                            <div class="action-cell">
+                                <button class="action-btn details-btns view-member-btn" data-user-id="{{ user.id }}">
+                                    <i class="fas fa-eye"></i> Review Details
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="no-events-message">
+            <i class="fas fa-user-check"></i>
+            <p>No pending users to review.</p>
+            <p>All membership requests have been processed.</p>
+        </div>
+        {% endif %}
     </div>
 </div>
 
@@ -100,7 +110,7 @@ Knights of Columbus - Manage Pending Users
             <div class="loading">Loading member details...</div>
         </div>
         <div class="modal-footer" id="modalFooter">
-            <!-- Approval/rejection buttons will be added dynamically -->
+            <button type="button" class="dashboard-btn" onclick="closeModal('memberDetailsModal')">OK</button>
         </div>
     </div>
 </div>
@@ -157,109 +167,222 @@ Knights of Columbus - Manage Pending Users
     font-size: 1rem;
 }
 
-.members-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+/* Event Table Styles */
+.event-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    background-color: white;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(13, 52, 113, 0.1);
     margin-bottom: 2rem;
 }
 
-.member-item {
-    background-color: white;
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-}
-
-.member-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-.member-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-    gap: 1rem;
-}
-
-.member-name-section {
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-}
-
-.member-pic {
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: #f0f0f0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-}
-
-.member-pic i {
-    font-size: 1.8rem;
-    color: #0D3471;
-}
-
-.member-pic img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-}
-
-.member-header h3 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: var(--heading-color);
-}
-
-.member-details {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    margin-bottom: 1rem;
-}
-
-.detail-column {
-    flex: 1;
-    min-width: 200px;
-}
-
-.detail-column p {
-    margin: 0.5rem 0;
-}
-
-.role-badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
+.event-table th {
+    background-color: var(--primary-bg);
+    padding: 1rem;
+    text-align: left;
     font-weight: 600;
-    margin-top: 0.5rem;
+    color: white;
+    border: none;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
 }
 
-.role-pending {
-    background-color: #ffc107;
+.event-table th:first-child {
+    border-top-left-radius: 12px;
+}
+
+.event-table th:last-child {
+    border-top-right-radius: 12px;
+}
+
+.event-table tbody tr {
+    transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(13, 52, 113, 0.08);
+}
+
+.event-table tbody tr:hover {
+    background-color: rgba(13, 52, 113, 0.02);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px rgba(13, 52, 113, 0.1);
+}
+
+.event-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.event-table td {
+    padding: 1rem;
+    vertical-align: middle;
+    border: none;
+}
+
+.action-cell {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.action-btn {
+    padding: 0.7rem 1rem;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+}
+
+.details-btns {
+    background-color: #28a745;
+    color: white;
+}
+
+.details-btns:hover {
+    background-color: #218838;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(23, 162, 184, 0.3);
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.status-pending {
+    background: linear-gradient(135deg, #ffc107, #f39c12);
     color: #212529;
 }
 
-.empty-state {
+.no-events-message {
     text-align: center;
-    padding: 3rem 1rem;
+    padding: 3rem;
     color: #6c757d;
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(13, 52, 113, 0.1);
 }
 
-.empty-state i {
+.no-events-message i {
     font-size: 3rem;
     margin-bottom: 1rem;
-    color: #adb5bd;
+    color: var(--primary-bg);
+}
+
+.no-events-message p {
+    margin: 0.5rem 0;
+    font-size: 1.1rem;
+}
+
+.no-events-message p:first-of-type {
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .event-table th:nth-child(4),
+    .event-table td:nth-child(4) {
+        display: none;
+    }
+}
+
+@media (max-width: 992px) {
+    .event-table th:nth-child(3),
+    .event-table td:nth-child(3) {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .event-table {
+        font-size: 0.9rem;
+    }
+    
+    .event-table th,
+    .event-table td {
+        padding: 0.75rem 0.5rem;
+    }
+    
+    .action-cell {
+        flex-direction: column;
+        gap: 0.25rem;
+    }
+    
+    .action-btn {
+        font-size: 0.8rem;
+        padding: 0.4rem 0.8rem;
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .dashboard-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .dashboard-header div {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .dashboard-btn {
+        text-align: center;
+        width: 100%;
+    }
+    
+    .modal-footer {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: stretch;
+    }
+    
+    .modal-footer .action-buttons {
+        justify-content: center;
+        width: 100%;
+    }
+    
+    .modal-footer .ok-button {
+        margin-left: 0;
+        width: 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .event-table-container {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 -1rem;
+        padding: 0 1rem;
+    }
+    
+    .event-table {
+        min-width: 600px;
+    }
+    
+    .content-card {
+        padding: 1rem;
+    }
+}
+
+.event-table-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin-bottom: 2rem;
 }
 
 /* Modal styles */
@@ -282,58 +405,94 @@ Knights of Columbus - Manage Pending Users
 
 .modal-content {
     background-color: var(--secondary-bg);
-    margin: 10% auto;
+    margin: 5% auto;
+    padding: 0;
     border-radius: var(--border-radius);
     max-width: 700px;
     position: relative;
-    max-height: 80vh;
+    max-height: 85vh;
     overflow-y: auto;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transform: translateY(-20px);
-    opacity: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    box-shadow: 0 20px 60px rgba(13, 52, 113, 0.3);
+    animation: modalSlideIn 0.4s ease-out;
 }
-
+@keyframes modalSlideIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
 .modal.show .modal-content {
     transform: translateY(0);
     opacity: 1;
 }
 
 .modal-header {
-    padding: 1.5rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 1.5rem 1.5rem 0 1.5rem;
+    position: relative;
+}
+
+.modal-header h3 { 
+    color: var(--heading-color); 
+    margin: 0 0 1.5rem 0; 
+    border-bottom: 2px solid var(--primary-bg); 
+    padding-bottom: 1rem; 
+    font-size: 1.8rem; 
+}
+
+#memberDetailsContent { 
+    padding: 1.5rem; 
+}
+.modal-member-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.modal-detail-item { padding: 1rem; background-color: rgba(13, 52, 113, 0.05); border-radius: var(--border-radius); }
+.modal-detail-item strong { display: block; color: var(--heading-color); margin-bottom: 0.5rem; }
+.modal-detail-item.full-width { grid-column: 1 / -1; }
+.modal-member-title { grid-column: 1 / -1; margin: 0 0 1rem 0; padding-bottom: 1rem; border-bottom: 1px solid rgba(13, 52, 113, 0.1); }
+.modal-footer { 
+    padding: 1.5rem; 
+    display: flex; 
+    justify-content: flex-start; 
+    align-items: center; 
+    border-top: 1px solid rgba(13, 52, 113, 0.1); 
+    gap: 1rem;
+}
+.modal-footer .action-buttons {
     display: flex;
-    justify-content: space-between;
+    gap: 0.5rem;
     align-items: center;
 }
-
-.modal-header h3 {
-    margin: 0;
-    color: var(--heading-color);
+.modal-footer .ok-button {
+    margin-left: auto;
 }
-
-#memberDetailsContent {
-    padding: 1.5rem;
+.modal-footer .dashboard-btn {
+    background: linear-gradient(135deg, var(--primary-bg), #1e5a96);
+    color: white;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(13, 52, 113, 0.3);
 }
-
-.modal-footer {
-    padding: 1rem 1.5rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    text-align: right;
-    display: flex;
-    justify-content: flex-end;
-    gap: 1rem;
+.modal-footer .dashboard-btn:hover {
+    background: linear-gradient(135deg, #1e5a96, var(--primary-bg));
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(13, 52, 113, 0.4);
 }
 
 .close {
-    font-size: 1.5rem;
-        cursor: pointer;
-    color: #aaa;
-    transition: color 0.2s ease;
+    position: absolute;
+    top: 1.5rem; right: 2rem;
+    font-size: 2rem;
+    cursor: pointer;
+    color: var(--heading-color);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    transition: all var(--transition-speed) ease;
 }
-
 .close:hover {
-    color: var(--primary-bg);
+    background-color: var(--primary-bg);
+    color: var(--secondary-bg);
+    transform: rotate(90deg);
 }
 
 .loading {
@@ -491,6 +650,50 @@ Knights of Columbus - Manage Pending Users
     background-color: #f4b41a !important;
     color: white;
 }
+
+/* Sort dropdown styles */
+.sort-filter-container {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.sort-filter {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.sort-dropdown {
+    padding: 0.75rem 1rem;
+    border: 2px solid rgba(13, 52, 113, 0.2);
+    border-radius: 8px;
+    background: white;
+    color: var(--primary-bg);
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 8px rgba(13, 52, 113, 0.1);
+    min-width: 200px;
+}
+
+.sort-dropdown:hover {
+    border-color: var(--primary-bg);
+    box-shadow: 0 4px 12px rgba(13, 52, 113, 0.2);
+}
+
+.sort-dropdown:focus {
+    outline: none;
+    border-color: var(--primary-bg);
+    box-shadow: 0 0 0 3px rgba(13, 52, 113, 0.1);
+}
+
+@media (max-width: 768px) {
+    .sort-filter-container { justify-content: center; }
+    .sort-dropdown { min-width: auto; width: 100%; }
+}
 </style>
 
 <script>
@@ -502,14 +705,15 @@ document.addEventListener('DOMContentLoaded', function() {
     if (searchInput) {
         searchInput.addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
-            const memberItems = document.querySelectorAll('.member-item');
+            const rows = document.querySelectorAll('.event-table tbody tr');
             
             // Show/hide clear button
             clearButton.style.display = searchTerm ? 'block' : 'none';
             
-            memberItems.forEach(item => {
-                const text = item.textContent.toLowerCase();
-                item.style.display = text.includes(searchTerm) ? '' : 'none';
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                const shouldShow = text.includes(searchTerm);
+                row.style.display = shouldShow ? '' : 'none';
             });
         });
         
@@ -531,6 +735,47 @@ document.addEventListener('DOMContentLoaded', function() {
             searchInput.focus();
         });
     }
+    
+    // Sort functionality
+    const sortSelect = document.getElementById('sortSelect');
+    
+    function sortTable(sortType) {
+        const tbody = document.querySelector('.event-table tbody');
+        const rows = Array.from(tbody.querySelectorAll('tr'));
+        
+        rows.sort((a, b) => {
+            switch(sortType) {
+                case 'alphabetical':
+                    const nameA = a.dataset.name.toLowerCase();
+                    const nameB = b.dataset.name.toLowerCase();
+                    return nameA.localeCompare(nameB);
+                case 'reverse-alphabetical':
+                    const nameA2 = a.dataset.name.toLowerCase();
+                    const nameB2 = b.dataset.name.toLowerCase();
+                    return nameB2.localeCompare(nameA2);
+                case 'newest':
+                    const dateA = new Date(a.dataset.joined);
+                    const dateB = new Date(b.dataset.joined);
+                    return dateB - dateA;
+                case 'oldest':
+                    const dateA2 = new Date(a.dataset.joined);
+                    const dateB2 = new Date(b.dataset.joined);
+                    return dateA2 - dateB2;
+                default:
+                    return 0;
+            }
+        });
+        
+        // Re-append sorted rows
+        rows.forEach(row => tbody.appendChild(row));
+    }
+    
+    // Initialize with alphabetical sort
+    sortTable('alphabetical');
+    
+    sortSelect.addEventListener('change', function() {
+        sortTable(this.value);
+    });
     
     // View member details
     const viewMemberBtns = document.querySelectorAll('.view-member-btn');
@@ -563,103 +808,75 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(response => response.json())
                 .then(data => {
                     let detailsHTML = `
-                        <div class="member-full-details">
-                            <div class="profile-image-container">
+                        <div class="user-profile-header">
+                            <div class="profile-picture-container">
                                 ${data.profile_picture ? 
-                                    `<img src="${data.profile_picture}" alt="Profile Picture" class="profile-image">` : 
-                                    `<div class="profile-placeholder"><i class="fas fa-user"></i></div>`
+                                    `<img src="${data.profile_picture}" alt="Profile Picture" class="profile-picture">` : 
+                                    `<div class="profile-picture-placeholder"><i class="fas fa-user"></i></div>`
                                 }
                             </div>
-                            
-                            <h4>
-                                ${data.first_name}
-                                ${data.second_name ? data.second_name + ' ' : ''}
-                                ${data.middle_name ? data.middle_name + ' ' : ''}
-                                ${data.last_name}
-                                ${data.suffix ? ' ' + data.suffix : ''}
-                            </h4>
-                            <span class="role-badge role-pending">Pending</span>
-                            
-                            <div class="detail-group">
+                            <div class="user-basic-info">
+                                <h4 class="user-name">${data.first_name} ${data.middle_name ? data.middle_name + ' ' : ''}${data.last_name}${data.suffix ? ' ' + data.suffix : ''}</h4>
+                                <span class="role-badge role-pending">Pending</span>
+                            </div>
+                        </div>
+                        <div class="modal-event-details-grid">
+                            <div class="modal-detail-item">
                                 <strong>Username:</strong>
-                                <p>${data.username}</p>
+                                <span>${data.username}</span>
                             </div>
-                            
-                            <div class="detail-group">
+                            <div class="modal-detail-item">
                                 <strong>Email:</strong>
-                                <p>${data.email || 'Not provided'}</p>
+                                <span>${data.email || 'Not provided'}</span>
                             </div>
-                            
-                            <div class="detail-group">
+                            <div class="modal-detail-item">
                                 <strong>Contact Number:</strong>
-                                <p>${data.contact_number || 'Not provided'}</p>
+                                <span>${data.contact_number || 'Not provided'}</span>
                             </div>
-                            
-                            <div class="detail-group">
+                            <div class="modal-detail-item">
                                 <strong>Council:</strong>
-                                <p>${data.council_name || 'Not assigned'}</p>
+                                <span>${data.council_name || 'Not assigned'}</span>
                             </div>
-                            
-                            <div class="detail-group">
+                            <div class="modal-detail-item">
                                 <strong>Birthday:</strong>
-                                <p>${data.birthday || 'Not specified'}</p>
+                                <span>${data.birthday || 'Not specified'}</span>
                             </div>
-                            
-                            <div class="detail-group">
+                            <div class="modal-detail-item">
                                 <strong>Age:</strong>
-                                <p>${data.age || 'Not specified'}</p>
+                                <span>${data.age || 'Not specified'}</span>
                             </div>
-                            
-                            <div class="detail-group">
+                            <div class="modal-detail-item full-width">
                                 <strong>Address:</strong>
-                                <address>
-                                    ${data.street ? data.street + '<br>' : ''}
-                                    ${data.barangay ? data.barangay + '<br>' : ''}
-                                    ${data.city ? data.city + ', ' : ''}${data.province || ''}
-                                    ${data.zip_code ? '<br>ZIP: ' + data.zip_code : ''}
-                                </address>
+                                <span>${data.street ? `${data.street}, ${data.barangay}, ${data.city}, ${data.province} ${data.zip_code}` : 'Not provided'}</span>
                             </div>
-                            
-                            <div class="detail-group">
+                            <div class="modal-detail-item">
                                 <strong>Marital Status:</strong>
-                                <p>${data.marital_status || 'Not specified'}</p>
+                                <span>${data.marital_status || 'Not specified'}</span>
                             </div>
-                            
-                            <div class="detail-group">
+                            <div class="modal-detail-item">
                                 <strong>Occupation:</strong>
-                                <p>${data.occupation || 'Not specified'}</p>
+                                <span>${data.occupation || 'Not specified'}</span>
                             </div>
-                            
-                            <div class="detail-group">
+                            <div class="modal-detail-item">
                                 <strong>Recruiter's Name:</strong>
-                                <p>${data.recruiter_name || (data.voluntary_join ? 'Joined voluntarily' : 'Not specified')}</p>
+                                <span>${data.recruiter_name || (data.voluntary_join ? 'Joined voluntarily' : 'Not specified')}</span>
                             </div>
-                            
-                            <div class="detail-group">
+                            <div class="modal-detail-item">
+                                <strong>Applied On:</strong>
+                                <span>${data.date_joined}</span>
+                            </div>
+                            <div class="modal-detail-item full-width">
                                 <strong>Reason for Joining:</strong>
-                                <p>${data.join_reason || 'Not specified'}</p>
+                                <span>${data.join_reason || 'Not specified'}</span>
                             </div>
-                            
                             ${data.e_signature ? `
-                            <div class="detail-group">
+                            <div class="modal-detail-item full-width">
                                 <strong>E-Signature:</strong>
                                 <div class="e-signature-container">
                                     <img src="${data.e_signature}" alt="E-Signature" class="e-signature-image" onerror="this.onerror=null; this.src='{% static 'img/signature-placeholder.png' %}'; this.alt='Signature not available';">
                                 </div>
                             </div>
-                            ` : `
-                            <div class="detail-group">
-                                <strong>E-Signature:</strong>
-                                <div class="e-signature-container">
-                                    <p class="text-muted">No signature provided</p>
-                                </div>
-                            </div>
-                            `}
-                            
-                            <div class="detail-group">
-                                <strong>Applied On:</strong>
-                                <p>${data.date_joined}</p>
-                            </div>
+                            ` : ''}
                         </div>
                     `;
                     

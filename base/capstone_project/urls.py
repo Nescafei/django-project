@@ -31,6 +31,7 @@ urlpatterns = [
     path('cancel/', views.cancel_page, name='cancel_page'),
     path('gcash/confirm/', views.confirm_gcash_payment, name='confirm_gcash_payment'),
     path('blockchain/', views.get_blockchain_data, name='blockchain'),
+    path('download-ledger/', views.download_ledger, name='download_ledger'),
     # path('search-users/', views.search_users, name='search_users'),
 
     # New endpoint for recruiter name autocomplete
@@ -84,4 +85,18 @@ urlpatterns = [
     
     # Change Council
     path('change-council/<int:user_id>/', views.change_council, name='change_council'),
+    
+    # Leaderboard
+    path('leaderboard/', views.leaderboard, name='leaderboard'),
+    
+    # Attendance for solid ahh members
+    path('member_attend/', views.member_attend, name='member_attend'),
+    path('officer-take-attendance/', views.officer_take_attendance, name='officer_take_attendance'),
+    path('scan-qr/', views.scan_qr, name='scan_qr'),
+    
+    # Council Management
+    path('manage-councils/', views.manage_councils, name='manage_councils'),
+    path('add-council/', views.add_council, name='add_council'),
+    path('delete-council/<int:council_id>/', views.delete_council, name='delete_council'),
+    path('edit-council/<int:council_id>/', views.edit_council, name='edit_council'),
 ]

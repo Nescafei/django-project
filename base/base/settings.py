@@ -95,7 +95,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 # Internationalization
 LANGUAGE_CODE = 'en-us'
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Manila'  # Philippines timezone (UTC+8)
 USE_I18N = True
 USE_TZ = True
 
@@ -190,3 +190,7 @@ def load_keys():
     return private_key, public_key
 
 PRIVATE_KEY, PUBLIC_KEY = load_keys()
+
+# Suppress database access warnings during app initialization
+import warnings
+warnings.filterwarnings('ignore', message='Accessing the database during app initialization is discouraged')

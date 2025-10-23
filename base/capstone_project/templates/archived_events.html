@@ -17,9 +17,7 @@ Knights of Columbus - Archived Events
                 </a>
             </div>
         </div>
-
-        <h2>Past Events</h2>
-
+        <h2 style="color: var(--primary-bg);">Past Events</h2>
         <!-- Filters -->
         <div class="filters-container">
             <form method="get" class="filter-form">
@@ -68,7 +66,7 @@ Knights of Columbus - Archived Events
                 {% endif %}
                 {% endif %}
 
-                <div class="filter-group">
+                <div class="filter-group filter-actions">
                     <button type="submit" class="dashboard-btn">Apply Filters</button>
                     <a href="{% url 'archived_events' %}" class="dashboard-btn secondary">Clear Filters</a>
                 </div>
@@ -85,50 +83,46 @@ Knights of Columbus - Archived Events
         </div>
 
         {% if past_events %}
-        <div class="events-list">
-            {% for event in past_events %}
-            <div class="event-item {% if event.status == 'rejected' %}rejected-event{% endif %}">
-                <div class="event-header">
-                    <h3 {% if event.status == 'rejected' %}class="rejected-title"{% endif %}>{{ event.name }}</h3>
-                    <span class="status-badge status-{{ event.status }}">{{ event.get_status_display }}</span>
-                </div>
-                
-                <div class="event-details">
-                    <div class="detail-column">
-                        <p><strong>Event ID:</strong> #{{ event.id }}</p>
-                        <p><strong>Date:</strong> {{ event.date_from|date:"F d, Y" }} {% if event.date_until and event.date_until != event.date_from %} - {{ event.date_until|date:"F d, Y" }}{% endif %}</p>
-                        <p><strong>Category:</strong> {{ event.category }}{% if event.subcategory and event.subcategory != 'N/A' %} - {{ event.subcategory }}{% endif %}</p>
-                    </div>
-                    <div class="detail-column">
-                        <p><strong>Council:</strong> {{ event.council.name }}</p>
-                        <p><strong>Location:</strong> {{ event.city }}, {{ event.province }}</p>
-                    </div>
-                </div>
-                
-                {% if event.status == 'rejected' and event.rejection_reason %}
-                <div class="rejection-reason">
-                    <p><strong>Rejection Reason:</strong> {{ event.rejection_reason }}</p>
-                </div>
-                {% endif %}
-                
-                <div class="event-description">
-                    <p>{{ event.description|truncatechars:150 }}</p>
-                </div>
-                
-                <div class="action-buttons">
-                    <button class="dashboard-btn view-event-btn" onclick="viewEventDetails('{{ event.id }}')">
-                        <i class="fas fa-eye"></i>View Details
-                    </button>
-                </div>
-            </div>
-            {% empty %}
-            <div class="empty-state">
-                <i class="fas fa-calendar-times"></i>
-                <p>No past events found matching your criteria.</p>
-                <p>Try adjusting your filters or check back later.</p>
-            </div>
-            {% endfor %}
-        </div>
+        <table class="event-table">
+            <thead>
+                <tr>
+                    <th>Event ID</th>
+                    <th>Event Name</th>
+                    <th>Date</th>
+                    <th>Category</th>
+                    <th>Council</th>
+                    <th>Status</th>
+                    <th class="action-header">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for event in past_events %}
+                <tr>
+                    <td>{{ event.id }}</td>
+                    <td>{{ event.name }}</td>
+                    <td>{{ event.date_from|date:"F d, Y" }}{% if event.date_until and event.date_until != event.date_from %} - {{ event.date_until|date:"F d, Y" }}{% endif %}</td>
+                    <td>{{ event.category }}{% if event.subcategory and event.subcategory != 'N/A' %} - {{ event.subcategory }}{% endif %}</td>
+                    <td>{{ event.council.name }}</td>
+                    <td><span class="status-badge status-{{ event.status }}">{{ event.get_status_display }}</span></td>
+                    <td>
+                        <div class="action-cell">
+                            <button class="action-btn details-btn" onclick="viewEventDetails('{{ event.id }}')">
+                                <i class="fas fa-eye"></i> View Details
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="6">
+                        <div class="no-events-message">
+                            <p>No past events found matching your criteria.</p>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
         {% else %}
         <div class="empty-state">
             <i class="fas fa-calendar-times"></i>
@@ -155,63 +149,100 @@ Knights of Columbus - Archived Events
 </div>
 
 <style>
-/* Dashboard header with actions */
+:root {
+    --primary-bg: #0D3471;
+    --secondary-bg: #F0F1F6;
+    --accent-color: #F4B41A;
+    --heading-color: #0D3471;
+    --text-color: #000000;
+    --container-padding: 2rem;
+    --border-radius: 8px;
+    --transition-speed: 0.3s;
+    --table-shadow: 0 8px 32px rgba(13, 52, 113, 0.15);
+}
 .dashboard-header {
-    position: relative;
-    padding-bottom: 1rem;
-    margin-bottom: 2rem;
-    border-bottom: 1px solid rgba(13, 52, 113, 0.1);
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 2.5rem;
 }
-
+.dashboard-header h1 {
+    color: var(--primary-bg);
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+.back-btn {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid var(--primary-bg);
+    border-radius: var(--border-radius);
+    color: var(--secondary-bg);
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all var(--transition-speed) ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+.back-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: var(--accent-color);
+    transition: left var(--transition-speed) ease;
+    z-index: -1;
+}
+.back-btn:hover {
+    color: var(--primary-bg);
+}
+.back-btn:hover::before {
+    left: 0;
+}
 .filters-container {
     background-color: #f8f9fa;
     padding: 1.5rem;
     border-radius: var(--border-radius);
     margin-bottom: 2rem;
 }
-
 .filter-form {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
     align-items: flex-end;
 }
-
 .filter-group {
-    flex: 1;
-    min-width: 200px;
+    flex: 1 1 200px;
 }
-
 .filter-group label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: var(--heading-color);
 }
-
 .filter-select {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid rgba(13, 52, 113, 0.2);
     border-radius: var(--border-radius);
     font-size: 1rem;
-    background-color: white;
 }
-
-/* Improved search container */
+.filter-actions {
+    display: flex;
+    gap: 1rem;
+    flex-basis: auto;
+    flex-grow: 0;
+}
 .search-container {
     margin-bottom: 2rem;
 }
-
 .search-wrapper {
     position: relative;
     max-width: 600px;
     margin: 0 auto;
 }
-
 .search-icon {
     position: absolute;
     left: 1rem;
@@ -219,23 +250,13 @@ Knights of Columbus - Archived Events
     transform: translateY(-50%);
     color: #6c757d;
 }
-
 .search-input {
     width: 100%;
     padding: 0.75rem 2.5rem;
     border: 2px solid rgba(13, 52, 113, 0.2);
     border-radius: var(--border-radius);
     font-size: 1rem;
-    background-color: white;
-    transition: all 0.3s ease;
 }
-
-.search-input:focus {
-    border-color: var(--primary-bg);
-    box-shadow: 0 0 0 3px rgba(13, 52, 113, 0.1);
-    outline: none;
-}
-
 .clear-search {
     position: absolute;
     right: 1rem;
@@ -247,211 +268,138 @@ Knights of Columbus - Archived Events
     cursor: pointer;
     display: none;
 }
-
-.clear-search:hover {
-    color: var(--primary-bg);
-}
-
-.events-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.event-item {
+.event-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
     background-color: white;
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--table-shadow);
+    margin-top: 2rem;
 }
-
-.event-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+.event-table::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
 }
-
-.event-header {
+.event-table th {
+    padding: 1.5rem 1.25rem;
+    text-align: left;
+    background-color: var(--primary-bg);
+    color: white;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+}
+.event-table td {
+    padding: 1.25rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(13, 52, 113, 0.08);
+    vertical-align: middle;
+}
+.event-table tbody tr:hover {
+    background-color: rgba(13, 52, 113, 0.06);
+}
+.event-table tr:last-child td {
+    border-bottom: none;
+}
+.action-header { text-align: center !important; }
+.action-cell {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-    gap: 1rem;
+    justify-content: center;
+    gap: 0.75rem;
 }
-
-.event-header h3 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: var(--heading-color);
-}
-
-.event-details {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    margin-bottom: 1rem;
-}
-
-.detail-column {
-    flex: 1;
-    min-width: 200px;
-}
-
-.detail-column p {
-    margin: 0.5rem 0;
-}
-
-.event-description {
-    margin-bottom: 1.5rem;
-    color: #555;
-}
-
-.status-badge {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
+.action-btn {
+    padding: 0.6rem 1.2rem;
+    border: none;
+    border-radius: 6px;
     font-size: 0.85rem;
     font-weight: 600;
-}
-
-.status-pending {
-    background-color: #ffc107;
-    color: #212529;
-}
-
-.status-approved {
-    background-color: #28a745;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
     color: white;
-}
-
-.status-rejected {
-    background-color: #dc3545;
-    color: white;
-}
-
-.rejected-event {
     position: relative;
-    opacity: 0.85;
-    border-left: 4px solid #dc3545 !important;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
-
-.rejected-title {
-    text-decoration: line-through;
-    color: #6c757d;
+.action-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25); }
+.details-btn {
+    background-color: var(--accent-color);
+    color: var(--primary-bg) !important;
 }
-
-.rejection-reason {
-    margin: 0.5rem 0;
-    padding: 0.75rem;
-    background-color: rgba(220, 53, 69, 0.1);
-    border-left: 3px solid #dc3545;
-    border-radius: 0.25rem;
-    color: #6c757d;
+.status-badge {
+    display: inline-block;
+    padding: 0.7rem 1rem;
+    align-items: center;
+    border-radius: 25px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
-
-.empty-state {
+.status-pending { background-color: #ffc107; color: #212529; }
+.status-approved { background-color: #28a745; color: white; }
+.status-rejected { background-color: #dc3545; color: white; }
+.no-events-message {
     text-align: center;
-    padding: 3rem 1rem;
+    padding: 3rem 2rem;
+    background: #f8f9fa;
+    border-radius: 12px;
     color: #6c757d;
 }
-
-.empty-state i {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    color: #adb5bd;
-}
-
-/* Modal styles */
 .modal {
     display: none;
     position: fixed;
     z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    background-color: rgba(13, 52, 113, 0.8);
+    backdrop-filter: blur(5px);
 }
-
-.modal.show {
-    opacity: 1;
-}
-
+.modal.show { display: block; }
 .modal-content {
-    background-color: var(--secondary-bg);
-    margin: 10% auto;
-    border-radius: var(--border-radius);
+    background: linear-gradient(135deg, var(--secondary-bg), white);
+    margin: 5% auto;
+    padding: 2rem;
+    border-radius: 16px;
     max-width: 700px;
     position: relative;
-    max-height: 80vh;
+    max-height: 85vh;
     overflow-y: auto;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transform: translateY(-20px);
-    opacity: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease;
+    box-shadow: 0 20px 60px rgba(13, 52, 113, 0.3);
+    animation: modalSlideIn 0.4s ease-out;
 }
-
-.modal.show .modal-content {
-    transform: translateY(0);
-    opacity: 1;
-}
-
-.modal-header {
-    padding: 1.5rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.modal-header h3 {
-    margin: 0;
-    color: var(--heading-color);
-}
-
-.modal-footer {
-    padding: 1rem 1.5rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    text-align: right;
-}
-
+@keyframes modalSlideIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+.modal-header h3 { color: var(--heading-color); margin-bottom: 1.5rem; border-bottom: 2px solid var(--primary-bg); padding-bottom: 1rem; font-size: 1.8rem; }
 .close {
-    font-size: 1.5rem;
+    position: absolute;
+    top: 1.5rem; right: 2rem;
+    font-size: 2rem;
     cursor: pointer;
-    color: #212229;
-    transition: color 0.2s ease;
-}
-
-.close:hover {
-    color: var(--primary-bg);
-}
-
-.loading {
-    text-align: center;
-    padding: 2rem;
     color: var(--heading-color);
+    transition: all var(--transition-speed) ease;
 }
-
-/* Responsive adjustments */
+.close:hover { transform: rotate(90deg); }
+#eventDetailsContent { padding: 0; }
+.modal-event-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.modal-detail-item { padding: 1rem; background-color: rgba(13, 52, 113, 0.05); border-radius: var(--border-radius); }
+.modal-detail-item strong { display: block; color: var(--heading-color); margin-bottom: 0.5rem; }
+.modal-detail-item.full-width { grid-column: 1 / -1; }
+.modal-event-title { grid-column: 1 / -1; margin: 0 0 1rem 0; padding-bottom: 1rem; border-bottom: 1px solid rgba(13, 52, 113, 0.1); }
+.modal-footer { padding-top: 1.5rem; text-align: right; border-top: 1px solid rgba(13, 52, 113, 0.1); }
 @media (max-width: 768px) {
-    .filter-form {
-        flex-direction: column;
-    }
-    
-    .filter-group {
-        width: 100%;
-        margin-bottom: 1rem;
-    }
-    
-    .modal-content {
-        margin: 10% 1rem;
-        max-height: 90vh;
-    }
+    .filter-form { flex-direction: column; }
+    .filter-group { width: 100%; }
+    .filter-actions { width: 100%; flex-direction: row; }
+    .event-table { display: block; overflow-x: auto; }
 }
 </style>
 
@@ -508,41 +456,34 @@ document.addEventListener('DOMContentLoaded', function() {
             .then(data => {
                 let statusClass = data.status === 'rejected' ? 'rejected-title' : '';
                 let detailsHTML = `
-                    <div class="event-details">
-                        <h4 ${data.status === 'rejected' ? 'class="rejected-title"' : ''}>${data.name}</h4>
-                        <p class="event-category">${data.category}</p>
-                        
-                        <div class="detail-group">
+                    <h4 class="modal-event-title ${data.status === 'rejected' ? 'rejected-title' : ''}">${data.name}</h4>
+                    <div class="modal-event-details-grid">
+                        <div class="modal-detail-item">
                             <strong>Date:</strong> 
                             <span>${data.date_from}${data.date_until ? ' - ' + data.date_until : ''}</span>
                         </div>
-                        
-                        <div class="detail-group">
+                        <div class="modal-detail-item">
                             <strong>Location:</strong>
                             <address>
                                 ${data.street}, ${data.barangay}<br>
                                 ${data.city}, ${data.province}
                             </address>
                         </div>
-                        
-                        <div class="detail-group">
-                            <strong>Description:</strong>
-                            <p>${data.description}</p>
-                        </div>
-                        
-                        <div class="detail-group">
+                        <div class="modal-detail-item">
                             <strong>Council:</strong>
                             <p>${data.council_name}</p>
                         </div>
-                        
-                        <div class="detail-group">
+                        <div class="modal-detail-item">
                             <strong>Status:</strong>
                             <span class="status-badge status-${data.status}">${data.status_display}</span>
                         </div>
-                        
-                        <div class="detail-group">
+                        <div class="modal-detail-item">
                             <strong>Created by:</strong>
                             <p>${data.creator_name}</p>
+                        </div>
+                        <div class="modal-detail-item full-width">
+                            <strong>Description:</strong>
+                            <p>${data.description}</p>
                         </div>
                 `;
                 

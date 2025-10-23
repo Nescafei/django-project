@@ -7,267 +7,267 @@ Knights of Columbus - Sign Up
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/signup-style.css' %}?v={% now 'U' %}">
+
 <div class="container">
-    <section class="sign-up-form">
-        <h2>Create an Account</h2>
-        <form method="post" id="signupForm" enctype="multipart/form-data" onsubmit="return validateForm()">
-            {% csrf_token %}
-            <div class="form-group-row">
-                <div class="form-group">
-                    <label for="first_name">First Name:</label>
-                    <input type="text" id="first_name" name="first_name" placeholder="Enter your first name" required
-                        pattern="[A-Z][a-zA-Z]*" oninput="validateName(this)">
-                    <span class="warning" id="first_name_warning"></span>
-                </div>
-                <div class="form-group">
-                    <label for="second_name">Second Name:</label>
-                    <input type="text" id="second_name" name="second_name" placeholder="Optional second name"
-                        pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validateName(this)">
-                    <span class="warning" id="second_name_warning"></span>
-                </div>
+    <div class="signup-header">
+        <h1>Create an Account</h1>
+        <a href="{% url 'dashboard' %}" class="sign-up-btn">
+            <i class="fas fa-arrow-left"></i> Have an Account? Back to Sign in
+        </a>
+    </div>
+
+    <form method="post" id="signupForm" enctype="multipart/form-data" onsubmit="return validateForm()">
+        {% csrf_token %}
+
+        <h2 class="form-section-heading">Personal Information</h2>
+
+        <div class="form-group">
+            <label for="first_name">First Name</label>
+            <input type="text" id="first_name" name="first_name" placeholder="Enter your first name" required pattern="[A-Z][a-zA-Z]*" oninput="validateName(this)">
+            <span class="warning" id="first_name_warning"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="second_name">Second Name</label>
+            <input type="text" id="second_name" name="second_name" placeholder="Optional second name" pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validateName(this)">
+            <span class="warning" id="second_name_warning"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="middle_name">Middle Name</label>
+            <input type="text" id="middle_name" name="middle_name" placeholder="Enter your middle name" required pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validateName(this)">
+            <span class="warning" id="middle_name_warning"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="last_name">Last Name</label>
+            <input type="text" id="last_name" name="last_name" placeholder="Enter your last name" required pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validateName(this)">
+            <span class="warning" id="last_name_warning"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="suffix">Suffix</label>
+            <select id="suffix" name="suffix">
+                <option value="" selected>None</option>
+                <option value="Jr.">Jr.</option>
+                <option value="Sr.">Sr.</option>
+                <option value="II">II</option>
+                <option value="III">III</option>
+                <option value="IV">IV</option>
+            </select>
+            <span class="warning" id="suffix_warning"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="birthday">Birthday</label>
+            <input type="date" id="birthday" name="birthday" required>
+            <span class="warning" id="birthday_warning"></span>
+        </div>
+
+        <div class="form-group">
+            <label>Marital Status</label>
+            <div class="radio-group">
+                <label><input type="radio" name="marital_status" value="Single" required> Single</label>
+                <label><input type="radio" name="marital_status" value="Married"> Married</label>
+                <label><input type="radio" name="marital_status" value="Widowed"> Widowed</label>
+                <label><input type="radio" name="marital_status" value="Divorced"> Divorced</label>
+                <label><input type="radio" name="marital_status" value="Separated"> Separated</label>
             </div>
-            <div class="form-group-row">
-                <div class="form-group">
-                    <label for="middle_name">Middle Name:</label>
-                    <input type="text" id="middle_name" name="middle_name" placeholder="Enter your middle name" required
-                        pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validateName(this)">
-                    <span class="warning" id="middle_name_warning"></span>
-                </div>
-                <div class="form-group">
-                    <label for="last_name">Last Name:</label>
-                    <input type="text" id="last_name" name="last_name" placeholder="Enter your last name" required
-                        pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validateName(this)">
-                    <span class="warning" id="last_name_warning"></span>
-                </div>
+            <span class="warning" id="marital_status_warning"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="occupation">Occupation</label>
+            <select id="occupation" name="occupation" required>
+                <option value="" disabled selected>Select your occupation</option>
+                <option value="Accountant">Accountant</option>
+                <option value="Architect">Architect</option>
+                <option value="Business Owner">Business Owner</option>
+                <option value="Chef/Cook">Chef/Cook</option>
+                <option value="Civil Engineer">Civil Engineer</option>
+                <option value="Computer Programmer">Computer Programmer</option>
+                <option value="Construction Worker">Construction Worker</option>
+                <option value="Doctor">Doctor</option>
+                <option value="Electrician">Electrician</option>
+                <option value="Engineer">Engineer</option>
+                <option value="Farmer">Farmer</option>
+                <option value="Government Employee">Government Employee</option>
+                <option value="Healthcare Worker">Healthcare Worker</option>
+                <option value="IT Professional">IT Professional</option>
+                <option value="Lawyer">Lawyer</option>
+                <option value="Manager">Manager</option>
+                <option value="Mechanic">Mechanic</option>
+                <option value="Nurse">Nurse</option>
+                <option value="Police Officer">Police Officer</option>
+                <option value="Retired">Retired</option>
+                <option value="Sales Representative">Sales Representative</option>
+                <option value="Security Guard">Security Guard</option>
+                <option value="Student">Student</option>
+                <option value="Teacher">Teacher</option>
+                <option value="Technician">Technician</option>
+                <option value="Unemployed">Unemployed</option>
+                <option value="Other">Other</option>
+            </select>
+            <span class="warning" id="occupation_warning"></span>
+        </div>
+
+        <h2 class="form-section-heading">Account Credentials</h2>
+
+        <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" placeholder="Choose a unique username" required oninput="validateUsername(this)">
+            <span class="warning" id="username_warning"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email Address</label>
+            <input type="email" id="email" name="email" placeholder="Enter your email address" required oninput="validateEmail(this)">
+            <span class="warning" id="email_warning"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" placeholder="Enter a strong password" required oninput="validatePassword(this)">
+            <span class="warning" id="password_warning"></span>
+            <div class="strength-indicator" id="password_strength">
+                <div class="strength-bar"><div class="strength-bar-fill"></div></div>
+                <span class="strength-text"></span>
             </div>
-            <div class="form-group">
-                <label for="suffix">Suffix:</label>
-                <select id="suffix" name="suffix">
-                    <option value="" selected>None</option>
-                    <option value="Jr.">Jr.</option>
-                    <option value="Sr.">Sr.</option>
-                    <option value="II">II</option>
-                    <option value="III">III</option>
-                    <option value="IV">IV</option>
-                </select>
-                <span class="warning" id="suffix_warning"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="re_password">Re-enter Password</label>
+            <input type="password" id="re_password" name="re_password" placeholder="Confirm your password" required>
+            <span class="warning" id="re_password_warning"></span>
+        </div>
+
+        <h2 class="form-section-heading">Contact Information</h2>
+
+        <div class="form-group full-width">
+            <label for="street">Street</label>
+            <input type="text" id="street" name="street" placeholder="Enter your street" required pattern="[A-Z][a-z]*( [A-Z][a-z]*)*" oninput="validatePlace(this)">
+            <span class="warning" id="street_warning"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="province">Province</label>
+            <select id="province" name="province" required onchange="loadCities()">
+                <option value="" disabled selected>Select a province</option>
+                <option value="Batangas">Batangas</option>
+                <option value="Cavite">Cavite</option>
+                <option value="Laguna">Laguna</option>
+                <option value="Quezon">Quezon</option>
+                <option value="Rizal">Rizal</option>
+            </select>
+            <span class="warning" id="province_warning"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="city">City/Municipality</label>
+            <select id="city" name="city" required onchange="loadBarangays(); updateZipCode();" disabled>
+                <option value="" disabled selected>Select a city/municipality</option>
+            </select>
+            <span class="warning" id="city_warning"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="barangay">Barangay</label>
+            <select id="barangay" name="barangay" required disabled>
+                <option value="" disabled selected>Select a barangay</option>
+            </select>
+            <span class="warning" id="barangay_warning"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="zip_code">ZIP Code</label>
+            <input type="text" id="zip_code" name="zip_code" readonly>
+            <span class="warning" id="zip_code_warning"></span>
+        </div>
+
+        <div class="form-group full-width">
+            <label for="contact_number">Contact Number</label>
+            <input type="tel" id="contact_number" name="contact_number" placeholder="Enter your contact number" maxlength="15" pattern="[0-9]+" oninput="validateContactNumber(this)">
+            <span class="warning" id="contact_number_warning"></span>
+        </div>
+
+        <h2 class="form-section-heading">Membership Details</h2>
+
+        <div class="form-group">
+            <label for="recruiter_name">Recruiter's Name</label>
+            <div class="recruiter-container">
+                <input type="text" id="recruiter_name" name="recruiter_name" placeholder="Enter the name of who recruited you" autocomplete="off" oninput="searchMembers(this.value)">
+                <div id="recruiter_suggestions" class="suggestions-dropdown"></div>
             </div>
-            <div class="form-group">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" placeholder="Choose your username" required
-                       oninput="validateUsername(this)">
-                <span class="warning" id="username_warning"></span>
+            <div class="checkbox-option">
+                <label><input type="checkbox" id="voluntary_join" name="voluntary_join" onchange="handleVoluntaryJoin()"> I am joining voluntarily (no recruiter)</label>
             </div>
-            <div class="form-group">
-                <label for="email">Email Address:</label>
-                <input type="email" id="email" name="email" placeholder="Enter your email address" required
-                       oninput="validateEmail(this)">
-                <span class="warning" id="email_warning"></span>
-            </div>
-            <div class="form-group">
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" placeholder="Enter your password" required
-                       oninput="validatePassword(this)">
-                <span class="warning" id="password_warning"></span>
-                <div class="strength-indicator" id="password_strength">
-                    <span class="strength-text"></span>
-                    <div class="strength-bar"></div>
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="re_password">Re-enter Password:</label>
-                <input type="password" id="re_password" name="re_password" placeholder="Re-enter your password" required>
-                <span class="warning" id="re_password_warning"></span>
-            </div>
-            <div class="form-group">
-                <label for="birthday">Birthday:</label>
-                <input type="date" id="birthday" name="birthday" required class="styled-input">
-                <span class="warning" id="birthday_warning"></span>
-            </div>
-            <div class="form-group">
-                <label>Are you a practical Catholic?</label>
-                <div class="radio-group">
-                    <label>
-                        <input type="radio" name="practical_catholic" value="Yes" required>
-                        Yes
-                    </label>
-                    <label>
-                        <input type="radio" name="practical_catholic" value="No">
-                        No
-                    </label>
-                </div>
-                <span class="warning" id="practical_catholic_warning"></span>
-            </div>
-            <div class="form-group">
-                <label>Marital Status:</label>
-                <div class="radio-group">
-                    <label>
-                        <input type="radio" name="marital_status" value="Single" required>
-                        Single
-                    </label>
-                    <label>
-                        <input type="radio" name="marital_status" value="Married">
-                        Married
-                    </label>
-                    <label>
-                        <input type="radio" name="marital_status" value="Widowed">
-                        Widowed
-                    </label>
-                    <label>
-                        <input type="radio" name="marital_status" value="Divorced">
-                        Divorced
-                    </label>
-                    <label>
-                        <input type="radio" name="marital_status" value="Separated">
-                        Separated
-                    </label>
-                </div>
-                <span class="warning" id="marital_status_warning"></span>
-            </div>
-            <div class="form-group">
-                <label for="occupation">Occupation:</label>
-                <select id="occupation" name="occupation" required class="styled-select">
-                    <option value="" disabled selected>Select your occupation</option>
-                    <option value="Accountant">Accountant</option>
-                    <option value="Architect">Architect</option>
-                    <option value="Business Owner">Business Owner</option>
-                    <option value="Chef/Cook">Chef/Cook</option>
-                    <option value="Civil Engineer">Civil Engineer</option>
-                    <option value="Computer Programmer">Computer Programmer</option>
-                    <option value="Construction Worker">Construction Worker</option>
-                    <option value="Doctor">Doctor</option>
-                    <option value="Electrician">Electrician</option>
-                    <option value="Engineer">Engineer</option>
-                    <option value="Farmer">Farmer</option>
-                    <option value="Government Employee">Government Employee</option>
-                    <option value="Healthcare Worker">Healthcare Worker</option>
-                    <option value="IT Professional">IT Professional</option>
-                    <option value="Lawyer">Lawyer</option>
-                    <option value="Manager">Manager</option>
-                    <option value="Mechanic">Mechanic</option>
-                    <option value="Nurse">Nurse</option>
-                    <option value="Police Officer">Police Officer</option>
-                    <option value="Retired">Retired</option>
-                    <option value="Sales Representative">Sales Representative</option>
-                    <option value="Security Guard">Security Guard</option>
-                    <option value="Student">Student</option>
-                    <option value="Teacher">Teacher</option>
-                    <option value="Technician">Technician</option>
-                    <option value="Unemployed">Unemployed</option>
-                    <option value="Other">Other</option>
-                </select>
-                <span class="warning" id="occupation_warning"></span>
-            </div>
-            <div class="form-group">
-                <label for="street">Street:</label>
-                <input type="text" id="street" name="street" placeholder="Enter your street" required
-                       pattern="[A-Z][a-z]*( [A-Z][a-z]*)*" oninput="validatePlace(this)">
-                <span class="warning" id="street_warning"></span>
-            </div>
-            <div class="form-group">
-                <label for="province">Province:</label>
-                <select id="province" name="province" required class="styled-select" onchange="loadCities()">
-                    <option value="" disabled selected>Select a province</option>
-                    <option value="Batangas">Batangas</option>
-                    <option value="Cavite">Cavite</option>
-                    <option value="Laguna">Laguna</option>
-                    <option value="Quezon">Quezon</option>
-                    <option value="Rizal">Rizal</option>
-                </select>
-                <span class="warning" id="province_warning"></span>
-            </div>
-            <div class="form-group">
-                <label for="city">City/Municipality:</label>
-                <select id="city" name="city" required class="styled-select" onchange="loadBarangays(); updateZipCode();" disabled>
-                    <option value="" disabled selected>Select a city/municipality</option>
-                </select>
-                <span class="warning" id="city_warning"></span>
-            </div>
-            <div class="form-group">
-                <label for="barangay">Barangay:</label>
-                <select id="barangay" name="barangay" required class="styled-select" disabled>
-                    <option value="" disabled selected>Select a barangay</option>
-                </select>
-                <span class="warning" id="barangay_warning"></span>
-            </div>
-            <div class="form-group">
-                <label for="zip_code">ZIP Code:</label>
-                <input type="text" id="zip_code" name="zip_code" readonly>
-                <span class="warning" id="zip_code_warning"></span>
-            </div>
-            <div class="form-group">
-                <label for="contact_number">Contact Number:</label>
-                <input type="tel" id="contact_number" name="contact_number" placeholder="Enter your contact number"
-                       maxlength="15" pattern="[0-9]+" oninput="validateContactNumber(this)">
-                <span class="warning" id="contact_number_warning"></span>
-            </div>
-            <div class="form-group">
-                <label for="recruiter_name">Recruiter's Name:</label>
-                <div class="recruiter-container">
-                    <input type="text" id="recruiter_name" name="recruiter_name" placeholder="Enter the name of who recruited you" 
-                           autocomplete="off" oninput="searchMembers(this.value)">
-                    <div id="recruiter_suggestions" class="suggestions-dropdown"></div>
-                </div>
-                <div class="checkbox-option">
-                    <label>
-                        <input type="checkbox" id="voluntary_join" name="voluntary_join" onchange="handleVoluntaryJoin()">
-                        I am joining voluntarily (no recruiter)
-                    </label>
-                </div>
-                <span class="warning" id="recruiter_warning"></span>
-            </div>
-            <div class="form-group">
-                <label for="e_signature">E-Signature Upload:</label>
-                <div class="file-upload-wrapper">
-                    <input type="file" id="e_signature" name="e_signature" accept="image/*" 
-                           onchange="displayFileName(this)" required>
-                    <label for="e_signature" class="file-upload-label">
-                        <span id="file-name">Choose a file</span>
-                        <span class="browse-btn">Browse</span>
-                    </label>
-                </div>
-                <small class="file-info">Maximum file size: 10MB. Accepted formats: JPG, PNG, GIF.</small>
-                <span class="warning" id="e_signature_warning"></span>
-                <div id="preview-container" class="preview-container" style="display: none;">
-                    <img id="signature-preview" src="" alt="Signature Preview">
-                </div>
-            </div>
-            <div class="form-group">
-                <label for="council">Select Your Council:</label>
-                <select id="council" name="council" required class="styled-select">
-                    <option value="" disabled selected>Select a council</option>
-                    {% for council in councils %}
-                        <option value="{{ council.id }}">{{ council.name }}</option>
-                    {% endfor %}
-                </select>
-                <span class="warning" id="council_warning"></span>
-            </div>
-            <div class="form-group">
-                <label for="join_reason">Why do you want to join Knights of Columbus?</label>
-                <textarea id="join_reason" name="join_reason" rows="4" placeholder="Please share your reasons for joining..." required></textarea>
-                <span class="warning" id="join_reason_warning"></span>
-            </div>
-            <div class="form-group">
-                <label>Data Privacy Agreement:</label>
-                <p class="privacy-text">
-                    Through this form, your data will be collected. This information will be used solely to enable the Knights of Columbus to gather statistics on Membership Record. It will be utilized within our Organization and will not be shared with any outside parties. We value your rights as data subjects under the Data Privacy Act.
-                </p>
-                <div class="radio-group">
-                    <label>
-                        <input type="radio" name="privacy_agreement" value="agree" required>
-                        I agree
-                    </label>
-                <label>
-                        <input type="radio" name="privacy_agreement" value="disagree">
-                        I disagree
+            <span class="warning" id="recruiter_warning"></span>
+        </div>
+
+        <div class="form-group">
+            <label for="council">Select Your Council</label>
+            <select id="council" name="council" required>
+                <option value="" disabled selected>Select a council</option>
+                {% for council in councils %}
+                    <option value="{{ council.id }}">{{ council.name }}</option>
+                {% endfor %}
+            </select>
+            <span class="warning" id="council_warning"></span>
+        </div>
+
+        <div class="form-group full-width">
+            <label for="join_reason">Why do you want to join Knights of Columbus?</label>
+            <textarea id="join_reason" name="join_reason" rows="4" placeholder="Please share your reasons for joining..." required></textarea>
+            <span class="warning" id="join_reason_warning"></span>
+        </div>
+        
+        <div class="form-group full-width">
+            <label for="e_signature">E-Signature Upload</label>
+            <div class="file-upload-wrapper">
+                <input type="file" id="e_signature" name="e_signature" accept="image/*" onchange="displayFileName(this)" required>
+                <label for="e_signature" class="file-upload-label">
+                    <span id="file-name">Choose a file</span>
+                    <span class="browse-btn">Browse</span>
                 </label>
-                </div>
-                <span class="warning" id="privacy_agreement_warning"></span>
             </div>
-            <button type="submit" class="styled-button">Create Account</button>
-        </form>
-        <p>Already have an account? <a href="{% url 'sign-in' %}">Sign in</a>.</p>
-    </section>
+            <small class="file-info">Maximum file size: 5MB. Accepted formats: JPG, PNG, GIF.</small>
+            <span class="warning" id="e_signature_warning"></span>
+            <div id="preview-container" class="preview-container" style="display: none;">
+                <img id="signature-preview" src="" alt="Signature Preview">
+            </div>
+        </div>
+
+        <h2 class="form-section-heading">Final Steps</h2>
+
+        <div class="form-group full-width">
+            <label>Are you a practical Catholic?</label>
+            <div class="radio-group">
+                <label><input type="radio" name="practical_catholic" value="Yes" required> Yes</label>
+                <label><input type="radio" name="practical_catholic" value="No"> No</label>
+            </div>
+            <span class="warning" id="practical_catholic_warning"></span>
+        </div>
+
+        <div class="form-group full-width">
+            <label>Data Privacy Agreement</label>
+            <p class="privacy-text">
+                Through this form, your data will be collected. This information will be used solely to enable the Knights of Columbus to gather statistics on Membership Record. It will be utilized within our Organization and will not be shared with any outside parties. We value your rights as data subjects under the Data Privacy Act.
+            </p>
+            <div class="radio-group">
+                <label><input type="radio" name="privacy_agreement" value="agree" required> I agree</label>
+                <label><input type="radio" name="privacy_agreement" value="disagree"> I disagree</label>
+            </div>
+            <span class="warning" id="privacy_agreement_warning"></span>
+        </div>
+
+        <div class="form-actions">
+            <button type="submit" class="sign-up-btn">Create Account</button>
+        </div>
+
+        <div class="login-link">
+            <p>Already have an account? <a href="{% url 'sign-in' %}">Sign in</a>.</p>
+        </div>
+    </form>
 </div>
 
 <script>
@@ -620,7 +620,7 @@ Knights of Columbus - Sign Up
     // Add file size validation function
     function validateFileSize(input) {
         const warning = document.getElementById('e_signature_warning');
-        const maxSize = 10 * 1024 * 1024; // 10MB in bytes
+        const maxSize = 5 * 1024 * 1024; // 5MB in bytes
         
         // Clear previous warnings
         warning.textContent = '';
@@ -628,7 +628,7 @@ Knights of Columbus - Sign Up
         if (input.files && input.files[0]) {
             const fileSize = input.files[0].size;
             if (fileSize > maxSize) {
-                warning.textContent = 'File size exceeds 10MB limit. Please select a smaller file.';
+                warning.textContent = 'File size exceeds 5MB limit. Please select a smaller file.';
                 input.value = ''; // Clear the input
                 
                 // Reset the display

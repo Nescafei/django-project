@@ -7,11 +7,13 @@ Knights of Columbus - Add Recruitment Record
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/event_management.css' %}?v={% now 'U' %}">
+
 
 <div class="dashboard-container">
     <div class="content-card">
         <div class="dashboard-header">
-            <h1>Add Recruitment Record</h1>
+            <h1 style="color: #0D3471">Add Recruitment Record</h1>
             <div>
                 <a href="{% url 'dashboard' %}" class="dashboard-btn secondary back-btn">
                     <i class="fas fa-arrow-left"></i> Back to Dashboard
@@ -72,7 +74,7 @@ Knights of Columbus - Add Recruitment Record
                             {% if record.recruiter.profile_picture %}
                             <img src="{{ record.recruiter.profile_picture.url }}" alt="{{ record.recruiter.first_name }}" class="profile-pic-small">
                             {% else %}
-                            <img src="{% static 'images/default-profile.png' %}" alt="{{ record.recruiter.first_name }}" class="profile-pic-small">
+                            <i class="fas fa-user-circle profile-pic-small person-icon" style="font-size: 2.5rem; color: #6c757d;"></i>
                             {% endif %}
                             {{ record.recruiter.first_name }} {{ record.recruiter.last_name }}
                         </td>
@@ -80,7 +82,7 @@ Knights of Columbus - Add Recruitment Record
                             {% if record.recruited.profile_picture %}
                             <img src="{{ record.recruited.profile_picture.url }}" alt="{{ record.recruited.first_name }}" class="profile-pic-small">
                             {% else %}
-                            <img src="{% static 'images/default-profile.png' %}" alt="{{ record.recruited.first_name }}" class="profile-pic-small">
+                            <i class="fas fa-user-circle profile-pic-small person-icon" style="font-size: 2.5rem; color: #6c757d;"></i>
                             {% endif %}
                             {{ record.recruited.first_name }} {{ record.recruited.last_name }}
                         </td>
@@ -129,8 +131,11 @@ Knights of Columbus - Add Recruitment Record
 
 <style>
     .form-container {
-        max-width: 600px;
+        max-width: 1200px;
         margin: 0 auto;
+        text-align: center;
+        font-size: 1.2rem;
+        padding: 0 1rem;
     }
     
     .dashboard-header {
@@ -142,6 +147,9 @@ Knights of Columbus - Add Recruitment Record
     
     .form-group {
         margin-bottom: 1.5rem;
+        text-align: center;
+        justify-content: center;
+        max-width: 1200px; /* Limit maximum width for better readability */
     }
     
     .form-group label {
@@ -149,14 +157,146 @@ Knights of Columbus - Add Recruitment Record
         margin-bottom: 0.5rem;
         font-weight: 500;
         color: var(--heading-color);
+        font-size: 1.5rem;
     }
     
     .form-control {
         width: 100%;
+        min-width: 60vw;
+        max-width: 80vw;
         padding: 0.75rem;
         border: 1px solid rgba(13, 52, 113, 0.2);
         border-radius: var(--border-radius);
         font-size: 1rem;
+        box-sizing: border-box;
+    }
+    
+    .custom-select-wrapper {
+        width: 100%;
+        min-width: 60vw;
+        max-width: 80vw;
+        position: relative;
+        margin: 0 auto;
+    }
+    
+    .custom-select {
+        width: 100%;
+        min-width: 60vw;
+        max-width: 80vw;
+    }
+    
+    /* Large screens - wider dropdowns */
+    @media (min-width: 1200px) {
+        .form-control {
+            min-width: 50rem;
+            max-width: 60rem;
+        }
+        
+        .custom-select-wrapper {
+            min-width: 50rem;
+            max-width: 60rem;
+        }
+        
+        .custom-select {
+            min-width: 50rem;
+            max-width: 60rem;
+        }
+    }
+    
+    /* Medium-large screens */
+    @media (max-width: 1199px) and (min-width: 992px) {
+        .form-control {
+            min-width: 70vw;
+            max-width: 85vw;
+        }
+        
+        .custom-select-wrapper {
+            min-width: 70vw;
+            max-width: 85vw;
+        }
+        
+        .custom-select {
+            min-width: 70vw;
+            max-width: 85vw;
+        }
+    }
+    
+    /* Tablet screens */
+    @media (max-width: 991px) and (min-width: 769px) {
+        .form-control {
+            min-width: 65vw;
+            max-width: 80vw;
+        }
+        
+        .custom-select-wrapper {
+            min-width: 65vw;
+            max-width: 80vw;
+        }
+        
+        .custom-select {
+            min-width: 65vw;
+            max-width: 80vw;
+        }
+    }
+    
+    /* Mobile screens */
+    @media (max-width: 768px) {
+        .form-group {
+            max-width: 100%;
+            padding: 0 0.5rem;
+        }
+        
+        .form-control {
+            min-width: 65vw;
+            max-width: 80vw;
+            font-size: 0.9rem;
+        }
+        
+        .custom-select-wrapper {
+            min-width: 65vw;
+            max-width: 80vw;
+        }
+        
+        .custom-select {
+            min-width: 65vw;
+            max-width: 80vw;
+        }
+        
+        .form-container {
+            padding: 0 0.25rem;
+        }
+    }
+    
+    /* Small mobile screens */
+    @media (max-width: 480px) {
+        .form-group {
+            padding: 0 0.25rem;
+        }
+        
+        .form-control {
+            min-width: 90vw;
+            max-width: 98vw;
+            font-size: 0.85rem;
+            padding: 0.6rem;
+        }
+        
+        .custom-select-wrapper {
+            min-width: 90vw;
+            max-width: 98vw;
+        }
+        
+        .custom-select {
+            min-width: 90vw;
+            max-width: 98vw;
+        }
+        
+        .form-container {
+            padding: 0 0.1rem;
+        }
+        
+        .form-group label {
+            font-size: 1.2rem;
+        }
     }
     
     .form-actions {
@@ -200,12 +340,29 @@ Knights of Columbus - Add Recruitment Record
     
     /* Profile picture in select options */
     .profile-pic-small {
-        width: 24px;
-        height: 24px;
+        width: 2.5rem;
+        height: 2.5rem;
         border-radius: 50%;
         object-fit: cover;
         margin-right: 8px;
         vertical-align: middle;
+    }
+    
+    /* Person icon styling */
+    .person-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        margin-right: 8px;
+        vertical-align: middle;
+        border-radius: 50%;
+        background-color: #f8f9fa;
+        padding: 2px;
+        border: 2px solid #dee2e6;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.5rem;
+        color: #6c757d;
     }
     
     /* Custom select styling */
@@ -241,6 +398,18 @@ Knights of Columbus - Add Recruitment Record
         position: relative;
     }
     
+    /* Person icon in selected option styling */
+    .selected-option .person-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.5rem;
+        background-color: #f8f9fa;
+        border: 2px solid #dee2e6;
+        color: #6c757d;
+        margin-right: 8px;
+        vertical-align: middle;
+    }
+    
     .selected-option::after {
         content: '';
         position: absolute;
@@ -263,11 +432,26 @@ Knights of Columbus - Add Recruitment Record
         border: 1px solid rgba(13, 52, 113, 0.2);
         border-top: none;
         border-radius: 0 0 var(--border-radius) var(--border-radius);
-        max-height: 300px;
+        max-height: 200px;
         overflow-y: auto;
-        z-index: 100;
+        z-index: 1000;
         display: none;
         box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    /* Ensure dropdown doesn't overflow viewport */
+    @media (max-height: 600px) {
+        .select-dropdown {
+            max-height: 150px;
+        }
+    }
+    
+    @media (max-height: 400px) {
+        .select-dropdown {
+            max-height: 100px;
+        }
     }
     
     .custom-select.open .select-dropdown {
@@ -295,6 +479,18 @@ Knights of Columbus - Add Recruitment Record
     .option-text {
         margin-left: 0.5rem;
         margin-right: 0.5rem;
+    }
+    
+    /* Person icon in dropdown styling */
+    .select-option .person-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.5rem;
+        background-color: #f8f9fa;
+        border: 2px solid #dee2e6;
+        color: #6c757d;
+        margin-right: 8px;
+        vertical-align: middle;
     }
     
     /* Enhanced select option styling */
@@ -340,9 +536,20 @@ Knights of Columbus - Add Recruitment Record
     
     /* History section styles */
     .history-section {
-        margin-top: 3rem;
+        margin-top: 4rem;
         padding-top: 2rem;
         border-top: 1px solid rgba(13, 52, 113, 0.2);
+        clear: both;
+    }
+    
+    /* Add spacing after form to prevent overlap */
+    .form-container {
+        margin-bottom: 3rem;
+    }
+    
+    /* Ensure proper spacing between form groups */
+    .form-group:last-of-type {
+        margin-bottom: 2rem;
     }
     
     .history-section h2 {
@@ -354,56 +561,172 @@ Knights of Columbus - Add Recruitment Record
     
     .history-table {
         width: 100%;
-        border-collapse: collapse;
+        border-collapse: separate;
+        border-spacing: 0;
+        background-color: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 12px rgba(13, 52, 113, 0.1);
         margin-top: 1rem;
+        position: relative;
+    }
+    
+    .history-table::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
     }
     
     .history-table th,
     .history-table td {
-        padding: 0.75rem;
+        padding: 1rem 0.75rem;
         text-align: left;
-        border-bottom: 1px solid rgba(13, 52, 113, 0.1);
+        border-bottom: 1px solid rgba(13, 52, 113, 0.08);
+        vertical-align: middle;
     }
     
     .history-table th {
-        background-color: rgba(13, 52, 113, 0.05);
-        font-weight: 600;
-        color: var(--heading-color);
+        padding: 1.5rem 1rem;
+        background-color: var(--primary-bg);
+        color: white;
+        font-weight: 700;
+        font-size: 0.9rem;
+        text-transform: uppercase;
+    }
+    
+    .history-table tbody tr:hover {
+        background-color: rgba(13, 52, 113, 0.06);
+    }
+    
+    .history-table tr:last-child td {
+        border-bottom: none;
     }
     
     .badge {
         display: inline-block;
-        padding: 0.25rem 0.5rem;
-        border-radius: 0.25rem;
-        font-size: 0.75rem;
-        font-weight: 600;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-size: 0.8rem;
+        font-weight: 700;
         text-transform: uppercase;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
     
     .badge.system {
-        background-color: #e9ecef;
-        color: #495057;
+        background-color: var(--accent-color);
+        color: var(--primary-bg);
     }
     
     .badge.manual {
-        background-color: #cce5ff;
-        color: #004085;
+        background-color: var(--primary-bg);
+        color: white;
     }
     
     .undo-btn {
-        background-color: #f8d7da;
-        color: #721c24;
+        background: linear-gradient(135deg, #dc3545, #e74c3c);
+        color: white;
         border: none;
-        padding: 0.5rem 0.75rem;
-        border-radius: var(--border-radius);
+        padding: 0.6rem 1.2rem;
+        border-radius: 6px;
         cursor: pointer;
-        font-size: 0.875rem;
-        transition: all 0.2s;
+        font-size: 0.85rem;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     }
     
     .undo-btn:hover {
-        background-color: #dc3545;
-        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    }
+    
+    /* Mobile responsive table */
+    @media (max-width: 768px) {
+        .history-table { 
+            display: block; 
+            overflow-x: auto; 
+            white-space: nowrap;
+        }
+        
+        .history-table th,
+        .history-table td {
+            padding: 0.75rem 0.5rem;
+            font-size: 0.85rem;
+        }
+        
+        .profile-pic-small {
+            width: 40px;
+            height: 40px;
+        }
+        
+        .person-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 18px !important;
+        }
+        
+        .badge {
+            font-size: 0.7rem;
+            padding: 0.4rem 0.8rem;
+        }
+        
+        .undo-btn {
+            font-size: 0.75rem;
+            padding: 0.5rem 1rem;
+        }
+    }
+    
+    @media (max-width: 480px) {
+        .form-group {
+            max-width: 100%;
+            padding: 0 0.5rem;
+        }
+        .form-control {
+            min-width: 70vw;
+            max-width: 85vw;
+            font-size: 0.9rem;
+        }
+        .custom-select-wrapper {
+            min-width: 70vw;
+            max-width: 85vw;
+        }
+        .custom-select {
+            min-width: 70vw;
+            max-width: 85vw;
+        }
+        .history-table th,
+        .history-table td {
+            padding: 0.5rem 0.25rem;
+            font-size: 0.8rem;
+        }
+        
+        .profile-pic-small {
+            width: 30px;
+            height: 30px;
+        }
+        
+        .person-icon {
+            width: 30px;
+            height: 30px;
+            font-size: 16px !important;
+        }
+        
+        .badge {
+            font-size: 0.65rem;
+            padding: 0.3rem 0.6rem;
+        }
+        
+        .undo-btn {
+            font-size: 0.7rem;
+            padding: 0.4rem 0.8rem;
+        }
     }
     
     /* Modal styles */
@@ -513,11 +836,22 @@ Knights of Columbus - Add Recruitment Record
                             `${firstName} ${secondName} ${lastName}` : 
                             `${firstName} ${lastName}`;
                         
-                        customOption.innerHTML = `
-                            <img src="${imgUrl}" class="profile-pic-small" alt="${fullName}">
-                            <span class="option-text">${fullName}</span>
-                            <span class="council-badge">${council}</span>
-                        `;
+                        // Check if the image is a default profile image
+                        const isDefaultProfile = imgUrl && imgUrl.includes('default-profile.png');
+                        
+                        if (isDefaultProfile) {
+                            customOption.innerHTML = `
+                                <i class="fas fa-user-circle profile-pic-small person-icon" style="width: 2.5rem; height: 2.5rem; font-size: 1.5rem; color: #6c757d;"></i>
+                                <span class="option-text">${fullName}</span>
+                                <span class="council-badge">${council}</span>
+                            `;
+                        } else {
+                            customOption.innerHTML = `
+                                <img src="${imgUrl}" class="profile-pic-small" alt="${fullName}">
+                                <span class="option-text">${fullName}</span>
+                                <span class="council-badge">${council}</span>
+                            `;
+                        }
                         customOption.dataset.value = option.value;
                     } else {
                         customOption.textContent = option.textContent;
@@ -594,11 +928,22 @@ Knights of Columbus - Add Recruitment Record
                     `${firstName} ${secondName} ${lastName}` : 
                     `${firstName} ${lastName}`;
                 
-                display.innerHTML = `
-                    <img src="${imgUrl}" class="profile-pic-small" alt="${fullName}">
-                    <span class="option-text">${fullName}</span>
-                    <span class="council-badge">${council}</span>
-                `;
+                // Check if the image is a default profile image
+                const isDefaultProfile = imgUrl && imgUrl.includes('default-profile.png');
+                
+                if (isDefaultProfile) {
+                    display.innerHTML = `
+                        <i class="fas fa-user-circle profile-pic-small person-icon" style="width: 2.5rem; height: 2.5rem; font-size: 1.5rem; color: #6c757d;"></i>
+                        <span class="option-text">${fullName}</span>
+                        <span class="council-badge">${council}</span>
+                    `;
+                } else {
+                    display.innerHTML = `
+                        <img src="${imgUrl}" class="profile-pic-small" alt="${fullName}">
+                        <span class="option-text">${fullName}</span>
+                        <span class="council-badge">${council}</span>
+                    `;
+                }
             } else {
                 display.textContent = selectedOption.textContent;
             }

@@ -7,20 +7,69 @@ Knights of Columbus - Blockchain
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/blockchain.css' %}">
+
 <div class="blockchain-container">
     <div class="header">
         <h1>Donation Ledger</h1>
         <p>View the immutable record of all donation transactions.</p>
     </div>
+
     {% if messages %}
         {% for message in messages %}
             <div class="alert alert-{{ message.tags }}">{{ message }}</div>
         {% endfor %}
     {% endif %}
+
     <div class="summary">
-        <p><strong>Total Blocks:</strong> {{ chain|length }}</p>
+        <p><strong>Total Blocks:</strong> {{ total_blocks }}</p>
         <p><strong>Pending Transactions:</strong> {{ pending_transactions|length }}</p>
     </div>
+
+    <div class="controls">
+        <form method="get" class="filter-form">
+            <div>
+                <label for="search">Donor or Transaction ID:</label>
+                <input type="text" id="search" name="search" placeholder="Search by donor or transaction ID..." value="{{ request.GET.search|default:'' }}">
+            </div>
+            <div>
+                <label for="date_from">Date From:</label>
+                <input type="date" id="date_from" name="date_from" value="{{ request.GET.date_from|default:'' }}" placeholder="Date From">
+            </div>
+            <div>
+                <label for="date_to">Date To:</label>
+                <input type="date" id="date_to" name="date_to" value="{{ request.GET.date_to|default:'' }}" placeholder="Date To">
+            </div>
+            <div>
+                <label for="amount_min">Min Amount:</label>
+                <input type="number" id="amount_min" name="amount_min" step="0.01" value="{{ request.GET.amount_min|default:'' }}" placeholder="Min Amount">
+            </div>
+            <div>
+                <label for="amount_max">Max Amount:</label>
+                <input type="number" id="amount_max" name="amount_max" step="0.01" value="{{ request.GET.amount_max|default:'' }}" placeholder="Max Amount">
+            </div>
+            <div>
+                <label for="status">Status:</label>
+                <select id="status" name="status">
+                    <option value="">All Statuses</option>
+                    <option value="pending" {% if request.GET.status == 'pending' %}selected{% endif %}>Pending</option>
+                    <option value="completed" {% if request.GET.status == 'completed' %}selected{% endif %}>Completed</option>
+                    <option value="failed" {% if request.GET.status == 'failed' %}selected{% endif %}>Failed</option>
+                </select>
+            </div>
+            <div>
+                <label for="method">Payment Method:</label>
+                <select id="method" name="method">
+                    <option value="">All Methods</option>
+                    <option value="gcash" {% if request.GET.method == 'gcash' %}selected{% endif %}>GCash</option>
+                    <option value="manual" {% if request.GET.method == 'manual' %}selected{% endif %}>Manual</option>
+                </select>
+            </div>
+            <button type="submit">Filter</button>
+            <a href="{% url 'blockchain' %}" class="clear-button">Clear Filters</a>
+        </form>
+        <a href="{% url 'download_ledger' %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" class="download-button">Download Ledger as CSV</a>
+    </div>
+
     {% if chain %}
         <div class="table-container">
             <table class="blockchain-table">
@@ -47,18 +96,18 @@ Knights of Columbus - Blockchain
                                     <ul>
                                         {% for tx in block.transactions %}
                                             <li>
-                                                Transaction ID: {{ tx.transaction_id }}<br>
-                                                Donor: 
-                                                {% if tx.donor == "Anonymous" %}
-                                                    Anonymous<br>
-                                                {% else %}
-                                                    {{ tx.donor }}<br>
-                                                    Email: {{ tx.email }}<br>
-                                                {% endif %}
-                                                Amount: ₱{{ tx.amount }}<br>
-                                                Date: {{ tx.donation_date|default:"N/A" }}<br>
-                                                Method: {{ tx.payment_method }}<br>
-                                                Status: {{ tx.status }}
+                                                <span>Transaction ID: {{ tx.transaction_id }}</span><br>
+                                                <span>Donor: 
+                                                    {% if tx.donor == "Anonymous" %}
+                                                        Anonymous
+                                                    {% else %}
+                                                        {{ tx.donor }}<br>Email: {{ tx.email|default:"N/A" }}
+                                                    {% endif %}
+                                                </span><br>
+                                                <span>Amount: ₱{{ tx.amount|default:"0.00" }}</span><br>
+                                                <span>Date: {{ tx.donation_date|default:"N/A" }}</span><br>
+                                                <span>Method: {{ tx.payment_method|default:"N/A" }}</span><br>
+                                                <span>Status: {{ tx.status|default:"Unknown" }}</span>
                                             </li>
                                         {% endfor %}
                                     </ul>
@@ -71,42 +120,54 @@ Knights of Columbus - Blockchain
                 </tbody>
             </table>
         </div>
-        {% if pending_transactions %}
-            <h2>Pending Transactions</h2>
-            <div class="table-container">
-                <table class="blockchain-table">
-                    <thead>
-                        <tr>
-                            <th>Transaction ID</th>
-                            <th>Donor</th>
-                            <th>Email</th>
-                            <th>Amount</th>
-                            <th>Date</th>
-                            <th>Method</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for tx in pending_transactions %}
-                            <tr>
-                                <td>{{ tx.transaction_id }}</td>
-                                <td>{{ tx.donor }}</td>
-                                <td>{{ tx.email|default:"N/A" }}</td>
-                                <td>₱{{ tx.amount }}</td>
-                                <td>{{ tx.donation_date|default:"N/A" }}</td>
-                                <td>{{ tx.payment_method }}</td>
-                                <td>{{ tx.status }}</td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-        {% endif %}
+
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-link">Previous</a>
+            {% endif %}
+            <span class="pagination-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-link">Next</a>
+            {% endif %}
+        </div>
     {% else %}
         <div class="no-data">
             <p>No blocks found in the blockchain.</p>
         </div>
     {% endif %}
+
+    {% if pending_transactions %}
+        <h2>Pending Transactions</h2>
+        <div class="table-container">
+            <table class="blockchain-table">
+                <thead>
+                    <tr>
+                        <th>Transaction ID</th>
+                        <th>Donor</th>
+                        <th>Email</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Method</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for tx in pending_transactions %}
+                        <tr>
+                            <td>{{ tx.transaction_id }}</td>
+                            <td>{{ tx.donor }}</td>
+                            <td>{{ tx.email|default:"N/A" }}</td>
+                            <td>₱{{ tx.amount|default:"0.00" }}</td>
+                            <td>{{ tx.donation_date|default:"N/A" }}</td>
+                            <td>{{ tx.payment_method|default:"N/A" }}</td>
+                            <td>{{ tx.status|default:"Unknown" }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    {% endif %}
+
     <a href="{% url 'donations' %}" class="back-button">Back to Donations</a>
 </div>
 
@@ -114,9 +175,11 @@ Knights of Columbus - Blockchain
     var gk_isXlsx = false;
     var gk_xlsxFileLookup = {};
     var gk_fileData = {};
+
     function filledCell(cell) {
         return cell !== '' && cell != null;
     }
+
     function loadFileData(filename) {
         if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
             try {

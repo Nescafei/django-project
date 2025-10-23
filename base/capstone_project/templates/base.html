@@ -145,7 +145,7 @@
                                 <li><a href="{% url 'dashboard' %}"><i class="fas fa-tachometer-alt"></i>Dashboard</a></li>
                             {% endif %}
                             
-                            <li><a href="{% url 'forum' %}"><i class="fas fa-comments"></i>Community Forums</a></li>
+                            <li><a href="{% url 'forum' %}"><i class="fas fa-comments"></i>Community Chat</a></li>
                             <div class="dropdown-divider"></div>
                             <li><a href="{% url 'edit_profile' %}"><i class="fas fa-user-edit"></i>Edit Profile</a></li>
                             <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
@@ -243,5 +243,27 @@
     
     <!-- Select2 JS -->
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
+
+    <!-- Animation Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const observerOptions = {
+                threshold: 0.1,
+                rootMargin: '0px 0px -50px 0px'
+            };
+
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('animate-in');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, observerOptions);
+
+            const elementsToAnimate = document.querySelectorAll('.section, .highlight, .stat, .council, .card, .mission-overlay, .section-history, .donation-form, .background h1, .background p, .member-section, .member-card, .council-header, .no-members, .back-link');
+            elementsToAnimate.forEach(element => observer.observe(element));
+        });
+    </script>
 </body>
 </html>

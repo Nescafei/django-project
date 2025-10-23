@@ -1,0 +1,924 @@
+:root {
+    --primary-bg: #0D3471;
+    --secondary-bg: #F0F1F6;
+    --accent-color: #F4B41A;
+    --heading-color: #0D3471;
+    --text-color: #000000;
+}
+
+/* Reset and Base Styles */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+    background: linear-gradient(135deg, var(--primary-bg) 0%, #1a4480 100%);
+    min-height: 100vh;
+    color: var(--text-color);
+    line-height: 1.6;
+}
+
+/* Container and Layout */
+.leaderboard-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    min-height: 100vh;
+}
+
+/* Header Styles */
+.leaderboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 20px 30px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    animation: slideInDown 0.8s ease-out;
+}
+
+.header-content h1 {
+    color: white;
+    font-size: 2.2rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-content h1 i {
+    color: var(--accent-color);
+    font-size: 2rem;
+    animation: bounce 2s infinite;
+}
+
+.header-subtitle {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 1rem;
+    font-weight: 400;
+}
+
+.council-filter {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+}
+
+.filter-label {
+    color: white;
+    font-size: 0.875rem;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.council-dropdown {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(5px);
+    color: white;
+    padding: 10px 16px;
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    font-weight: 500;
+    font-size: 0.875rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    min-width: 180px;
+}
+
+.council-dropdown:hover {
+    background: rgba(255, 255, 255, 0.2);
+    transform: translateY(-1px);
+}
+
+.council-dropdown:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(244, 180, 26, 0.5);
+}
+
+.council-dropdown option {
+    background: var(--primary-bg);
+    color: white;
+    padding: 8px;
+}
+
+/* Main Layout Grid */
+.leaderboard-layout {
+    display: grid;
+    grid-template-columns: 1.5fr 1fr;
+    gap: 24px;
+    margin-bottom: 24px;
+}
+
+.right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Card Base Styles */
+.top-recruiters-card,
+.user-stats-card,
+.council-stats-card,
+.recent-recruitment-card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    overflow: hidden;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease-out forwards;
+}
+
+.top-recruiters-card:hover,
+.user-stats-card:hover,
+.council-stats-card:hover,
+.recent-recruitment-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 48px rgba(0, 0, 0, 0.15);
+}
+
+/* Animation delays for staggered entrance */
+.top-recruiters-card { animation-delay: 0.2s; }
+.user-stats-card { animation-delay: 0.35s; }
+.council-stats-card { animation-delay: 0.5s; }
+.recent-recruitment-card { animation-delay: 0.65s; }
+
+/* Card Headers */
+.card-header {
+    padding: 20px 24px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-bottom: 1px solid #e9ecef;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.card-header h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--heading-color);
+    margin: 0;
+}
+
+.card-subtitle {
+    font-size: 0.875rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+/* Top Recruiters Table */
+.recruiters-table-container {
+    padding: 0;
+    overflow-x: auto;
+}
+
+.recruiters-table-container.scrollable-table {
+    max-height: 700px;
+    overflow-y: auto;
+    overflow-x: auto;
+    scrollbar-width: thin;
+    scrollbar-color: #ccc transparent;
+}
+
+.recruiters-table-container.scrollable-table::-webkit-scrollbar {
+    width: 6px;
+}
+
+.recruiters-table-container.scrollable-table::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.recruiters-table-container.scrollable-table::-webkit-scrollbar-thumb {
+    background-color: #ccc;
+    border-radius: 3px;
+}
+
+.recruiters-table-container.scrollable-table::-webkit-scrollbar-thumb:hover {
+    background-color: #999;
+}
+
+.recruiters-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.recruiters-table thead th {
+    background: #f8f9fa;
+    padding: 16px 20px;
+    text-align: left;
+    font-weight: 600;
+    color: #495057;
+    font-size: 0.875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 2px solid #e9ecef;
+}
+
+.recruiter-row {
+    border-bottom: 1px solid #f1f3f4;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideInLeft 0.5s ease-out forwards;
+}
+
+.recruiter-row:nth-child(1) { animation-delay: 0.5s; }
+.recruiter-row:nth-child(2) { animation-delay: 0.6s; }
+.recruiter-row:nth-child(3) { animation-delay: 0.7s; }
+.recruiter-row:nth-child(4) { animation-delay: 0.8s; }
+.recruiter-row:nth-child(5) { animation-delay: 0.9s; }
+
+.recruiter-row:hover {
+    background: #f8f9fa;
+    transform: translateX(4px);
+}
+
+.recruiter-row.current-user {
+    background: linear-gradient(135deg, rgba(13, 52, 113, 0.1) 0%, rgba(26, 68, 128, 0.1) 100%);
+    border-left: 4px solid var(--primary-bg);
+}
+
+.recruiter-row td {
+    padding: 16px 20px;
+    vertical-align: middle;
+}
+
+.rank-icon {
+    font-size: 1.25rem;
+    margin-right: 4px;
+}
+
+.rank-icon.gold {
+    color: var(--accent-color);
+    animation: sparkle 2s infinite;
+}
+
+.rank-icon.silver {
+    color: #C0C0C0;
+}
+
+.rank-icon.bronze {
+    color: #CD7F32;
+}
+
+.rank-number {
+    font-weight: 700;
+    color: #495057;
+    font-size: 1.1rem;
+}
+
+.recruiter-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.recruiter-avatar {
+    width: 36px;
+    height: 36px;
+    background: linear-gradient(135deg, var(--primary-bg) 0%, #1a4480 100%);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1rem;
+    overflow: hidden;
+}
+
+.recruiter-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 50%;
+}
+
+.recruiter-name {
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+.recruit-count {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--primary-bg);
+    background: rgba(13, 52, 113, 0.1);
+    padding: 6px 12px;
+    border-radius: 8px;
+    min-width: 40px;
+    text-align: center;
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+.recruit-count:hover {
+    transform: scale(1.1);
+    background: rgba(13, 52, 113, 0.2);
+}
+
+.council-name {
+    font-weight: 500;
+    color: var(--heading-color);
+    /* background: rgba(244, 180, 26, 0.1); */
+    padding: 4px 8px;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    display: inline-block;
+}
+
+/* User Stats Card */
+.council-header {
+    background: linear-gradient(135deg, var(--primary-bg) 0%, #1a4480 100%);
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.council-icon {
+    font-size: 1.25rem;
+}
+
+.user-stats {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.stat-item {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.5s ease-out forwards;
+}
+
+.stat-item:nth-child(1) { animation-delay: 0.6s; }
+.stat-item:nth-child(3) { animation-delay: 0.8s; }
+
+.stat-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--primary-bg) 0%, #1a4480 100%);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.25rem;
+    transition: transform 0.3s ease;
+}
+
+.stat-icon:hover {
+    transform: scale(1.1) rotate(5deg);
+}
+
+.stat-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--heading-color);
+    line-height: 1;
+}
+
+.stat-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+    font-weight: 500;
+}
+
+.rank-section {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.5s ease-out 0.7s forwards;
+}
+
+.rank-display {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--primary-bg);
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.rank-hash {
+    font-size: 2rem;
+    opacity: 0.7;
+}
+
+.rank-value {
+    display: inline-block;
+}
+
+.rank-value.no-rank {
+    font-size: 1.5rem;
+    color: #6c757d;
+    font-style: italic;
+    font-weight: 500;
+}
+
+.rank-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Council Statistics Card */
+.council-stats-header {
+    background: linear-gradient(135deg, var(--primary-bg) 0%, #1a4480 100%);
+    color: white;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 600;
+}
+
+.stats-icon {
+    font-size: 1.25rem;
+}
+
+.council-stats-content {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.large-stat {
+    text-align: center;
+    padding: 20px;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    border-radius: 12px;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.5s ease-out 0.5s forwards;
+}
+
+.large-number {
+    font-size: 3rem;
+    font-weight: 700;
+    color: var(--heading-color);
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.large-label {
+    font-size: 0.875rem;
+    color: #6c757d;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.council-stat {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.5s ease-out 0.6s forwards;
+}
+
+.top-recruiter {
+    text-align: center;
+    padding: 16px;
+    background: linear-gradient(135deg, rgba(244, 180, 26, 0.1) 0%, rgba(224, 157, 0, 0.1) 100%);
+    border-radius: 12px;
+    border: 1px solid rgba(244, 180, 26, 0.2);
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInUp 0.5s ease-out 0.7s forwards;
+}
+
+.top-recruiter-name {
+    font-size: 1.125rem;
+    font-weight: 700;
+    color: var(--heading-color);
+    margin-bottom: 4px;
+}
+
+.top-recruiter-title {
+    font-size: 0.875rem;
+    color: var(--accent-color);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+/* Recent Recruitment Card */
+.recent-recruitment-card {
+    grid-column: 1 / -1;
+    margin-top: 4px;
+}
+
+.recent-content {
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.recent-content.scrollable-recent {
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
+
+.recruitment-entry {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 16px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateX(-20px);
+    animation: slideInLeft 0.5s ease-out forwards;
+}
+
+.recruitment-entry:nth-child(1) { animation-delay: 0.8s; }
+.recruitment-entry:nth-child(2) { animation-delay: 0.9s; }
+.recruitment-entry:nth-child(3) { animation-delay: 1.0s; }
+.recruitment-entry:nth-child(4) { animation-delay: 1.1s; }
+.recruitment-entry:nth-child(5) { animation-delay: 1.2s; }
+
+.recruitment-entry:hover {
+    background: #e9ecef;
+    transform: translateX(4px);
+}
+
+.recruitment-entry .recruiter-name {
+    font-weight: 600;
+    color: var(--primary-bg);
+}
+
+.recruiter-info .recruiter-name {
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+.action-text {
+    color: #6c757d;
+    font-style: italic;
+}
+
+.recruited-name {
+    font-weight: 600;
+    color: var(--heading-color);
+}
+
+.time-ago {
+    margin-left: auto;
+    font-size: 0.875rem;
+    color: #6c757d;
+    background: white;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.council-info {
+    font-size: 0.75rem;
+    color: #6c757d;
+    font-style: italic;
+    background: rgba(244, 180, 26, 0.1);
+    padding: 2px 6px;
+    border-radius: 4px;
+}
+
+/* Empty States */
+.empty-recruiters,
+.empty-recent {
+    text-align: center;
+    padding: 40px 20px;
+    color: #6c757d;
+}
+
+.empty-recruiters i,
+.empty-recent i {
+    font-size: 3rem;
+    margin-bottom: 16px;
+    opacity: 0.5;
+}
+
+/* Action Buttons */
+.action-section {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    margin-top: 32px;
+}
+
+.action-btn {
+    padding: 14px 28px;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+    min-width: 180px;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+}
+
+.action-btn.primary {
+    background-color: var(--secondary-bg);
+    color: var(--primary-bg);
+    box-shadow: 0 4px 16px rgba(13, 52, 113, 0.3);
+}
+
+.action-btn.primary:hover {
+    transform: translateY(-2px);
+    background-color: var(--accent-color);
+    color: var(--primary-bg);
+    box-shadow: 0 8px 24px rgba(13, 52, 113, 0.4);
+}
+
+.action-btn.secondary {
+    background: white;
+    color: var(--primary-bg);
+    border: 2px solid var(--primary-bg);
+}
+
+.action-btn.secondary:hover {
+    background: var(--accent-color);
+    color: var(--primary-bg);
+    transform: translateY(-2px);
+}
+
+/* Button shine effect */
+.action-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.action-btn:hover::before {
+    left: 100%;
+}
+
+/* Animations */
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes bounce {
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
+}
+
+@keyframes sparkle {
+    0%, 100% {
+        transform: scale(1);
+        filter: brightness(1);
+    }
+    50% {
+        transform: scale(1.1);
+        filter: brightness(1.3);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.1);
+    }
+}
+
+/* Counting Animation Classes */
+.count-animation {
+    display: inline-block;
+    transition: all 0.3s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .leaderboard-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    .right-column {
+        grid-row: 1;
+    }
+
+    .top-recruiters-card {
+        grid-row: 2;
+    }
+}
+
+@media (max-width: 768px) {
+    .leaderboard-container {
+        padding: 16px;
+    }
+
+    .leaderboard-header {
+        flex-direction: column;
+        gap: 16px;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .header-content h1 {
+        font-size: 1.8rem;
+    }
+
+    .council-filter {
+        align-items: center;
+        width: 100%;
+    }
+
+    .council-dropdown {
+        width: 100%;
+        max-width: 280px;
+    }
+
+    .right-column {
+        gap: 16px;
+    }
+
+    .user-stats {
+        padding: 20px;
+        gap: 16px;
+    }
+
+    .council-stats-content {
+        padding: 20px;
+        gap: 16px;
+    }
+
+    .recent-content {
+        padding: 20px;
+    }
+
+    .recruitment-entry {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .time-ago {
+        margin-left: 0;
+        margin-top: 8px;
+        flex-basis: 100%;
+    }
+
+    .action-section {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .action-btn {
+        width: 100%;
+        max-width: 280px;
+    }
+}
+
+@media (max-width: 768px) {
+    /* Hide council column on tablets and smaller */
+    .recruiters-table th:nth-child(3),
+    .recruiters-table td:nth-child(3) {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) {
+    .recruiters-table-container {
+        padding: 0 8px;
+    }
+
+    .recruiters-table thead th,
+    .recruiter-row td {
+        padding: 12px 8px;
+        font-size: 0.875rem;
+    }
+
+    .recruiter-info {
+        flex-direction: column;
+        gap: 8px;
+        align-items: flex-start;
+    }
+
+    .recruiter-avatar {
+        width: 32px;
+        height: 32px;
+        font-size: 0.875rem;
+    }
+
+    .stat-item {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+    }
+
+    .council-stat {
+        flex-direction: column;
+        text-align: center;
+        gap: 8px;
+    }
+
+    .rank-display {
+        font-size: 2.5rem;
+    }
+
+    .large-number {
+        font-size: 2.5rem;
+    }
+
+    .stat-value {
+        font-size: 1.5rem;
+    }
+}
+
+/* Additional utilities for Django template compatibility */
+.d-none { display: none !important; }
+.d-block { display: block !important; }
+.d-flex { display: flex !important; }
+
+/* Print styles */
+@media print {
+    body {
+        background: white !important;
+        color: black !important;
+    }
+
+    .leaderboard-header {
+        background: white !important;
+        color: black !important;
+        border: 1px solid #ccc !important;
+    }
+
+    .action-section {
+        display: none !important;
+    }
+}

@@ -104,6 +104,55 @@ class User(AbstractUser):
             output_size = (200, 200)
             img = img.resize(output_size, Image.Resampling.LANCZOS)
             img.save(self.profile_picture.path)
+    
+    def get_current_degree_display(self):
+        """Return the display value for current degree"""
+        if self.current_degree:
+            return dict(self.DEGREE_CHOICES)[self.current_degree]
+        return "Not specified"
+    
+    def is_inactive_member(self):
+        """Check if member is inactive (no activity for 30 days)"""
+        from datetime import timedelta
+        
+        # Only check for members and officers, not admin or pending
+        if self.role not in ['member', 'officer']:
+            return False
+        
+        # Grace period: newly accepted members get 30 days before being considered for inactivity
+        thirty_days_ago = timezone.now().date() - timedelta(days=30)
+        
+        # If user was approved/joined within the last 30 days, they're not inactive
+        if self.date_joined and self.date_joined.date() > thirty_days_ago:
+            return False
+            
+        # Check for recent recruitment activity
+        recent_recruitments = self.recruitments.filter(date_recruited__gte=thirty_days_ago).exists()
+        
+        # Check for recent event attendance
+        recent_attendance = self.event_attendances.filter(
+            event__date_from__gte=thirty_days_ago,
+            is_present=True
+        ).exists()
+        
+        # Member is inactive if they have no recent recruitment or attendance activity
+        return not (recent_recruitments or recent_attendance)
+    
+    def get_activity_status(self):
+        """Get activity status with warning level"""
+        if self.is_inactive_member():
+            return {
+                'status': 'inactive',
+                'warning': True,
+                'message': 'No activity in the last 30 days',
+                'class': 'warning-badge inactive'
+            }
+        return {
+            'status': 'active',
+            'warning': False,
+            'message': 'Active member',
+            'class': 'status-badge active'
+        }
 
 
 class Event(models.Model):
@@ -135,6 +184,9 @@ class Event(models.Model):
     
     def __str__(self):
         return self.name
+
+    enable_attendance = models.BooleanField(default=True, help_text="Enable attendance tracking for this event")
+
 
 class EventAttendance(models.Model):
     event = models.ForeignKey(Event, on_delete=models.CASCADE, related_name='attendances')
@@ -538,3 +590,4 @@ class Recruitment(models.Model):
         
     def __str__(self):
         return f"{self.recruiter.username} recruited {self.recruited.username} on {self.date_recruited}"
+    

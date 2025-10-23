@@ -5,6 +5,7 @@ Knights of Columbus - Event Proposals
 {% endblock %}
 
 {% block content %}
+<link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
 <link rel="stylesheet" href="{% static 'css/event_management.css' %}?v={% now 'U' %}">
 
 <div class="dashboard-container">
@@ -29,7 +30,7 @@ Knights of Columbus - Event Proposals
                     <th>Council</th>
                     <th>Proposed By</th>
                     <th>Status</th>
-                    <th>Actions</th>
+                    <th class="action-header">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -43,8 +44,8 @@ Knights of Columbus - Event Proposals
                     <td>{{ event.created_by.first_name }} {{ event.created_by.last_name }}</td>
                     <td><span class="status-badge status-{{ event.status }}">{{ event.get_status_display }}</span></td>
                     <td class="action-cell">
-                        <a href="#" class="action-btn details-btn" onclick="viewEventDetails('{{ event.id }}')">
-                            <i class="fas fa-eye"></i> View
+                        <a href="#" class="action-btn details-btn" onclick="viewEventDetails('{{ event.id }}'); return false;">
+                            <i class="fas fa-eye"></i> Details
                         </a>
                         <a href="{% url 'approve_event' event.id %}" class="action-btn approve-btn">
                             <i class="fas fa-check"></i> Approve
@@ -76,7 +77,7 @@ Knights of Columbus - Event Proposals
                     <th>Council</th>
                     <th>Proposed By</th>
                     <th>Status</th>
-                    <th>Actions</th>
+                    <th class="action-header">Actions</th>
                 </tr>
             </thead>
             <tbody>
@@ -90,8 +91,8 @@ Knights of Columbus - Event Proposals
                     <td>{{ event.created_by.first_name }} {{ event.created_by.last_name }}</td>
                     <td><span class="status-badge status-{{ event.status }}">{{ event.get_status_display }}</span></td>
                     <td class="action-cell">
-                        <a href="#" class="action-btn details-btn" onclick="viewEventDetails('{{ event.id }}')">
-                            <i class="fas fa-eye"></i> View
+                        <a href="#" class="action-btn details-btn" onclick="viewEventDetails('{{ event.id }}'); return false;">
+                            <i class="fas fa-eye"></i> Details
                         </a>
                         {% if event.status == 'pending' %}
                         <a href="{% url 'approve_event' event.id %}" class="action-btn approve-btn">
@@ -117,97 +118,110 @@ Knights of Columbus - Event Proposals
 <!-- Event details modal -->
 <div id="eventDetailsModal" class="modal">
     <div class="modal-content">
-        <span class="close">&times;</span>
-        <h3>Event Details</h3>
+        <div class="modal-header">
+            <h3>Event Details</h3>
+            <span class="close">&times;</span>
+        </div>
         <div id="eventDetailsContent">
             <div class="loading">Loading event details...</div>
+        </div>
+        <div class="modal-footer">
+            <button id="okButton" class="dashboard-btn">OK</button>
         </div>
     </div>
 </div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Modal functionality for event details
-        window.viewEventDetails = function(eventId) {
-            const modal = document.getElementById('eventDetailsModal');
-            const contentDiv = document.getElementById('eventDetailsContent');
-            modal.style.display = 'block';
-            contentDiv.innerHTML = '<div class="loading">Loading event details...</div>';
-            
-            // Fetch event details via AJAX
-            fetch(`/event/${eventId}/details/`)
-                .then(response => response.json())
-                .then(data => {
-                    let detailsHTML = `
-                        <div class="event-details">
-                            <h4>${data.name}</h4>
-                            <p class="event-category">${data.category}</p>
-                            
-                            <div class="detail-group">
-                                <strong>Date:</strong> 
-                                <span>${data.date_from}${data.date_until ? ' - ' + data.date_until : ''}</span>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Location:</strong>
-                                <address>
-                                    ${data.street}, ${data.barangay}<br>
-                                    ${data.city}, ${data.province}
-                                </address>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Description:</strong>
-                                <p>${data.description}</p>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Proposed by:</strong>
-                                <p>${data.creator_name}</p>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Council:</strong>
-                                <p>${data.council_name}</p>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Status:</strong>
-                                <span class="status-badge status-${data.status}">${data.status_display}</span>
-                            </div>
-                            
-                            ${data.status === 'pending' ? `
-                            <div class="action-buttons" style="margin-top: 1.5rem; text-align: center;">
-                                <a href="/approve-event/${data.id}/" class="action-btn approve-btn">
-                                    <i class="fas fa-check"></i> Approve Event
-                                </a>
-                                <a href="/reject-event/${data.id}/" class="action-btn reject-btn">
-                                    <i class="fas fa-times"></i> Reject Event
-                                </a>
-                            </div>
-                            ` : ''}
+    function viewEventDetails(eventId) {
+        const modal = document.getElementById('eventDetailsModal');
+        const content = document.getElementById('eventDetailsContent');
+        
+        content.innerHTML = '<div class="loading">Loading event details...</div>';
+        openModal(modal);
+        
+        fetch(`/event/${eventId}/details/`)
+            .then(response => response.json())
+            .then(data => {
+                let detailsHTML = `
+                    <h4 class="modal-event-title ${data.status === 'rejected' ? 'rejected-title' : ''}">${data.name}</h4>
+                    <div class="modal-event-details-grid">
+                        <div class="modal-detail-item">
+                            <strong>Date:</strong> 
+                            <span>${data.date_from}${data.date_until ? ' - ' + data.date_until : ''}</span>
+                        </div>
+                        <div class="modal-detail-item">
+                            <strong>Location:</strong>
+                            <address>
+                                ${data.street}, ${data.barangay}<br>
+                                ${data.city}, ${data.province}
+                            </address>
+                        </div>
+                        <div class="modal-detail-item">
+                            <strong>Council:</strong>
+                            <p>${data.council_name}</p>
+                        </div>
+                        <div class="modal-detail-item">
+                            <strong>Status:</strong>
+                            <span class="status-badge status-${data.status}">${data.status_display}</span>
+                        </div>
+                        <div class="modal-detail-item">
+                            <strong>Created by:</strong>
+                            <p>${data.creator_name}</p>
+                        </div>
+                        <div class="modal-detail-item full-width">
+                            <strong>Description:</strong>
+                            <p>${data.description}</p>
+                        </div>
+                    </div>
+                `;
+                
+                if (data.status === 'rejected' && data.rejection_reason) {
+                    detailsHTML += `
+                        <div class="detail-group rejection-reason">
+                            <strong>Rejection Reason:</strong>
+                            <p>${data.rejection_reason}</p>
                         </div>
                     `;
-                    contentDiv.innerHTML = detailsHTML;
-                })
-                .catch(error => {
-                    contentDiv.innerHTML = '<p>Error loading event details. Please try again later.</p>';
-                });
+                }
+                
+                content.innerHTML = detailsHTML;
+            })
+            .catch(error => {
+                content.innerHTML = '<p>Error loading event details. Please try again later.</p>';
+            });
+    }
+
+    function openModal(modal) {
+        modal.style.display = 'block';
+        modal.offsetHeight;
+        modal.classList.add('show');
+    }
+
+    function closeModal(modal) {
+        modal.classList.remove('show');
+        setTimeout(function() {
+            modal.style.display = 'none';
+        }, 300);
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('eventDetailsModal');
+        const closeBtn = modal.querySelector('.close');
+        const okBtn = modal.querySelector('#okButton');
+
+        closeBtn.onclick = function() {
+            closeModal(modal);
         };
-        
-        // Close modal when clicking the close button
-        const closeButton = document.querySelector('.modal .close');
-        closeButton.addEventListener('click', function() {
-            document.getElementById('eventDetailsModal').style.display = 'none';
-        });
-        
-        // Close modal when clicking outside of it
-        window.addEventListener('click', function(event) {
-            const modal = document.getElementById('eventDetailsModal');
+
+        okBtn.onclick = function() {
+            closeModal(modal);
+        };
+
+        window.onclick = function(event) {
             if (event.target === modal) {
-                modal.style.display = 'none';
+                closeModal(modal);
             }
-        });
+        };
     });
 </script>
 
@@ -217,34 +231,165 @@ Knights of Columbus - Event Proposals
         display: none;
         position: fixed;
         z-index: 1000;
-        left: 0;
-        top: 0;
-        width: 100%;
-        height: 100%;
-        background-color: rgba(0, 0, 0, 0.5);
+        left: 0; top: 0;
+        width: 100%; height: 100%;
+        background-color: rgba(13, 52, 113, 0.8);
+        backdrop-filter: blur(5px);
     }
-    
+    .modal.show { display: block; }
     .modal-content {
-        background-color: var(--secondary-bg);
-        margin: 3% auto;
+        background: linear-gradient(135deg, var(--secondary-bg), white);
+        margin: 5% auto;
         padding: 2rem;
-        border-radius: var(--border-radius);
-        max-width: 600px;
+        border-radius: 16px;
+        max-width: 700px;
         position: relative;
-        max-height: 100vh;
+        max-height: 85vh;
         overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(13, 52, 113, 0.3);
+        animation: modalSlideIn 0.4s ease-out;
     }
-    
+    @keyframes modalSlideIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+    .modal-header h3 { color: var(--heading-color); margin-bottom: 1.5rem; border-bottom: 2px solid var(--primary-bg); padding-bottom: 1rem; font-size: 1.8rem; }
     .close {
         position: absolute;
-        top: 1rem;
-        right: 1.5rem;
-        font-size: 1.5rem;
+        top: 1.5rem; right: 2rem;
+        font-size: 2rem;
         cursor: pointer;
+        color: var(--heading-color);
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all var(--transition-speed) ease;
+    }
+    .close:hover {
+        background-color: var(--primary-bg);
+        color: var(--secondary-bg);
+        transform: rotate(90deg);
+    }
+    #eventDetailsContent { padding: 0; }
+    .modal-event-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+    .modal-detail-item { padding: 1rem; background-color: rgba(13, 52, 113, 0.05); border-radius: var(--border-radius); }
+    .modal-detail-item strong { display: block; color: var(--heading-color); margin-bottom: 0.5rem; }
+    .modal-detail-item.full-width { grid-column: 1 / -1; }
+    .modal-event-title { grid-column: 1 / -1; margin: 0 0 1rem 0; padding-bottom: 1rem; border-bottom: 1px solid rgba(13, 52, 113, 0.1); }
+    .modal-footer { padding-top: 1.5rem; text-align: right; }
+    .modal-footer {
+        color: var(--button-text);
+        border: none;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
     }
     
-    .close:hover {
+    /*Table Styles */
+    .event-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background-color: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: var(--table-shadow);
+        margin-top: 2rem;
+        position: relative;
+    }
+    .event-table::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+    }
+    .event-table th {
+        padding: 1.5rem 1.25rem;
+        text-align: left;
+        background-color: var(--primary-bg);
         color: white;
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+    }
+    .event-table td {
+        padding: 1.25rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(13, 52, 113, 0.08);
+        vertical-align: middle;
+    }
+    .event-table tbody tr:hover {
+        background-color: rgba(13, 52, 113, 0.06);
+    }
+    .event-table tr:last-child td {
+        border-bottom: none;
+    }
+    .action-header { text-align: center !important; }
+    .action-cell {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+    .action-btn {
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all var(--transition-speed) ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: white;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    .action-btn:hover { 
+        transform: translateY(-2px); 
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25); 
+    }
+    .details-btn {
+        background-color: var(--accent-color);
+        color: var(--primary-bg) !important;
+    }
+    .approve-btn {
+        background-color: #28a745;
+        color: white !important;
+    }
+    .reject-btn {
+        background-color: #dc3545;
+        color: white !important;
+    }
+    .status-badge {
+        display: inline-block;
+        padding: 0.5rem 1rem;
+        border-radius: 25px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        text-transform: uppercase;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+    .status-pending { background-color: #ffc107; color: #212529; }
+    .status-approved { background-color: #28a745; color: white; }
+    .status-rejected { background-color: #dc3545; color: white; }
+    .no-events-message {
+        text-align: center;
+        padding: 3rem 2rem;
+        background: #f8f9fa;
+        border-radius: 12px;
+        color: #6c757d;
+    }
+    
+    @media (max-width: 768px) {
+        .event-table { display: block; overflow-x: auto; }
+        .action-cell { flex-direction: column; gap: 0.5rem; }
     }
     
     .event-details {
@@ -277,14 +422,6 @@ Knights of Columbus - Event Proposals
         color: var(--heading-color);
     }
     
-    .no-events-message {
-        text-align: center;
-        padding: 2rem;
-        background-color: white;
-        border-radius: var(--border-radius);
-        margin: 1rem 0;
-    }
-
     .dashboard-header {
         display: flex;
         justify-content: space-between;

@@ -4,6 +4,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
 from capstone_project import views
+from django.views.static import serve
 
 urlpatterns = [
     path('', views.capstone_project, name='capstone_project'),
@@ -26,7 +27,11 @@ urlpatterns = [
     ), name='password_reset_complete'),
     path('update-degree/<int:user_id>/', views.update_degree, name='update_degree'),
     path('edit-profile/', views.edit_profile, name='edit_profile'),
+    path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT})
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
-# if settings.DEBUG:
-#     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

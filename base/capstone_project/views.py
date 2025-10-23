@@ -2,9 +2,10 @@ from .models import User, Council, Event, Analytics, Donation, Blockchain, block
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
-from django.http import HttpResponseRedirect, JsonResponse
+from django.http import HttpResponseRedirect, JsonResponse, HttpResponse
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_exempt, csrf_protect
+from django.views.decorators.http import require_http_methods
 from django.contrib.sessions.models import Session
 from django.template.loader import render_to_string
 from django.core.exceptions import ValidationError
@@ -12,9 +13,9 @@ from django.core.files.base import ContentFile
 from django.core.paginator import Paginator
 from .forms import DonationForm, ManualDonationForm
 from django.contrib import messages
-from django.db import transaction
+from django.db import transaction, models
 from django.db.models.signals import pre_save, pre_delete
-from django.db.models import Count, Sum, Avg, Q
+from django.db.models import Count, Sum, Avg, Q, Max
 from django.dispatch import receiver
 from django.conf import settings
 from django.urls import reverse
@@ -23,18 +24,28 @@ from datetime import datetime, date, timezone, timedelta
 from base64 import b64encode, b64decode
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
-PRIVATE_KEY = getattr(settings, 'PRIVATE_KEY', None)
-PUBLIC_KEY = getattr(settings, 'PUBLIC_KEY', None)
-import base64
+import base64, os, re, uuid, logging, requests, json, csv, qrcode
 import pandas as pd
-import os
-import re
-import uuid
-import logging
-import requests
-import json
 from django.db.models import Q
 from django.core.mail import send_mail
+from django.core.files.base import ContentFile
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.core.files.storage import default_storage
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_protect
+from .models import Event, User, EventAttendance
+from django.shortcuts import render
+from django.contrib.auth.decorators import login_required
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+from django.conf import settings
+from django.shortcuts import render, redirect
+from django.utils import timezone
+from django.contrib import messages
+
+PRIVATE_KEY = getattr(settings, 'PRIVATE_KEY', None)
+PUBLIC_KEY = getattr(settings, 'PUBLIC_KEY', None)
 
 def load_keys():
     base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -133,6 +144,13 @@ def sign_in(request):
                     # Initialize last_activity timestamp
                     request.session['last_activity'] = datetime.now().timestamp()
                     request.session.modified = True
+                    
+                    # Check if user is inactive and show warning (only once per session)
+                    if user.is_inactive_member() and not request.session.get('inactive_warning_shown', False):
+                        request.session['inactive_warning_shown'] = True
+                        request.session['show_inactive_warning'] = True
+                        request.session.modified = True
+                    
                     print(f"User {username} logged in successfully, role: {user.role}, redirecting to dashboard")
                     return redirect('dashboard')
             else:
@@ -256,10 +274,10 @@ def sign_up(request):
             messages.error(request, 'Please upload your e-signature')
             return render(request, 'sign-up.html', {'councils': councils})
         
-        # Check e-signature file size (10MB limit)
-        if e_signature.size > 10 * 1024 * 1024:  # 10MB in bytes
-            print(f"Validation failed: E-signature file size exceeds 10MB limit. Size: {e_signature.size} bytes")
-            messages.error(request, 'E-signature file size exceeds 10MB limit')
+        # Check e-signature file size (5MB limit)
+        if e_signature.size > 5 * 1024 * 1024:  # 5MB in bytes
+            print(f"Validation failed: E-signature file size exceeds 5MB limit. Size: {e_signature.size} bytes")
+            messages.error(request, 'E-signature file size exceeds 5MB limit')
             return render(request, 'sign-up.html', {'councils': councils})
         
         # Check e-signature file type
@@ -373,6 +391,7 @@ def dashboard(request):
 def admin_dashboard(request):
     """Dashboard view for admins"""
     from datetime import date
+    from .bible_verses import get_daily_bible_verse
     today = date.today()
     
     user = request.user
@@ -386,14 +405,43 @@ def admin_dashboard(request):
     
     # Count only approved events
     approved_events_count = Event.objects.filter(status='approved', date_from__gte=today).count()
+    
+    # Count pending events for admin dashboard
+    pending_events_count = Event.objects.filter(status='pending', date_from__gte=today).count()
+    
     analytics = Analytics.objects.all()
+    
+    # Calculate user's recruitment count
+    user_recruitment_count = user.recruitments.count()
+    
+    # Count pending users for admin dashboard
+    pending_users_count = User.objects.filter(role='pending', is_archived=False).count()
+    
+    # Count inactive users (members/officers with no activity in 30 days)
+    inactive_users_count = sum(1 for u in User.objects.filter(is_archived=False, role__in=['member', 'officer']) if u.is_inactive_member())
+    
+    # Get daily Bible verse
+    daily_verse = get_daily_bible_verse()
+    
+    # Check if we need to show inactive warning popup
+    show_inactive_warning = request.session.pop('show_inactive_warning', False)
+    
+    # Count total councils
+    councils_count = Council.objects.count()
     
     context = {
         'user': user,
         'user_list': user_list, 
         'events': events, 
         'approved_events_count': approved_events_count,
-        'analytics': analytics
+        'pending_events_count': pending_events_count,
+        'analytics': analytics,
+        'user_recruitment_count': user_recruitment_count,
+        'pending_users_count': pending_users_count,
+        'inactive_users_count': inactive_users_count,
+        'daily_verse': daily_verse,
+        'show_inactive_warning': show_inactive_warning,
+        'councils_count': councils_count
     }
     
     return render(request, 'admin_dashboard.html', context)
@@ -401,6 +449,7 @@ def admin_dashboard(request):
 def officer_dashboard(request):
     """Dashboard view for officers"""
     from datetime import date
+    from .bible_verses import get_daily_bible_verse
     today = date.today()
     
     user = request.user
@@ -420,14 +469,46 @@ def officer_dashboard(request):
         (Q(council=user.council) | Q(is_global=True)) & 
         Q(status='approved', date_from__gte=today)
     ).count()
+    
+    # Count pending events for officers
+    pending_events_count = Event.objects.filter(
+        (Q(council=user.council) | Q(is_global=True)) & 
+        Q(status='pending', date_from__gte=today)
+    ).count()
+    
     analytics = Analytics.objects.filter(council=user.council)
+    
+    # Get activities (events attended) for officers too
+    activities_count = EventAttendance.objects.filter(member=user, is_present=True).count()
+    
+    # Calculate user's recruitment count
+    user_recruitment_count = user.recruitments.count()
+    
+    # Count pending users for officer dashboard (only their council)
+    pending_users_count = User.objects.filter(role='pending', council=user.council, is_archived=False).count()
+    
+    # Count inactive users in officer's council (members/officers with no activity in 30 days)
+    inactive_users_count = sum(1 for u in User.objects.filter(is_archived=False, council=user.council, role__in=['member', 'officer']) if u.is_inactive_member())
+    
+    # Get daily Bible verse
+    daily_verse = get_daily_bible_verse()
+    
+    # Check if we need to show inactive warning popup
+    show_inactive_warning = request.session.pop('show_inactive_warning', False)
     
     context = {
         'user': user,
         'user_list': user_list, 
         'events': events, 
         'approved_events_count': approved_events_count,
-        'analytics': analytics
+        'pending_events_count': pending_events_count,
+        'analytics': analytics,
+        'activities_count': activities_count,
+        'user_recruitment_count': user_recruitment_count,
+        'pending_users_count': pending_users_count,
+        'inactive_users_count': inactive_users_count,
+        'daily_verse': daily_verse,
+        'show_inactive_warning': show_inactive_warning
     }
     
     return render(request, 'officer_dashboard.html', context)
@@ -435,6 +516,7 @@ def officer_dashboard(request):
 def member_dashboard(request):
     """Dashboard view for members"""
     from datetime import date
+    from .bible_verses import get_daily_bible_verse
     today = date.today()
     
     user = request.user
@@ -455,6 +537,9 @@ def member_dashboard(request):
     # Get activities (events attended)
     activities_count = EventAttendance.objects.filter(member=user, is_present=True).count()
     
+    # Calculate user's recruitment count
+    user_recruitment_count = user.recruitments.count()
+    
     # Get council announcements
     announcements = []
     council_updates = []
@@ -465,6 +550,12 @@ def member_dashboard(request):
     # Get forum messages
     forum_messages = ForumMessage.objects.all().order_by('-timestamp')[:5]
     
+    # Get daily Bible verse
+    daily_verse = get_daily_bible_verse()
+    
+    # Check if we need to show inactive warning popup
+    show_inactive_warning = request.session.pop('show_inactive_warning', False)
+    
     context = {
         'user': user,
         'events': events, 
@@ -473,6 +564,9 @@ def member_dashboard(request):
         'announcements': announcements,
         'forum_messages': forum_messages,
         'council_updates': council_updates,
+        'user_recruitment_count': user_recruitment_count,
+        'daily_verse': daily_verse,
+        'show_inactive_warning': show_inactive_warning
     }
     
     return render(request, 'member_dashboard.html', context)
@@ -1048,7 +1142,6 @@ def manage_roles(request):
 @never_cache
 @login_required
 def add_event(request):
-    """View for adding or proposing events"""
     if request.user.role not in ['admin', 'officer']:
         return redirect('dashboard')
         
@@ -1064,22 +1157,21 @@ def add_event(request):
         date_from = request.POST.get('date_from')
         date_until = request.POST.get('date_until')
         is_global = request.POST.get('is_global') == 'on'  # Checkbox value
+        enable_attendance = request.POST.get('enable_attendance') == 'on'  # New checkbox for attendance
         
         # Only admin can create global events
         if is_global and request.user.role != 'admin':
             is_global = False
             
-        # Handle council selection (admin can choose council or create global event, officer uses their own)
+        # Handle council selection
         if request.user.role == 'admin':
-            # If global event, no council is assigned
             if is_global:
                 council = None
-                status = 'approved'  # Admin-created global events are automatically approved
+                status = 'approved'
             else:
                 council_id = request.POST.get('council_id')
                 try:
                     council = Council.objects.get(id=council_id)
-                    # Admin-created events are automatically approved
                     status = 'approved'
                 except Council.DoesNotExist:
                     messages.error(request, 'Invalid council selected.')
@@ -1087,11 +1179,10 @@ def add_event(request):
         else:
             council = request.user.council
             if not council:
-                messages.error(request, 'You need to be assigned to a council to create events.')
+                messages.error(request, 'You need to be assigned to a council to propose events.')
                 return redirect('dashboard')
-            # Officer-created events need approval
             status = 'pending'
-            is_global = False  # Officers cannot create global events
+            is_global = False  # Officers cannot propose global events
             
         try:
             event = Event.objects.create(
@@ -1108,7 +1199,8 @@ def add_event(request):
                 date_from=date_from,
                 date_until=date_until,
                 status=status,
-                created_by=request.user
+                created_by=request.user,
+                enable_attendance=enable_attendance  # New field
             )
             
             if status == 'approved':
@@ -1122,7 +1214,6 @@ def add_event(request):
         except Exception as e:
             messages.error(request, f'Error creating event: {str(e)}')
             
-    # Get all councils for admin selection
     councils = Council.objects.all() if request.user.role == 'admin' else None
     
     return render(request, 'add_event.html', {'councils': councils, 'is_admin': request.user.role == 'admin'})
@@ -1130,17 +1221,13 @@ def add_event(request):
 @never_cache
 @login_required
 def edit_event(request, event_id):
-    """View for editing an event"""
-    # Get the event or return 404
     event = get_object_or_404(Event, id=event_id)
     
-    # Security check - only admins or the event creator can edit
     if request.user.role != 'admin' and request.user != event.created_by:
         messages.error(request, "You don't have permission to edit this event.")
         return redirect('dashboard')
         
     if request.method == 'POST':
-        # Process the form data
         event.name = request.POST.get('name')
         event.description = request.POST.get('description')
         event.category = request.POST.get('category')
@@ -1151,16 +1238,14 @@ def edit_event(request, event_id):
         event.province = request.POST.get('province')
         event.date_from = request.POST.get('date_from')
         event.date_until = request.POST.get('date_until')
+        event.enable_attendance = request.POST.get('enable_attendance') == 'on'  # New field
         
-        # Only admins can change the council or global status
         if request.user.role == 'admin':
             is_global = request.POST.get('is_global') == 'on'
             event.is_global = is_global
             
-            # If global, remove council association
             if is_global:
                 event.council = None
-            # If not global, set council from selection
             elif request.POST.get('council_id'):
                 try:
                     council = Council.objects.get(id=request.POST.get('council_id'))
@@ -1172,21 +1257,19 @@ def edit_event(request, event_id):
         try:
             event.save()
             messages.success(request, f'Event "{event.name}" has been updated successfully.')
-            
-            # Always redirect to dashboard instead of admin_dashboard or other specific dashboards
             return redirect('dashboard')
         except Exception as e:
             messages.error(request, f'Error updating event: {str(e)}')
     
-    # For GET request, prepare the form
     councils = Council.objects.all() if request.user.role == 'admin' else None
     
-    # Pass the event and councils to the template
     return render(request, 'edit_event.html', {
         'event': event,
         'councils': councils,
         'is_admin': request.user.role == 'admin'
     })
+
+
 
 @never_cache
 @login_required
@@ -1731,55 +1814,283 @@ def confirm_gcash_payment(request):
 def get_blockchain_data(request):
     logger.debug("Fetching blockchain data")
     try:
-        chain = blockchain.get_chain()
+        # Fetch the full blockchain
+        full_chain = blockchain.get_chain()  # Assuming this returns a list of blocks
         if not blockchain.is_chain_valid():
             logger.error("Blockchain validation failed")
             messages.error(request, "Blockchain data is corrupted. Contact support.")
             return redirect('donations')
+        
         pending_transactions = blockchain.pending_transactions
 
-        # Preprocess chain: Ensure dates are in 'YYYY-MM-DD' format
-        for block in chain:
-            for tx in block['transactions']:
-                if 'date' in tx and tx['date']:
+        # Ensure transaction data is properly structured
+        for block in full_chain:
+            if not isinstance(block, dict):
+                block = {
+                    'index': block.index,
+                    'timestamp': block.timestamp,
+                    'proof': block.proof,
+                    'hash': block.hash,
+                    'previous_hash': block.previous_hash,
+                    'transactions': block.transactions if hasattr(block, 'transactions') else []
+                }
+            for tx in block.get('transactions', []):
+                if not isinstance(tx, dict):
+                    tx = {
+                        'transaction_id': getattr(tx, 'transaction_id', ''),
+                        'donor': getattr(tx, 'donor', 'Anonymous'),
+                        'email': getattr(tx, 'email', 'N/A'),
+                        'amount': getattr(tx, 'amount', '0.00'),  # Starts as string
+                        'donation_date': getattr(tx, 'donation_date', None),
+                        'payment_method': getattr(tx, 'payment_method', 'N/A'),
+                        'status': getattr(tx, 'status', 'Unknown')
+                    }
+                # Ensure donation_date is a date object
+                if tx.get('donation_date') and isinstance(tx['donation_date'], str):
                     try:
-                        # Ensure the date remains in 'YYYY-MM-DD' format
-                        date_obj = datetime.strptime(tx['date'], '%Y-%m-%d')
-                        tx['donation_date'] = date_obj.strftime('%Y-%m-%d')
+                        tx['donation_date'] = datetime.strptime(tx['donation_date'], '%Y-%m-%d').date()
                     except ValueError:
-                        logger.error(f"Invalid date format in transaction {tx.get('transaction_id')}: {tx['date']}")
-                        tx['donation_date'] = 'N/A'
-                else:
-                    tx['donation_date'] = 'N/A'
-                # Ensure status is present
-                if 'status' not in tx:
-                    tx['status'] = 'Unknown'
+                        tx['donation_date'] = None
+                # Ensure amount is a float
+                if 'amount' in tx:
+                    if isinstance(tx['amount'], str):
+                        try:
+                            tx['amount'] = float(tx['amount'].replace('₱', '').replace(',', ''))
+                        except ValueError:
+                            tx['amount'] = 0.0  # Default to 0.0 if conversion fails
+                    elif tx['amount'] is None:
+                        tx['amount'] = 0.0  # Handle None case
 
-        # Preprocess pending transactions
         for tx in pending_transactions:
-            if 'date' in tx and tx['date']:
+            if not isinstance(tx, dict):
+                tx = {
+                    'transaction_id': getattr(tx, 'transaction_id', ''),
+                    'donor': getattr(tx, 'donor', 'Anonymous'),
+                    'email': getattr(tx, 'email', 'N/A'),
+                    'amount': getattr(tx, 'amount', '0.00'),
+                    'donation_date': getattr(tx, 'donation_date', None),
+                    'payment_method': getattr(tx, 'payment_method', 'N/A'),
+                    'status': getattr(tx, 'status', 'Unknown')
+                }
+            if tx.get('donation_date') and isinstance(tx['donation_date'], str):
                 try:
-                    date_obj = datetime.strptime(tx['date'], '%Y-%m-%d')
-                    tx['donation_date'] = date_obj.strftime('%Y-%m-%d')
+                    tx['donation_date'] = datetime.strptime(tx['donation_date'], '%Y-%m-%d').date()
                 except ValueError:
-                    logger.error(f"Invalid date format in pending transaction {tx.get('transaction_id')}: {tx['date']}")
-                    tx['donation_date'] = 'N/A'
-            else:
-                tx['donation_date'] = 'N/A'
-            # Ensure status is present
-            if 'status' not in tx:
-                tx['status'] = 'Unknown'
+                    tx['donation_date'] = None
+            if 'amount' in tx and isinstance(tx['amount'], str):
+                tx['amount'] = float(tx['amount'].replace('₱', '').replace(',', ''))
 
-        logger.info(f"Blockchain data retrieved: {len(chain)} blocks, {len(pending_transactions)} pending transactions")
+        # Apply filters
+        search = request.GET.get('search', '').lower()
+        date_from = request.GET.get('date_from')
+        date_to = request.GET.get('date_to')
+        amount_min = request.GET.get('amount_min')
+        amount_max = request.GET.get('amount_max')
+        status = request.GET.get('status')
+        method = request.GET.get('method')
+
+        def matches_filter(tx):
+            match = True
+            if search and not (tx.get('donor', '').lower().find(search) != -1 or tx.get('transaction_id', '').lower().find(search) != -1):
+                match = False
+            if date_from and tx.get('donation_date') and tx['donation_date'] < datetime.strptime(date_from, '%Y-%m-%d').date():
+                match = False
+            if date_to and tx.get('donation_date') and tx['donation_date'] > datetime.strptime(date_to, '%Y-%m-%d').date():
+                match = False
+            if amount_min and float(amount_min) > tx.get('amount', 0):
+                match = False
+            if amount_max and float(amount_max) < tx.get('amount', 0):
+                match = False
+            if status and status != tx.get('status'):
+                match = False
+            if method and method != tx.get('payment_method'):
+                match = False
+            return match
+
+        # Filter chain transactions
+        filtered_chain = []
+        for block in full_chain:
+            filtered_txs = [tx for tx in block.get('transactions', []) if matches_filter(tx)]
+            if filtered_txs:
+                block_copy = block.copy()
+                block_copy['transactions'] = filtered_txs
+                filtered_chain.append(block_copy)
+
+        # Filter pending transactions
+        filtered_pending = [tx for tx in pending_transactions if matches_filter(tx)]
+
+        # Pagination for chain (10 blocks per page)
+        paginator = Paginator(filtered_chain, 10)
+        page_number = request.GET.get('page', 1)
+        try:
+            page_obj = paginator.get_page(page_number)
+        except Exception as e:
+            page_obj = paginator.get_page(1)  # Fallback to first page if invalid
+
+        logger.info(f"Blockchain data retrieved: {len(full_chain)} blocks, {len(pending_transactions)} pending transactions")
         return render(request, 'blockchain.html', {
-            'chain': chain,
-            'pending_transactions': pending_transactions
+            'chain': page_obj,
+            'pending_transactions': filtered_pending,
+            'total_blocks': len(filtered_chain),
+            'page_obj': page_obj,
         })
     except Exception as e:
         logger.error(f"Error fetching blockchain data: {str(e)}")
         messages.error(request, "Unable to retrieve blockchain data. Please try again later.")
         return redirect('donations')
-           
+
+@login_required
+def download_ledger(request):
+    full_chain = blockchain.get_chain()
+    pending_transactions = blockchain.pending_transactions
+
+    # Normalize transaction data
+    for block in full_chain:
+        for tx in block.get('transactions', []):
+            if not isinstance(tx, dict):
+                tx = {
+                    'transaction_id': getattr(tx, 'transaction_id', ''),
+                    'donor': getattr(tx, 'donor', 'Anonymous'),
+                    'email': getattr(tx, 'email', 'N/A'),
+                    'amount': getattr(tx, 'amount', '0.00'),
+                    'donation_date': getattr(tx, 'donation_date', None),
+                    'payment_method': getattr(tx, 'payment_method', 'N/A'),
+                    'status': getattr(tx, 'status', 'Unknown')  # Ensure 'status' is always present
+                }
+            # Ensure donation_date is a date object
+            if tx.get('donation_date') and isinstance(tx['donation_date'], str):
+                try:
+                    tx['donation_date'] = datetime.strptime(tx['donation_date'], '%Y-%m-%d').date()
+                except ValueError:
+                    tx['donation_date'] = None
+            # Ensure amount is a float
+            if 'amount' in tx:
+                if isinstance(tx['amount'], str):
+                    try:
+                        tx['amount'] = float(tx['amount'].replace('₱', '').replace(',', ''))
+                    except ValueError:
+                        tx['amount'] = 0.0  # Default to 0.0 if conversion fails
+                elif tx['amount'] is None:
+                    tx['amount'] = 0.0  # Handle None case
+
+    for tx in pending_transactions:
+        if not isinstance(tx, dict):
+            tx = {
+                'transaction_id': getattr(tx, 'transaction_id', ''),
+                'donor': getattr(tx, 'donor', 'Anonymous'),
+                'email': getattr(tx, 'email', 'N/A'),
+                'amount': getattr(tx, 'amount', '0.00'),
+                'donation_date': getattr(tx, 'donation_date', None),
+                'payment_method': getattr(tx, 'payment_method', 'N/A'),
+                'status': getattr(tx, 'status', 'Unknown')  # Ensure 'status' is always present
+            }
+        # Ensure donation_date is a date object
+        if tx.get('donation_date') and isinstance(tx['donation_date'], str):
+            try:
+                tx['donation_date'] = datetime.strptime(tx['donation_date'], '%Y-%m-%d').date()
+            except ValueError:
+                tx['donation_date'] = None
+        # Ensure amount is a float
+        if 'amount' in tx:
+            if isinstance(tx['amount'], str):
+                try:
+                    tx['amount'] = float(tx['amount'].replace('₱', '').replace(',', ''))
+                except ValueError:
+                    tx['amount'] = 0.0  # Default to 0.0 if conversion fails
+            elif tx['amount'] is None:
+                tx['amount'] = 0.0  # Handle None case
+
+    # Apply filters
+    search = request.GET.get('search', '').lower()
+    date_from = request.GET.get('date_from')
+    date_to = request.GET.get('date_to')
+    amount_min = request.GET.get('amount_min', '')  # Default to empty string
+    amount_max = request.GET.get('amount_max', '')  # Default to empty string
+    status = request.GET.get('status')
+    method = request.GET.get('method')
+
+    def matches_filter(tx):
+        match = True
+        if search and not (tx.get('donor', '').lower().find(search) != -1 or tx.get('transaction_id', '').lower().find(search) != -1):
+            match = False
+        if date_from and tx.get('donation_date') and tx['donation_date'] < datetime.strptime(date_from, '%Y-%m-%d').date():
+            match = False
+        if date_to and tx.get('donation_date') and tx['donation_date'] > datetime.strptime(date_to, '%Y-%m-%d').date():
+            match = False
+        # Convert amount_min and amount_max to float only if they exist and are valid
+        if amount_min and amount_min.strip():
+            try:
+                min_amount = float(amount_min)
+                if tx.get('amount', 0) < min_amount:
+                    match = False
+            except ValueError:
+                logger.warning(f"Invalid amount_min: {amount_min}")
+                pass  # Ignore invalid input, treat as no filter
+        if amount_max and amount_max.strip():
+            try:
+                max_amount = float(amount_max)
+                if tx.get('amount', 0) > max_amount:
+                    match = False
+            except ValueError:
+                logger.warning(f"Invalid amount_max: {amount_max}")
+                pass  # Ignore invalid input, treat as no filter
+        if status and status != tx.get('status'):
+            match = False
+        if method and method != tx.get('payment_method'):
+            match = False
+        return match
+
+    filtered_chain = []
+    for block in full_chain:
+        filtered_txs = [tx for tx in block.get('transactions', []) if matches_filter(tx)]
+        if filtered_txs:
+            block_copy = block.copy()
+            block_copy['transactions'] = filtered_txs
+            filtered_chain.append(block_copy)
+
+    filtered_pending = [tx for tx in pending_transactions if matches_filter(tx)]
+
+    # Generate filename with timestamp
+    timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+    response = HttpResponse(content_type='text/csv')
+    response['Content-Disposition'] = f'attachment; filename="donation_ledger_{timestamp}.csv"'
+
+    writer = csv.writer(response)
+    writer.writerow(['Block Index', 'Timestamp', 'Proof', 'Current Hash', 'Previous Hash', 'Transaction ID', 'Donor', 'Email', 'Amount', 'Date', 'Method', 'Status'])
+
+    for block in filtered_chain:
+        for tx in block['transactions']:
+            writer.writerow([
+                block['index'],
+                block['timestamp'],
+                block['proof'],
+                block['hash'],
+                block['previous_hash'],
+                tx['transaction_id'],
+                tx['donor'],
+                tx.get('email', 'N/A'),
+                tx['amount'],
+                tx.get('donation_date', 'N/A'),
+                tx['payment_method'],
+                tx.get('status', 'Unknown')  # Use get() with default value
+            ])
+
+    writer.writerow([])
+    writer.writerow(['Pending Transactions'])
+    writer.writerow(['Transaction ID', 'Donor', 'Email', 'Amount', 'Date', 'Method', 'Status'])
+    for tx in filtered_pending:
+        writer.writerow([
+            tx['transaction_id'],
+            tx['donor'],
+            tx.get('email', 'N/A'),
+            tx['amount'],
+            tx.get('donation_date', 'N/A'),
+            tx['payment_method'],
+            tx.get('status', 'Unknown')  # Use get() with default value
+        ])
+
+    return response
+
 def success_page(request):
     return render(request, 'success.html', {'message': 'Payment processing. Awaiting confirmation.'})
 
@@ -1993,7 +2304,9 @@ def council_events(request):
     if request.user.role not in ['admin', 'officer']:
         return redirect('dashboard')
     
-    today = date.today()
+    # Use timezone-aware date to ensure correct date comparison
+    from django.utils import timezone
+    today = timezone.localtime(timezone.now()).date()
     
     # Officers can only see events of their own council
     if request.user.role == 'officer':
@@ -2027,7 +2340,8 @@ def council_events(request):
     rejected_events = []
     
     for event in events:
-        # Check if the event is happening today
+        # Check if the event is happening today (strict date match)
+        # Event is only accessible on or after the start date, and on or before the end date
         event.is_today = (event.date_from <= today <= (event.date_until or event.date_from))
         
         # If filtering by status, only include matching events
@@ -2151,6 +2465,7 @@ def user_details(request, user_id):
         'recruiter_name': user.recruiter_name,
         'voluntary_join': user.voluntary_join,
         'join_reason': user.join_reason,
+        'is_inactive': user.is_inactive_member(),
     }
     
     if user.profile_picture:
@@ -2182,20 +2497,21 @@ def event_attendance(request, event_id):
         messages.error(request, 'You can only manage attendance for events in your council.')
         return redirect('event_list')
     
-    # Check if the event is happening today
-    today = date.today()
+    # Check if the event is happening today (use timezone-aware date)
+    from django.utils import timezone
+    today = timezone.localtime(timezone.now()).date()
     is_today = (event.date_from <= today <= (event.date_until or event.date_from))
-    
-    # Get members based on the event's council or global status
+
+    # Get members and officers based on the event's council or global status
     if event.is_global:
         if request.user.role == 'admin':
-            # Admin can see all members for global events
-            members = User.objects.filter(role='member', is_active=True, is_archived=False).order_by('first_name', 'last_name')
+            # Admin can see all members and officers for global events
+            members = User.objects.filter(role__in=['member', 'officer'], is_active=True, is_archived=False).order_by('first_name', 'last_name')
         else:
-            # Officers can only see members from their council for global events
-            members = User.objects.filter(council=request.user.council, role='member', is_active=True, is_archived=False).order_by('first_name', 'last_name')
+            # Officers can only see members and officers from their council for global events
+            members = User.objects.filter(council=request.user.council, role__in=['member', 'officer'], is_active=True, is_archived=False).order_by('first_name', 'last_name')
     else:
-        members = User.objects.filter(council=event.council, role='member', is_active=True, is_archived=False).order_by('first_name', 'last_name')
+        members = User.objects.filter(council=event.council, role__in=['member', 'officer'], is_active=True, is_archived=False).order_by('first_name', 'last_name')
     
     # Get existing attendance records
     attendance_records = EventAttendance.objects.filter(event=event)
@@ -2256,24 +2572,22 @@ def update_attendance(request):
                 if request.user.role == 'officer' and event.council != request.user.council and not event.is_global:
                     return JsonResponse({'status': 'error', 'message': 'You can only manage attendance for events in your council'}, status=403)
                 
-                # For testing purposes, bypass the date check
-                # Check if the event is happening today
-                today = date.today()
+                # Check if the event is happening today (use timezone-aware date)
+                from django.utils import timezone
+                today = timezone.localtime(timezone.now()).date()
                 if not (event.date_from <= today <= (event.date_until or event.date_from)):
-                    # Temporarily comment out this check for testing
-                    # return JsonResponse({'status': 'error', 'message': 'Can only update attendance on the day of the event'}, status=400)
-                    pass
+                    return JsonResponse({'status': 'error', 'message': 'Can only update attendance on the day of the event'}, status=400)
                 
-                # Get all members for this event
+                # Get all members and officers for this event
                 if event.is_global:
                     if request.user.role == 'admin':
-                        # Admin can see all members for global events
-                        members = User.objects.filter(role='member', is_active=True, is_archived=False)
+                        # Admin can see all members and officers for global events
+                        members = User.objects.filter(role__in=['member', 'officer'], is_active=True, is_archived=False)
                     else:
-                        # Officers can only see members from their council for global events
-                        members = User.objects.filter(council=request.user.council, role='member', is_active=True, is_archived=False)
+                        # Officers can only see members and officers from their council for global events
+                        members = User.objects.filter(council=request.user.council, role__in=['member', 'officer'], is_active=True, is_archived=False)
                 else:
-                    members = User.objects.filter(council=event.council, role='member', is_active=True, is_archived=False)
+                    members = User.objects.filter(council=event.council, role__in=['member', 'officer'], is_active=True, is_archived=False)
                 
                 # Update all attendance records
                 with transaction.atomic():
@@ -2306,11 +2620,28 @@ def update_attendance(request):
                 # Calculate total count based on user role and event type
                 if event.is_global:
                     if request.user.role == 'admin':
-                        total_count = User.objects.filter(role='member', is_active=True, is_archived=False).count()
+                        total_count = User.objects.filter(role__in=['member', 'officer'], is_active=True, is_archived=False).count()
                     else:
-                        total_count = User.objects.filter(council=request.user.council, role='member', is_active=True, is_archived=False).count()
+                        total_count = User.objects.filter(council=request.user.council, role__in=['member', 'officer'], is_active=True, is_archived=False).count()
                 else:
-                    total_count = User.objects.filter(council=event.council, role='member', is_active=True, is_archived=False).count()
+                    total_count = User.objects.filter(council=event.council, role__in=['member', 'officer'], is_active=True, is_archived=False).count()
+                
+                # Record activity for present members
+                from capstone_project.models import Activity
+                for member_id in present_members:
+                    try:
+                        member = User.objects.get(id=member_id)
+                        Activity.objects.get_or_create(
+                            user=member,
+                            event=event,
+                            defaults={
+                                'activity_type': 'event_attendance',
+                                'description': f'Attended {event.name}',
+                                'date_completed': timezone.now().date()
+                            }
+                        )
+                    except User.DoesNotExist:
+                        continue
                 
                 return JsonResponse({
                     'status': 'success',
@@ -2804,3 +3135,453 @@ def recalculate_degree(user):
             print(f"Error creating degree change notification: {str(e)}")
     
     return True
+
+@never_cache
+@login_required
+def leaderboard(request):
+    """Leaderboard view showing top recruiters"""
+    from datetime import datetime, timedelta
+    from django.utils import timezone
+    
+    # Calculate date 3 months ago
+    three_months_ago = timezone.now() - timedelta(days=90)
+    
+    # Build base queryset - show all users globally for precise leaderboard
+    recruiters_query = User.objects.filter(
+        is_archived=False
+    ).annotate(
+        recruitment_count=Count('recruitments')
+    ).filter(
+        recruitment_count__gt=0
+    ).select_related('council')
+    
+    # Order the results
+    recruiters = recruiters_query.order_by('-recruitment_count', 'first_name')
+    
+    # Get all recruiters for the main leaderboard (not just top 10)
+    top_recruiters = recruiters
+    
+    # Get current user's rank and stats
+    user_rank = None
+    user_recruitment_count = request.user.recruitments.count()
+    
+    if user_recruitment_count > 0:
+        # Find user's rank in the filtered results
+        recruiters_list = list(recruiters.values_list('id', flat=True))
+        if request.user.id in recruiters_list:
+            user_rank = recruiters_list.index(request.user.id) + 1
+    
+    # Get recent recruitments for activity feed - show all globally
+    recent_recruitments_query = Recruitment.objects.select_related(
+        'recruiter', 'recruited', 'recruiter__council'
+    )
+    
+    recent_recruitments = recent_recruitments_query.order_by('-date_recruited')[:10]
+    
+    # Calculate stats for all councils for filtering functionality
+    all_councils_stats = {}
+    councils = Council.objects.all()
+    
+    for council in councils:
+        # Active recruiters: users with at least 1 recruitment in last 3 months
+        active_recruiters = User.objects.filter(
+            council=council,
+            is_archived=False,
+            recruitments__date_recruited__gte=three_months_ago
+        ).distinct()
+        
+        # All-time council recruiters for top recruiter calculation
+        council_recruiters = User.objects.filter(
+            council=council,
+            is_archived=False
+        ).annotate(
+            recruitment_count=Count('recruitments')
+        ).filter(
+            recruitment_count__gt=0
+        ).order_by('-recruitment_count')
+        
+        all_councils_stats[council.name] = {
+            'total_recruiters': active_recruiters.count(),
+            'total_recruitments': Recruitment.objects.filter(
+                recruiter__council=council
+            ).count(),
+            'top_recruiter': council_recruiters.first() if council_recruiters else None
+        }
+    
+    # Get council-specific stats for current user's council
+    council_stats = None
+    if request.user.council:
+        council_stats = all_councils_stats.get(request.user.council.name, {
+            'total_recruiters': 0,
+            'total_recruitments': 0,
+            'top_recruiter': None
+        })
+    
+    # Calculate global stats for "All Councils" filter
+    global_active_recruiters = User.objects.filter(
+        is_archived=False,
+        recruitments__date_recruited__gte=three_months_ago
+    ).distinct().count()
+    
+    global_total_recruitments = Recruitment.objects.count()
+    
+    global_top_recruiter = User.objects.filter(
+        is_archived=False
+    ).annotate(
+        recruitment_count=Count('recruitments')
+    ).filter(
+        recruitment_count__gt=0
+    ).order_by('-recruitment_count').first()
+    
+    global_stats = {
+        'total_recruiters': global_active_recruiters,
+        'total_recruitments': global_total_recruitments,
+        'top_recruiter': global_top_recruiter
+    }
+    
+    # Add recruitment dates to top_recruiters for JavaScript filtering
+    top_recruiters_with_dates = []
+    for recruiter in top_recruiters:
+        recruiter_data = {
+            'user': recruiter,
+            'recruitment_count': recruiter.recruitment_count,
+            'recent_recruitments': list(recruiter.recruitments.filter(
+                date_recruited__gte=three_months_ago
+            ).values_list('date_recruited', flat=True)),
+            'is_active': recruiter.recruitments.filter(
+                date_recruited__gte=three_months_ago
+            ).exists()
+        }
+        top_recruiters_with_dates.append(recruiter_data)
+    
+    # Convert stats to JSON-serializable format
+    import json
+    serializable_all_councils_stats = {}
+    for council_name, stats in all_councils_stats.items():
+        serializable_all_councils_stats[council_name] = {
+            'total_recruiters': stats['total_recruiters'],
+            'total_recruitments': stats['total_recruitments'],
+            'top_recruiter': {
+                'first_name': stats['top_recruiter'].first_name,
+                'last_name': stats['top_recruiter'].last_name
+            } if stats['top_recruiter'] else None
+        }
+    
+    serializable_global_stats = {
+        'total_recruiters': global_stats['total_recruiters'],
+        'total_recruitments': global_stats['total_recruitments'],
+        'top_recruiter': {
+            'first_name': global_stats['top_recruiter'].first_name,
+            'last_name': global_stats['top_recruiter'].last_name
+        } if global_stats['top_recruiter'] else None
+    }
+    
+    # Convert to JSON strings for safe template rendering
+    all_councils_stats_json = json.dumps(serializable_all_councils_stats)
+    global_stats_json = json.dumps(serializable_global_stats)
+
+    context = {
+        'top_recruiters': top_recruiters,
+        'top_recruiters_with_dates': top_recruiters_with_dates,
+        'user_rank': user_rank,
+        'user_recruitment_count': user_recruitment_count,
+        'recent_recruitments': recent_recruitments,
+        'council_stats': serializable_global_stats,  # Use global stats as default display
+        'all_councils_stats': all_councils_stats_json,
+        'global_stats': global_stats_json,
+        'three_months_ago': three_months_ago.isoformat(),
+        'user': request.user
+    }
+    
+    return render(request, 'leaderboard.html', context)
+
+# def member_attend(request):
+#     return render(request, 'member_attend.html')
+
+
+@login_required
+def member_attend(request):
+    if request.user.role not in ['member', 'officer']:
+        messages.error(request, 'You are not authorized to attend events.')
+        return redirect('dashboard')
+
+    qr = qrcode.QRCode(
+        version=1,
+        error_correction=qrcode.constants.ERROR_CORRECT_L,
+        box_size=10,
+        border=4,
+    )
+    # FIX: Add "-event:" to match the expected format
+    qr_data = f"member:{request.user.id}-event:attendance-{request.user.get_full_name()}"
+    qr.add_data(qr_data)
+    qr.make(fit=True)
+
+    img = qr.make_image(fill_color="black", back_color="white")
+    qr_io = ContentFile(b'')
+    img.save(qr_io, format='PNG')
+    qr_io.seek(0)
+
+    qr_filename = f'qr_{request.user.id}_{request.user.get_full_name().replace(" ", "_")}.png'
+    file_path = os.path.join(settings.MEDIA_ROOT, 'qr_codes', qr_filename)
+    if not os.path.exists(os.path.dirname(file_path)):
+        os.makedirs(os.path.dirname(file_path))
+    default_storage.save(file_path, qr_io)
+
+    qr_code_url = f"{settings.MEDIA_URL}qr_codes/{qr_filename}"
+
+    return render(request, 'member_attend.html', {
+        'qr_code_url': qr_code_url,
+        'user': request.user,
+    })
+    
+@login_required
+def scan_attendance(request, event_id):
+    event = get_object_or_404(Event, id=event_id)
+    if request.user.role not in ['admin', 'officer']:
+        return redirect('dashboard')
+    # Logic to handle QR scan input (e.g., from form or JS scanner)
+    qr_data = request.POST.get('qr_data')  # Assume POST from scanner
+    if qr_data:
+        # Parse qr_data (e.g., 'member:15-event:1-attendance-Harold Marquez')
+        parts = qr_data.split('-')
+        if len(parts) == 3 and parts[0].starts_with('member:') and parts[1].starts_with('event:'):
+            member_id = parts[0].split(':')[1]
+            event_id_from_qr = parts[1].split(':')[1]
+            if int(event_id_from_qr) != event.id:
+                messages.error(request, 'QR code is for a different event.')
+                return redirect('event_attendance', event_id=event_id)
+            member = get_object_or_404(User, id=member_id)
+            # Update attendance
+            attendance, created = EventAttendance.objects.get_or_create(
+                event=event,
+                member=member,
+                defaults={'is_present': True, 'recorded_by': request.user}
+            )
+            if not created:
+                attendance.is_present = True
+                attendance.recorded_by = request.user
+                attendance.save()
+            messages.success(request, f'Attendance recorded for {member.get_full_name()}.')
+    return redirect('event_attendance', event_id=event_id)
+
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_protect
+from .models import Event, User, EventAttendance
+
+@login_required
+def officer_take_attendance(request):
+    if request.user.role not in ['admin', 'officer']:
+        return redirect('dashboard')
+    
+    today = date.today()
+    events = Event.objects.filter(status='approved', date_from__lte=today, date_until__gte=today)  # Only today's approved events
+    if request.user.role == 'officer':
+        events = events.filter(Q(council=request.user.council) | Q(is_global=True))
+    
+    return render(request, 'officer_take_attendance.html', {'events': events})
+
+@csrf_protect
+@login_required
+def scan_qr(request):
+    if request.method == 'POST':
+        if request.user.role not in ['admin', 'officer']:
+            return JsonResponse({'status': 'error', 'message': 'Unauthorized'}, status=403)
+        
+        try:
+            data = json.loads(request.body)
+            qr_data = data.get('qr_data')
+            event_id = data.get('event_id')
+            
+            if not qr_data or not event_id:
+                return JsonResponse({'status': 'error', 'message': 'Missing data'}, status=400)
+            
+            # Parse QR data (format: member:{id}-attendance-{full_name})
+            # Split only on first hyphen after "member:XX"
+            if not qr_data.startswith('member:'):
+                return JsonResponse({'status': 'error', 'message': 'Invalid QR code format'}, status=400)
+            
+            # Extract member ID: "member:32-attendance-John Doe" -> ["member:32", "attendance-John Doe"]
+            parts = qr_data.split('-', 1)
+            if len(parts) < 2:
+                return JsonResponse({'status': 'error', 'message': 'Invalid QR code format'}, status=400)
+            
+            member_id = parts[0].replace('member:', '')
+            
+            if not member_id.isdigit():
+                return JsonResponse({'status': 'error', 'message': 'Invalid member ID'}, status=400)
+            
+            try:
+                member = User.objects.get(id=member_id)
+            except User.DoesNotExist:
+                return JsonResponse({'status': 'error', 'message': 'Member not found'}, status=404)
+            
+            try:
+                event = Event.objects.get(id=event_id)
+            except Event.DoesNotExist:
+                return JsonResponse({'status': 'error', 'message': 'Event not found'}, status=404)
+            
+            # Check eligibility
+            if not event.is_global and member.council != event.council:
+                return JsonResponse({'status': 'error', 'message': f'{member.get_full_name()} is not eligible for this event'}, status=400)
+            
+            # Check if event is today
+            today = date.today()
+            if not (event.date_from <= today <= (event.date_until or event.date_from)):
+                return JsonResponse({'status': 'error', 'message': 'Attendance can only be recorded on the day of the event'}, status=400)
+            
+            # Record attendance
+            attendance, created = EventAttendance.objects.get_or_create(
+                event=event,
+                member=member,
+                defaults={'is_present': True, 'recorded_by': request.user}
+            )
+            
+            if not created:
+                if attendance.is_present:
+                    return JsonResponse({'status': 'success', 'message': f'{member.get_full_name()} was already marked present'})
+                else:
+                    attendance.is_present = True
+                    attendance.recorded_by = request.user
+                    attendance.save()
+            
+            return JsonResponse({'status': 'success', 'message': f'Attendance recorded for {member.get_full_name()}'})
+            
+        except json.JSONDecodeError:
+            return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
+        except Exception as e:
+            logger.error(f'Error in scan_qr: {str(e)}', exc_info=True)
+            return JsonResponse({'status': 'error', 'message': str(e)}, status=500)
+    
+    return JsonResponse({'status': 'error', 'message': 'Invalid request'}, status=400)
+
+@login_required
+def manage_councils(request):
+    """View for managing councils - add or remove"""
+    if request.user.role != 'admin':
+        messages.error(request, 'You do not have permission to access this page.')
+        return redirect('dashboard')
+    
+    councils = Council.objects.all().order_by('name')
+    
+    # Get member count for each council
+    council_data = []
+    for council in councils:
+        member_count = User.objects.filter(council=council, is_archived=False).count()
+        council_data.append({
+            'council': council,
+            'member_count': member_count
+        })
+    
+    context = {
+        'council_data': council_data,
+    }
+    
+    return render(request, 'manage_councils.html', context)
+
+@login_required
+@require_http_methods(["POST"])
+def add_council(request):
+    """Add a new council"""
+    if request.user.role != 'admin':
+        messages.error(request, 'You do not have permission to perform this action.')
+        return redirect('dashboard')
+    
+    council_name = request.POST.get('council_name', '').strip()
+    district = request.POST.get('district', '').strip()
+    
+    if not council_name or not district:
+        messages.error(request, 'Council name and district are required.')
+        return redirect('manage_councils')
+    
+    # Check if council already exists
+    if Council.objects.filter(name__iexact=council_name).exists():
+        messages.error(request, f'Council "{council_name}" already exists.')
+        return redirect('manage_councils')
+    
+    # Extract numbers from council name for ID, or use auto-increment
+    import re
+    numbers = re.findall(r'\d+', council_name)
+    
+    if numbers:
+        # Use the first number found in the name as ID
+        council_id = int(numbers[0])
+        
+        # Check if this ID already exists
+        if Council.objects.filter(id=council_id).exists():
+            messages.error(request, f'Council ID {council_id} already exists. Please use a different council name or number.')
+            return redirect('manage_councils')
+    else:
+        # No numbers in name, use auto-increment
+        max_id = Council.objects.aggregate(Max('id'))['id__max']
+        council_id = (max_id or 0) + 1
+    
+    # Create the council
+    Council.objects.create(
+        id=council_id,
+        name=council_name,
+        district=district
+    )
+    
+    messages.success(request, f'Council "{council_name}" has been added successfully.')
+    return redirect('manage_councils')
+
+@login_required
+@require_http_methods(["POST"])
+def delete_council(request, council_id):
+    """Delete a council"""
+    if request.user.role != 'admin':
+        messages.error(request, 'You do not have permission to perform this action.')
+        return redirect('dashboard')
+    
+    try:
+        council = Council.objects.get(id=council_id)
+        
+        # Check if council has members
+        member_count = User.objects.filter(council=council, is_archived=False).count()
+        if member_count > 0:
+            messages.error(request, f'Cannot delete council "{council.name}" because it has {member_count} active member(s). Please reassign members first.')
+            return redirect('manage_councils')
+        
+        council_name = council.name
+        council.delete()
+        messages.success(request, f'Council "{council_name}" has been deleted successfully.')
+    except Council.DoesNotExist:
+        messages.error(request, 'Council not found.')
+    except Exception as e:
+        messages.error(request, f'Error deleting council: {str(e)}')
+    
+    return redirect('manage_councils')
+
+@login_required
+@require_http_methods(["POST"])
+def edit_council(request, council_id):
+    """Edit a council's information"""
+    if request.user.role != 'admin':
+        messages.error(request, 'You do not have permission to perform this action.')
+        return redirect('dashboard')
+    
+    try:
+        council = Council.objects.get(id=council_id)
+        council_name = request.POST.get('council_name', '').strip()
+        district = request.POST.get('district', '').strip()
+        
+        if not council_name or not district:
+            messages.error(request, 'Council name and district are required.')
+            return redirect('manage_councils')
+        
+        # Check if another council with the same name exists
+        if Council.objects.filter(name__iexact=council_name).exclude(id=council_id).exists():
+            messages.error(request, f'Another council with the name "{council_name}" already exists.')
+            return redirect('manage_councils')
+        
+        council.name = council_name
+        council.district = district
+        council.save()
+        
+        messages.success(request, f'Council "{council_name}" has been updated successfully.')
+    except Council.DoesNotExist:
+        messages.error(request, 'Council not found.')
+    except Exception as e:
+        messages.error(request, f'Error updating council: {str(e)}')
+    
+    return redirect('manage_councils')

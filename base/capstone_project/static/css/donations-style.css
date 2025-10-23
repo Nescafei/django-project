@@ -167,15 +167,15 @@ body {
     height: 3rem;
     font-size: 1.2rem;
     cursor: pointer;
-    background: #f4b41a;
-    color: #161b5f;
+    background: #161b5f;
+    color: #f0f1f6;
     transition: 0.2s ease-in-out;
     font-family: "Noto Sans", sans-serif;
 }
 
 .donation-form button:hover {
-    background: #161b5f;
-    color: #f0f1f6;
+    background: #f4b41a;
+    color: #161b5f;
 }
 
 .donation-form #view-blockchain {
@@ -310,5 +310,46 @@ body {
         width: 7rem;
         height: 2rem;
         font-size: 0.9rem;
+    }
+}
+
+/* Animations from homepage-style.css */
+
+.background h1 {
+    animation: slideInDown 1s ease-out;
+}
+
+.background p {
+    animation: fadeIn 1s ease-out 0.4s both;
+}
+
+.donation-form {
+    opacity: 0;
+    transform: translateY(50px);
+    transition: all 0.8s ease-out;
+}
+
+.donation-form.animate-in {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
     }
 }

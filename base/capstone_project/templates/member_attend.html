@@ -1,0 +1,113 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Attend an Event
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/event_management.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
+
+<div class="dashboard-container">
+    <div class="event-form-container">
+        <div class="dashboard-header">
+            <h1>Attend an Event</h1>
+            <div>
+                <a href="{% url 'dashboard' %}" class="back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+        <div class="attendance-info">
+            <div class="qr-code-section">
+                <h2>Member Attendance</h2>
+                    <p>Welcome, {{ user.get_full_name }}!</p>
+                    {% if qr_code_url %}
+                        <img src="{{ qr_code_url }}" alt="QR Code" style="max-width: 200px;">
+                    {% else %}
+                        <p>No QR code available.</p>
+                    {% endif %}
+            </div>
+            <div class="member-details">
+                <h2>Member Information</h2>
+                <p><strong>Full Name:</strong> {{ user.get_full_name }}</p>
+                <p><strong>Council:</strong> {{ user.council.name|default:"Not assigned" }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Placeholder for QR code generation (to be handled by backend)
+    const qrPlaceholder = document.querySelector('.qr-placeholder');
+    if (qrPlaceholder && !document.querySelector('.qr-code-img')) {
+        console.log('QR code not loaded yet. Check backend integration.');
+    }
+});
+</script>
+
+<style>
+.attendance-info {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 2rem;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+    margin-top: 2rem;
+}
+
+.qr-code-section, .member-details {
+    margin-bottom: 2rem;
+}
+
+.qr-code-section h2, .member-details h2 {
+    color: var(--primary-bg);
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.qr-code-img {
+    width: 200px;
+    height: 200px;
+    border: 2px solid var(--primary-bg);
+    border-radius: 10px;
+    padding: 10px;
+    background: white;
+}
+
+.qr-placeholder {
+    color: #6c757d;
+    font-style: italic;
+}
+
+.member-details p {
+    font-size: 1.2rem;
+    color: var(--text-color);
+    margin: 0.5rem 0;
+}
+
+.member-details strong {
+    color: var(--heading-color);
+}
+
+@media (max-width: 768px) {
+    .attendance-info {
+        padding: 1.5rem;
+    }
+
+    .qr-code-img {
+        width: 150px;
+        height: 150px;
+    }
+
+    .member-details p {
+        font-size: 1rem;
+    }
+}
+</style>
+{% endblock %}

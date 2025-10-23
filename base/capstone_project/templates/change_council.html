@@ -10,7 +10,7 @@ Knights of Columbus - Change Council
 <div class="dashboard-container">
     <div class="content-card">
         <div class="dashboard-header">
-            <h1>Change Council Assignment</h1>
+            <h1 style="color: var(--primary-bg);">Change Council Assignment</h1>
             <div>
                 {% if request.user.role == 'admin' %}
                 <a href="{% url 'member_list' %}" class="dashboard-btn secondary back-btn">

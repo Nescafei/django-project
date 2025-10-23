@@ -1,0 +1,570 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Manage Councils
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/role_management.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/event_management.css' %}?v={% now 'U' %}">
+
+<div class="dashboard-container">
+    <div class="role-management-container">
+        <div class="role-management-header">
+            <h2>Council Management</h2>
+            <div>
+                <a href="{% url 'dashboard' %}" class="role-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Add Council Button -->
+        <div class="add-council-section">
+            <button class="secondary-btn" onclick="openAddCouncilModal()">
+                <i class="fas fa-plus"></i> Add New Council
+            </button>
+        </div>
+
+        <div class="role-search-filter">
+            <input type="text" id="councilSearchInput" placeholder="Search councils by name or district..." class="role-search-input">
+        </div>
+
+        <table class="event-table">
+            <thead>
+                <tr>
+                    <th>Council ID</th>
+                    <th>Council Name</th>
+                    <th>District</th>
+                    <th>Members</th>
+                    <th class="action-header">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in council_data %}
+                <tr data-name="{{ data.council.name }}" data-district="{{ data.council.district }}">
+                    <td>{{ data.council.id }}</td>
+                    <td>{{ data.council.name }}</td>
+                    <td>{{ data.council.district }}</td>
+                    <td>{{ data.member_count }}</td>
+                    <td>
+                        <div class="action-cell">
+                            <button class="action-btn edit-btn" onclick="openEditCouncilModal({{ data.council.id }}, '{{ data.council.name|escapejs }}', '{{ data.council.district|escapejs }}')">
+                                <i class="fas fa-edit"></i> Edit
+                            </button>
+                            <button class="action-btn delete-btn" onclick="confirmDeleteCouncil({{ data.council.id }}, '{{ data.council.name|escapejs }}', {{ data.member_count }})">
+                                <i class="fas fa-trash"></i> Delete
+                            </button>
+                        </div>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr>
+                    <td colspan="5" style="text-align: center; padding: 2rem;">No councils found.</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Add Council Modal -->
+<div id="addCouncilModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Add New Council</h3>
+            <span class="close" onclick="closeAddCouncilModal()">&times;</span>
+        </div>
+        <form method="POST" action="{% url 'add_council' %}">
+            {% csrf_token %}
+            <div class="modal-event-details-grid">
+                <div class="modal-detail-item full-width">
+                    <label for="council_name"><strong>Council Name:</strong></label>
+                    <input type="text" id="council_name" name="council_name" class="form-input" required>
+                </div>
+                <div class="modal-detail-item full-width">
+                    <label for="district"><strong>District:</strong></label>
+                    <input type="text" id="district" name="district" class="form-input" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="secondary-btn" onclick="closeAddCouncilModal()">Cancel</button>
+                <button type="submit" class="secondary-btn">Add Council</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Edit Council Modal -->
+<div id="editCouncilModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Edit Council</h3>
+            <span class="close" onclick="closeEditCouncilModal()">&times;</span>
+        </div>
+        <form method="POST" id="editCouncilForm">
+            {% csrf_token %}
+            <div class="modal-event-details-grid">
+                <div class="modal-detail-item full-width">
+                    <label for="edit_council_name"><strong>Council Name:</strong></label>
+                    <input type="text" id="edit_council_name" name="council_name" class="form-input" required>
+                </div>
+                <div class="modal-detail-item full-width">
+                    <label for="edit_district"><strong>District:</strong></label>
+                    <input type="text" id="edit_district" name="district" class="form-input" required>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="secondary-btn" onclick="closeEditCouncilModal()">Cancel</button>
+                <button type="submit" class="secondary-btn">Update Council</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div id="deleteCouncilModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Confirm Delete</h3>
+            <span class="close" onclick="closeDeleteCouncilModal()">&times;</span>
+        </div>
+        <div id="deleteCouncilContent">
+            <p>Are you sure you want to delete this council?</p>
+        </div>
+        <div class="modal-footer">
+            <button type="button" class="secondary-btn" onclick="closeDeleteCouncilModal()">Cancel</button>
+            <form method="POST" id="deleteCouncilForm" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit" class="secondary-btn">Delete</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Make notification messages disappear after 5 seconds
+        const alerts = document.querySelectorAll('.alert');
+        if (alerts.length > 0) {
+            setTimeout(function() {
+                alerts.forEach(function(alert) {
+                    alert.style.transition = 'opacity 1s ease';
+                    alert.style.opacity = '0';
+                    setTimeout(function() {
+                        alert.style.display = 'none';
+                    }, 1000);
+                });
+            }, 5000);
+        }
+        
+        // Search functionality
+        const searchInput = document.getElementById('councilSearchInput');
+        searchInput.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const rows = document.querySelectorAll('.event-table tbody tr');
+            
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
+            });
+        });
+    });
+
+    // Add Council Modal Functions
+    function openAddCouncilModal() {
+        const modal = document.getElementById('addCouncilModal');
+        modal.style.display = 'block';
+        modal.classList.add('show');
+    }
+
+    function closeAddCouncilModal() {
+        const modal = document.getElementById('addCouncilModal');
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300);
+    }
+
+    // Edit Council Modal Functions
+    function openEditCouncilModal(councilId, councilName, district) {
+        const modal = document.getElementById('editCouncilModal');
+        const form = document.getElementById('editCouncilForm');
+        
+        // Set form action
+        form.action = `/edit-council/${councilId}/`;
+        
+        // Populate form fields
+        document.getElementById('edit_council_name').value = councilName;
+        document.getElementById('edit_district').value = district;
+        
+        modal.style.display = 'block';
+        modal.classList.add('show');
+    }
+
+    function closeEditCouncilModal() {
+        const modal = document.getElementById('editCouncilModal');
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300);
+    }
+
+    // Delete Council Modal Functions
+    function confirmDeleteCouncil(councilId, councilName, memberCount) {
+        const modal = document.getElementById('deleteCouncilModal');
+        const content = document.getElementById('deleteCouncilContent');
+        const form = document.getElementById('deleteCouncilForm');
+        
+        if (memberCount > 0) {
+            content.innerHTML = `
+                <div class="warning-message">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <p>Cannot delete council "<strong>${councilName}</strong>" because it has <strong>${memberCount}</strong> active member(s).</p>
+                    <p>Please reassign members to another council before deleting.</p>
+                </div>
+            `;
+            form.style.display = 'none';
+        } else {
+            content.innerHTML = `
+                <p>Are you sure you want to delete council "<strong>${councilName}</strong>"?</p>
+                <p class="warning-text">This action cannot be undone.</p>
+            `;
+            form.action = `/delete-council/${councilId}/`;
+            form.style.display = 'inline';
+        }
+        
+        modal.style.display = 'block';
+        modal.classList.add('show');
+    }
+
+    function closeDeleteCouncilModal() {
+        const modal = document.getElementById('deleteCouncilModal');
+        modal.classList.remove('show');
+        setTimeout(() => {
+            modal.style.display = 'none';
+        }, 300);
+    }
+
+    // Close modals when clicking outside
+    window.addEventListener('click', function(event) {
+        const addModal = document.getElementById('addCouncilModal');
+        const editModal = document.getElementById('editCouncilModal');
+        const deleteModal = document.getElementById('deleteCouncilModal');
+        
+        if (event.target === addModal) {
+            closeAddCouncilModal();
+        } else if (event.target === editModal) {
+            closeEditCouncilModal();
+        } else if (event.target === deleteModal) {
+            closeDeleteCouncilModal();
+        }
+    });
+</script>
+
+<style>
+    /* Add Council Section */
+    .add-council-section {
+        margin-bottom: 1.5rem;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    .add-council-btn {
+        background-color: var(--primary-bg);
+        color: white !important;
+        padding: 0.75rem 1.5rem;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .add-council-btn:hover {
+        background-color: var(--accent-color);
+        transform: translateY(-2px);
+    }
+
+    /* Table Styles */
+    .event-table {
+        width: 100%;
+        border-collapse: separate;
+        border-spacing: 0;
+        background-color: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        margin-top: 2rem;
+        position: relative;
+    }
+
+    .event-table::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 4px;
+        background: linear-gradient(90deg, var(--primary-bg), var(--accent-color), var(--primary-bg));
+    }
+
+    .event-table th {
+        padding: 1.5rem 1.25rem;
+        text-align: left;
+        background-color: var(--primary-bg);
+        color: white;
+        font-weight: 700;
+        font-size: 0.95rem;
+        text-transform: uppercase;
+    }
+
+    .event-table td {
+        padding: 1.25rem;
+        text-align: left;
+        border-bottom: 1px solid rgba(13, 52, 113, 0.08);
+        vertical-align: middle;
+    }
+
+    .event-table tbody tr:hover {
+        background-color: rgba(13, 52, 113, 0.06);
+    }
+
+    .event-table tr:last-child td {
+        border-bottom: none;
+    }
+
+    .action-header {
+        text-align: center !important;
+    }
+
+    .action-cell {
+        display: flex;
+        justify-content: center;
+        gap: 0.75rem;
+    }
+
+    .action-btn {
+        padding: 0.6rem 1.2rem;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.85rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.5rem;
+        color: white;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    }
+
+    .action-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+    }
+
+    .edit-btn {
+        background-color: var(--accent-color);
+        color: var(--primary-bg) !important;
+    }
+
+    .delete-btn {
+        background-color: #dc3545;
+        color: white !important;
+    }
+
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(13, 52, 113, 0.8);
+        backdrop-filter: blur(5px);
+    }
+
+    .modal.show {
+        display: block;
+    }
+
+    .modal-content {
+        background: linear-gradient(135deg, var(--secondary-bg), white);
+        margin: 5% auto;
+        padding: 2rem;
+        border-radius: 16px;
+        max-width: 600px;
+        position: relative;
+        box-shadow: 0 20px 60px rgba(13, 52, 113, 0.3);
+        animation: modalSlideIn 0.4s ease-out;
+    }
+
+    @keyframes modalSlideIn {
+        from {
+            opacity: 0;
+            transform: translateY(-30px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .modal-header {
+        margin-bottom: 1.5rem;
+        border-bottom: 2px solid var(--primary-bg);
+        padding-bottom: 1rem;
+    }
+
+    .modal-header h3 {
+        color: var(--heading-color);
+        font-size: 1.8rem;
+        margin: 0;
+    }
+
+    .close {
+        position: absolute;
+        top: 1.5rem;
+        right: 2rem;
+        font-size: 2rem;
+        cursor: pointer;
+        color: var(--heading-color);
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all 0.3s ease;
+    }
+
+    .close:hover {
+        background-color: var(--primary-bg);
+        color: var(--secondary-bg);
+        transform: rotate(90deg);
+    }
+
+    .modal-event-details-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+
+    .modal-detail-item {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .modal-detail-item.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .form-input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 2px solid rgba(13, 52, 113, 0.2);
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s ease;
+    }
+
+    .form-input:focus {
+        outline: none;
+        border-color: var(--primary-bg);
+        box-shadow: 0 0 0 3px rgba(13, 52, 113, 0.1);
+    }
+
+    .modal-footer {
+        padding-top: 1.5rem;
+        text-align: right;
+        border-top: 1px solid rgba(13, 52, 113, 0.1);
+        display: flex;
+        justify-content: flex-end;
+        gap: 1rem;
+    }
+
+    .modal-footer .dashboard-btn {
+        padding: 0.75rem 1.5rem;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(13, 52, 113, 0.3);
+    }
+
+    .submit-btn {
+        background: linear-gradient(135deg, var(--primary-bg), #1e5a96);
+        color: white;
+    }
+
+    .submit-btn:hover {
+        background: linear-gradient(135deg, #1e5a96, var(--primary-bg));
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(13, 52, 113, 0.4);
+    }
+
+    .cancel-btn {
+        background: linear-gradient(135deg, #6c757d, #5a6268);
+        color: white;
+    }
+
+    .cancel-btn:hover {
+        background: linear-gradient(135deg, #5a6268, #6c757d);
+        transform: translateY(-2px);
+    }
+
+    .delete-confirm-btn {
+        background: linear-gradient(135deg, #dc3545, #e74c3c);
+        color: white;
+    }
+
+    .delete-confirm-btn:hover {
+        background: linear-gradient(135deg, #e74c3c, #dc3545);
+        transform: translateY(-2px);
+        box-shadow: 0 6px 16px rgba(220, 53, 69, 0.4);
+    }
+
+    .warning-message {
+        background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+        border: 2px solid #ffc107;
+        border-radius: 8px;
+        padding: 1.5rem;
+        text-align: center;
+    }
+
+    .warning-message i {
+        font-size: 3rem;
+        color: #f39c12;
+        margin-bottom: 1rem;
+    }
+
+    .warning-text {
+        color: #dc3545;
+        font-weight: 600;
+        margin-top: 0.5rem;
+    }
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .event-table {
+            display: block;
+            overflow-x: auto;
+        }
+
+        .action-cell {
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .modal-content {
+            margin: 10% 5%;
+            max-width: 90%;
+        }
+    }
+</style>
+{% endblock %}

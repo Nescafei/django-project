@@ -6,6 +6,7 @@ Knights of Columbus - Council Events
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/event_management.css' %}?v={% now 'U' %}">
 
 <div class="dashboard-container">
     <div class="content-card">
@@ -17,8 +18,6 @@ Knights of Columbus - Council Events
                 </a>
             </div>
         </div>
-        
-        <h2>{{ council.name }}</h2>
 
         <!-- Filters -->
         <div class="filters-container">
@@ -54,7 +53,7 @@ Knights of Columbus - Council Events
                     </select>
                 </div>
 
-                <div class="filter-group filter-buttons">
+                                <div class="filter-actions">
                     <button type="submit" class="dashboard-btn">Apply Filters</button>
                     <a href="{% url 'council_events' %}" class="dashboard-btn secondary">Clear Filters</a>
                 </div>
@@ -73,93 +72,74 @@ Knights of Columbus - Council Events
         <!-- Current & Upcoming Events List -->
         <h3 class="section-title">Current & Upcoming Events</h3>
         <div class="events-list">
-            {% for event in events %}
-            <div class="event-item {% if event.status == 'rejected' %}rejected-event{% endif %} {% if event.is_today %}today-event{% endif %}">
-                {% if event.is_today %}
-                <div class="today-badge">
-                    <i class="fas fa-calendar-day"></i> Today's Event
-                </div>
-                {% endif %}
-                
-                <div class="event-header">
-                    <h3 {% if event.status == 'rejected' %}class="rejected-title"{% endif %}>{{ event.name }}</h3>
-                    <span class="status-badge status-{{ event.status }}">{{ event.get_status_display }}</span>
-                </div>
-                
-                <div class="event-details">
-                    <div class="detail-column">
-                        <p><strong>Event ID:</strong> #{{ event.id }}</p>
-                        <p><strong>Date:</strong> {{ event.date_from|date:"F d, Y" }} {% if event.date_until and event.date_until != event.date_from %} - {{ event.date_until|date:"F d, Y" }}{% endif %}</p>
-                        <p><strong>Category:</strong> {{ event.category }}{% if event.subcategory and event.subcategory != 'N/A' %} - {{ event.subcategory }}{% endif %}</p>
-                    </div>
-                    <div class="detail-column">
-                        <p><strong>Location:</strong> {{ event.city }}, {{ event.province }}</p>
-                        <p><strong>Created by:</strong> {{ event.created_by.first_name }} {{ event.created_by.last_name }}</p>
-                    </div>
-                </div>
-                
-                {% if event.status == 'rejected' and event.rejection_reason %}
-                <div class="rejection-reason">
-                    <p><strong>Rejection Reason:</strong> {{ event.rejection_reason }}</p>
-                </div>
-                {% endif %}
-                
-                <div class="event-description">
-                    <p>{{ event.description|truncatechars:150 }}</p>
-                </div>
-                
-                <div class="action-buttons">
-                    <button class="dashboard-btn view-event-btn" data-event-id="{{ event.id }}">
-                        <i class="fas fa-eye"></i>View Details
-                    </button>
-                    
-                    {% if user == event.created_by and event.status == 'pending' %}
-                    <a href="{% url 'edit_event' event.id %}" class="dashboard-btn">
-                        <i class="fas fa-edit"></i>Edit
-                    </a>
-                    {% endif %}
-                    
-                    {% if user.role == 'officer' and event.status == 'approved' %}
-                        {% if event.is_today %}
-                        <a href="{% url 'event_attendance' event.id %}" class="dashboard-btn attendance-btn">
-                            <i class="fas fa-clipboard-check"></i>Manage Attendance
-                        </a>
-                        {% else %}
-                        <button class="dashboard-btn attendance-btn disabled" data-event-id="{{ event.id }}">
-                            <i class="fas fa-clipboard-check"></i>Manage Attendance
-                        </button>
-                        {% endif %}
-                    {% endif %}
-                </div>
-            </div>
-            {% empty %}
-            <div class="empty-state">
-                <i class="fas fa-calendar-times"></i>
-                <p>No upcoming events found matching your criteria.</p>
-                <p>Try adjusting your filters or propose a new event.</p>
-            </div>
-            {% endfor %}
+            <table class="event-table">
+                <thead>
+                    <tr>
+                        <th>Event ID</th>
+                        <th>Event Name</th>
+                        <th>Date</th>
+                        <th>Category</th>
+                        <th>Council</th>
+                        <th>Status</th>
+                        <th class="action-header">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for event in events %}
+                    <tr>
+                        <td>{{ event.id }}</td>
+                        <td>{{ event.name }}</td>
+                        <td>{{ event.date_from|date:"F d, Y" }}{% if event.date_until and event.date_until != event.date_from %} - {{ event.date_until|date:"F d, Y" }}{% endif %}</td>
+                        <td>{{ event.category }}{% if event.subcategory and event.subcategory != 'N/A' %} - {{ event.subcategory }}{% endif %}</td>
+                        <td>{{ event.council.name }}</td>
+                        <td><span class="status-badge status-{{ event.status }}">{{ event.get_status_display }}</span></td>
+                        <td>
+                            <div class="action-cell">
+                                <button class="action-btn details-btn" onclick="viewEventDetails('{{ event.id }}')"><i class="fas fa-eye"></i> View</button>
+                                                                <a href="{% url 'edit_event' event.id %}" class="action-btn edit-btn"><i class="fas fa-edit"></i> Edit</a>
+                                {% if user.role == 'officer' and event.status == 'approved' %}
+                                    {% if event.is_today %}
+                                    <a href="{% url 'event_attendance' event.id %}" class="action-btn attendance-btn">
+                                        <i class="fas fa-clipboard-check"></i> Attendance
+                                    </a>
+                                    {% else %}
+                                    <button class="action-btn attendance-btn disabled" data-event-id="{{ event.id }}">
+                                        <i class="fas fa-clipboard-check"></i> Attendance
+                                    </button>
+                                    {% endif %}
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6">
+                            <div class="no-events-message">
+                                <p>No events found matching your criteria.</p>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
         </div>
         
         <!-- Past Events Section -->
         {% if past_events %}
         <div class="past-events-section">
-            <h3 class="section-title">Past Events</h3>
-            <p class="past-events-message">
+            <h2 style="color: var(--primary-bg);">Past Events</h2>
+            <div class="past-events-message">
                 <i class="fas fa-info-circle"></i>
-                Past events are automatically moved to the archives. 
-                <a href="{% url 'archived_events' %}" class="view-archives-link">View All Archived Events</a>
-            </p>
-            
+                <span>Past events are automatically moved to the archives. <a href="{% url 'archived_events' %}" class="view-archives-link">View All Archived Events</a></span>
+            </div>
             <div class="past-events-preview">
-                {% for event in past_events|slice:":3" %}
+                {% for event in past_events|slice:":5" %}
                 <div class="past-event-item">
-                    <div class="past-event-name">{{ event.name }}</div>
-                    <div class="past-event-date">{{ event.date_from|date:"F d, Y" }}</div>
+                    <span class="past-event-name">{{ event.name }}</span>
+                    <span class="past-event-date">{{ event.date_from|date:"F d, Y" }}</span>
                 </div>
                 {% endfor %}
-                
-                {% if past_events|length > 3 %}
+                {% if past_events|length > 5 %}
                 <div class="more-past-events">
                     <a href="{% url 'archived_events' %}">+ {{ past_events|length|add:"-3" }} more past events</a>
                 </div>
@@ -214,60 +194,98 @@ Knights of Columbus - Council Events
 </div>
 
 <style>
+:root {
+    --primary-bg: #0D3471;
+    --secondary-bg: #F0F1F6;
+    --accent-color: #F4B41A;
+    --heading-color: #0D3471;
+    --text-color: #000000;
+    --container-padding: 2rem;
+    --border-radius: 8px;
+    --transition-speed: 0.3s;
+    --table-shadow: 0 8px 32px rgba(13, 52, 113, 0.15);
+}
+.dashboard-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2.5rem;
+}
+.dashboard-header h1 {
+    color: var(--primary-bg);
+    font-size: 2.5rem;
+    font-weight: 700;
+}
+.add-event-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--border-radius);
+    background: var(--primary-bg);
+    color: white;
+    font-size: 1rem;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all var(--transition-speed) ease;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+}
+.add-event-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(45deg, var(--accent-color), #f39c12);
+    transition: left var(--transition-speed) ease;
+    z-index: -1;
+}
+.add-event-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(13, 52, 113, 0.3);
+}
+.add-event-btn:hover::before {
+    left: 0;
+}
 .filters-container {
     background-color: #f8f9fa;
     padding: 1.5rem;
     border-radius: var(--border-radius);
     margin-bottom: 2rem;
 }
-
 .filter-form {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
     align-items: flex-end;
 }
-
-.filter-group {
-    flex: 1;
-    min-width: 200px;
-}
-
+.filter-group { flex: 1 1 200px; }
 .filter-group label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: var(--heading-color);
 }
-
 .filter-select {
     width: 100%;
     padding: 0.75rem;
     border: 1px solid rgba(13, 52, 113, 0.2);
     border-radius: var(--border-radius);
     font-size: 1rem;
-    background-color: white;
 }
-
-.filter-buttons {
+.filter-actions {
     display: flex;
     gap: 1rem;
-    flex-direction: row;
-    height: 3rem;
+    flex-basis: auto;
+    flex-grow: 0;
 }
-
-
-/* Improved search container */
-.search-container {
-    margin-bottom: 2rem;
-}
-
+.search-container { margin-bottom: 2rem; }
 .search-wrapper {
     position: relative;
     max-width: 600px;
     margin: 0 auto;
 }
-
 .search-icon {
     position: absolute;
     left: 1rem;
@@ -275,23 +293,13 @@ Knights of Columbus - Council Events
     transform: translateY(-50%);
     color: #6c757d;
 }
-
 .search-input {
     width: 100%;
     padding: 0.75rem 2.5rem;
     border: 2px solid rgba(13, 52, 113, 0.2);
     border-radius: var(--border-radius);
     font-size: 1rem;
-    background-color: white;
-    transition: all 0.3s ease;
 }
-
-.search-input:focus {
-    border-color: var(--primary-bg);
-    box-shadow: 0 0 0 3px rgba(13, 52, 113, 0.1);
-    outline: none;
-}
-
 .clear-search {
     position: absolute;
     right: 1rem;
@@ -303,385 +311,189 @@ Knights of Columbus - Council Events
     cursor: pointer;
     display: none;
 }
-
-.clear-search:hover {
-    color: var(--primary-bg);
-}
-
-.section-title {
-    margin: 2rem 0 1rem;
-    color: var(--heading-color);
-    border-bottom: 2px solid rgba(13, 52, 113, 0.1);
-    padding-bottom: 0.5rem;
-}
-
-.events-list {
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
-    margin-bottom: 2rem;
-}
-
-.event-item {
+.event-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
     background-color: white;
-    border-radius: var(--border-radius);
-    padding: 1.5rem;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-    transition: transform 0.2s ease, box-shadow 0.2s ease;
-    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: var(--table-shadow);
+    margin-top: 2rem;
 }
-
-.event-item:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-}
-
-.today-event {
-    border-left: 4px solid #28a745;
-}
-
-.today-badge {
+.event-table::before {
+    content: '';
     position: absolute;
-    top: -10px;
-    right: 20px;
-    background-color: #28a745;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+}
+.event-table th {
+    padding: 1.5rem 1.25rem;
+    text-align: left;
+    background-color: var(--primary-bg);
     color: white;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 0.95rem;
+    text-transform: uppercase;
+}
+.event-table td {
+    padding: 1.25rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(13, 52, 113, 0.08);
+    vertical-align: middle;
+}
+.event-table tbody tr:hover { background-color: rgba(13, 52, 113, 0.06); }
+.event-table tr:last-child td { border-bottom: none; }
+.action-header { text-align: center !important; }
+.action-cell {
     display: flex;
-    align-items: center;
+    justify-content: center;
     gap: 0.5rem;
 }
-
-.event-header {
-    display: flex;
-    justify-content: space-between;
+.action-btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all var(--transition-speed) ease;
+    text-decoration: none;
+    display: inline-flex;
     align-items: center;
-    margin-bottom: 1rem;
-    flex-wrap: wrap;
-    gap: 1rem;
+    justify-content: center;
+    color: white;
+    gap: 0.5rem;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
-
-.event-header h3 {
-    margin: 0;
-    font-size: 1.5rem;
-    color: var(--heading-color);
-}
-
-.event-details {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 2rem;
-    margin-bottom: 1rem;
-}
-
-.detail-column {
-    flex: 1;
-    min-width: 200px;
-}
-
-.detail-column p {
-    margin: 0.5rem 0;
-}
-
-.event-description {
-    margin-bottom: 1.5rem;
-    color: #555;
-}
-
+.action-btn:hover { transform: translateY(-2px); box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25); }
+.details-btn { background-color: var(--accent-color); color: var(--primary-bg); }
+.edit-btn { background-color: var(--primary-bg); }
+.delete-btn { background-color: #dc3545; }
+.approve-btn { background-color: #28a745; }
+.reject-btn { background-color: #6c757d; }
+.attendance-btn { background-color: #28a745; }
+.attendance-btn.disabled { background-color: #6c757d; cursor: not-allowed; }
 .status-badge {
     display: inline-block;
-    padding: 0.25rem 0.75rem;
-    border-radius: 20px;
-    font-size: 0.85rem;
-    font-weight: 600;
+    padding: 0.5rem 1rem;
+    border-radius: 25px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+.status-pending { background-color: #ffc107; color: #212529; }
+.status-approved { background-color: #28a745; color: white; }
+.status-rejected { background-color: #dc3545; color: white; }
+.no-events-message { text-align: center; padding: 3rem 2rem; background: #f8f9fa; border-radius: 12px; color: #6c757d; }
+.modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; background-color: rgba(13, 52, 113, 0.8); backdrop-filter: blur(5px); }
+.modal.show { display: block; }
+.modal-content { background: linear-gradient(135deg, var(--secondary-bg), white); margin: 5% auto; padding: 2.5rem; border-radius: 16px; max-width: 700px; position: relative; max-height: 85vh; overflow-y: auto; box-shadow: 0 20px 60px rgba(13, 52, 113, 0.3); animation: modalSlideIn 0.4s ease-out; }
+@keyframes modalSlideIn { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+.modal-header h3 { color: var(--heading-color); margin-bottom: 1.5rem; border-bottom: 2px solid var(--primary-bg); padding-bottom: 1rem; font-size: 1.8rem; }
+.close { position: absolute; top: 1.5rem; right: 2rem; font-size: 2rem; cursor: pointer; color: var(--heading-color); transition: all var(--transition-speed) ease; }
+.close:hover { transform: rotate(90deg); }
+#eventDetailsContent { padding: 0; }
+.modal-event-details-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
+.modal-detail-item { padding: 1rem; background-color: rgba(13, 52, 113, 0.05); border-radius: var(--border-radius); }
+.modal-detail-item strong { display: block; color: var(--heading-color); margin-bottom: 0.5rem; }
+.modal-detail-item.full-width { grid-column: 1 / -1; }
+.modal-event-title { grid-column: 1 / -1; margin: 0 0 1rem 0; padding-bottom: 1rem; border-bottom: 1px solid rgba(13, 52, 113, 0.1); }
+.modal-footer { padding-top: 1.5rem; text-align: right; border-top: 1px solid rgba(13, 52, 113, 0.1); }
+@media (max-width: 768px) {
+    .filter-form { flex-direction: column; align-items: stretch; }
+    .filter-group { width: 100%; }
+    .filter-actions { width: 100%; flex-direction: column; gap: 0.5rem; }
+    .filter-actions .dashboard-btn { justify-content: center; width: 100%; }
+    .event-table { display: block; overflow-x: auto; }
 }
 
-.status-pending {
-    background-color: #ffc107;
-    color: #212529;
-}
-
-.status-approved {
-    background-color: #28a745;
-    color: white;
-}
-
-.status-rejected {
-    background-color: #dc3545;
-    color: white;
-}
-
-/* Rejected event styles */
-.rejected-event {
-    opacity: 0.8;
-    border-left: 4px solid #dc3545;
-}
-
-.rejected-title {
-    text-decoration: line-through;
-    color: #6c757d;
-}
-
-.rejection-reason {
-    background-color: #f8d7da;
-    color: #721c24;
-    padding: 0.75rem;
-    border-radius: var(--border-radius);
-    margin-bottom: 1rem;
-    font-size: 0.9rem;
-}
-
-.empty-state {
-    text-align: center;
-    padding: 3rem 1rem;
-    color: #6c757d;
-}
-
-.empty-state i {
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    color: #adb5bd;
-}
-
-.action-buttons-container {
-    display: flex;
-    justify-content: flex-end;
-    margin-top: 1rem;
-}
-
-/* Past events section */
 .past-events-section {
-    margin: 2rem 0;
-    padding: 1.5rem;
-    background-color: #f8f9fa;
-    border-radius: var(--border-radius);
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(13, 52, 113, 0.1);
 }
 
 .past-events-message {
+    background-color: rgba(13, 52, 113, 0.05);
+    padding: 1rem;
+    border-radius: var(--border-radius);
     display: flex;
     align-items: center;
     gap: 0.75rem;
+    color: var(--heading-color);
     margin-bottom: 1.5rem;
-    color: #6c757d;
 }
 
-.past-events-message i {
+.past-events-message .view-archives-link {
+    font-weight: 600;
     color: var(--primary-bg);
-}
-
-.view-archives-link {
-    color: var(--primary-bg);
-    font-weight: 500;
-    margin-left: auto;
+    text-decoration: none;
 }
 
 .past-events-preview {
-    display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    display: grid;
+    gap: 1rem;
 }
 
 .past-event-item {
+    background-color: #fff;
+    padding: 1rem 1.5rem;
+    border-radius: var(--border-radius);
     display: flex;
     justify-content: space-between;
-    padding: 0.75rem;
-    background-color: white;
-    border-radius: var(--border-radius);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    align-items: center;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.07);
 }
 
-.past-event-name {
-    font-weight: 500;
-    color: var(--heading-color);
-}
+.past-event-name { font-weight: 500; }
 
 .past-event-date {
-    color: #6c757d;
     font-size: 0.9rem;
-}
-
-.more-past-events {
-    text-align: center;
-    margin-top: 1rem;
+    color: #6c757d;
 }
 
 .more-past-events a {
-    color: var(--primary-bg);
-    font-weight: 500;
-}
-
-/* Attendance button */
-.attendance-btn {
-    background-color: #28a745;
-}
-
-.attendance-btn:hover {
-    background-color: #218838;
-}
-
-.attendance-btn.disabled {
-    background-color: #6c757d;
-    cursor: pointer;
-}
-
-/* Warning modal */
-.warning-modal .modal-header {
-    border-bottom-color: #ffc107;
-}
-
-.warning-message {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 2rem 1rem;
+    display: block;
     text-align: center;
-}
-
-.warning-message i {
-    font-size: 3rem;
-    color: #ffc107;
-    margin-bottom: 1.5rem;
-}
-
-.warning-message p {
-    margin: 0.5rem 0;
-    font-size: 1.1rem;
-    color: #495057;
-}
-
-/* Improved Modal styles */
-.modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background-color: rgba(0, 0, 0, 0.5);
-    opacity: 0;
-    transition: opacity 0.3s ease;
-}
-
-.modal.show {
-    opacity: 1;
-}
-
-.modal-content {
-    background-color: var(--secondary-bg);
-    margin: 10% auto;
+    padding: 0.75rem;
+    background-color: #f8f9fa;
     border-radius: var(--border-radius);
-    max-width: 700px;
-    position: relative;
-    max-height: 80vh;
-    overflow-y: auto;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-    transform: translateY(-20px);
-    opacity: 0;
-    transition: transform 0.3s ease, opacity 0.3s ease;
-}
-
-.modal.show .modal-content {
-    transform: translateY(0);
-    opacity: 1;
-}
-
-.modal-header {
-    padding: 1.5rem;
-    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.modal-header h3 {
-    margin: 0;
-    color: var(--heading-color);
-}
-
-.modal-body {
-    padding: 1.5rem;
-}
-
-#eventDetailsContent {
-    padding: 1.5rem;
-}
-
-.modal-footer {
-    padding: 1rem 1.5rem;
-    border-top: 1px solid rgba(0, 0, 0, 0.1);
-    text-align: right;
-}
-
-.close {
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #aaa;
-    transition: color 0.2s ease;
-}
-
-.close:hover {
+    text-decoration: none;
     color: var(--primary-bg);
+    font-weight: 600;
+    transition: background-color var(--transition-speed) ease;
 }
 
-.loading {
-    text-align: center;
-    padding: 2rem;
-    color: var(--heading-color);
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .action-buttons-container {
-        flex-direction: column;
-    }
-    
-    .modal-content {
-        margin: 10% 1rem;
-        max-height: 90vh;
-    }
-}
-
-.back-btn:hover {
-    background-color: #f4b41a !important;
-    color: white;
-}
+.more-past-events a:hover { background-color: #e9ecef; }
 </style>
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    // Search functionality with clear button
+    // Search functionality
     const searchInput = document.getElementById('eventSearch');
     const clearButton = document.getElementById('clearSearch');
     
     if (searchInput) {
         searchInput.addEventListener('input', function() {
             const searchTerm = this.value.toLowerCase();
-            const eventItems = document.querySelectorAll('.event-item');
-            
-            // Show/hide clear button
+            const eventRows = document.querySelectorAll('.event-table tbody tr');
             clearButton.style.display = searchTerm ? 'block' : 'none';
-            
-            eventItems.forEach(item => {
-                const text = item.textContent.toLowerCase();
-                item.style.display = text.includes(searchTerm) ? '' : 'none';
+            eventRows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                row.style.display = text.includes(searchTerm) ? '' : 'none';
             });
         });
-        
-        // Focus effect
-        searchInput.addEventListener('focus', function() {
-            this.parentElement.style.boxShadow = '0 0 0 3px rgba(13, 52, 113, 0.1)';
-        });
-        
-        searchInput.addEventListener('blur', function() {
-            this.parentElement.style.boxShadow = 'none';
-        });
+
+        searchInput.addEventListener('focus', () => searchInput.parentElement.style.boxShadow = '0 0 0 3px rgba(13, 52, 113, 0.1)');
+        searchInput.addEventListener('blur', () => searchInput.parentElement.style.boxShadow = 'none');
     }
     
-    // Clear search
     if (clearButton) {
         clearButton.addEventListener('click', function() {
             searchInput.value = '';
@@ -689,138 +501,80 @@ document.addEventListener('DOMContentLoaded', function() {
             searchInput.focus();
         });
     }
-    
-    // View event details
-    const viewEventBtns = document.querySelectorAll('.view-event-btn');
+
+    // Modal handling
     const eventModal = document.getElementById('eventDetailsModal');
-    const contentDiv = document.getElementById('eventDetailsContent');
     const okButton = document.getElementById('okButton');
-    
-    // Attendance warning modal
     const attendanceWarningModal = document.getElementById('attendanceWarningModal');
     const warningOkButton = document.getElementById('warningOkButton');
-    const disabledAttendanceBtns = document.querySelectorAll('.attendance-btn.disabled');
-    
+
     function openModal(modal) {
         modal.style.display = 'block';
-        // Trigger reflow to allow animation to work
-        modal.offsetHeight;
+        modal.offsetHeight; // Trigger reflow
         modal.classList.add('show');
     }
-    
+
     function closeModal(modal) {
         modal.classList.remove('show');
-        setTimeout(function() {
-            modal.style.display = 'none';
-        }, 300); // Match the transition duration
+        setTimeout(() => { modal.style.display = 'none'; }, 300);
     }
-    
-    viewEventBtns.forEach(btn => {
-        btn.addEventListener('click', function(e) {
-            e.preventDefault();
-            const eventId = this.getAttribute('data-event-id');
-            
-            openModal(eventModal);
-            contentDiv.innerHTML = '<div class="loading">Loading event details...</div>';
-            
-            fetch(`/event/${eventId}/details/`)
-                .then(response => response.json())
-                .then(data => {
-                    let statusClass = data.status === 'rejected' ? 'rejected-title' : '';
-                    let detailsHTML = `
-                        <div class="event-details">
-                            <h4 ${data.status === 'rejected' ? 'class="rejected-title"' : ''}>${data.name}</h4>
-                            <p class="event-category">${data.category}</p>
-                            
-                            <div class="detail-group">
-                                <strong>Date:</strong> 
-                                <span>${data.date_from}${data.date_until ? ' - ' + data.date_until : ''}</span>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Location:</strong>
-                                <address>
-                                    ${data.street}, ${data.barangay}<br>
-                                    ${data.city}, ${data.province}
-                                </address>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Description:</strong>
-                                <p>${data.description}</p>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Council:</strong>
-                                <p>${data.council_name}</p>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Status:</strong>
-                                <span class="status-badge status-${data.status}">${data.status_display}</span>
-                            </div>
-                            
-                            <div class="detail-group">
-                                <strong>Created by:</strong>
-                                <p>${data.creator_name}</p>
-                            </div>
-                    `;
-                    
-                    if (data.status === 'rejected' && data.rejection_reason) {
-                        detailsHTML += `
-                            <div class="detail-group rejection-reason">
-                                <strong>Rejection Reason:</strong>
-                                <p>${data.rejection_reason}</p>
-                            </div>
-                        `;
-                    }
-                    
-                    detailsHTML += `</div>`;
-                    contentDiv.innerHTML = detailsHTML;
-                })
-                .catch(error => {
-                    contentDiv.innerHTML = '<p>Error loading event details. Please try again later.</p>';
-                });
-        });
-    });
-    
-    // Disabled attendance buttons
-    disabledAttendanceBtns.forEach(btn => {
-        btn.addEventListener('click', function(e) {
+
+    window.viewEventDetails = function(eventId) {
+        const contentDiv = document.getElementById('eventDetailsContent');
+        openModal(eventModal);
+        contentDiv.innerHTML = '<div class="loading">Loading event details...</div>';
+        
+        fetch(`/event/${eventId}/details/`)
+            .then(response => response.json())
+            .then(data => {
+                let detailsHTML = `
+                    <h4 class="modal-event-title ${data.status === 'rejected' ? 'rejected-title' : ''}">${data.name}</h4>
+                    <div class="modal-event-details-grid">
+                        <div class="modal-detail-item"><strong>Date:</strong> <span>${data.date_from}${data.date_until ? ' - ' + data.date_until : ''}</span></div>
+                        <div class="modal-detail-item"><strong>Location:</strong> <address>${data.street}, ${data.barangay}<br>${data.city}, ${data.province}</address></div>
+                        <div class="modal-detail-item"><strong>Council:</strong> <p>${data.council_name}</p></div>
+                        <div class="modal-detail-item"><strong>Status:</strong> <span class="status-badge status-${data.status}">${data.status_display}</span></div>
+                        <div class="modal-detail-item"><strong>Created by:</strong> <p>${data.creator_name}</p></div>
+                        <div class="modal-detail-item full-width"><strong>Description:</strong> <p>${data.description}</p></div>
+                `;
+                if (data.status === 'rejected' && data.rejection_reason) {
+                    detailsHTML += `<div class="modal-detail-item full-width rejection-reason"><strong>Rejection Reason:</strong> <p>${data.rejection_reason}</p></div>`;
+                }
+                detailsHTML += `</div>`;
+                contentDiv.innerHTML = detailsHTML;
+            })
+            .catch(error => {
+                contentDiv.innerHTML = '<p>Error loading event details. Please try again later.</p>';
+            });
+    };
+
+    window.confirmDelete = function(eventId) {
+        if (confirm('Are you sure you want to delete this event?')) {
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = `/event/${eventId}/delete/`;
+            const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+            form.innerHTML = `<input type="hidden" name="csrfmiddlewaretoken" value="${csrfToken}">`;
+            document.body.appendChild(form);
+            form.submit();
+        }
+    };
+
+    document.querySelectorAll('.attendance-btn.disabled').forEach(btn => {
+        btn.addEventListener('click', e => {
             e.preventDefault();
             openModal(attendanceWarningModal);
         });
     });
-    
-    // Close modals when clicking the close button
-    document.querySelectorAll('.modal .close').forEach(closeBtn => {
-        closeBtn.addEventListener('click', function() {
-            const modal = this.closest('.modal');
-            closeModal(modal);
-        });
-    });
-    
-    // Close modals when clicking the OK button
-    if (okButton) {
-        okButton.addEventListener('click', function() {
-            closeModal(eventModal);
-        });
-    }
-    
-    if (warningOkButton) {
-        warningOkButton.addEventListener('click', function() {
-            closeModal(attendanceWarningModal);
-        });
-    }
-    
-    // Close modals when clicking outside of them
-    window.addEventListener('click', function(event) {
-        if (event.target === eventModal) {
-            closeModal(eventModal);
-        } else if (event.target === attendanceWarningModal) {
-            closeModal(attendanceWarningModal);
-        }
+
+    document.querySelectorAll('.modal .close').forEach(btn => btn.addEventListener('click', () => closeModal(btn.closest('.modal'))));
+    if (okButton) okButton.addEventListener('click', () => closeModal(eventModal));
+    if (warningOkButton) warningOkButton.addEventListener('click', () => closeModal(attendanceWarningModal));
+
+    window.addEventListener('click', e => { 
+        if (e.target === eventModal) closeModal(eventModal); 
+        if (e.target === attendanceWarningModal) closeModal(attendanceWarningModal);
     });
 });
 </script>
-{% endblock %} 
+{% endblock %}
