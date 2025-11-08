@@ -223,7 +223,29 @@ body {
     background-color: #f8d7da;
     color: #721c24;
 }
+.warning {
+    color: #d9534f;
+    font-size: 0.85em;
+    display: block;
+    margin-top: 5px;
+}
 
+.form-group {
+    margin-bottom: 15px;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     .background {

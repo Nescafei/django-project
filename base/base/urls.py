@@ -3,7 +3,8 @@ from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
 from django.contrib.auth import views as auth_views
-from capstone_project import views
+from capstone_project.more_views import views,donation, ledger, event_management, user_management, attendance
+from capstone_project.more_views import views
 from django.views.static import serve
 
 urlpatterns = [
@@ -25,7 +26,7 @@ urlpatterns = [
     path('reset/done/', auth_views.PasswordResetCompleteView.as_view(
         template_name='registration/password_reset_complete.html'
     ), name='password_reset_complete'),
-    path('update-degree/<int:user_id>/', views.update_degree, name='update_degree'),
+    path('update-degree/<int:user_id>/', user_management.update_degree, name='update_degree'),
     path('edit-profile/', views.edit_profile, name='edit_profile'),
     path('media/<path:path>', serve, {'document_root': settings.MEDIA_ROOT})
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

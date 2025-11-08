@@ -10,7 +10,7 @@ from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric import rsa
 from cryptography.hazmat.backends import default_backend
 from capstone_project.models import Blockchain, Block, Donation, Council, User
-from capstone_project.views import PRIVATE_KEY, PUBLIC_KEY
+from capstone_project.more_views import PRIVATE_KEY, PUBLIC_KEY
 
 logger = logging.getLogger(__name__)
 
