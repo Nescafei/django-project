@@ -90,38 +90,14 @@ function validateAmount(input) {
     return true;
 }
 
-function validateDate(input) {
-    const warning = document.getElementById('donation_date_warning');
-    
-    if (!input.value) {
-        warning.textContent = 'Donation date is required.';
-        return false;
-    }
-    
-    const selectedDate = new Date(input.value);
-    const today = new Date();
-    
-    selectedDate.setHours(0, 0, 0, 0);
-    today.setHours(0, 0, 0, 0);
-    
-    if (selectedDate > today) {
-        warning.textContent = 'Donation date cannot be in the future.';
-        return false;
-    }
-    
-    warning.textContent = '';
-    return true;
-}
-
 function validateForm() {
     const firstNameValid = validateName(document.getElementById('id_first_name'));
     const middleInitialValid = validateMiddleInitial(document.getElementById('id_middle_initial'));
     const lastNameValid = validateName(document.getElementById('id_last_name'));
     const emailValid = validateEmail(document.getElementById('id_email'));
     const amountValid = validateAmount(document.getElementById('id_amount'));
-    const dateValid = validateDate(document.getElementById('id_donation_date'));
     
-    return firstNameValid && middleInitialValid && lastNameValid && emailValid && amountValid && dateValid;
+    return firstNameValid && middleInitialValid && lastNameValid && emailValid && amountValid;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -129,24 +105,16 @@ document.addEventListener('DOMContentLoaded', () => {
     const donationForm = document.querySelector('#donationForm');
     if (donationForm) {
         console.log('Donation form found:', donationForm);
-        donationForm.addEventListener('submit', async (event) => {
-            console.log('Form submit event triggered');
-            event.preventDefault();
-            event.stopPropagation();
-
+        donationForm.addEventListener('submit', function handler(event) {
+            console.log('Submit intercepted');
             if (!validateForm()) {
-                console.error('Form validation failed');
+                event.preventDefault();
+                console.warn('Validation failed — blocking submit');
                 return;
             }
-
-            const formData = new FormData(event.target);
-            const formEntries = {};
-            for (const [key, value] of formData.entries()) {
-                formEntries[key] = value;
-            }
-            console.log('Raw form data:', formEntries);
-
-            donationForm.submit();
+            console.log('Validation passed — submitting...');
+            donationForm.removeEventListener('submit', handler);
+            event.target.submit();
         });
     } else {
         console.error('Error: Donation form not found');

@@ -1,6 +1,6 @@
-import base64, os,uuid, logging, requests
+import base64, os, uuid, logging, requests
 from capstone_project.forms import DonationForm, ManualDonationForm
-from capstone_project.models import User, Council, Event, Analytics, Donation, Blockchain, blockchain, Block, ForumCategory, ForumMessage, Notification, EventAttendance, Recruitment
+from capstone_project.models import User, Council, Event, Analytics, Donation, Blockchain, blockchain, Block, ForumCategory, ForumMessage, Notification, EventAttendance, Recruitment, get_blockchain
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
 from datetime import datetime, date
@@ -33,6 +33,7 @@ def log_block_delete(sender, instance, **kwargs):
 
 PAYMONGO_API_URL = 'https://api.paymongo.com/v1'
 
+# Updated donations view in donation.py
 @never_cache
 def donations(request):
     show_manual_link = request.user.is_authenticated and request.user.role in ['admin', 'officer']
@@ -41,7 +42,7 @@ def donations(request):
         form = DonationForm(request.POST, request.FILES)
         logger.debug(f"Form fields: {form.as_p()}")
         if form.is_valid():
-            donation = form.save(commit=False)
+            donation = form.save(commit=False)  # Event is now included via form
             donation.submitted_by = request.user if request.user.is_authenticated else None
             donation.transaction_id = f"GCASH-{uuid.uuid4().hex[:8]}"
             donation.payment_method = 'gcash'
@@ -49,25 +50,32 @@ def donations(request):
             donation.signature = ''
             donation.donation_date = date.today()
             donation.save()
-            logger.info(f"GCash donation created: ID={donation.id}, Email={donation.email}, Amount={donation.amount}")
+            logger.info(f"GCash donation created: ID={donation.id}, Email={donation.email}, Amount={donation.amount}, Event={donation.event.name if donation.event else 'General'}")
             return initiate_gcash_payment(request, donation)
         else:
             logger.debug(f"Form errors: {form.errors}")
             messages.error(request, 'Please correct the errors in the form.')
     else:
-        form = DonationForm(initial={'donation_date': date.today()})
+        from django.db.models import Q
+        from datetime import date
+        today = date.today()
+        upcoming_events = Event.objects.filter(
+            Q(date_from__gte=today) | Q(date_until__gte=today),
+            status='approved'
+        ).order_by('date_from')
+        form = DonationForm()
+        form.fields['event'].queryset = upcoming_events
         logger.debug(f"Rendered form HTML: {form.as_p()}")
     return render(request, 'donations.html', {'form': form, 'show_manual_link': show_manual_link})
 
 @csrf_protect
 @login_required
-# @permission_required('capstone_project.add_manual_donation', raise_exception=True)
 def manual_donation(request):
     if request.method == 'POST':
         logger.debug(f"POST data: {dict(request.POST)}")
         form = ManualDonationForm(request.POST, request.FILES)
         if form.is_valid():
-            donation = form.save(commit=False)
+            donation = form.save(commit=False)  # Event is now included via form
             donation.payment_method = 'manual'
             donation.submitted_by = request.user
             # Assign the council of the submitting user
@@ -79,23 +87,25 @@ def manual_donation(request):
             donation.transaction_id = f"KC-{uuid.uuid4().hex[:8]}"
             donation.source_id = ''
             donation.status = 'pending_manual'
-            # If donating anonymously, clear personal fields
-            if form.cleaned_data.get('donate_anonymously'):
-                donation.first_name = "Anonymous"
-                donation.middle_initial = ""
-                donation.last_name = ""
-                donation.email = ""
+            donation.donation_date = date.today()
             donation.save()
-            logger.info(f"Manual donation created: ID={donation.id}, Email={donation.email or 'Anonymous'}, Amount={donation.amount}, Status={donation.status}, Council={donation.council.name if donation.council else 'None'}")
+            logger.info(f"Manual donation created: ID={donation.id}, Email={donation.email or 'Anonymous'}, Amount={donation.amount}, Status={donation.status}, Council={donation.council.name if donation.council else 'None'}, Event={donation.event.name if donation.event else 'General'}")
             messages.success(request, 'Manual donation submitted for review.')
             return redirect('donations')
         else:
             logger.debug(f"Form errors: {form.errors}")
             messages.error(request, 'Please correct the errors in the form.')
     else:
-        form = ManualDonationForm(initial={'donation_date': date.today()})
+        from django.db.models import Q
+        from datetime import date
+        today = date.today()
+        upcoming_events = Event.objects.filter(
+            Q(date_from__gte=today) | Q(date_until__gte=today),
+            status='approved'
+        ).order_by('date_from')
+        form = ManualDonationForm()
+        form.fields['event'].queryset = upcoming_events
     return render(request, 'add_manual_donation.html', {'form': form})
-
 
 @csrf_protect
 @login_required
@@ -146,11 +156,7 @@ def review_manual_donations(request):
                     donation.save()
                     logger.debug("Donation signed and saved")
                     # Initialize blockchain instance
-                    blockchain_instance = getattr(blockchain, 'initialize_chain', None)
-                    if callable(blockchain_instance):
-                        blockchain_instance()
-                    else:
-                        blockchain.initialize_chain()  # Fallback if method not callable
+                    blockchain.initialize_chain()
                     logger.debug("Blockchain initialized")
 
                     # Handle blockchain transaction in a separate function
@@ -342,9 +348,12 @@ def confirm_gcash_payment(request):
                 if transaction_result:
                     previous_block = blockchain.get_previous_block()
                     previous_proof = previous_block['proof'] if previous_block else 0
+                    logger.debug(f"Previous proof: {previous_proof}")
                     proof = blockchain.proof_of_work(previous_proof)
-                    block = blockchain.create_block(proof)
-                    if block:
+                    logger.debug(f"Proof of work completed: {proof}")
+                    new_block = blockchain.create_block(proof)
+                    logger.debug(f"New block created: {new_block}")
+                    if new_block:
                         logger.info(f"Block created for donation ID {donation.id}, Transaction ID {donation.transaction_id}")
                         blockchain.refresh_from_db()
                         logger.debug(f"Pending transactions after block creation: {blockchain.pending_transactions}")

@@ -1,19 +1,18 @@
 from django import forms
-from .models import Donation
+from .models import Donation, Event
 from datetime import date
 import uuid
 
 class DonationForm(forms.ModelForm):
     class Meta:
         model = Donation
-        fields = ['first_name', 'middle_initial', 'last_name', 'email', 'amount', 'donation_date']
-        widgets = {
-            'donation_date': forms.DateInput(attrs={'type': 'date'}),
-        }
+        fields = ['first_name', 'middle_initial', 'last_name', 'email', 'amount', 'event']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.initial['donation_date'] = date.today()
+        self.fields['event'].queryset = Event.objects.filter(status='approved')  # Only approved events
+        self.fields['event'].empty_label = "General Donation"  # Optional choice for None
+        self.fields['event'].required = False  # Not required
 
     def clean_amount(self):
         amount = self.cleaned_data.get('amount')
@@ -38,10 +37,7 @@ class ManualDonationForm(forms.ModelForm):
 
     class Meta:
         model = Donation
-        fields = ['first_name', 'middle_initial', 'last_name', 'email', 'amount', 'donation_date', 'donate_anonymously']  # Removed signature
-        widgets = {
-            'donation_date': forms.DateInput(attrs={'type': 'date'}),
-        }
+        fields = ['first_name', 'middle_initial', 'last_name', 'email', 'amount', 'event', 'donate_anonymously']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -51,6 +47,9 @@ class ManualDonationForm(forms.ModelForm):
             self.initial['source_id'] = ''
         for field in ['first_name', 'middle_initial', 'last_name', 'email']:
             self.fields[field].required = False
+        self.fields['event'].queryset = Event.objects.filter(status='approved')  # Only approved events
+        self.fields['event'].empty_label = "General Donation"  # Optional choice for None
+        self.fields['event'].required = False  # Not required
 
     def clean(self):
         cleaned_data = super().clean()

@@ -512,15 +512,17 @@ class Donation(models.Model):
     )
     rejection_reason = models.TextField(blank=True, null=True)
     receipt = models.ImageField(upload_to='donation_receipts/', null=True, blank=True)
-
+    event = models.ForeignKey('Event', on_delete=models.SET_NULL, null=True, blank=True, related_name='donations')
+    
     def sign_donation(self, private_key):
         """Sign the donation data with the provided private key"""
         try:
             first_name = self.first_name if self.first_name != "Anonymous" else "Anonymous"
             last_name = self.last_name if self.last_name else ""
             email = self.email if self.email else "anonymous@example.com"
-            
-            donation_data = f"{self.transaction_id}:{first_name}:{last_name}:{email}:{self.amount}:{self.donation_date.isoformat() if isinstance(self.donation_date, date) else str(self.donation_date)}:{self.payment_method}"
+            event_info = self.event.name if self.event else "General Donation"
+
+            donation_data = f"{self.transaction_id}:{first_name}:{last_name}:{email}:{self.amount}:{self.donation_date.isoformat() if isinstance(self.donation_date, date) else str(self.donation_date)}:{self.payment_method}:{event_info}"
             
             signature = private_key.sign(
                 donation_data.encode(),
@@ -547,9 +549,9 @@ class Donation(models.Model):
             first_name = self.first_name if self.first_name != "Anonymous" else "Anonymous"
             last_name = self.last_name if self.last_name else ""
             email = self.email if self.email else "anonymous@example.com"
-            
-            donation_data = f"{self.transaction_id}:{first_name}:{last_name}:{email}:{self.amount}:{self.donation_date.isoformat() if isinstance(self.donation_date, date) else str(self.donation_date)}:{self.payment_method}"
-            
+            event_info = self.event.name if self.event else "General Donation"
+
+            donation_data = f"{self.transaction_id}:{first_name}:{last_name}:{email}:{self.amount}:{self.donation_date.isoformat() if isinstance(self.donation_date, date) else str(self.donation_date)}:{self.payment_method}:{event_info}"
             signature = base64.b64decode(self.signature)
             
             public_key.verify(
@@ -590,4 +592,3 @@ class Recruitment(models.Model):
         
     def __str__(self):
         return f"{self.recruiter.username} recruited {self.recruited.username} on {self.date_recruited}"
-    

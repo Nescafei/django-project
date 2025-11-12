@@ -73,10 +73,9 @@ Knights of Columbus - Donations
                 <span class="warning" id="amount_warning"></span>
             </div>
             <div class="form-group">
-                <label for="id_donation_date">Donation Date:</label>
-                <input type="date" id="id_donation_date" name="donation_date" value="{{ form.donation_date.value|default:'' }}" required
-                       oninput="validateDate(this)">
-                <span class="warning" id="donation_date_warning"></span>
+                <label for="id_event">Direct Donation To (Optional):</label>
+                {{ form.event }}  <!-- Renders the select dropdown with options -->
+                <span class="warning" id="event_warning"></span>
             </div>
             <button type="submit" class="btn btn-primary">Donate</button>
         </form>

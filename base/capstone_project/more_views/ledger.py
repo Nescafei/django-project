@@ -1,4 +1,4 @@
-from capstone_project.models import  blockchain
+from capstone_project.models import blockchain
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
@@ -8,6 +8,7 @@ from django.contrib import messages
 from datetime import datetime, date, timezone, timedelta
 from django.contrib.auth.decorators import login_required
 import logging, csv
+from dateutil import parser as date_parser
 
 logger = logging.getLogger(__name__)
 
@@ -36,6 +37,12 @@ def get_blockchain_data(request):
                     'previous_hash': block.previous_hash,
                     'transactions': block.transactions if hasattr(block, 'transactions') else []
                 }
+            # Parse block timestamp if it's a string
+            if isinstance(block.get('timestamp'), str):
+                try:
+                    block['timestamp'] = date_parser.parse(block['timestamp'])
+                except ValueError:
+                    block['timestamp'] = None
             for tx in block.get('transactions', []):
                 if not isinstance(tx, dict):
                     tx = {
@@ -47,12 +54,21 @@ def get_blockchain_data(request):
                         'payment_method': getattr(tx, 'payment_method', 'N/A'),
                         'status': getattr(tx, 'status', 'Unknown')
                     }
+                # Align 'date' key to 'donation_date' if present (from blockchain storage)
+                if 'date' in tx and 'donation_date' not in tx:
+                    tx['donation_date'] = tx['date']
                 # Ensure donation_date is a date object
                 if tx.get('donation_date') and isinstance(tx['donation_date'], str):
                     try:
                         tx['donation_date'] = datetime.strptime(tx['donation_date'], '%Y-%m-%d').date()
                     except ValueError:
                         tx['donation_date'] = None
+                # Parse transaction timestamp if present and it's a string
+                if 'timestamp' in tx and isinstance(tx['timestamp'], str):
+                    try:
+                        tx['timestamp'] = date_parser.parse(tx['timestamp'])
+                    except ValueError:
+                        tx['timestamp'] = None
                 # Ensure amount is a float
                 if 'amount' in tx:
                     if isinstance(tx['amount'], str):
@@ -74,11 +90,20 @@ def get_blockchain_data(request):
                     'payment_method': getattr(tx, 'payment_method', 'N/A'),
                     'status': getattr(tx, 'status', 'Unknown')
                 }
+            # Align 'date' key to 'donation_date' if present (from blockchain storage)
+            if 'date' in tx and 'donation_date' not in tx:
+                tx['donation_date'] = tx['date']
             if tx.get('donation_date') and isinstance(tx['donation_date'], str):
                 try:
                     tx['donation_date'] = datetime.strptime(tx['donation_date'], '%Y-%m-%d').date()
                 except ValueError:
                     tx['donation_date'] = None
+            # Parse transaction timestamp if present and it's a string
+            if 'timestamp' in tx and isinstance(tx['timestamp'], str):
+                try:
+                    tx['timestamp'] = date_parser.parse(tx['timestamp'])
+                except ValueError:
+                    tx['timestamp'] = None
             if 'amount' in tx and isinstance(tx['amount'], str):
                 tx['amount'] = float(tx['amount'].replace('₱', '').replace(',', ''))
 
@@ -148,6 +173,12 @@ def download_ledger(request):
 
     # Normalize transaction data
     for block in full_chain:
+        # Parse block timestamp if it's a string
+        if isinstance(block.get('timestamp'), str):
+            try:
+                block['timestamp'] = date_parser.parse(block['timestamp'])
+            except ValueError:
+                block['timestamp'] = None
         for tx in block.get('transactions', []):
             if not isinstance(tx, dict):
                 tx = {
@@ -159,12 +190,21 @@ def download_ledger(request):
                     'payment_method': getattr(tx, 'payment_method', 'N/A'),
                     'status': getattr(tx, 'status', 'Unknown')  # Ensure 'status' is always present
                 }
+            # Align 'date' key to 'donation_date' if present (from blockchain storage)
+            if 'date' in tx and 'donation_date' not in tx:
+                tx['donation_date'] = tx['date']
             # Ensure donation_date is a date object
             if tx.get('donation_date') and isinstance(tx['donation_date'], str):
                 try:
                     tx['donation_date'] = datetime.strptime(tx['donation_date'], '%Y-%m-%d').date()
                 except ValueError:
                     tx['donation_date'] = None
+            # Parse transaction timestamp if present and it's a string
+            if 'timestamp' in tx and isinstance(tx['timestamp'], str):
+                try:
+                    tx['timestamp'] = date_parser.parse(tx['timestamp'])
+                except ValueError:
+                    tx['timestamp'] = None
             # Ensure amount is a float
             if 'amount' in tx:
                 if isinstance(tx['amount'], str):
@@ -186,12 +226,21 @@ def download_ledger(request):
                 'payment_method': getattr(tx, 'payment_method', 'N/A'),
                 'status': getattr(tx, 'status', 'Unknown')  # Ensure 'status' is always present
             }
+        # Align 'date' key to 'donation_date' if present (from blockchain storage)
+        if 'date' in tx and 'donation_date' not in tx:
+            tx['donation_date'] = tx['date']
         # Ensure donation_date is a date object
         if tx.get('donation_date') and isinstance(tx['donation_date'], str):
             try:
                 tx['donation_date'] = datetime.strptime(tx['donation_date'], '%Y-%m-%d').date()
             except ValueError:
                 tx['donation_date'] = None
+        # Parse transaction timestamp if present and it's a string
+        if 'timestamp' in tx and isinstance(tx['timestamp'], str):
+            try:
+                tx['timestamp'] = date_parser.parse(tx['timestamp'])
+            except ValueError:
+                tx['timestamp'] = None
         # Ensure amount is a float
         if 'amount' in tx:
             if isinstance(tx['amount'], str):

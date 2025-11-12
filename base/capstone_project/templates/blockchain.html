@@ -95,8 +95,7 @@ Knights of Columbus - Blockchain
                                 {% if block.transactions %}
                                     <ul>
                                         {% for tx in block.transactions %}
-                                            <li>
-                                                <span>Transaction ID: {{ tx.transaction_id }}</span><br>
+                                                <span>ID: {{ tx.transaction_id }}</span><br>
                                                 <span>Donor: 
                                                     {% if tx.donor == "Anonymous" %}
                                                         Anonymous
@@ -107,8 +106,6 @@ Knights of Columbus - Blockchain
                                                 <span>Amount: ₱{{ tx.amount|default:"0.00" }}</span><br>
                                                 <span>Date: {{ tx.donation_date|default:"N/A" }}</span><br>
                                                 <span>Method: {{ tx.payment_method|default:"N/A" }}</span><br>
-                                                <span>Status: {{ tx.status|default:"Unknown" }}</span>
-                                            </li>
                                         {% endfor %}
                                     </ul>
                                 {% else %}
