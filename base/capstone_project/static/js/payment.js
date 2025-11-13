@@ -90,14 +90,72 @@ function validateAmount(input) {
     return true;
 }
 
+function validateDate(input) {
+    const warning = document.getElementById('donation_date_warning');
+    if (!input.value) {
+        warning.textContent = 'Donation date is required.';
+        return false;
+    }
+    const selectedDate = new Date(input.value);
+    const currentDate = new Date(); // Use current date dynamically instead of hardcoded
+    currentDate.setHours(0, 0, 0, 0);
+    selectedDate.setHours(0, 0, 0, 0);
+    if (selectedDate > currentDate) {
+        warning.textContent = 'Donation date cannot be in the future.';
+        return false;
+    }
+    warning.textContent = '';
+    return true;
+}
+
+function validateReceipt(input) {
+    const warning = document.getElementById('receipt_warning');
+    if (input.files && input.files[0]) {
+        const file = input.files[0];
+        if (file.size > MAX_FILE_SIZE) {
+            warning.textContent = 'File size exceeds 10MB limit.';
+            return false;
+        }
+        const allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        if (!allowedTypes.includes(file.type)) {
+            warning.textContent = 'Only JPEG, PNG, and GIF files are allowed.';
+            return false;
+        }
+    }
+    warning.textContent = '';
+    return true;
+}
+
 function validateForm() {
-    const firstNameValid = validateName(document.getElementById('id_first_name'));
-    const middleInitialValid = validateMiddleInitial(document.getElementById('id_middle_initial'));
-    const lastNameValid = validateName(document.getElementById('id_last_name'));
-    const emailValid = validateEmail(document.getElementById('id_email'));
-    const amountValid = validateAmount(document.getElementById('id_amount'));
-    
-    return firstNameValid && middleInitialValid && lastNameValid && emailValid && amountValid;
+    const anonymousCheckbox = document.getElementById('id_donate_anonymously');
+    const isAnonymous = anonymousCheckbox ? anonymousCheckbox.checked : false;
+
+    const firstNameInput = document.getElementById('id_first_name');
+    const lastNameInput = document.getElementById('id_last_name');
+    const emailInput = document.getElementById('id_email');
+    const middleInitialInput = document.getElementById('id_middle_initial');
+    const amountInput = document.getElementById('id_amount');
+    const dateInput = document.getElementById('id_donation_date');
+    const receiptInput = document.getElementById('id_receipt');
+
+    let firstNameValid = isAnonymous || (firstNameInput && validateName(firstNameInput));
+    let lastNameValid = isAnonymous || (lastNameInput && validateName(lastNameInput));
+    let emailValid = isAnonymous || (emailInput && validateEmail(emailInput));
+    let middleInitialValid = true;
+    if (!isAnonymous && middleInitialInput) {
+        middleInitialValid = validateMiddleInitial(middleInitialInput);
+    }
+    let amountValid = amountInput && validateAmount(amountInput);
+    let dateValid = true;
+    if (dateInput) {
+        dateValid = validateDate(dateInput);
+    }
+    let receiptValid = true;
+    if (receiptInput) {
+        receiptValid = validateReceipt(receiptInput);
+    }
+
+    return firstNameValid && middleInitialValid && lastNameValid && emailValid && amountValid && dateValid && receiptValid;
 }
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -130,4 +188,6 @@ document.addEventListener('DOMContentLoaded', () => {
     } else {
         console.error('Error: #view-blockchain not found');
     }
+
+    // Removed togglePersonalInfo; fields always visible. Anonymity handled in backend via form field.
 });

@@ -120,6 +120,14 @@ body {
     margin: 0 auto;
 }
 
+.donation-form .form-group {
+    width: 100%;
+    max-width: 300px; /* Fixed max-width for form groups to prevent expansion */
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+}
+
 .donation-form label {
     font-size: 1.2rem;
     color: #161b5f;
@@ -132,11 +140,15 @@ body {
 .donation-form input[type="number"],
 .donation-form input[type="text"],
 .donation-form input[type="email"],
-.donation-form textarea {
+.donation-form input[type="date"],
+.donation-form input[type="file"],
+.donation-form textarea,
+.donation-form select {
+    flex: 0 0 auto;
     width: 100%;
     max-width: 100%;
     padding: 0.75rem;
-    margin-bottom: 1rem;
+    margin-bottom: 0.25rem;
     font-family: "Roboto", sans-serif;
     font-size: 1rem;
     font-weight: 500;
@@ -146,12 +158,39 @@ body {
     color: #161b5f;
     box-shadow: 0 2px 4px rgba(144, 144, 144, 0.25);
     transition: 0.3s ease-in-out;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    box-sizing: border-box; /* Ensures padding doesn't expand width */
+}
+
+.donation-form input[type="checkbox"] {
+    width: auto;
+    margin-right: 0.5rem;
+    accent-color: #161b5f; /* Custom checkbox color to match theme */
+}
+
+.donation-form select option {
+    max-width: 100%; /* Prevents options from forcing select width expansion */
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.donation-form .form-group .warning {
+    flex: 0 0 auto;
+    width: 100%;
+    margin-top: 0.25rem;
+    box-sizing: border-box;
 }
 
 .donation-form input[type="number"]:hover,
 .donation-form input[type="text"]:hover,
 .donation-form input[type="email"]:hover,
-.donation-form textarea:hover {
+.donation-form input[type="date"]:hover,
+.donation-form input[type="file"]:hover,
+.donation-form textarea:hover,
+.donation-form select:hover {
     transform: scale(1.02);
 }
 
@@ -201,11 +240,13 @@ body {
 .donation-form input[type="number"],
 .donation-form input[type="date"],
 .donation-form input[type="file"],
-.donation-form textarea {
+.donation-form textarea,
+.donation-form select {
     width: 100%;
     padding: 0.5rem;
     border: 1px solid #ccc;
     border-radius: 4px;
+    box-sizing: border-box; /* Consistent box-sizing */
 }
 .donation-form textarea {
     resize: vertical;
@@ -245,6 +286,7 @@ body {
     padding: 8px;
     border: 1px solid #ccc;
     border-radius: 4px;
+    box-sizing: border-box;
 }
 /* Responsive Adjustments */
 @media (max-width: 768px) {
@@ -283,10 +325,17 @@ body {
         max-width: 25rem;
     }
 
+    .donation-form .form-group {
+        max-width: 250px; /* Adjusted fixed width for mobile */
+    }
+
     .donation-form input[type="number"],
     .donation-form input[type="text"],
     .donation-form input[type="email"],
-    .donation-form textarea {
+    .donation-form input[type="date"],
+    .donation-form input[type="file"],
+    .donation-form textarea,
+    .donation-form select {
         padding: 0.5rem;
         font-size: 0.9rem;
     }
@@ -321,10 +370,17 @@ body {
         max-width: 18rem;
     }
 
+    .donation-form .form-group {
+        max-width: 200px; /* Further adjusted for small screens */
+    }
+
     .donation-form input[type="number"],
     .donation-form input[type="text"],
     .donation-form input[type="email"],
-    .donation-form textarea {
+    .donation-form input[type="date"],
+    .donation-form input[type="file"],
+    .donation-form textarea,
+    .donation-form select {
         font-size: 0.8rem;
     }   
 

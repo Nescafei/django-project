@@ -37,7 +37,7 @@ class ManualDonationForm(forms.ModelForm):
 
     class Meta:
         model = Donation
-        fields = ['first_name', 'middle_initial', 'last_name', 'email', 'amount', 'event', 'donate_anonymously']
+        fields = ['first_name', 'middle_initial', 'last_name', 'email', 'amount', 'event', 'donation_date', 'receipt', 'donate_anonymously']
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -45,11 +45,14 @@ class ManualDonationForm(forms.ModelForm):
             self.initial['transaction_id'] = f"KC-{uuid.uuid4().hex[:8]}"
             self.initial['payment_method'] = 'manual'
             self.initial['source_id'] = ''
+            self.initial['donation_date'] = date.today()  # Default to today, but editable
         for field in ['first_name', 'middle_initial', 'last_name', 'email']:
             self.fields[field].required = False
         self.fields['event'].queryset = Event.objects.filter(status='approved')  # Only approved events
         self.fields['event'].empty_label = "General Donation"  # Optional choice for None
         self.fields['event'].required = False  # Not required
+        self.fields['donation_date'].required = True  # Ensure date is required
+        self.fields['receipt'].required = False  # Optional receipt upload
 
     def clean(self):
         cleaned_data = super().clean()

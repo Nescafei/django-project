@@ -28774,3 +28774,165 @@ DEBUG 2025-11-13 01:46:41,894 donation Rendered form HTML: <p>
       
     
   </p>
+DEBUG 2025-11-13 01:48:46,638 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 01:48:46,655 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-13 01:49:56,546 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 01:49:56,557 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-13 02:20:54,020 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 02:20:54,031 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>

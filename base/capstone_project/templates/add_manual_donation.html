@@ -9,44 +9,95 @@ Knights of Columbus - Add Manual Donation
 <link rel="stylesheet" href="{% static 'css/donations-style.css' %}?v={% now 'U' %}">
 <div class="background">
     <h1>Add Manual Donation</h1>
-    <p>Enter details for donations made offline (e.g., cash, donation).</p>
+    <p>Enter details for donations made offline (e.g., cash, check).</p>
 </div>
 <div class="container">
+    <section class="hero">
+        <div class="content">
+            <h1>Record Offline Donations</h1>
+            <p>Help track manual contributions to support our mission and ensure accurate records.</p>
+        </div>
+    </section>
+    
     <section class="donation-form">
         <h2>Manual Donation Input</h2>
         {% if messages %}
-            {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-            {% endfor %}
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+        {% endfor %}
         {% endif %}
-        <form method="post" enctype="multipart/form-data">
+        {% if form.errors %}
+        <div class="alert alert-danger">
+            <ul>
+                {% for field in form %}
+                {% for error in field.errors %}
+                <li>{{ field.label }}: {{ error }}</li>
+                {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        <form method="post" enctype="multipart/form-data" id="donationForm">
             {% csrf_token %}
-            <div id="personal-info" style="display: block;">
-                <p>{{ form.first_name.label_tag }} {{ form.first_name }} {{ form.first_name.errors }}</p>
-                <p>{{ form.middle_initial.label_tag }} {{ form.middle_initial }} {{ form.middle_initial.errors }}</p>
-                <p>{{ form.last_name.label_tag }} {{ form.last_name }} {{ form.last_name.errors }}</p>
-                <p>{{ form.email.label_tag }} {{ form.email }} {{ form.email.errors }}</p>
+            <!-- Removed #personal-info wrapper; fields now direct children like in donations.html -->
+            <div class="form-group">
+                <label for="id_first_name">First Name:</label>
+                <input type="text" id="id_first_name" name="first_name" value="{{ form.first_name.value|default:'' }}" 
+                       pattern="[A-Z][a-zA-Z]*" oninput="validateName(this)">
+                <span class="warning" id="first_name_warning"></span>
             </div>
-            <p>{{ form.amount.label_tag }} {{ form.amount }} {{ form.amount.errors }}</p>
-            <p>{{ form.donation_date.label_tag }} {{ form.donation_date }} {{ form.donation_date.errors }}</p>
-            <p>{{ form.donate_anonymously.label_tag }} {{ form.donate_anonymously }} {{ form.donate_anonymously.errors }}</p>
-            <!-- Removed signature field -->
+            <div class="form-group">
+                <label for="id_middle_initial">Middle Initial:</label>
+                <input type="text" id="id_middle_initial" name="middle_initial" value="{{ form.middle_initial.value|default:'' }}" 
+                       pattern="[A-Z]" oninput="validateMiddleInitial(this)" maxlength="1">
+                <span class="warning" id="middle_initial_warning"></span>
+            </div>
+            <div class="form-group">
+                <label for="id_last_name">Last Name:</label>
+                <input type="text" id="id_last_name" name="last_name" value="{{ form.last_name.value|default:'' }}" 
+                       pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validateName(this)">
+                <span class="warning" id="last_name_warning"></span>
+            </div>
+            <div class="form-group">
+                <label for="id_email">Email:</label>
+                <input type="email" id="id_email" name="email" value="{{ form.email.value|default:'' }}" 
+                       oninput="validateEmail(this)">
+                <span class="warning" id="email_warning"></span>
+            </div>
+            <div class="form-group">
+                <label for="id_amount">Amount (PHP):</label>
+                <input type="number" id="id_amount" name="amount" value="{{ form.amount.value|default:'' }}" required min="1" step="0.01"
+                       oninput="validateAmount(this)">
+                <span class="warning" id="amount_warning"></span>
+            </div>
+            <div class="form-group">
+                <label for="id_donation_date">Donation Date:</label>
+                <input type="date" id="id_donation_date" name="donation_date" value="{{ form.donation_date.value|default:'' }}" required
+                       oninput="validateDate(this)">
+                <span class="warning" id="donation_date_warning"></span>
+            </div>
+            <div class="form-group">
+                <label for="id_event">Direct Donation To (Optional):</label>
+                {{ form.event }}
+                <span class="warning" id="event_warning"></span>
+            </div>
+            <div class="form-group">
+                <label for="id_receipt">Receipt (Optional):</label>
+                <input type="file" id="id_receipt" name="receipt" onchange="validateReceipt(this)">
+                <span class="warning" id="receipt_warning"></span>
+            </div>
+            <div class="form-group">
+                {{ form.donate_anonymously.label_tag }}
+                {{ form.donate_anonymously }}
+                {{ form.donate_anonymously.errors }}
+            </div>
             <button type="submit" class="btn btn-primary">Submit Donation</button>
         </form>
         <a href="{% url 'donations' %}">Back to Donations</a>
     </section>
 </div>
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const anonymousCheckbox = document.querySelector('#id_donate_anonymously');
-    const personalInfoDiv = document.querySelector('#personal-info'); // Fixed selector
-
-    function togglePersonalInfo() {
-        personalInfoDiv.style.display = anonymousCheckbox.checked ? 'none' : 'block';
-    }
-
-    anonymousCheckbox.addEventListener('change', togglePersonalInfo);
-    togglePersonalInfo(); // Initial state
-});
-</script>
+<script src="{% static 'js/payment.js' %}?v={% now 'U' %}"></script>
 {% endblock %}

@@ -87,7 +87,7 @@ def manual_donation(request):
             donation.transaction_id = f"KC-{uuid.uuid4().hex[:8]}"
             donation.source_id = ''
             donation.status = 'pending_manual'
-            donation.donation_date = date.today()
+            # Removed: donation.donation_date = date.today()  # Use form value instead
             donation.save()
             logger.info(f"Manual donation created: ID={donation.id}, Email={donation.email or 'Anonymous'}, Amount={donation.amount}, Status={donation.status}, Council={donation.council.name if donation.council else 'None'}, Event={donation.event.name if donation.event else 'General'}")
             messages.success(request, 'Manual donation submitted for review.')
