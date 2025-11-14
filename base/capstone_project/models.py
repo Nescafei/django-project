@@ -496,6 +496,7 @@ class Donation(models.Model):
     source_id = models.CharField(max_length=100, blank=True, null=True)
     signature = models.TextField(blank=True, null=True)
     council = models.ForeignKey('Council', on_delete=models.SET_NULL, null=True, blank=True)
+    is_anonymous = models.BooleanField(default=False, help_text="Whether the donor wishes to remain anonymous in public records.")
     submitted_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.SET_NULL,
@@ -513,13 +514,14 @@ class Donation(models.Model):
     rejection_reason = models.TextField(blank=True, null=True)
     receipt = models.ImageField(upload_to='donation_receipts/', null=True, blank=True)
     event = models.ForeignKey('Event', on_delete=models.SET_NULL, null=True, blank=True, related_name='donations')
-    
+
     def sign_donation(self, private_key):
         """Sign the donation data with the provided private key"""
         try:
-            first_name = self.first_name if self.first_name != "Anonymous" else "Anonymous"
-            last_name = self.last_name if self.last_name else ""
-            email = self.email if self.email else "anonymous@example.com"
+            # Use is_anonymous to determine display name for signing
+            first_name = "Anonymous" if self.is_anonymous else (self.first_name or "")
+            last_name = "" if self.is_anonymous else (self.last_name or "")
+            email = "anonymous@example.com" if self.is_anonymous else (self.email or "")
             event_info = self.event.name if self.event else "General Donation"
 
             donation_data = f"{self.transaction_id}:{first_name}:{last_name}:{email}:{self.amount}:{self.donation_date.isoformat() if isinstance(self.donation_date, date) else str(self.donation_date)}:{self.payment_method}:{event_info}"
@@ -546,9 +548,10 @@ class Donation(models.Model):
             return False
             
         try:
-            first_name = self.first_name if self.first_name != "Anonymous" else "Anonymous"
-            last_name = self.last_name if self.last_name else ""
-            email = self.email if self.email else "anonymous@example.com"
+            # Reconstruct data using is_anonymous for verification
+            first_name = "Anonymous" if self.is_anonymous else (self.first_name or "")
+            last_name = "" if self.is_anonymous else (self.last_name or "")
+            email = "anonymous@example.com" if self.is_anonymous else (self.email or "")
             event_info = self.event.name if self.event else "General Donation"
 
             donation_data = f"{self.transaction_id}:{first_name}:{last_name}:{email}:{self.amount}:{self.donation_date.isoformat() if isinstance(self.donation_date, date) else str(self.donation_date)}:{self.payment_method}:{event_info}"
@@ -571,9 +574,16 @@ class Donation(models.Model):
             logger.error(f"Error verifying signature: {str(e)}")
             return False
 
+    def get_display_name(self):
+        """Helper method to get donor name for displays (e.g., ledgers)"""
+        if self.is_anonymous:
+            return "Anonymous Donor"
+        return f"{self.first_name or ''} {self.middle_initial or ''} {self.last_name or ''}".strip()
+
     def __str__(self):
-        return f"{self.first_name} {self.last_name} - {self.amount} - {self.get_status_display()}"
-        
+        display_name = self.get_display_name()
+        return f"{display_name} - {self.amount} - {self.get_status_display()}"    
+
 def receipt_upload_path(instance, filename):
     ext = filename.split('.')[-1]
     new_filename = f"{instance.transaction_id}.{ext}"

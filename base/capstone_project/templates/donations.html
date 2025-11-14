@@ -77,6 +77,11 @@ Knights of Columbus - Donations
                 {{ form.event }}  <!-- Renders the select dropdown with options -->
                 <span class="warning" id="event_warning"></span>
             </div>
+            <div class="form-group">
+                {{ form.donate_anonymously.label_tag }}
+                {{ form.donate_anonymously }}
+                {{ form.donate_anonymously.errors }}
+            </div>
             <button type="submit" class="btn btn-primary">Donate</button>
         </form>
         {% if show_manual_link %}

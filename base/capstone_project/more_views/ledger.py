@@ -146,6 +146,49 @@ def get_blockchain_data(request):
         # Filter pending transactions
         filtered_pending = [tx for tx in pending_transactions if matches_filter(tx)]
 
+        # Check if CSV export is requested
+        if 'csv' in request.GET:
+            # Generate filename with timestamp
+            timestamp = datetime.now().strftime('%Y%m%d_%H%M%S')
+            response = HttpResponse(content_type='text/csv')
+            response['Content-Disposition'] = f'attachment; filename="donation_ledger_{timestamp}.csv"'
+
+            writer = csv.writer(response)
+            writer.writerow(['Block Index', 'Timestamp', 'Proof', 'Current Hash', 'Previous Hash', 'Transaction ID', 'Donor', 'Email', 'Amount', 'Date', 'Method', 'Status'])
+
+            for block in filtered_chain:
+                for tx in block['transactions']:
+                    writer.writerow([
+                        block['index'],
+                        block['timestamp'],
+                        block['proof'],
+                        block['hash'],
+                        block['previous_hash'],
+                        tx['transaction_id'],
+                        tx['donor'],
+                        tx.get('email', 'N/A'),
+                        tx['amount'],
+                        tx.get('donation_date', 'N/A'),
+                        tx['payment_method'],
+                        tx.get('status', 'Unknown')  # Use get() with default value
+                    ])
+
+            writer.writerow([])
+            writer.writerow(['Pending Transactions'])
+            writer.writerow(['Transaction ID', 'Donor', 'Email', 'Amount', 'Date', 'Method', 'Status'])
+            for tx in filtered_pending:
+                writer.writerow([
+                    tx['transaction_id'],
+                    tx['donor'],
+                    tx.get('email', 'N/A'),
+                    tx['amount'],
+                    tx.get('donation_date', 'N/A'),
+                    tx['payment_method'],
+                    tx.get('status', 'Unknown')  # Use get() with default value
+                ])
+
+            return response
+
         # Pagination for chain (10 blocks per page)
         paginator = Paginator(filtered_chain, 10)
         page_number = request.GET.get('page', 1)
@@ -165,7 +208,7 @@ def get_blockchain_data(request):
         logger.error(f"Error fetching blockchain data: {str(e)}")
         messages.error(request, "Unable to retrieve blockchain data. Please try again later.")
         return redirect('donations')
-
+    
 @login_required
 def download_ledger(request):
     full_chain = blockchain.get_chain()

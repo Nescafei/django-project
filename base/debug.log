@@ -28936,3 +28936,3933 @@ DEBUG 2025-11-13 02:20:54,031 donation Rendered form HTML: <p>
       
     
   </p>
+DEBUG 2025-11-13 02:43:20,367 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 02:43:20,386 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-13 02:43:22,060 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 02:43:22,067 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-13 14:40:56,730 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 14:40:56,741 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-13 14:41:20,250 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 14:41:20,254 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-13 14:57:06,926 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 14:57:06,931 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-13 14:58:40,274 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 14:58:40,280 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-13 14:59:07,058 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 14:59:07,064 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-13 15:01:54,518 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 15:01:54,536 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-13 15:22:34,147 donation POST data: {'csrfmiddlewaretoken': ['tOJV4eRJVZLXKfFm7nkEb6fONKkQCOJAL5LtFD0NZRzuJco4q6BFOICwK0hDH1XD'], 'first_name': ['Juan'], 'middle_initial': ['D'], 'last_name': ['La Cruz'], 'email': ['DLaCruz1@gmail.com'], 'amount': ['1234'], 'donation_date': ['2025-11-13'], 'event': ['36'], 'donate_anonymously': ['on']}
+INFO 2025-11-13 15:22:34,478 donation Manual donation created: ID=52, Email=DLaCruz1@gmail.com, Amount=1234, Status=pending_manual, Council=Council 3469, Event=aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+DEBUG 2025-11-13 15:22:34,504 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 15:22:34,516 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-13 15:27:59,432 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 15:27:59,437 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-13 15:28:01,539 ledger Fetching blockchain data
+INFO 2025-11-13 15:28:01,553 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 15:28:11,117 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 15:28:11,121 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-13 15:33:28,859 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 15:33:28,876 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-13 15:33:29,833 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 15:33:29,838 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-13 15:37:52,791 ledger Fetching blockchain data
+INFO 2025-11-13 15:37:52,802 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 15:37:56,219 ledger Fetching blockchain data
+INFO 2025-11-13 15:37:56,223 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 15:38:05,374 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 15:38:05,380 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-13 16:02:31,309 ledger Fetching blockchain data
+INFO 2025-11-13 16:02:31,318 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 16:02:48,577 ledger Fetching blockchain data
+INFO 2025-11-13 16:02:48,580 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 16:02:52,155 ledger Fetching blockchain data
+INFO 2025-11-13 16:02:52,158 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 16:03:00,755 ledger Fetching blockchain data
+INFO 2025-11-13 16:03:00,759 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 16:03:10,217 ledger Fetching blockchain data
+INFO 2025-11-13 16:03:10,225 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 16:03:16,622 ledger Fetching blockchain data
+INFO 2025-11-13 16:03:16,626 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 16:03:20,835 ledger Fetching blockchain data
+INFO 2025-11-13 16:03:20,838 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 16:03:31,654 ledger Fetching blockchain data
+INFO 2025-11-13 16:03:31,658 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 16:03:43,028 ledger Fetching blockchain data
+INFO 2025-11-13 16:03:43,033 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 16:05:32,515 ledger Fetching blockchain data
+INFO 2025-11-13 16:05:32,519 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 16:10:14,270 ledger Fetching blockchain data
+DEBUG 2025-11-13 16:10:14,593 ledger Fetching blockchain data
+DEBUG 2025-11-13 16:10:21,292 ledger Fetching blockchain data
+DEBUG 2025-11-13 16:10:21,636 ledger Fetching blockchain data
+DEBUG 2025-11-13 16:10:28,473 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 16:10:28,497 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-13 16:10:32,490 ledger Fetching blockchain data
+DEBUG 2025-11-13 16:10:32,591 ledger Fetching blockchain data
+DEBUG 2025-11-13 16:10:49,448 ledger Fetching blockchain data
+DEBUG 2025-11-13 16:10:49,540 ledger Fetching blockchain data
+DEBUG 2025-11-13 16:16:08,480 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 16:16:08,507 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-13 16:16:10,129 ledger Fetching blockchain data
+DEBUG 2025-11-13 16:16:10,334 ledger Fetching blockchain data
+DEBUG 2025-11-13 16:16:44,377 ledger Fetching blockchain data
+INFO 2025-11-13 16:16:44,382 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 16:19:28,028 ledger Fetching blockchain data
+INFO 2025-11-13 16:19:28,032 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 16:19:34,000 ledger Fetching blockchain data
+INFO 2025-11-13 16:19:34,003 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 16:19:38,307 ledger Fetching blockchain data
+INFO 2025-11-13 16:19:38,310 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 16:19:39,291 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-13 16:19:39,310 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-13 16:21:16,200 ledger Fetching blockchain data
+DEBUG 2025-11-13 16:21:21,748 ledger Fetching blockchain data
+DEBUG 2025-11-13 16:22:22,617 ledger Fetching blockchain data
+DEBUG 2025-11-13 16:22:22,835 ledger Fetching blockchain data
+DEBUG 2025-11-13 16:23:53,265 ledger Fetching blockchain data
+INFO 2025-11-13 16:23:53,270 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 16:23:56,674 ledger Fetching blockchain data
+INFO 2025-11-13 16:23:56,678 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 16:26:16,356 ledger Fetching blockchain data
+INFO 2025-11-13 16:26:16,360 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-13 16:53:03,420 ledger Fetching blockchain data
+INFO 2025-11-13 16:53:03,437 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-14 02:46:44,755 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-11-14 02:46:44,874 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 02:47:00,357 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 02:47:00,361 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 02:47:01,844 ledger Fetching blockchain data
+INFO 2025-11-14 02:47:01,855 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-14 02:47:20,641 ledger Fetching blockchain data
+INFO 2025-11-14 02:47:20,656 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-14 02:47:25,232 ledger Fetching blockchain data
+INFO 2025-11-14 02:47:25,236 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-14 02:47:27,950 ledger Fetching blockchain data
+INFO 2025-11-14 02:47:27,954 ledger Blockchain data retrieved: 16 blocks, 0 pending transactions
+DEBUG 2025-11-14 02:47:33,573 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 02:47:33,577 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 02:47:54,240 donation User Mr_Admin (role=admin, council=Council 3469): Found 2 pending manual donations
+DEBUG 2025-11-14 02:47:54,243 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-14 02:47:54,245 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-14 02:48:00,294 donation User Mr_Admin (role=admin, council=Council 3469): Found 2 pending manual donations
+DEBUG 2025-11-14 02:48:00,296 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-14 02:48:00,298 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-14 02:48:00,298 donation Updated review_manual_donations view applied - May 28, 19:26 PST fix
+DEBUG 2025-11-14 02:48:00,324 donation User Mr_Admin (role=admin, council=Council 3469): Found 2 pending manual donations
+DEBUG 2025-11-14 02:48:00,326 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-14 02:48:00,328 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-14 02:48:15,190 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 02:48:15,193 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:00:13,691 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:00:13,704 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:00:19,453 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:00:19,458 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:00:21,557 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:00:21,563 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:00:28,915 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:00:28,928 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:02:45,915 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:02:45,918 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" required id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" required id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" required id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:05:22,300 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:05:22,320 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:13:09,013 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:13:09,023 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:19:02,679 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:19:02,684 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:26:41,455 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:26:41,463 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:36:44,166 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:36:44,175 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:36:52,996 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:36:53,034 donation Form fields: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" value="2000" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="1">Bible Study Session</option>
+
+  <option value="2">Bible Study Session</option>
+
+  <option value="5">Food Distribution to Yolanda Survivors</option>
+
+  <option value="6">Meeting for Election</option>
+
+  <option value="7">Sample Event</option>
+
+  <option value="8">Testing</option>
+
+  <option value="9">ADHADSJ</option>
+
+  <option value="10">Example Event</option>
+
+  <option value="11">Test Event</option>
+
+  <option value="12">Food Distribution to Cotta</option>
+
+  <option value="13">Tralalelo Tralalove: A Family-Friendly Seminar</option>
+
+  <option value="14">Election for New Officers</option>
+
+  <option value="15">Family is Love</option>
+
+  <option value="16">School Supplies Distribution to Gulang-Gulang Elementary School</option>
+
+  <option value="17">Bible Study Session</option>
+
+  <option value="18">Just Testing</option>
+
+  <option value="19">Testing 102</option>
+
+  <option value="21">Testing 104</option>
+
+  <option value="24">Food Distribution to Yolanda Survivors</option>
+
+  <option value="25">Testing 106</option>
+
+  <option value="26">Do Not Be Afraid</option>
+
+  <option value="27">Add Notifications for Recruitment and Attendance</option>
+
+  <option value="28">Test Event </option>
+
+  <option value="29">Digger</option>
+
+  <option value="31">Test</option>
+
+  <option value="32">I am Groot</option>
+
+  <option value="33">Again, I am Groot!</option>
+
+  <option value="34">Groot Nation</option>
+
+  <option value="35">Test Event</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously" checked>
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:37:52,978 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:37:52,991 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:38:04,700 donation POST data: {'csrfmiddlewaretoken': ['mpFNF7rcTcZ2EO2FvOU2zsA2G3vK2tyGZPpC0tzQ2G5iaKt2sYzT1mSZKItuXikV'], 'amount': ['4700'], 'donation_date': ['2025-11-14'], 'event': [''], 'receipt': [''], 'donate_anonymously': ['on']}
+INFO 2025-11-14 03:38:04,754 donation Manual donation created: ID=53, Email=anonymous@example.com, Amount=4700, Status=pending_manual, Council=Council 3469, Event=General, Anonymous=True
+DEBUG 2025-11-14 03:38:04,776 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:38:04,782 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:38:36,248 donation POST data: {'csrfmiddlewaretoken': ['3hQdz2NKIWL1vRKTq39Ubnq9fFjQYIN8GHA2UoVoRqRh1NbgndOLDhI6jkhATxzn'], 'amount': ['3600'], 'donation_date': ['2025-11-14'], 'event': [''], 'receipt': [''], 'donate_anonymously': ['on']}
+INFO 2025-11-14 03:38:36,299 donation Manual donation created: ID=54, Email=anonymous@example.com, Amount=3600, Status=pending_manual, Council=Council 3469, Event=General, Anonymous=True
+DEBUG 2025-11-14 03:38:36,555 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:38:36,562 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:39:35,472 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:39:35,486 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:39:38,813 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:39:38,820 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:39:46,317 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:39:46,347 donation Form fields: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" value="1111" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="1">Bible Study Session</option>
+
+  <option value="2">Bible Study Session</option>
+
+  <option value="5">Food Distribution to Yolanda Survivors</option>
+
+  <option value="6">Meeting for Election</option>
+
+  <option value="7">Sample Event</option>
+
+  <option value="8">Testing</option>
+
+  <option value="9">ADHADSJ</option>
+
+  <option value="10">Example Event</option>
+
+  <option value="11">Test Event</option>
+
+  <option value="12">Food Distribution to Cotta</option>
+
+  <option value="13">Tralalelo Tralalove: A Family-Friendly Seminar</option>
+
+  <option value="14">Election for New Officers</option>
+
+  <option value="15">Family is Love</option>
+
+  <option value="16">School Supplies Distribution to Gulang-Gulang Elementary School</option>
+
+  <option value="17">Bible Study Session</option>
+
+  <option value="18">Just Testing</option>
+
+  <option value="19">Testing 102</option>
+
+  <option value="21">Testing 104</option>
+
+  <option value="24">Food Distribution to Yolanda Survivors</option>
+
+  <option value="25">Testing 106</option>
+
+  <option value="26">Do Not Be Afraid</option>
+
+  <option value="27">Add Notifications for Recruitment and Attendance</option>
+
+  <option value="28">Test Event </option>
+
+  <option value="29">Digger</option>
+
+  <option value="31">Test</option>
+
+  <option value="32">I am Groot</option>
+
+  <option value="33">Again, I am Groot!</option>
+
+  <option value="34">Groot Nation</option>
+
+  <option value="35">Test Event</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously" checked>
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:41:04,829 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:41:04,845 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:41:05,540 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:41:05,546 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:41:11,134 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:41:11,170 donation Form fields: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" value="1111" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="1">Bible Study Session</option>
+
+  <option value="2">Bible Study Session</option>
+
+  <option value="5">Food Distribution to Yolanda Survivors</option>
+
+  <option value="6">Meeting for Election</option>
+
+  <option value="7">Sample Event</option>
+
+  <option value="8">Testing</option>
+
+  <option value="9">ADHADSJ</option>
+
+  <option value="10">Example Event</option>
+
+  <option value="11">Test Event</option>
+
+  <option value="12">Food Distribution to Cotta</option>
+
+  <option value="13">Tralalelo Tralalove: A Family-Friendly Seminar</option>
+
+  <option value="14">Election for New Officers</option>
+
+  <option value="15">Family is Love</option>
+
+  <option value="16">School Supplies Distribution to Gulang-Gulang Elementary School</option>
+
+  <option value="17">Bible Study Session</option>
+
+  <option value="18">Just Testing</option>
+
+  <option value="19">Testing 102</option>
+
+  <option value="21">Testing 104</option>
+
+  <option value="24">Food Distribution to Yolanda Survivors</option>
+
+  <option value="25">Testing 106</option>
+
+  <option value="26">Do Not Be Afraid</option>
+
+  <option value="27">Add Notifications for Recruitment and Attendance</option>
+
+  <option value="28">Test Event </option>
+
+  <option value="29">Digger</option>
+
+  <option value="31">Test</option>
+
+  <option value="32">I am Groot</option>
+
+  <option value="33">Again, I am Groot!</option>
+
+  <option value="34">Groot Nation</option>
+
+  <option value="35">Test Event</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously" checked>
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:44:55,510 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:44:55,529 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:44:56,431 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:44:56,438 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:44:56,576 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:44:56,582 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:45:05,259 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:45:05,297 donation Form fields: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" value="Anonymous" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" value="anonymous@example.com" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" value="1111" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="1">Bible Study Session</option>
+
+  <option value="2">Bible Study Session</option>
+
+  <option value="5">Food Distribution to Yolanda Survivors</option>
+
+  <option value="6">Meeting for Election</option>
+
+  <option value="7">Sample Event</option>
+
+  <option value="8">Testing</option>
+
+  <option value="9">ADHADSJ</option>
+
+  <option value="10">Example Event</option>
+
+  <option value="11">Test Event</option>
+
+  <option value="12">Food Distribution to Cotta</option>
+
+  <option value="13">Tralalelo Tralalove: A Family-Friendly Seminar</option>
+
+  <option value="14">Election for New Officers</option>
+
+  <option value="15">Family is Love</option>
+
+  <option value="16">School Supplies Distribution to Gulang-Gulang Elementary School</option>
+
+  <option value="17">Bible Study Session</option>
+
+  <option value="18">Just Testing</option>
+
+  <option value="19">Testing 102</option>
+
+  <option value="21">Testing 104</option>
+
+  <option value="24">Food Distribution to Yolanda Survivors</option>
+
+  <option value="25">Testing 106</option>
+
+  <option value="26">Do Not Be Afraid</option>
+
+  <option value="27">Add Notifications for Recruitment and Attendance</option>
+
+  <option value="28">Test Event </option>
+
+  <option value="29">Digger</option>
+
+  <option value="31">Test</option>
+
+  <option value="32">I am Groot</option>
+
+  <option value="33">Again, I am Groot!</option>
+
+  <option value="34">Groot Nation</option>
+
+  <option value="35">Test Event</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously" checked>
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:45:37,013 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:45:37,039 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:45:38,353 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:45:38,356 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:49:25,183 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:49:25,199 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:49:31,966 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:49:32,006 donation Form fields: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" value="Anonymous" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" value="anonymous@example.com" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" value="1111" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="1">Bible Study Session</option>
+
+  <option value="2">Bible Study Session</option>
+
+  <option value="5">Food Distribution to Yolanda Survivors</option>
+
+  <option value="6">Meeting for Election</option>
+
+  <option value="7">Sample Event</option>
+
+  <option value="8">Testing</option>
+
+  <option value="9">ADHADSJ</option>
+
+  <option value="10">Example Event</option>
+
+  <option value="11">Test Event</option>
+
+  <option value="12">Food Distribution to Cotta</option>
+
+  <option value="13">Tralalelo Tralalove: A Family-Friendly Seminar</option>
+
+  <option value="14">Election for New Officers</option>
+
+  <option value="15">Family is Love</option>
+
+  <option value="16">School Supplies Distribution to Gulang-Gulang Elementary School</option>
+
+  <option value="17">Bible Study Session</option>
+
+  <option value="18">Just Testing</option>
+
+  <option value="19">Testing 102</option>
+
+  <option value="21">Testing 104</option>
+
+  <option value="24">Food Distribution to Yolanda Survivors</option>
+
+  <option value="25">Testing 106</option>
+
+  <option value="26">Do Not Be Afraid</option>
+
+  <option value="27">Add Notifications for Recruitment and Attendance</option>
+
+  <option value="28">Test Event </option>
+
+  <option value="29">Digger</option>
+
+  <option value="31">Test</option>
+
+  <option value="32">I am Groot</option>
+
+  <option value="33">Again, I am Groot!</option>
+
+  <option value="34">Groot Nation</option>
+
+  <option value="35">Test Event</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously" checked>
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 03:59:19,677 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 03:59:19,729 donation Form fields: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" value="Anonymous" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" value="anonymous@example.com" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" value="1111" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="1">Bible Study Session</option>
+
+  <option value="2">Bible Study Session</option>
+
+  <option value="5">Food Distribution to Yolanda Survivors</option>
+
+  <option value="6">Meeting for Election</option>
+
+  <option value="7">Sample Event</option>
+
+  <option value="8">Testing</option>
+
+  <option value="9">ADHADSJ</option>
+
+  <option value="10">Example Event</option>
+
+  <option value="11">Test Event</option>
+
+  <option value="12">Food Distribution to Cotta</option>
+
+  <option value="13">Tralalelo Tralalove: A Family-Friendly Seminar</option>
+
+  <option value="14">Election for New Officers</option>
+
+  <option value="15">Family is Love</option>
+
+  <option value="16">School Supplies Distribution to Gulang-Gulang Elementary School</option>
+
+  <option value="17">Bible Study Session</option>
+
+  <option value="18">Just Testing</option>
+
+  <option value="19">Testing 102</option>
+
+  <option value="21">Testing 104</option>
+
+  <option value="24">Food Distribution to Yolanda Survivors</option>
+
+  <option value="25">Testing 106</option>
+
+  <option value="26">Do Not Be Afraid</option>
+
+  <option value="27">Add Notifications for Recruitment and Attendance</option>
+
+  <option value="28">Test Event </option>
+
+  <option value="29">Digger</option>
+
+  <option value="31">Test</option>
+
+  <option value="32">I am Groot</option>
+
+  <option value="33">Again, I am Groot!</option>
+
+  <option value="34">Groot Nation</option>
+
+  <option value="35">Test Event</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously" checked>
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 04:02:44,234 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 04:02:44,253 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 04:02:49,898 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 04:02:49,929 donation Form fields: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" value="Anonymous" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" value="anonymous@example.com" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" value="1111" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="1">Bible Study Session</option>
+
+  <option value="2">Bible Study Session</option>
+
+  <option value="5">Food Distribution to Yolanda Survivors</option>
+
+  <option value="6">Meeting for Election</option>
+
+  <option value="7">Sample Event</option>
+
+  <option value="8">Testing</option>
+
+  <option value="9">ADHADSJ</option>
+
+  <option value="10">Example Event</option>
+
+  <option value="11">Test Event</option>
+
+  <option value="12">Food Distribution to Cotta</option>
+
+  <option value="13">Tralalelo Tralalove: A Family-Friendly Seminar</option>
+
+  <option value="14">Election for New Officers</option>
+
+  <option value="15">Family is Love</option>
+
+  <option value="16">School Supplies Distribution to Gulang-Gulang Elementary School</option>
+
+  <option value="17">Bible Study Session</option>
+
+  <option value="18">Just Testing</option>
+
+  <option value="19">Testing 102</option>
+
+  <option value="21">Testing 104</option>
+
+  <option value="24">Food Distribution to Yolanda Survivors</option>
+
+  <option value="25">Testing 106</option>
+
+  <option value="26">Do Not Be Afraid</option>
+
+  <option value="27">Add Notifications for Recruitment and Attendance</option>
+
+  <option value="28">Test Event </option>
+
+  <option value="29">Digger</option>
+
+  <option value="31">Test</option>
+
+  <option value="32">I am Groot</option>
+
+  <option value="33">Again, I am Groot!</option>
+
+  <option value="34">Groot Nation</option>
+
+  <option value="35">Test Event</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously" checked>
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+INFO 2025-11-14 04:02:49,944 donation GCash donation created: ID=55, Email=anonymous@example.com, Amount=1111, Event=General
+DEBUG 2025-11-14 04:02:49,944 donation Initiating GCash payment for donation ID=55, Amount=1111
+INFO 2025-11-14 04:02:50,248 donation PayMongo source created: Source ID=src_hcB8xR1oBx3tTM8WAkse6KEi, Donation ID=55
+DEBUG 2025-11-14 04:02:53,196 donation Session data: dict_items([('_csrftoken', 'NAUZvwiOjEgqG6Bx7kP1C4s7eP8U5ZWp'), ('_auth_user_id', '1'), ('_auth_user_backend', 'django.contrib.auth.backends.ModelBackend'), ('_auth_user_hash', '99c979bcf892b63decc252b27357bdda7fa2e635621a1222beae2f0852221933'), ('_session_expiry', 28800), ('last_activity', 1763064170.249446), ('donation_id', 55)])
+DEBUG 2025-11-14 04:02:53,283 donation PayMongo source response: {'data': {'id': 'src_hcB8xR1oBx3tTM8WAkse6KEi', 'type': 'source', 'attributes': {'amount': 111100, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'anonymous@example.com', 'name': 'Anonymous .', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_hcB8xR1oBx3tTM8WAkse6KEi', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'donation_id': '55', 'transaction_id': 'GCASH-46db2447'}, 'created_at': 1763064170, 'updated_at': 1763064173}}}
+INFO 2025-11-14 04:02:53,299 models Transaction GCASH-46db2447 added to pending transactions
+DEBUG 2025-11-14 04:02:53,300 donation Previous proof: 2492
+DEBUG 2025-11-14 04:02:53,325 donation Proof of work completed: 22592
+DEBUG 2025-11-14 04:02:53,326 models Calculated hash for Block 17: ce6a2eb9f0f9875bffdf01617864939f7f83b671d477f7b9e2242569dafb9b33
+INFO 2025-11-14 04:02:53,327 models Saving Block 17: Old hash=, New hash=ce6a2eb9f0f9875bffdf01617864939f7f83b671d477f7b9e2242569dafb9b33
+INFO 2025-11-14 04:02:53,328 models Block 17 saved with hash=ce6a2eb9f0f9875bffdf01617864939f7f83b671d477f7b9e2242569dafb9b33
+INFO 2025-11-14 04:02:53,329 models Block 17 created successfully
+DEBUG 2025-11-14 04:02:53,329 donation New block created: {'index': 17, 'timestamp': '2025-11-13T20:02:53.326784+00:00', 'transactions': [{'transaction_id': 'GCASH-46db2447', 'donor': 'Anonymous', 'email': 'anonymous@example.com', 'amount': '1111.00', 'date': '2025-11-14', 'payment_method': 'gcash', 'status': 'completed', 'timestamp': '2025-11-13T20:02:53.297996+00:00'}], 'proof': 22592, 'previous_hash': '13bbe4691d6cf5f4e6cdb54817e8e4a43a87874882a0a4d0fc8b1309bd9092a3', 'hash': 'ce6a2eb9f0f9875bffdf01617864939f7f83b671d477f7b9e2242569dafb9b33'}
+INFO 2025-11-14 04:02:53,330 donation Block created for donation ID 55, Transaction ID GCASH-46db2447
+DEBUG 2025-11-14 04:02:53,331 donation Pending transactions after block creation: []
+DEBUG 2025-11-14 04:02:53,375 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 04:02:53,383 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 04:02:56,898 ledger Fetching blockchain data
+INFO 2025-11-14 04:02:56,903 ledger Blockchain data retrieved: 17 blocks, 0 pending transactions
+DEBUG 2025-11-14 04:03:00,207 ledger Fetching blockchain data
+INFO 2025-11-14 04:03:00,210 ledger Blockchain data retrieved: 17 blocks, 0 pending transactions
+DEBUG 2025-11-14 04:03:18,227 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 04:03:18,241 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 04:03:57,777 ledger Fetching blockchain data
+INFO 2025-11-14 04:03:57,783 ledger Blockchain data retrieved: 17 blocks, 0 pending transactions
+DEBUG 2025-11-14 04:04:00,356 ledger Fetching blockchain data
+INFO 2025-11-14 04:04:00,359 ledger Blockchain data retrieved: 17 blocks, 0 pending transactions
+DEBUG 2025-11-14 04:04:03,265 ledger Fetching blockchain data
+INFO 2025-11-14 04:04:03,268 ledger Blockchain data retrieved: 17 blocks, 0 pending transactions
+DEBUG 2025-11-14 04:05:24,758 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 04:05:24,772 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-14 04:13:17,059 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-14 04:13:17,061 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-14 04:13:17,063 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-14 04:13:17,064 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-14 04:13:17,066 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-14 04:13:33,679 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-14 04:13:33,684 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>

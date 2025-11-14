@@ -158,6 +158,50 @@ function validateForm() {
     return firstNameValid && middleInitialValid && lastNameValid && emailValid && amountValid && dateValid && receiptValid;
 }
 
+let previousValues = {};
+
+function toggleAnonymous(event) {
+    const isChecked = event.target.checked;
+    const fields = ['first_name', 'middle_initial', 'last_name', 'email'];
+    const hideFields = ['middle_initial', 'last_name']; // Fields to hide when anonymous
+
+    fields.forEach(field => {
+        const input = document.getElementById(`id_${field}`);
+        if (input) {
+            const group = input.closest('.form-group'); // Get parent form-group
+            if (isChecked) {
+                // Store previous value if not already stored
+                if (!(field in previousValues)) {
+                    previousValues[field] = input.value;
+                }
+                input.readOnly = true;       
+                if (field === 'first_name') {
+                    input.value = 'Anonymous';
+                } else if (field === 'email') {
+                    input.value = 'anonymous@example.com';
+                } else {
+                    input.value = '';
+                }
+                // Hide specific fields
+                if (hideFields.includes(field) && group) {
+                    group.classList.add('hidden');
+                }
+            } else {
+                input.readOnly = false;
+                // Restore previous value if stored
+                if (field in previousValues) {
+                    input.value = previousValues[field];
+                    delete previousValues[field];
+                }
+                // Show hidden fields
+                if (hideFields.includes(field) && group) {
+                    group.classList.remove('hidden');
+                }
+            }
+        }
+    });
+}
+
 document.addEventListener('DOMContentLoaded', () => {
     console.log('DOM fully loaded');
     const donationForm = document.querySelector('#donationForm');
@@ -189,5 +233,12 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Error: #view-blockchain not found');
     }
 
-    // Removed togglePersonalInfo; fields always visible. Anonymity handled in backend via form field.
+    const anonymousCheckbox = document.getElementById('id_donate_anonymously');
+    if (anonymousCheckbox) {
+        anonymousCheckbox.addEventListener('change', toggleAnonymous);
+        // Initial toggle if pre-checked (e.g., from form errors)
+        if (anonymousCheckbox.checked) {
+            toggleAnonymous({ target: anonymousCheckbox });
+        }
+    }
 });

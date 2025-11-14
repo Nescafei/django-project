@@ -3,7 +3,7 @@ from capstone_project.forms import DonationForm, ManualDonationForm
 from capstone_project.models import User, Council, Event, Analytics, Donation, Blockchain, blockchain, Block, ForumCategory, ForumMessage, Notification, EventAttendance, Recruitment, get_blockchain
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
-from datetime import datetime, date
+from datetime import date
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, permission_required
@@ -28,12 +28,12 @@ def log_block_change(sender, instance, **kwargs):
 
 @receiver(pre_delete, sender=Block)
 def log_block_delete(sender, instance, **kwargs):
+    from datetime import datetime
     timestamp_str = instance.timestamp.isoformat() if isinstance(instance.timestamp, datetime) else str(instance.timestamp)
     logger.warning(f"Block {instance.index} deleted: index={instance.index}, timestamp={timestamp_str}")
 
 PAYMONGO_API_URL = 'https://api.paymongo.com/v1'
 
-# Updated donations view in donation.py
 @never_cache
 def donations(request):
     show_manual_link = request.user.is_authenticated and request.user.role in ['admin', 'officer']
@@ -49,6 +49,8 @@ def donations(request):
             donation.status = 'pending'
             donation.signature = ''
             donation.donation_date = date.today()
+            # Set is_anonymous based on form checkbox
+            donation.is_anonymous = form.cleaned_data.get('donate_anonymously', False)
             donation.save()
             logger.info(f"GCash donation created: ID={donation.id}, Email={donation.email}, Amount={donation.amount}, Event={donation.event.name if donation.event else 'General'}")
             return initiate_gcash_payment(request, donation)
@@ -57,7 +59,6 @@ def donations(request):
             messages.error(request, 'Please correct the errors in the form.')
     else:
         from django.db.models import Q
-        from datetime import date
         today = date.today()
         upcoming_events = Event.objects.filter(
             Q(date_from__gte=today) | Q(date_until__gte=today),
@@ -87,9 +88,10 @@ def manual_donation(request):
             donation.transaction_id = f"KC-{uuid.uuid4().hex[:8]}"
             donation.source_id = ''
             donation.status = 'pending_manual'
-            # Removed: donation.donation_date = date.today()  # Use form value instead
+            # Set is_anonymous based on form checkbox
+            donation.is_anonymous = form.cleaned_data.get('donate_anonymously', False)
             donation.save()
-            logger.info(f"Manual donation created: ID={donation.id}, Email={donation.email or 'Anonymous'}, Amount={donation.amount}, Status={donation.status}, Council={donation.council.name if donation.council else 'None'}, Event={donation.event.name if donation.event else 'General'}")
+            logger.info(f"Manual donation created: ID={donation.id}, Email={donation.email or 'Anonymous'}, Amount={donation.amount}, Status={donation.status}, Council={donation.council.name if donation.council else 'None'}, Event={donation.event.name if donation.event else 'General'}, Anonymous={donation.is_anonymous}")
             messages.success(request, 'Manual donation submitted for review.')
             return redirect('donations')
         else:
@@ -97,7 +99,6 @@ def manual_donation(request):
             messages.error(request, 'Please correct the errors in the form.')
     else:
         from django.db.models import Q
-        from datetime import date
         today = date.today()
         upcoming_events = Event.objects.filter(
             Q(date_from__gte=today) | Q(date_until__gte=today),

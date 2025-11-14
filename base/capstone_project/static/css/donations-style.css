@@ -60,6 +60,10 @@ body {
     margin: 0 auto;
 }
 
+.hidden {
+    display: none !important;
+}
+
 .donation-form .manual-field {
     display: none;
 }
@@ -430,4 +434,16 @@ body {
     to {
         opacity: 1;
     }
+}
+
+.donation-form input[readonly] {
+    color: gray; /* Change text color to gray */
+    pointer-events: none; /* Disable all mouse interactions, including hover */
+    cursor: not-allowed; /* Indicate it's disabled */
+    background-color: #f0f0f0; /* Optional: Light gray background for better visual cue */
+}
+
+.donation-form input[readonly]:hover {
+    border-color: inherit; /* Prevent any border change on hover */
+    box-shadow: none; /* Prevent any shadow on hover */
 }
