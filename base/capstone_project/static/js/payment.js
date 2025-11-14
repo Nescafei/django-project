@@ -241,4 +241,14 @@ document.addEventListener('DOMContentLoaded', () => {
             toggleAnonymous({ target: anonymousCheckbox });
         }
     }
+
+    document.querySelectorAll('.amount-btn').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const amountInput = document.getElementById('id_amount');
+            if (amountInput) {
+                amountInput.value = btn.dataset.amount;
+                validateAmount(amountInput);
+            }
+        });
+    });
 });

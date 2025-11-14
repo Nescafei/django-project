@@ -16,6 +16,7 @@ Knights of Columbus - Donations
         <div class="content">
             <h1>Make a Difference</h1>
             <p>Your generosity supports our charitable initiatives, including disaster relief, support for the disabled, and pro-life programs. Every donation makes a lasting impact.</p>
+            <!-- Add a engaging image or icon here if available, e.g., <img src="{% static 'images/charity-icon.png' %}" alt="Helping Hands" class="hero-icon"> -->
         </div>
     </section>
     
@@ -40,49 +41,74 @@ Knights of Columbus - Donations
             </ul>
         </div>
         {% endif %}
+        <!-- Static Donation Thermometer (replace values dynamically if needed) -->
+        <div class="donation-thermometer">
+            <p>Our Goal: ₱100,000</p>
+            <div class="progress-bar">
+                <div class="progress" style="width: 50%;"></div> <!-- Example: 50% filled -->
+            </div>
+            <p>Raised: ₱50,000</p>
+        </div>
         <form method="post" enctype="multipart/form-data" id="donationForm">
             {% csrf_token %}
-            <div class="form-group">
-                <label for="id_first_name">First Name:</label>
-                <input type="text" id="id_first_name" name="first_name" value="{{ form.first_name.value|default:'' }}" required
-                       pattern="[A-Z][a-zA-Z]*" oninput="validateName(this)">
-                <span class="warning" id="first_name_warning"></span>
-            </div>
-            <div class="form-group">
-                <label for="id_middle_initial">Middle Initial:</label>
-                <input type="text" id="id_middle_initial" name="middle_initial" value="{{ form.middle_initial.value|default:'' }}" 
-                       pattern="[A-Z]" oninput="validateMiddleInitial(this)" maxlength="1">
-                <span class="warning" id="middle_initial_warning"></span>
-            </div>
-            <div class="form-group">
-                <label for="id_last_name">Last Name:</label>
-                <input type="text" id="id_last_name" name="last_name" value="{{ form.last_name.value|default:'' }}" required
-                       pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validateName(this)">
-                <span class="warning" id="last_name_warning"></span>
-            </div>
-            <div class="form-group">
-                <label for="id_email">Email:</label>
-                <input type="email" id="id_email" name="email" value="{{ form.email.value|default:'' }}" required
-                       oninput="validateEmail(this)">
-                <span class="warning" id="email_warning"></span>
-            </div>
-            <div class="form-group">
-                <label for="id_amount">Amount (PHP):</label>
-                <input type="number" id="id_amount" name="amount" value="{{ form.amount.value|default:'' }}" required min="1" step="0.01"
-                       oninput="validateAmount(this)">
-                <span class="warning" id="amount_warning"></span>
-            </div>
-            <div class="form-group">
-                <label for="id_event">Direct Donation To (Optional):</label>
-                {{ form.event }}  <!-- Renders the select dropdown with options -->
-                <span class="warning" id="event_warning"></span>
-            </div>
-            <div class="form-group">
-                {{ form.donate_anonymously.label_tag }}
-                {{ form.donate_anonymously }}
-                {{ form.donate_anonymously.errors }}
-            </div>
-            <button type="submit" class="btn btn-primary">Donate</button>
+            <fieldset class="form-section">
+                <legend>Donor Information</legend>
+                <div class="form-group">
+                    <label for="id_first_name">First Name:</label>
+                    <input type="text" id="id_first_name" name="first_name" value="{{ form.first_name.value|default:'' }}" required
+                           pattern="[A-Z][a-zA-Z]*" oninput="validateName(this)">
+                    <span class="warning" id="first_name_warning"></span>
+                </div>
+                <div class="form-group">
+                    <label for="id_middle_initial">Middle Initial:</label>
+                    <input type="text" id="id_middle_initial" name="middle_initial" value="{{ form.middle_initial.value|default:'' }}" 
+                           pattern="[A-Z]" oninput="validateMiddleInitial(this)" maxlength="1">
+                    <span class="warning" id="middle_initial_warning"></span>
+                </div>
+                <div class="form-group">
+                    <label for="id_last_name">Last Name:</label>
+                    <input type="text" id="id_last_name" name="last_name" value="{{ form.last_name.value|default:'' }}" required
+                           pattern="[A-Z][a-zA-Z]*( [A-Z][a-zA-Z]*)*" oninput="validateName(this)">
+                    <span class="warning" id="last_name_warning"></span>
+                </div>
+                <div class="form-group">
+                    <label for="id_email">Email:</label>
+                    <input type="email" id="id_email" name="email" value="{{ form.email.value|default:'' }}" required
+                           oninput="validateEmail(this)">
+                    <span class="warning" id="email_warning"></span>
+                </div>
+            </fieldset>
+            <fieldset class="form-section">
+                <legend>Donation Details</legend>
+                <div class="form-group">
+                    <label for="id_amount">Amount (PHP):</label>
+                    <input type="number" id="id_amount" name="amount" value="{{ form.amount.value|default:'' }}" required min="1" step="0.01"
+                           oninput="validateAmount(this)">
+                    <span class="warning" id="amount_warning"></span>
+                    <!-- Suggested Amounts -->
+                    <div class="suggested-amounts">
+                        <button type="button" class="amount-btn" data-amount="100">₱100</button>
+                        <button type="button" class="amount-btn" data-amount="500">₱500</button>
+                        <button type="button" class="amount-btn" data-amount="1000">₱1,000</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="id_event">Direct Donation To (Optional):</label>
+                    {{ form.event }}
+                    <span class="warning" id="event_warning"></span>
+                </div>
+                <div class="form-group">
+                    {{ form.donate_anonymously.label_tag }}
+                    <div class="anonymous-row">
+                        {{ form.donate_anonymously }}
+                        {{ form.donate_anonymously.errors }}
+                        <p class="explanation-text">
+                            <strong>Privacy Note:</strong> By selecting 'Donate Anonymously', your personal details (such as name and email) will not be publicly displayed or shared with anyone outside our organization. Your donation will still count toward our totals and support our mission, but it won't be linked to you in any visible way. This option is ideal if you prefer privacy. Note: We may still need your contact info for internal records or tax purposes, but it won't be disclosed.
+                        </p>
+                    </div>
+                </div>
+            </fieldset>
+            <button type="submit" class="btn btn-primary">Donate Now</button>
         </form>
         {% if show_manual_link %}
         <p class="manual-donation-text">
