@@ -338,30 +338,33 @@ class Blockchain(models.Model):
         return chain
 
     def add_transaction(self, donation, public_key):
-        try:
-            if not donation.verify_signature(public_key):
-                logger.error(f"Invalid signature for donation {donation.transaction_id}")
-                return False
-
-            transaction = {
-                'transaction_id': donation.transaction_id,
-                'donor': f"{donation.first_name} {donation.last_name}" if donation.first_name != "Anonymous" else "Anonymous",
-                'email': donation.email if donation.email else "N/A",
-                'amount': str(donation.amount),
-                'date': donation.donation_date.strftime('%Y-%m-%d') if donation.donation_date else "N/A",  # Ensure date is in YYYY-MM-DD format
-                'payment_method': donation.payment_method,
-                'status': donation.status,  # Add status field
-                'timestamp': timezone.now().isoformat()
-            }
-            
-            self.pending_transactions.append(transaction)
-            self.save()
-            logger.info(f"Transaction {donation.transaction_id} added to pending transactions")
-            return True
-        except Exception as e:
-            logger.error(f"Error adding transaction: {str(e)}")
+        """Add a transaction to pending after verification, with masked details for privacy"""
+        if not donation.verify_signature(public_key):
+            logger.error(f"Failed to verify signature for donation {donation.transaction_id}")
             return False
-    
+        
+        # Mask details for storage in blockchain (privacy protection)
+        donor = donation.get_display_name()
+        email = "anonymous@example.com" if donation.is_anonymous else (donation.email or "N/A")
+        
+        tx = {
+            'transaction_id': donation.transaction_id,
+            'donor': donor,
+            'email': email,
+            'amount': str(donation.amount),
+            'donation_date': donation.donation_date.isoformat() if isinstance(donation.donation_date, date) else str(donation.donation_date),
+            'payment_method': donation.payment_method,
+            'status': donation.status,
+            'signature': donation.signature,
+            'is_anonymous': donation.is_anonymous,
+            'event': donation.event.name if donation.event else "General Donation"
+            # Add any other fields as needed, e.g., 'source_id', 'council'
+        }
+        
+        self.pending_transactions.append(tx)
+        logger.debug(f"Added transaction with masked details: {tx}")
+        return True
+
     def get_previous_block(self):
         try:
             latest_block = Block.objects.latest('index')

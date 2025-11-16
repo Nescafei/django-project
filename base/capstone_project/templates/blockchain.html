@@ -1,9 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}
-Knights of Columbus - Blockchain
-{% endblock %}
+{% block title %}Knights of Columbus - Blockchain{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/blockchain.css' %}">
@@ -22,6 +20,7 @@ Knights of Columbus - Blockchain
 
     <div class="summary">
         <p><strong>Total Blocks:</strong> {{ total_blocks }}</p>
+        <p><strong>Total Transactions:</strong> {{ total_transactions }}</p>
         <p><strong>Pending Transactions:</strong> {{ pending_transactions|length }}</p>
     </div>
 
@@ -29,32 +28,23 @@ Knights of Columbus - Blockchain
         <form method="get" class="filter-form">
             <div>
                 <label for="search">Donor or Transaction ID:</label>
-                <input type="text" id="search" name="search" placeholder="Search by donor or transaction ID..." value="{{ request.GET.search|default:'' }}">
+                <input type="text" id="search" name="search" placeholder="Search..." value="{{ request.GET.search|default:'' }}">
             </div>
             <div>
                 <label for="date_from">Date From:</label>
-                <input type="date" id="date_from" name="date_from" value="{{ request.GET.date_from|default:'' }}" placeholder="Date From">
+                <input type="date" id="date_from" name="date_from" value="{{ request.GET.date_from|default:'' }}">
             </div>
             <div>
                 <label for="date_to">Date To:</label>
-                <input type="date" id="date_to" name="date_to" value="{{ request.GET.date_to|default:'' }}" placeholder="Date To">
+                <input type="date" id="date_to" name="date_to" value="{{ request.GET.date_to|default:'' }}">
             </div>
             <div>
                 <label for="amount_min">Min Amount:</label>
-                <input type="number" id="amount_min" name="amount_min" step="0.01" value="{{ request.GET.amount_min|default:'' }}" placeholder="Min Amount">
+                <input type="number" id="amount_min" name="amount_min" step="0.01" value="{{ request.GET.amount_min|default:'' }}">
             </div>
             <div>
                 <label for="amount_max">Max Amount:</label>
-                <input type="number" id="amount_max" name="amount_max" step="0.01" value="{{ request.GET.amount_max|default:'' }}" placeholder="Max Amount">
-            </div>
-            <div>
-                <label for="status">Status:</label>
-                <select id="status" name="status">
-                    <option value="">All Statuses</option>
-                    <option value="pending" {% if request.GET.status == 'pending' %}selected{% endif %}>Pending</option>
-                    <option value="completed" {% if request.GET.status == 'completed' %}selected{% endif %}>Completed</option>
-                    <option value="failed" {% if request.GET.status == 'failed' %}selected{% endif %}>Failed</option>
-                </select>
+                <input type="number" id="amount_max" name="amount_max" step="0.01" value="{{ request.GET.amount_max|default:'' }}">
             </div>
             <div>
                 <label for="method">Payment Method:</label>
@@ -64,54 +54,47 @@ Knights of Columbus - Blockchain
                     <option value="manual" {% if request.GET.method == 'manual' %}selected{% endif %}>Manual</option>
                 </select>
             </div>
+            <div>
+                <label for="sort">Sort By:</label>
+                <select id="sort" name="sort">
+                    <option value="recent_to_oldest" {% if request.GET.sort == 'recent_to_oldest' or not request.GET.sort %}selected{% endif %}>Recent to Oldest (Default)</option>
+                    <option value="oldest_to_recent" {% if request.GET.sort == 'oldest_to_recent' %}selected{% endif %}>Oldest to Recent</option>
+                    <option value="highest_amount" {% if request.GET.sort == 'highest_amount' %}selected{% endif %}>Highest Donation</option>
+                    <option value="lowest_amount" {% if request.GET.sort == 'lowest_amount' %}selected{% endif %}>Lowest Donation</option>
+                </select>
+            </div>
             <button type="submit">Filter</button>
             <a href="{% url 'blockchain' %}" class="clear-button">Clear Filters</a>
         </form>
-        <a href="{% url 'download_ledger' %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" class="download-button">Download Ledger as CSV</a>
+        <a href="{% url 'download_ledger' %}{% if request.GET %}?{{ request.GET.urlencode }}{% endif %}" class="download-button">Download Ledger</a>
     </div>
 
-    {% if chain %}
+    {% if page_obj.object_list %}
         <div class="table-container">
             <table class="blockchain-table">
                 <thead>
                     <tr>
                         <th>Block Index</th>
-                        <th>Timestamp</th>
-                        <th>Proof</th>
-                        <th>Current Hash</th>
-                        <th>Previous Hash</th>
-                        <th>Transactions</th>
+                        <th>Block Timestamp</th>
+                        <th>Transaction ID</th>
+                        <th>Donor</th>
+                        <th>Email</th>
+                        <th>Amount</th>
+                        <th>Date</th>
+                        <th>Method</th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for block in chain %}
+                    {% for tx in page_obj %}
                         <tr>
-                            <td>{{ block.index }}</td>
-                            <td>{{ block.timestamp|date:"Y-m-d H:i:s" }}</td>
-                            <td>{{ block.proof }}</td>
-                            <td>{{ block.hash }}</td>
-                            <td>{{ block.previous_hash }}</td>
-                            <td>
-                                {% if block.transactions %}
-                                    <ul>
-                                        {% for tx in block.transactions %}
-                                                <span>ID: {{ tx.transaction_id }}</span><br>
-                                                <span>Donor: 
-                                                    {% if tx.donor == "Anonymous" %}
-                                                        Anonymous
-                                                    {% else %}
-                                                        {{ tx.donor }}<br>Email: {{ tx.email|default:"N/A" }}
-                                                    {% endif %}
-                                                </span><br>
-                                                <span>Amount: ₱{{ tx.amount|default:"0.00" }}</span><br>
-                                                <span>Date: {{ tx.donation_date|default:"N/A" }}</span><br>
-                                                <span>Method: {{ tx.payment_method|default:"N/A" }}</span><br>
-                                        {% endfor %}
-                                    </ul>
-                                {% else %}
-                                    No transactions
-                                {% endif %}
-                            </td>
+                            <td>{{ tx.block_index|default:"Pending" }}</td>
+                            <td>{{ tx.block_timestamp|date:"Y-m-d H:i:s"|default:"N/A" }}</td>
+                            <td>{{ tx.transaction_id }}</td>
+                            <td>{{ tx.donor }}</td>
+                            <td>{{ tx.email|default:"N/A" }}</td>
+                            <td>₱{{ tx.amount|floatformat:2 }}</td>
+                            <td>{{ tx.donation_date|default:"N/A" }}</td>
+                            <td>{{ tx.payment_method|default:"N/A" }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>
@@ -120,89 +103,19 @@ Knights of Columbus - Blockchain
 
         <div class="pagination">
             {% if page_obj.has_previous %}
-                <a href="?page={{ page_obj.previous_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-link">Previous</a>
+                <a href="?page={{ page_obj.previous_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-link">Previous</a>
             {% endif %}
             <span class="pagination-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
             {% if page_obj.has_next %}
-                <a href="?page={{ page_obj.next_page_number }}{% for key, value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-link">Next</a>
+                <a href="?page={{ page_obj.next_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-link">Next</a>
             {% endif %}
         </div>
     {% else %}
         <div class="no-data">
-            <p>No blocks found in the blockchain.</p>
-        </div>
-    {% endif %}
-
-    {% if pending_transactions %}
-        <h2>Pending Transactions</h2>
-        <div class="table-container">
-            <table class="blockchain-table">
-                <thead>
-                    <tr>
-                        <th>Transaction ID</th>
-                        <th>Donor</th>
-                        <th>Email</th>
-                        <th>Amount</th>
-                        <th>Date</th>
-                        <th>Method</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for tx in pending_transactions %}
-                        <tr>
-                            <td>{{ tx.transaction_id }}</td>
-                            <td>{{ tx.donor }}</td>
-                            <td>{{ tx.email|default:"N/A" }}</td>
-                            <td>₱{{ tx.amount|default:"0.00" }}</td>
-                            <td>{{ tx.donation_date|default:"N/A" }}</td>
-                            <td>{{ tx.payment_method|default:"N/A" }}</td>
-                            <td>{{ tx.status|default:"Unknown" }}</td>
-                        </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
+            <p>No transactions found.</p>
         </div>
     {% endif %}
 
     <a href="{% url 'donations' %}" class="back-button">Back to Donations</a>
 </div>
-
-<script type="text/javascript">
-    var gk_isXlsx = false;
-    var gk_xlsxFileLookup = {};
-    var gk_fileData = {};
-
-    function filledCell(cell) {
-        return cell !== '' && cell != null;
-    }
-
-    function loadFileData(filename) {
-        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-            try {
-                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-                var firstSheetName = workbook.SheetNames[0];
-                var worksheet = workbook.Sheets[firstSheetName];
-
-                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-                var filteredData = jsonData.filter(row => row.some(filledCell));
-
-                var headerRowIndex = jsonData.findIndex((row, index) =>
-                    row.filter(filledCell).length >= jsonData[index + 1]?.filter(filledCell).length
-                );
-                if (headerRowIndex === -1 || headerRowIndex > 25) {
-                    headerRowIndex = 0;
-                }
-
-                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
-                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-                return csv;
-            } catch (e) {
-                console.error(e);
-                return "";
-            }
-        }
-        return gk_fileData[filename] || "";
-    }
-</script>
 {% endblock %}
