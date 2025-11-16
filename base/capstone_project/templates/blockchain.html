@@ -74,14 +74,16 @@
             <table class="blockchain-table">
                 <thead>
                     <tr>
-                        <th>Block Index</th>
-                        <th>Block Timestamp</th>
+                        <th>Index</th>
+                        <th>Timestamp</th>
                         <th>Transaction ID</th>
                         <th>Donor</th>
                         <th>Email</th>
                         <th>Amount</th>
                         <th>Date</th>
                         <th>Method</th>
+                        <th>Submitted By</th>
+                        <th>Reviewed By</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -95,6 +97,8 @@
                             <td>₱{{ tx.amount|floatformat:2 }}</td>
                             <td>{{ tx.donation_date|default:"N/A" }}</td>
                             <td>{{ tx.payment_method|default:"N/A" }}</td>
+                            <td>{{ tx.submitted_by|default:"N/A" }}</td>
+                            <td>{{ tx.reviewed_by|default:"N/A" }}</td>
                         </tr>
                     {% endfor %}
                 </tbody>

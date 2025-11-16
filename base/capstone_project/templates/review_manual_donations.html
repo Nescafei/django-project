@@ -1,28 +1,62 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}
-Knights of Columbus - Review Manual Donations
-{% endblock %}
-
-{% block extra_css %}
-<link rel="stylesheet" href="{% static 'css/review_manual_donations.css' %}">
-{% endblock %}
+{% block title %}Knights of Columbus - Review Manual Donations{% endblock %}
 
 {% block content %}
-<div class="container">
-    <h1>Review Manual Donations</h1>
+<link rel="stylesheet" href="{% static 'css/review_manual_donations.css' %}">
+
+<div class="blockchain-container">
+    <div class="header">
+        <h1>Review Manual Donations</h1>
+        <p>Approve or reject pending manual donations to ensure accurate records.</p>
+    </div>
+
     {% if messages %}
         {% for message in messages %}
-            <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
-                {{ message }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
+            <div class="alert alert-{{ message.tags }}">{{ message }}</div>
         {% endfor %}
     {% endif %}
+
+    <div class="controls">
+        <form method="get" class="filter-form">
+            <div>
+                <label for="search">Donor or Transaction ID:</label>
+                <input type="text" id="search" name="search" placeholder="Search..." value="{{ request.GET.search|default:'' }}">
+            </div>
+            <div>
+                <label for="date_from">Date From:</label>
+                <input type="date" id="date_from" name="date_from" value="{{ request.GET.date_from|default:'' }}">
+            </div>
+            <div>
+                <label for="date_to">Date To:</label>
+                <input type="date" id="date_to" name="date_to" value="{{ request.GET.date_to|default:'' }}">
+            </div>
+            <div>
+                <label for="amount_min">Min Amount:</label>
+                <input type="number" id="amount_min" name="amount_min" step="0.01" value="{{ request.GET.amount_min|default:'' }}">
+            </div>
+            <div>
+                <label for="amount_max">Max Amount:</label>
+                <input type="number" id="amount_max" name="amount_max" step="0.01" value="{{ request.GET.amount_max|default:'' }}">
+            </div>
+            <div>
+                <label for="sort">Sort By:</label>
+                <select id="sort" name="sort">
+                    <option value="recent_to_oldest" {% if request.GET.sort == 'recent_to_oldest' or not request.GET.sort %}selected{% endif %}>Recent to Oldest (Default)</option>
+                    <option value="oldest_to_recent" {% if request.GET.sort == 'oldest_to_recent' %}selected{% endif %}>Oldest to Recent</option>
+                    <option value="highest_amount" {% if request.GET.sort == 'highest_amount' %}selected{% endif %}>Highest Donation</option>
+                    <option value="lowest_amount" {% if request.GET.sort == 'lowest_amount' %}selected{% endif %}>Lowest Donation</option>
+                </select>
+            </div>
+            <button type="submit">Filter</button>
+            <a href="{% url 'review_manual_donations' %}" class="clear-button">Clear Filters</a>
+        </form>
+    </div>
+
     {% if page_obj %}
-        <div class="table-responsive">
-            <table class="table table-striped table-hover">
+        <div class="table-container">
+            <table class="blockchain-table">
                 <thead>
                     <tr>
                         <th>Transaction ID</th>
@@ -30,6 +64,7 @@ Knights of Columbus - Review Manual Donations
                         <th>Email</th>
                         <th>Amount</th>
                         <th>Date</th>
+                        <th>Submitted By</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
@@ -41,67 +76,86 @@ Knights of Columbus - Review Manual Donations
                             <td>{{ donation.email|default:'N/A' }}</td>
                             <td>₱{{ donation.amount }}</td>
                             <td>{{ donation.donation_date|date:'F d, Y' }}</td>
+                            <td>{{ donation.submitted_by.username|default:'N/A' }}</td>
                             <td>
                                 <form method="post" class="form-actions">
                                     {% csrf_token %}
                                     <input type="hidden" name="donation_id" value="{{ donation.id }}">
                                     <button type="submit" name="action" value="approve" class="btn btn-success">Approve</button>
+                                    <button type="button" onclick="openModal('rejectModal{{ donation.id }}')" class="btn btn-danger">Reject</button>
+                                    {% if donation.receipt %}
+                                        <button type="button" onclick="openModal('receiptModal{{ donation.id }}')" class="btn btn-view">View Receipt</button>
+                                    {% endif %}
                                 </form>
-                                <!-- Modal for Rejection Reason -->
-                                <div class="modal fade" id="rejectModal{{ donation.id }}" tabindex="-1" aria-labelledby="rejectModalLabel{{ donation.id }}" aria-hidden="true">
-                                    <div class="modal-dialog">
-                                        <div class="modal-content">
-                                            <div class="modal-body">
-                                                <form method="post">
-                                                    {% csrf_token %}
-                                                    <input type="hidden" name="donation_id" value="{{ donation.id }}">
-                                                    <input type="hidden" name="action" value="reject">
-                                                    <div class="mb-3">
-                                                        <label for="rejection_reason_{{ donation.id }}" class="form-label">Rejection Reason</label>
-                                                        <input type="text" name="rejection_reason" id="rejection_reason_{{ donation.id }}" class="form-control" placeholder="Enter reason" required>
-                                                    </div>
-                                                    <button type="submit" class="btn btn-danger">Submit Rejection</button>
-                                                </form>
+                                <!-- Custom Modal for Rejection Reason -->
+                                <div id="rejectModal{{ donation.id }}" class="modal">
+                                    <div class="modal-content">
+                                        <span class="close" onclick="closeModal('rejectModal{{ donation.id }}')">&times;</span>
+                                        <h5>Reject Donation</h5>
+                                        <form method="post">
+                                            {% csrf_token %}
+                                            <input type="hidden" name="donation_id" value="{{ donation.id }}">
+                                            <input type="hidden" name="action" value="reject">
+                                            <div class="mb-3">
+                                                <label for="rejection_reason_{{ donation.id }}" class="form-label">Rejection Reason</label>
+                                                <input type="text" name="rejection_reason" id="rejection_reason_{{ donation.id }}" class="form-control" placeholder="Enter reason" required>
                                             </div>
-                                        </div>
+                                            <button type="submit" class="btn btn-danger">Submit Rejection</button>
+                                        </form>
                                     </div>
                                 </div>
+                                <!-- Custom Modal for Receipt Image -->
+                                {% if donation.receipt %}
+                                    <div id="receiptModal{{ donation.id }}" class="modal">
+                                        <div class="modal-content">
+                                            <span class="close" onclick="closeModal('receiptModal{{ donation.id }}')">&times;</span>
+                                            <h5>Receipt for {{ donation.transaction_id }}</h5>
+                                            <img src="{{ donation.receipt.url }}" alt="Receipt" class="receipt-image">
+                                        </div>
+                                    </div>
+                                {% endif %}
                             </td>
                         </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
-        <nav aria-label="Page navigation">
-            <ul class="pagination justify-content-center">
-                {% if page_obj.has_previous %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page=1">« First</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
-                    </li>
-                {% endif %}
-                <li class="page-item disabled">
-                    <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
-                </li>
-                {% if page_obj.has_next %}
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
-                    </li>
-                    <li class="page-item">
-                        <a class="page-link" href="?page={{ page_obj.paginator.num_pages }}">Last »</a>
-                    </li>
-                {% endif %}
-            </ul>
-        </nav>
+
+        <div class="pagination">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-link">Previous</a>
+            {% endif %}
+            <span class="pagination-info">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-link">Next</a>
+            {% endif %}
+        </div>
     {% else %}
-        <p class="text-center text-muted">No pending manual donations to review.</p>
+        <div class="no-data">
+            <p>No pending manual donations to review.</p>
+        </div>
     {% endif %}
-    <div class="back-btn-container">
-        <a href="{% url 'donations' %}" class="btn btn-primary">Back to Donations</a>
-    </div>
+
+    <a href="{% url 'donations' %}" class="back-button">Back to Donations</a>
 </div>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+    function openModal(modalId) {
+        document.getElementById(modalId).style.display = "block";
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = "none";
+    }
+
+    // Close modal if clicking outside of it
+    window.onclick = function(event) {
+        var modals = document.getElementsByClassName('modal');
+        for (var i = 0; i < modals.length; i++) {
+            if (event.target == modals[i]) {
+                modals[i].style.display = "none";
+            }
+        }
+    }
+</script>
 {% endblock %}

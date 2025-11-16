@@ -37541,3 +37541,1073 @@ DEBUG 2025-11-16 14:57:34,366 ledger Fetching blockchain data
 INFO 2025-11-16 14:57:34,376 ledger Blockchain data retrieved: 22 blocks, 0 pending transactions
 DEBUG 2025-11-16 14:57:48,983 ledger Fetching blockchain data
 INFO 2025-11-16 14:57:48,988 ledger Blockchain data retrieved: 22 blocks, 0 pending transactions
+DEBUG 2025-11-16 20:40:06,640 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-16 20:40:06,673 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-16 20:40:21,784 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-16 20:40:21,824 donation Form fields: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" value="Test" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" value="R" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" value="Event" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" value="KENK13605@GMAIL.COM" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" value="500" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="">General Donation</option>
+
+  <option value="1">Bible Study Session</option>
+
+  <option value="2">Bible Study Session</option>
+
+  <option value="5">Food Distribution to Yolanda Survivors</option>
+
+  <option value="6">Meeting for Election</option>
+
+  <option value="7">Sample Event</option>
+
+  <option value="8">Testing</option>
+
+  <option value="9">ADHADSJ</option>
+
+  <option value="10">Example Event</option>
+
+  <option value="11">Test Event</option>
+
+  <option value="12">Food Distribution to Cotta</option>
+
+  <option value="13">Tralalelo Tralalove: A Family-Friendly Seminar</option>
+
+  <option value="14">Election for New Officers</option>
+
+  <option value="15">Family is Love</option>
+
+  <option value="16">School Supplies Distribution to Gulang-Gulang Elementary School</option>
+
+  <option value="17">Bible Study Session</option>
+
+  <option value="18">Just Testing</option>
+
+  <option value="19">Testing 102</option>
+
+  <option value="21">Testing 104</option>
+
+  <option value="24">Food Distribution to Yolanda Survivors</option>
+
+  <option value="25">Testing 106</option>
+
+  <option value="26">Do Not Be Afraid</option>
+
+  <option value="27">Add Notifications for Recruitment and Attendance</option>
+
+  <option value="28">Test Event </option>
+
+  <option value="29">Digger</option>
+
+  <option value="31">Test</option>
+
+  <option value="32">I am Groot</option>
+
+  <option value="33">Again, I am Groot!</option>
+
+  <option value="34">Groot Nation</option>
+
+  <option value="35" selected>Test Event</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously" checked>
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+INFO 2025-11-16 20:40:21,854 donation GCash donation created: ID=61, Email=KENK13605@GMAIL.COM, Amount=500, Event=Test Event
+DEBUG 2025-11-16 20:40:21,854 donation Initiating GCash payment for donation ID=61, Amount=500
+INFO 2025-11-16 20:40:22,123 donation PayMongo source created: Source ID=src_sidTCS5gGzfPVay9j3mhFD9E, Donation ID=61
+DEBUG 2025-11-16 20:40:24,725 donation Session data: dict_items([('_csrftoken', 'O1EimqKEO12Uy9hVTF9cber5Uj67YrKi'), ('_auth_user_id', '1'), ('_auth_user_backend', 'django.contrib.auth.backends.ModelBackend'), ('_auth_user_hash', '99c979bcf892b63decc252b27357bdda7fa2e635621a1222beae2f0852221933'), ('_session_expiry', 28800), ('last_activity', 1763296822.125047), ('donation_id', 61)])
+DEBUG 2025-11-16 20:40:24,845 donation PayMongo source response: {'data': {'id': 'src_sidTCS5gGzfPVay9j3mhFD9E', 'type': 'source', 'attributes': {'amount': 50000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'KENK13605@GMAIL.COM', 'name': 'Test R. Event', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_sidTCS5gGzfPVay9j3mhFD9E', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'transaction_id': 'GCASH-5b3c6093', 'donation_id': '61'}, 'created_at': 1763296823, 'updated_at': 1763296825}}}
+DEBUG 2025-11-16 20:40:24,861 models Added transaction with masked details: {'transaction_id': 'GCASH-5b3c6093', 'donor': 'Anonymous Donor', 'email': 'anonymous@example.com', 'amount': '500.00', 'donation_date': '2025-11-16', 'payment_method': 'gcash', 'status': 'completed', 'signature': 'u80aSXo6ZYhEYDeAfv+AF92TKPNnRIipsghiekrP40fXeoulOg8eICLJbALxhx7xfKHZP55OFDZ/vjEkeMWrGB2HBeJx2L3tBsl60N8tXuX++KHofE8UDi4Ji/kP/oJuROAaZ7rjue1/XLJvvclNusjp/j6G7/zIahQVxJ7hdT5ghjp09ZYrOO246Q+RSSAV9sZMpThOQCvWzkfhktzUjkyJBCmuss/nHS0nbn2p1U+ROG1LKrfpAVvRcdjNivQBK06pfGQEGGmPEE/weuIEMsy9suvjAVKcImVnow9bUuYIUqVNa84MiZc4Ffe4ODOWhFGwe5Kay0IvXNTBBB9/dg==', 'is_anonymous': True, 'event': 'Test Event'}
+DEBUG 2025-11-16 20:40:24,863 donation Previous proof: 200907
+DEBUG 2025-11-16 20:40:25,019 donation Proof of work completed: 133432
+DEBUG 2025-11-16 20:40:25,020 models Calculated hash for Block 23: b665376ab54a2aae21158d560bf43e07fb7eecbb8798117cf499256ded9765f0
+INFO 2025-11-16 20:40:25,020 models Saving Block 23: Old hash=, New hash=b665376ab54a2aae21158d560bf43e07fb7eecbb8798117cf499256ded9765f0
+INFO 2025-11-16 20:40:25,021 models Block 23 saved with hash=b665376ab54a2aae21158d560bf43e07fb7eecbb8798117cf499256ded9765f0
+INFO 2025-11-16 20:40:25,022 models Block 23 created successfully
+DEBUG 2025-11-16 20:40:25,022 donation New block created: {'index': 23, 'timestamp': '2025-11-16T12:40:25.020155+00:00', 'transactions': [{'transaction_id': 'GCASH-5b3c6093', 'donor': 'Anonymous Donor', 'email': 'anonymous@example.com', 'amount': '500.00', 'donation_date': '2025-11-16', 'payment_method': 'gcash', 'status': 'completed', 'signature': 'u80aSXo6ZYhEYDeAfv+AF92TKPNnRIipsghiekrP40fXeoulOg8eICLJbALxhx7xfKHZP55OFDZ/vjEkeMWrGB2HBeJx2L3tBsl60N8tXuX++KHofE8UDi4Ji/kP/oJuROAaZ7rjue1/XLJvvclNusjp/j6G7/zIahQVxJ7hdT5ghjp09ZYrOO246Q+RSSAV9sZMpThOQCvWzkfhktzUjkyJBCmuss/nHS0nbn2p1U+ROG1LKrfpAVvRcdjNivQBK06pfGQEGGmPEE/weuIEMsy9suvjAVKcImVnow9bUuYIUqVNa84MiZc4Ffe4ODOWhFGwe5Kay0IvXNTBBB9/dg==', 'is_anonymous': True, 'event': 'Test Event'}], 'proof': 133432, 'previous_hash': '9da278f41dd524838de3c2edbc3ab2f7657456930804ff0f9b962285d3048500', 'hash': 'b665376ab54a2aae21158d560bf43e07fb7eecbb8798117cf499256ded9765f0'}
+INFO 2025-11-16 20:40:25,022 donation Block created for donation ID 61, Transaction ID GCASH-5b3c6093
+DEBUG 2025-11-16 20:40:25,023 donation Pending transactions after block creation: []
+DEBUG 2025-11-16 20:40:25,060 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-16 20:40:25,064 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-16 20:43:26,884 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-16 20:43:26,889 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-16 22:04:48,911 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:04:48,925 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:04:48,928 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:04:48,930 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:04:48,932 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:11:55,299 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:11:55,316 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:11:55,319 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:11:55,323 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:11:55,326 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:17:35,558 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:17:35,568 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:17:35,570 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:17:35,574 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:17:35,590 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:20:41,832 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:20:41,845 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:20:41,848 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:20:41,850 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:20:41,853 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:23,324 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:21:23,329 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:23,333 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:23,342 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:23,345 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:23,345 donation Updated review_manual_donations view applied - May 28, 19:26 PST fix
+DEBUG 2025-11-16 22:21:23,392 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:21:23,399 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:23,401 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:23,404 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:23,407 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:26,015 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:21:26,018 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:26,024 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:26,029 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:26,032 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:26,034 donation Updated review_manual_donations view applied - May 28, 19:26 PST fix
+DEBUG 2025-11-16 22:21:26,112 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:21:26,119 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:26,123 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:26,129 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:26,135 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:28,626 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:21:28,632 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:28,639 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:28,646 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:28,649 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:28,651 donation Updated review_manual_donations view applied - May 28, 19:26 PST fix
+DEBUG 2025-11-16 22:21:28,698 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:21:28,711 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:28,717 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:28,719 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:28,724 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:31,843 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:21:31,848 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:31,850 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:31,855 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:31,858 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:31,859 donation Updated review_manual_donations view applied - May 28, 19:26 PST fix
+DEBUG 2025-11-16 22:21:31,890 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:21:31,894 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:31,897 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:31,899 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:21:31,902 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:22:40,131 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:22:40,140 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:22:40,143 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:22:40,146 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:22:40,149 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:23:40,853 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:23:40,857 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:23:40,859 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:23:40,861 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:23:40,866 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:23:57,794 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:23:57,796 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:23:57,798 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:23:57,800 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:23:57,803 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:23:57,804 donation Updated review_manual_donations view applied - May 28, 19:26 PST fix
+DEBUG 2025-11-16 22:23:57,848 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:23:57,852 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:23:57,855 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:23:57,857 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:23:57,859 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:39:45,912 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:39:45,920 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:39:45,922 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:39:45,924 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:39:45,925 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:39:51,900 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:39:51,903 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:39:51,909 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:39:51,915 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:39:51,920 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:39:51,923 donation Updated review_manual_donations view applied - May 28, 19:26 PST fix
+DEBUG 2025-11-16 22:39:51,979 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:39:51,985 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:39:51,989 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:39:51,992 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:39:51,995 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:41:03,860 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-16 22:41:04,068 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-16 22:41:06,503 donation User Mr_Admin (role=admin, council=Council 3469): Found 4 pending manual donations
+DEBUG 2025-11-16 22:41:06,510 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:41:06,517 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:41:06,527 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:41:06,533 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:41:10,183 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-16 22:41:10,191 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-16 22:43:37,987 donation POST data: {'csrfmiddlewaretoken': ['9A8GoL2ULRglJYy0Ozn8diTz82GTvBA8NrCOA1CopI857XFLx4maemauSbCQjSag'], 'first_name': ['Rudolf'], 'middle_initial': ['R'], 'last_name': ['Raindeer'], 'email': ['KENK13605@GMAIL.COM'], 'amount': ['200'], 'donation_date': ['2025-11-04'], 'event': [''], 'donate_anonymously': ['on']}
+INFO 2025-11-16 22:43:38,661 donation Manual donation created: ID=62, Email=KENK13605@GMAIL.COM, Amount=200, Status=pending_manual, Council=Council 3469, Event=General, Anonymous=True
+DEBUG 2025-11-16 22:43:38,699 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-16 22:43:38,709 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-16 22:43:42,758 donation User Mr_Admin (role=admin, council=Council 3469): Found 5 pending manual donations
+DEBUG 2025-11-16 22:43:42,762 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:43:42,766 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:43:42,769 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:43:42,780 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:43:42,787 donation Donation ID=62, Transaction=KC-5cecf370, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:44:54,549 donation User Mr_Admin (role=admin, council=Council 3469): Found 5 pending manual donations
+DEBUG 2025-11-16 22:44:54,557 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:44:54,574 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:44:54,584 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:44:54,594 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:44:54,600 donation Donation ID=62, Transaction=KC-5cecf370, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:48:58,999 donation User Mr_Admin (role=admin, council=Council 3469): Found 5 pending manual donations
+DEBUG 2025-11-16 22:48:59,011 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:48:59,021 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:48:59,023 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:48:59,025 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:48:59,030 donation Donation ID=62, Transaction=KC-5cecf370, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:59:30,922 donation User Mr_Admin (role=admin, council=Council 3469): Found 5 pending manual donations
+DEBUG 2025-11-16 22:59:30,958 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:59:30,968 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:59:30,980 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:59:31,016 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 22:59:31,023 donation Donation ID=62, Transaction=KC-5cecf370, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 23:24:10,357 donation User Mr_Admin (role=admin, council=Council 3469): Found 5 pending manual donations
+DEBUG 2025-11-16 23:24:10,367 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 23:24:10,370 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 23:24:10,372 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 23:24:10,375 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 23:24:10,378 donation Donation ID=62, Transaction=KC-5cecf370, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-11-16 23:24:15,046 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-16 23:24:15,086 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+ERROR 2025-11-17 04:05:39,022 ledger Error fetching ledger data: Could not parse some characters: tx.block_index|default_if_none:"Pending Review"| if mode == 'pending_review' else tx.block_index||default:"Pending"
+DEBUG 2025-11-17 04:05:39,060 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-17 04:05:39,148 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+ERROR 2025-11-17 04:05:45,110 ledger Error fetching ledger data: Could not parse some characters: tx.block_index|default_if_none:"Pending Review"| if mode == 'pending_review' else tx.block_index||default:"Pending"
+DEBUG 2025-11-17 04:05:45,133 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-17 04:05:45,140 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-17 04:10:13,163 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-17 04:10:13,180 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+ERROR 2025-11-17 04:10:15,445 ledger Error fetching ledger data: Could not parse some characters: tx.block_index|default_if_none:"Pending Review"| if mode == 'pending_review' else tx.block_index||default:"Pending"
+DEBUG 2025-11-17 04:10:15,475 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-17 04:10:15,480 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-11-17 04:11:12,661 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-11-17 04:11:12,678 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>

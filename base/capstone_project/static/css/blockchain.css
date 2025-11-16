@@ -95,28 +95,34 @@ body {
 
 /* Column widths for main table (8 columns) */
 .blockchain-table th:nth-child(1),
-.blockchain-table td:nth-child(1) { width: 10%; } /* Block Index */
+.blockchain-table td:nth-child(1) { width: 5%; } /* Block Index */
 
 .blockchain-table th:nth-child(2),
-.blockchain-table td:nth-child(2) { width: 15%; } /* Block Timestamp */
+.blockchain-table td:nth-child(2) { width: 8%; } /* Block Timestamp */
 
 .blockchain-table th:nth-child(3),
 .blockchain-table td:nth-child(3) { width: 10%; } /* Transaction ID */
 
 .blockchain-table th:nth-child(4),
-.blockchain-table td:nth-child(4) { width: 15%; } /* Donor */
+.blockchain-table td:nth-child(4) { width: 6%; } /* Donor */
 
 .blockchain-table th:nth-child(5),
-.blockchain-table td:nth-child(5) { width: 15%; } /* Email */
+.blockchain-table td:nth-child(5) { width: 10%; } /* Email */
 
 .blockchain-table th:nth-child(6),
-.blockchain-table td:nth-child(6) { width: 10%; } /* Amount */
+.blockchain-table td:nth-child(6) { width: 6%; } /* Amount */
 
 .blockchain-table th:nth-child(7),
-.blockchain-table td:nth-child(7) { width: 15%; } /* Date */
+.blockchain-table td:nth-child(7) { width: 7%; } /* Date */
 
 .blockchain-table th:nth-child(8),
-.blockchain-table td:nth-child(8) { width: 10%; } /* Method */
+.blockchain-table td:nth-child(8) { width: 7%; } /* Method */
+
+.blockchain-table th:nth-child(9),
+.blockchain-table td:nth-child(9) { width: 8%; } /* Submitted By */
+
+.blockchain-table th:nth-child(10),
+.blockchain-table td:nth-child(10) { width: 8%; } /* Reviewed By */
 
 .blockchain-table th {
     background: linear-gradient(135deg, #f4b41a, #e0a10d); /* Gradient for headers */

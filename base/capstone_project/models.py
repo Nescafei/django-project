@@ -338,32 +338,38 @@ class Blockchain(models.Model):
         return chain
 
     def add_transaction(self, donation, public_key):
-        """Add a transaction to pending after verification, with masked details for privacy"""
-        if not donation.verify_signature(public_key):
-            logger.error(f"Failed to verify signature for donation {donation.transaction_id}")
+        try:
+            if not donation.signature:
+                logger.error(f"Donation {donation.transaction_id} has no signature")
+                return False
+                
+            if not donation.verify_signature(public_key):
+                logger.error(f"Invalid signature for donation {donation.transaction_id}")
+                return False
+
+            # Use is_anonymous for donor_name and email
+            transaction_data = {
+                'transaction_id': donation.transaction_id,
+                'donor_name': donation.get_display_name(),
+                'email': "anonymous@example.com" if donation.is_anonymous else donation.email,
+                'amount': float(donation.amount),
+                'donation_date': donation.donation_date.isoformat() if isinstance(donation.donation_date, date) else str(donation.donation_date),
+                'payment_method': donation.payment_method,
+                'event': donation.event.name if donation.event else "General Donation",
+                'signature': donation.signature,
+                # NEW: Add submitter and reviewer usernames for recording (None if not set)
+                'submitted_by': donation.submitted_by.username if donation.submitted_by else None,
+                'reviewed_by': donation.reviewed_by.username if donation.reviewed_by else None,
+            }
+            
+            self.pending_transactions.append(transaction_data)
+            self.save()
+            
+            logger.info(f"Transaction added for donation {donation.transaction_id}")
+            return True
+        except Exception as e:
+            logger.error(f"Error adding transaction: {str(e)}")
             return False
-        
-        # Mask details for storage in blockchain (privacy protection)
-        donor = donation.get_display_name()
-        email = "anonymous@example.com" if donation.is_anonymous else (donation.email or "N/A")
-        
-        tx = {
-            'transaction_id': donation.transaction_id,
-            'donor': donor,
-            'email': email,
-            'amount': str(donation.amount),
-            'donation_date': donation.donation_date.isoformat() if isinstance(donation.donation_date, date) else str(donation.donation_date),
-            'payment_method': donation.payment_method,
-            'status': donation.status,
-            'signature': donation.signature,
-            'is_anonymous': donation.is_anonymous,
-            'event': donation.event.name if donation.event else "General Donation"
-            # Add any other fields as needed, e.g., 'source_id', 'council'
-        }
-        
-        self.pending_transactions.append(tx)
-        logger.debug(f"Added transaction with masked details: {tx}")
-        return True
 
     def get_previous_block(self):
         try:

@@ -72,17 +72,21 @@ def normalize_blockchain_data(full_chain, pending_transactions):
                     'amount': getattr(tx, 'amount', '0.00'),
                     'donation_date': getattr(tx, 'donation_date', None),
                     'payment_method': getattr(tx, 'payment_method', 'N/A'),
-                    'is_anonymous': is_anonymous
+                    'is_anonymous': is_anonymous,
+                    'submitted_by': getattr(tx, 'submitted_by', 'N/A'),
+                    'reviewed_by': getattr(tx, 'reviewed_by', 'N/A')
                 }
             else:
-                is_anonymous = tx.get('is_anonymous', False)
+                # Fallback to support possible old data formats
+                donor_raw = tx.get('donor_name', tx.get('donor', ''))
+                is_anonymous = tx.get('is_anonymous', donor_raw == 'Anonymous Donor')
             # Mask personal details
-            if tx.get('is_anonymous', False):
+            if is_anonymous:
                 tx['donor'] = "Anonymous Donor"
                 tx['email'] = "N/A"
             else:
                 # Partial mask for non-anonymous
-                tx['donor'] = mask_name(tx.get('donor', ''))
+                tx['donor'] = mask_name(donor_raw)
                 tx['email'] = mask_email(tx.get('email', ''))
             # Align 'date' key to 'donation_date' if present
             if 'date' in tx and 'donation_date' not in tx:
@@ -108,6 +112,9 @@ def normalize_blockchain_data(full_chain, pending_transactions):
                         tx['amount'] = 0.0
                 elif tx['amount'] is None:
                     tx['amount'] = 0.0
+            # Ensure submitted_by and reviewed_by are present
+            tx['submitted_by'] = tx.get('submitted_by', 'N/A')
+            tx['reviewed_by'] = tx.get('reviewed_by', 'N/A')
 
     # Same detailed normalization for pending_transactions
     for tx in pending_transactions:
@@ -122,19 +129,23 @@ def normalize_blockchain_data(full_chain, pending_transactions):
                 'amount': getattr(tx, 'amount', '0.00'),
                 'donation_date': getattr(tx, 'donation_date', None),
                 'payment_method': getattr(tx, 'payment_method', 'N/A'),
-                'is_anonymous': is_anonymous
+                'is_anonymous': is_anonymous,
+                'submitted_by': getattr(tx, 'submitted_by', 'N/A'),
+                'reviewed_by': getattr(tx, 'reviewed_by', 'N/A')
             }
         else:
-            is_anonymous = tx.get('is_anonymous', False)
-        if tx.get('is_anonymous', False):
+            # Fallback to support possible old data formats
+            donor_raw = tx.get('donor_name', tx.get('donor', ''))
+            is_anonymous = tx.get('is_anonymous', donor_raw == 'Anonymous Donor')
+        if is_anonymous:
             tx['donor'] = "Anonymous Donor"
             tx['email'] = "N/A"
         else:
-            tx['donor'] = mask_name(tx.get('donor', ''))
+            tx['donor'] = mask_name(donor_raw)
             tx['email'] = mask_email(tx.get('email', ''))
         if 'date' in tx and 'donation_date' not in tx:
             tx['donation_date'] = tx['date']
-        if tx.get('donation_date') and isinstance(tx['donation_date'], str):
+        if tx.get('donation_date') and isinstance(tx.get('donation_date'), str):
             try:
                 tx['donation_date'] = datetime.strptime(tx['donation_date'], '%Y-%m-%d').date()
             except ValueError:
@@ -152,6 +163,9 @@ def normalize_blockchain_data(full_chain, pending_transactions):
                     tx['amount'] = 0.0
             elif tx['amount'] is None:
                 tx['amount'] = 0.0
+        # Ensure submitted_by and reviewed_by are present
+        tx['submitted_by'] = tx.get('submitted_by', 'N/A')
+        tx['reviewed_by'] = tx.get('reviewed_by', 'N/A')
 
     return full_chain, pending_transactions
 
@@ -310,9 +324,9 @@ def download_ledger(request):
 
     sort = request.GET.get('sort', 'recent_to_oldest')
     if sort == 'recent_to_oldest':
-        all_transactions.sort(key=lambda x: x.get('block_index', max_block_index + 1), reverse=True)
+        all_transactions.sort(key=lambda x: x['block_index'] if x['block_index'] is not None else (max_block_index + 1), reverse=True)
     elif sort == 'oldest_to_recent':
-        all_transactions.sort(key=lambda x: x.get('block_index', max_block_index + 1))
+        all_transactions.sort(key=lambda x: x['block_index'] if x['block_index'] is not None else (max_block_index + 1))
     elif sort == 'highest_amount':
         all_transactions.sort(key=lambda x: x.get('amount', 0), reverse=True)
     elif sort == 'lowest_amount':
@@ -323,8 +337,8 @@ def download_ledger(request):
     ws = wb.active
     ws.title = "Donation Ledger"
 
-    # Headers
-    headers = ['Block Index', 'Block Timestamp', 'Transaction ID', 'Donor', 'Email', 'Amount', 'Date', 'Method']
+    # Updated Headers with Submitted By and Reviewed By
+    headers = ['Block Index', 'Block Timestamp', 'Transaction ID', 'Donor', 'Email', 'Amount', 'Date', 'Method', 'Submitted By', 'Reviewed By']
     ws.append(headers)
     for cell in ws[1]:
         cell.font = Font(bold=True)
@@ -343,18 +357,19 @@ def download_ledger(request):
         if block_timestamp and block_timestamp.tzinfo is not None:
             block_timestamp = block_timestamp.replace(tzinfo=None)
 
-        donation_date = tx.get('donation_date')
         if donation_date and hasattr(donation_date, 'tzinfo') and donation_date.tzinfo is not None:
             donation_date = donation_date.replace(tzinfo=None)
         ws.append([
             tx.get('block_index', 'Pending') if tx.get('block_index') is not None else 'Pending',
-            block_timestamp if block_timestamp else '',  # ← now timezone-naive or empty
+            block_timestamp if block_timestamp else '',
             tx.get('transaction_id', ''),
             tx.get('donor', 'N/A'),
             tx.get('email', 'N/A'),
             amount,
-            donation_date,  # ← safe now
-            tx.get('payment_method', 'N/A')
+            donation_date,
+            tx.get('payment_method', 'N/A'),
+            tx.get('submitted_by', 'N/A'),
+            tx.get('reviewed_by', 'N/A')
         ])
 
     # Styling: wrap text + auto-size columns
@@ -389,6 +404,8 @@ def download_ledger(request):
     ws.column_dimensions['D'].width = 35  # Donor
     ws.column_dimensions['C'].width = 28  # Transaction ID
     ws.column_dimensions['E'].width = 32  # Email
+    ws.column_dimensions['I'].width = 20  # Submitted By
+    ws.column_dimensions['J'].width = 20  # Reviewed By
 
     # Output to response
     output = io.BytesIO()
