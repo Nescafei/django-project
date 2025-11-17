@@ -98,31 +98,23 @@ body {
 .blockchain-table td:nth-child(1) { width: 5%; } /* Block Index */
 
 .blockchain-table th:nth-child(2),
-.blockchain-table td:nth-child(2) { width: 8%; } /* Block Timestamp */
+.blockchain-table td:nth-child(2) { width: 7%; } /* Block Timestamp */
 
 .blockchain-table th:nth-child(3),
-.blockchain-table td:nth-child(3) { width: 10%; } /* Transaction ID */
+.blockchain-table td:nth-child(3) { width: 10%; } /* Previous Hash */
 
 .blockchain-table th:nth-child(4),
-.blockchain-table td:nth-child(4) { width: 6%; } /* Donor */
+.blockchain-table td:nth-child(4) { width: 10%; } /* Block Hash */
 
 .blockchain-table th:nth-child(5),
-.blockchain-table td:nth-child(5) { width: 10%; } /* Email */
+.blockchain-table td:nth-child(5) { width: 5%; } /* Proof */
 
 .blockchain-table th:nth-child(6),
 .blockchain-table td:nth-child(6) { width: 6%; } /* Amount */
 
 .blockchain-table th:nth-child(7),
-.blockchain-table td:nth-child(7) { width: 7%; } /* Date */
+.blockchain-table td:nth-child(7) { width: 7%; } /* Actions */
 
-.blockchain-table th:nth-child(8),
-.blockchain-table td:nth-child(8) { width: 7%; } /* Method */
-
-.blockchain-table th:nth-child(9),
-.blockchain-table td:nth-child(9) { width: 8%; } /* Submitted By */
-
-.blockchain-table th:nth-child(10),
-.blockchain-table td:nth-child(10) { width: 8%; } /* Reviewed By */
 
 .blockchain-table th {
     background: linear-gradient(135deg, #f4b41a, #e0a10d); /* Gradient for headers */
@@ -350,7 +342,100 @@ body {
     transform: translateY(-2px);
     box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Larger shadow on hover */
 }
+.hash-cell {
+    font-family: 'Courier New', monospace;
+    font-size: 0.8rem;
+    word-break: break-all;
+    max-width: 150px;
+}
 
+/* Modal Styles */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1000;
+    left: 0; top: 0;
+    width: 100%; height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.7);
+    backdrop-filter: blur(5px);
+}
+
+.modal-content {
+    background: rgba(30, 60, 114, 0.95);
+    color: #e6d7a3;
+    margin: 10% auto;
+    padding: 30px;
+    border-radius: 15px;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: 0 10px 30px rgba(244, 180, 26, 0.4);
+    border: 2px solid #f4b41a;
+}
+
+.modal-content h2 {
+    color: #f4b41a;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.modal-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 15px;
+}
+
+.modal-grid p {
+    margin: 0;
+    padding: 8px 0;
+}
+
+.close {
+    color: #f4b41a;
+    float: right;
+    font-size: 34px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.close:hover { color: white; }
+
+/* Button styles */
+.view-details {
+    background: #f4b41a;
+    color: #1e3c72;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: bold;
+    margin: 4px;
+}
+
+.view-details:hover {
+    background: #e0a10d;
+    color: white;
+}
+
+.download-button.small {
+    padding: 6px 10px !important;
+    font-size: 0.9rem;
+}
+
+.na-text {
+    color: #888;
+    font-style: italic;
+    font-size: 0.9rem;
+}
+
+.actions-cell {
+    white-space: nowrap;
+}
+
+/* Responsive modal */
+@media (max-width: 768px) {
+    .modal-grid { grid-template-columns: 1fr; }
+}
 /* Responsive Design */
 @media (max-width: 768px) {
     .header h1 {

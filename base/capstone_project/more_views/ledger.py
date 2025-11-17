@@ -304,18 +304,26 @@ def get_blockchain_data(request):  # Removed @login_required for public transpar
         all_transactions = []
         max_block_index = max((b.get('index', 0) for b in full_chain), default=0)
 
+        # For transactions IN a block:
         for block in filtered_chain:
             for tx in block.get('transactions', []):
                 tx_copy = tx.copy()
                 tx_copy['block_index'] = block['index']
                 tx_copy['block_timestamp'] = block['timestamp']
+                tx_copy['previous_hash'] = block['previous_hash']       # NEW
+                tx_copy['block_hash'] = block['hash']                   # NEW
+                tx_copy['proof'] = block['proof']                       # NEW
                 tx_copy['_sort_key'] = block['index']
                 all_transactions.append(tx_copy)
 
+        # For PENDING transactions:
         for tx in filtered_pending:
             tx_copy = tx.copy()
             tx_copy['block_index'] = None
             tx_copy['block_timestamp'] = None
+            tx_copy['previous_hash'] = 'N/A'   # NEW
+            tx_copy['block_hash'] = 'N/A'       # NEW
+            tx_copy['proof'] = 'N/A'           # NEW
             tx_copy['_sort_key'] = max_block_index + 1
             all_transactions.append(tx_copy)
 
@@ -374,17 +382,27 @@ def download_ledger(request):
     all_transactions = []
     max_block_index = max((b.get('index', 0) for b in full_chain), default=0)
 
+    # For transactions IN a block:
     for block in filtered_chain:
         for tx in block.get('transactions', []):
             tx_copy = tx.copy()
             tx_copy['block_index'] = block['index']
             tx_copy['block_timestamp'] = block['timestamp']
+            tx_copy['previous_hash'] = block['previous_hash']       # NEW
+            tx_copy['block_hash'] = block['hash']                   # NEW
+            tx_copy['proof'] = block['proof']                       # NEW
+            tx_copy['_sort_key'] = block['index']
             all_transactions.append(tx_copy)
 
+    # For PENDING transactions:
     for tx in filtered_pending:
         tx_copy = tx.copy()
         tx_copy['block_index'] = None
         tx_copy['block_timestamp'] = None
+        tx_copy['previous_hash'] = 'N/A'   # NEW
+        tx_copy['block_hash'] = 'N/A'       # NEW
+        tx_copy['proof'] = 'N/A'           # NEW
+        tx_copy['_sort_key'] = max_block_index + 1
         all_transactions.append(tx_copy)
 
     sort = request.GET.get('sort', 'recent_to_oldest')
@@ -401,7 +419,9 @@ def download_ledger(request):
     ws = wb.active
     ws.title = "Donation Ledger"
 
-    headers = ['Block Index', 'Block Timestamp', 'Transaction ID', 'Donor', 'Email', 'Amount', 'Date', 'Method', 'Submitted By', 'Reviewed By']
+    headers = ['Block Index', 'Block Timestamp', 'Previous Hash', 'Block Hash', 'Proof',
+           'Amount', 'Transaction ID', 'Donor', 'Email', 'Date', 'Method', 
+           'Submitted By', 'Reviewed By']
     ws.append(headers)
     for cell in ws[1]:
         cell.font = Font(bold=True)
@@ -424,6 +444,10 @@ def download_ledger(request):
         ws.append([
             tx.get('block_index', 'Pending') if tx.get('block_index') is not None else 'Pending',
             block_timestamp if block_timestamp else '',
+            tx.get('previous_hash', 'N/A'),
+            tx.get('block_hash', 'N/A'),
+            tx.get('proof', 'N/A'),
+            amount,
             tx.get('transaction_id', ''),
             tx.get('donor', 'N/A'),
             tx.get('email', 'N/A'),

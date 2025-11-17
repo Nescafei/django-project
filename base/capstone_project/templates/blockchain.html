@@ -75,37 +75,46 @@
             <table class="blockchain-table">
                 <thead>
                     <tr>
-                        <th>Index</th>
+                        <th>Block Index</th>
                         <th>Timestamp</th>
-                        <th>Transaction ID</th>
-                        <th>Donor</th>
-                        <th>Email</th>
+                        <th>Previous Hash</th>
+                        <th>Block Hash</th>
+                        <th>Proof</th>
                         <th>Amount</th>
-                        <th>Date</th>
-                        <th>Method</th>
-                        <th>Submitted By</th>
-                        <th>Reviewed By</th>
                         <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for tx in page_obj %}
                         <tr>
-                            <td>{{ tx.block_index|default:"Pending" }}</td>
+                            <td>{{ tx.block_index|default:"N/A" }}</td>
                             <td>{{ tx.block_timestamp|date:"Y-m-d H:i:s"|default:"N/A" }}</td>
-                            <td>{{ tx.transaction_id }}</td>
-                            <td>{{ tx.donor }}</td>
-                            <td>{{ tx.email|default:"N/A" }}</td>
+                            <td title="{{ tx.previous_hash|default:'N/A' }}" class="hash-cell">
+                                {{ tx.previous_hash|default:"N/A"|truncatechars:30 }}
+                            </td>
+                            <td title="{{ tx.block_hash|default:'N/A' }}" class="hash-cell">
+                                {{ tx.block_hash|default:"N/A"|truncatechars:30 }}
+                            </td>
+                            <td>{{ tx.proof|default:"N/A" }}</td>
                             <td>₱{{ tx.amount|floatformat:2 }}</td>
-                            <td>{{ tx.donation_date|default:"N/A" }}</td>
-                            <td>{{ tx.payment_method|default:"N/A" }}</td>
-                            <td>{{ tx.submitted_by|default:"N/A" }}</td>
-                            <td>{{ tx.reviewed_by|default:"N/A" }}</td>
-                            <td>
+                            <td class="actions-cell">
+                                <button class="view-details"
+                                        data-tx-id="{{ tx.transaction_id }}"
+                                        data-donor="{{ tx.donor }}"
+                                        data-email="{{ tx.email|default:'N/A' }}"
+                                        data-date="{{ tx.donation_date|date:'Y-m-d'|default:'N/A' }}"
+                                        data-method="{{ tx.payment_method|default:'N/A' }}"
+                                        data-submitted="{{ tx.submitted_by|default:'N/A' }}"
+                                        data-reviewed="{{ tx.reviewed_by|default:'N/A' }}"
+                                        data-amount="{{ tx.amount|floatformat:2 }}">
+                                    View Details
+                                </button>
                                 {% if tx.id %}
-                                    <a href="{% url 'download_receipt' donation_id=tx.id %}" class="download-button">Download Receipt</a>
+                                    <a href="{% url 'download_receipt' donation_id=tx.id %}" class="download-button small">
+                                        Download Receipt
+                                    </a>
                                 {% else %}
-                                    N/A
+                                    <span class="na-text">No Receipt</span>
                                 {% endif %}
                             </td>
                         </tr>
@@ -113,7 +122,22 @@
                 </tbody>
             </table>
         </div>
-
+        <div id="detailsModal" class="modal">
+            <div class="modal-content">
+                <span class="close">&times;</span>
+                <h2>Transaction Details</h2>
+                <div class="modal-grid">
+                    <p><strong>Transaction ID:</strong> <span id="modal-tx-id"></span></p>
+                    <p><strong>Donor:</strong> <span id="modal-donor"></span></p>
+                    <p><strong>Email:</strong> <span id="modal-email"></span></p>
+                    <p><strong>Amount:</strong> ₱<span id="modal-amount"></span></p>
+                    <p><strong>Donation Date:</strong> <span id="modal-date"></span></p>
+                    <p><strong>Method:</strong> <span id="modal-method"></span></p>
+                    <p><strong>Submitted By:</strong> <span id="modal-submitted"></span></p>
+                    <p><strong>Reviewed By:</strong> <span id="modal-reviewed"></span></p>
+                </div>
+            </div>
+        </div>
         <div class="pagination">
             {% if page_obj.has_previous %}
                 <a href="?page={{ page_obj.previous_page_number }}{% for key,value in request.GET.items %}{% if key != 'page' %}&{{ key }}={{ value }}{% endif %}{% endfor %}" class="pagination-link">Previous</a>
@@ -131,4 +155,26 @@
 
     <a href="{% url 'donations' %}" class="back-button">Back to Donations</a>
 </div>
+<script>
+    const modal = document.getElementById('detailsModal');
+    const closeBtn = document.querySelector('.close');
+    const buttons = document.querySelectorAll('.view-details');
+
+    buttons.forEach(btn => {
+        btn.addEventListener('click', () => {
+            document.getElementById('modal-tx-id').textContent = btn.dataset.txId;
+            document.getElementById('modal-donor').textContent = btn.dataset.donor;
+            document.getElementById('modal-email').textContent = btn.dataset.email;
+            document.getElementById('modal-amount').textContent = btn.dataset.amount;
+            document.getElementById('modal-date').textContent = btn.dataset.date;
+            document.getElementById('modal-method').textContent = btn.dataset.method;
+            document.getElementById('modal-submitted').textContent = btn.dataset.submitted;
+            document.getElementById('modal-reviewed').textContent = btn.dataset.reviewed;
+            modal.style.display = 'block';
+        });
+    });
+
+    closeBtn.onclick = () => modal.style.display = 'none';
+    window.onclick = (e) => { if (e.target === modal) modal.style.display = 'none'; };
+</script>
 {% endblock %}
