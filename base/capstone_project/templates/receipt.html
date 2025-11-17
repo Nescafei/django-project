@@ -1,0 +1,24 @@
+# New template: request_receipt.html (create this file in your templates folder)
+{% extends 'base.html' %}
+
+{% block title %}Request Receipt{% endblock %}
+
+{% block content %}
+<h2>Request Receipt for Donation {{ donation.transaction_id }}</h2>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+<p>Enter your email to receive the receipt. It must match the donation record.</p>
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Request Receipt</button>
+</form>
+
+<a href="{% url 'blockchain' %}">Back to Ledger</a>
+{% endblock %}

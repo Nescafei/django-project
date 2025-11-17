@@ -1,3 +1,4 @@
+<!-- Updated blockchain.html with conditional links for download/request -->
 {% extends 'base.html' %}
 {% load static %}
 
@@ -84,6 +85,7 @@
                         <th>Method</th>
                         <th>Submitted By</th>
                         <th>Reviewed By</th>
+                        <th>Actions</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -99,6 +101,13 @@
                             <td>{{ tx.payment_method|default:"N/A" }}</td>
                             <td>{{ tx.submitted_by|default:"N/A" }}</td>
                             <td>{{ tx.reviewed_by|default:"N/A" }}</td>
+                            <td>
+                                {% if tx.id %}
+                                    <a href="{% url 'download_receipt' donation_id=tx.id %}" class="download-button">Download Receipt</a>
+                                {% else %}
+                                    N/A
+                                {% endif %}
+                            </td>
                         </tr>
                     {% endfor %}
                 </tbody>

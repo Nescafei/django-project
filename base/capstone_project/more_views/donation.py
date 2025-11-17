@@ -1,3 +1,4 @@
+# Updated donation.py with unmasked receipts and new request_receipt view
 import base64, os, uuid, logging, requests
 from capstone_project.forms import DonationForm, ManualDonationForm
 from capstone_project.models import User, Council, Event, Analytics, Donation, Blockchain, blockchain, Block, ForumCategory, ForumMessage, Notification, EventAttendance, Recruitment, get_blockchain
@@ -15,6 +16,13 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
 from django.urls import reverse
+from reportlab.lib.pagesizes import letter
+from reportlab.pdfgen import canvas
+from reportlab.lib.units import inch
+from io import BytesIO
+from django.core.mail import EmailMessage
+from datetime import datetime
+from django import forms  # For request form
 
 PRIVATE_KEY = getattr(settings, 'PRIVATE_KEY', None)
 PUBLIC_KEY = getattr(settings, 'PUBLIC_KEY', None)
@@ -42,14 +50,13 @@ def donations(request):
         form = DonationForm(request.POST, request.FILES)
         logger.debug(f"Form fields: {form.as_p()}")
         if form.is_valid():
-            donation = form.save(commit=False)  # Event is now included via form
+            donation = form.save(commit=False)
             donation.submitted_by = request.user if request.user.is_authenticated else None
             donation.transaction_id = f"GCASH-{uuid.uuid4().hex[:8]}"
             donation.payment_method = 'gcash'
             donation.status = 'pending'
             donation.signature = ''
             donation.donation_date = date.today()
-            # Set is_anonymous based on form checkbox
             donation.is_anonymous = form.cleaned_data.get('donate_anonymously', False)
             donation.save()
             logger.info(f"GCash donation created: ID={donation.id}, Email={donation.email}, Amount={donation.amount}, Event={donation.event.name if donation.event else 'General'}")
@@ -76,10 +83,9 @@ def manual_donation(request):
         logger.debug(f"POST data: {dict(request.POST)}")
         form = ManualDonationForm(request.POST, request.FILES)
         if form.is_valid():
-            donation = form.save(commit=False)  # Event is now included via form
+            donation = form.save(commit=False)
             donation.payment_method = 'manual'
             donation.submitted_by = request.user
-            # Assign the council of the submitting user
             if request.user.council:
                 donation.council = request.user.council
             else:
@@ -88,7 +94,6 @@ def manual_donation(request):
             donation.transaction_id = f"KC-{uuid.uuid4().hex[:8]}"
             donation.source_id = ''
             donation.status = 'pending_manual'
-            # Set is_anonymous based on form checkbox
             donation.is_anonymous = form.cleaned_data.get('donate_anonymously', False)
             donation.save()
             logger.info(f"Manual donation created: ID={donation.id}, Email={donation.email or 'Anonymous'}, Amount={donation.amount}, Status={donation.status}, Council={donation.council.name if donation.council else 'None'}, Event={donation.event.name if donation.event else 'General'}, Anonymous={donation.is_anonymous}")
@@ -110,11 +115,10 @@ def manual_donation(request):
 
 @csrf_protect
 @login_required
-# @permission_required('capstone_project.review_manual_donations', raise_exception=True)
 def review_manual_donations(request):
     if request.user.role == 'admin':
         pending_donations = Donation.objects.filter(status='pending_manual')
-    else:  # Officer
+    else:
         pending_donations = Donation.objects.filter(status='pending_manual').filter(
             submitted_by__council=request.user.council
         ).exclude(submitted_by=request.user)
@@ -128,18 +132,15 @@ def review_manual_donations(request):
     page_obj = paginator.get_page(page_number)
 
     if request.method == 'POST':
-        logger.debug("Updated review_manual_donations view applied - May 28, 19:26 PST fix")
         donation_id = request.POST.get('donation_id')
         action = request.POST.get('action')
         rejection_reason = request.POST.get('rejection_reason', '')
 
         try:
             donation = Donation.objects.get(id=donation_id, status='pending_manual')
-            # Council restriction for officers
             if request.user.role == 'officer' and donation.submitted_by and donation.submitted_by.council and donation.submitted_by.council != request.user.council:
                 messages.error(request, 'You are not authorized to review this donation.')
                 return redirect('review_manual_donations')
-            # Prevent self-review
             if donation.submitted_by == request.user:
                 messages.error(request, 'You cannot review your own donation.')
                 return redirect('review_manual_donations')
@@ -148,19 +149,16 @@ def review_manual_donations(request):
                 if action == 'approve':
                     donation.status = 'completed'
                     donation.reviewed_by = request.user
-                    # Use the globally defined keys from views.py
                     logger.debug(f"Using global keys: PRIVATE_KEY={PRIVATE_KEY is not None}, PUBLIC_KEY={PUBLIC_KEY is not None}")
                     if not PRIVATE_KEY or not PUBLIC_KEY:
-                        raise ValueError("Private or public key not loaded in views.py")
+                        raise ValueError("Private or public key not loaded")
                     logger.debug("Attempting to sign donation")
                     donation.sign_donation(PRIVATE_KEY)
                     donation.save()
                     logger.debug("Donation signed and saved")
-                    # Initialize blockchain instance
                     blockchain.initialize_chain()
                     logger.debug("Blockchain initialized")
 
-                    # Handle blockchain transaction in a separate function
                     def process_blockchain_transaction():
                         nonlocal donation
                         try:
@@ -183,6 +181,7 @@ def review_manual_donations(request):
                         if new_block:
                             logger.info(f"New block created for manual donation: Index={new_block['index']}, Transactions={len(new_block['transactions'])}")
                             messages.success(request, f"Donation {donation.transaction_id} approved and recorded on the blockchain.")
+                            send_receipt_email(donation)  # Send unmasked receipt
                         else:
                             logger.error("Failed to create block for donation")
                             donation.status = 'pending_manual'
@@ -280,7 +279,84 @@ def initiate_gcash_payment(request, donation):
         donation.save()
         messages.error(request, f"Failed to initiate payment: {error_detail}")
         return redirect('donations')
+
+def generate_receipt_pdf(donation):
+    buffer = BytesIO()
+    p = canvas.Canvas(buffer, pagesize=letter)
+    width, height = letter
+
+    p.setFont("Helvetica-Bold", 16)
+    p.drawString(inch, height - inch, "Knights of Columbus - Donation Receipt")
+
+    donor_name = f"{donation.first_name or ''} {donation.middle_initial or ''} {donation.last_name or ''}".strip() or "Anonymous Donor"
+    email = donation.email or "N/A"
+    event_name = donation.event.name if donation.event else "General Donation"
+
+    data = {
+        'transaction_id': donation.transaction_id,
+        'donor_name': donor_name,
+        'email': email,
+        'amount': donation.amount,
+        'donation_date': donation.donation_date,
+        'payment_method': donation.payment_method.capitalize(),
+        'event_name': event_name,
+        'status': donation.get_status_display(),
+        'block_index': "Pending" if donation.status != 'completed' else "Recorded",
+    }
+
+    y = height - 2 * inch
+    p.setFont("Helvetica", 12)
+    for key, value in data.items():
+        p.drawString(inch, y, f"{key.replace('_', ' ').title()}: {value}")
+        y -= 0.25 * inch
+
+    p.drawString(inch, inch, f"Generated on: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
+    p.drawString(inch, inch - 0.25 * inch, "Thank you for your support! Verify on blockchain ledger.")
+
+    p.save()
+    buffer.seek(0)
+    return buffer
+
+def send_receipt_email(donation):
+    if donation.is_anonymous:
+        logger.info(f"Skipping email for anonymous donation {donation.transaction_id}")
+        return
     
+    try:
+        pdf_buffer = generate_receipt_pdf(donation)
+        email = EmailMessage(
+            subject="Your Knights of Columbus Donation Receipt",
+            body=f"Thank you for your donation of ₱{donation.amount}. Please find your receipt attached.",
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[donation.email]
+        )
+        email.attach(f"receipt_{donation.transaction_id}.pdf", pdf_buffer.getvalue(), 'application/pdf')
+        email.send()
+        logger.info(f"Receipt email sent successfully for donation {donation.transaction_id}")
+    except Exception as e:
+        logger.error(f"Failed to send receipt email for donation {donation.transaction_id}: {str(e)}")
+
+class RequestReceiptForm(forms.Form):
+    email = forms.EmailField(label="Your Email", required=True)
+
+def request_receipt(request, donation_id):
+    donation = get_object_or_404(Donation, id=donation_id)
+    
+    if request.method == 'POST':
+        form = RequestReceiptForm(request.POST)
+        if form.is_valid():
+            provided_email = form.cleaned_data['email']
+            if provided_email == donation.email:
+                send_receipt_email(donation)
+                messages.success(request, "Receipt sent to your email.")
+                return redirect('blockchain')
+            else:
+                messages.error(request, "Email does not match the donation record.")
+    else:
+        form = RequestReceiptForm()
+    
+    return render(request, 'request_receipt.html', {'form': form, 'donation': donation})
+
 @csrf_protect
 def confirm_gcash_payment(request):
     logger.debug(f"Session data: {request.session.items()}")
@@ -359,6 +435,7 @@ def confirm_gcash_payment(request):
                         blockchain.refresh_from_db()
                         logger.debug(f"Pending transactions after block creation: {blockchain.pending_transactions}")
                         messages.success(request, "Payment successful! Donation recorded on the blockchain.")
+                        send_receipt_email(donation)  # Send unmasked receipt
                     else:
                         logger.error(f"Failed to create block for donation ID {donation.id}")
                         donation.status = 'pending'

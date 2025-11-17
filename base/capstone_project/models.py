@@ -593,6 +593,26 @@ class Donation(models.Model):
         display_name = self.get_display_name()
         return f"{display_name} - {self.amount} - {self.get_status_display()}"    
 
+    def get_masked_email(self):
+        """Mask email for PDF if anonymous (reuses mask_email logic from ledger.py if desired)."""
+        if self.is_anonymous or not self.email:
+            return "N/A"
+        return self.email
+    
+    def get_pdf_data(self):
+        """Get data dict for PDF rendering."""
+        return {
+            'transaction_id': self.transaction_id,
+            'donor_name': self.get_display_name(),
+            'email': self.get_masked_email(),
+            'amount': self.amount,
+            'donation_date': self.donation_date,
+            'payment_method': self.payment_method.capitalize(),
+            'event_name': self.event.name if self.event else "General Donation",
+            'status': self.get_status_display(),
+            'block_index': "Pending" if self.status != 'completed' else "Recorded",  # Simple for PDF
+        }
+
 def receipt_upload_path(instance, filename):
     ext = filename.split('.')[-1]
     new_filename = f"{instance.transaction_id}.{ext}"

@@ -171,14 +171,14 @@ SECURE_CONTENT_TYPE_NOSNIFF = True
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Email settings for SendGrid
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.sendgrid.net'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'apikey'  # Literal string 'apikey'
-EMAIL_HOST_PASSWORD = config('SENDGRID_API_KEY')
-DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')
+EMAIL_USE_SSL = False  # Use TLS, not SSL
+EMAIL_HOST_USER = config('EMAIL_HOST_USER')  # Your Gmail address
+EMAIL_HOST_PASSWORD = config('EMAIL_HOST_PASSWORD')  # The 16-char app password (no spaces in code)
+DEFAULT_FROM_EMAIL = config('EMAIL_HOST_USER')  # Same as EMAIL_HOST_USER
 
 # Blockchain key loading function
 def load_keys():

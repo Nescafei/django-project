@@ -26,8 +26,10 @@ urlpatterns = [
     # Blockchain / Ledger
     path('blockchain/', ledger.get_blockchain_data, name='blockchain'),
     path('download-ledger/', ledger.download_ledger, name='download_ledger'),
+    path('download-receipt/<int:donation_id>/', ledger.download_receipt, name='download_receipt'),
     
     # Donations
+    path('request-receipt/<int:donation_id>/', donation.request_receipt, name='request_receipt'),  # New path
     path('donations/', donation.donations, name='donations'),
     path('donation-reports/', views.donation_reports, name='donation_reports'),
     path('manual_donation/', donation.manual_donation, name='manual_donation'),
@@ -36,7 +38,6 @@ urlpatterns = [
     path('success/', donation.success_page, name='success_page'),
     path('cancel/', donation.cancel_page, name='cancel_page'),
     path('gcash/confirm/', donation.confirm_gcash_payment, name='confirm_gcash_payment'),
-
     # path('search-users/', views.search_users, name='search_users'),
 
     # New endpoint for recruiter name autocomplete
