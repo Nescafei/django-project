@@ -25,7 +25,7 @@ SECRET_KEY = 'django-insecure-&rpa0v6&rmfo8ucl20$q=_=9ch^2b70$0ul#da2$#%c*+v1_jv
 DEBUG = True
 
 # Update ALLOWED_HOSTS for local development and production
-ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'yourdomain.com']  # Add your production domain
+ALLOWED_HOSTS = ['localhost', '127.0.0.1', 'yourdomain.com', '192.168.101.71', '192.168.1.3']  # Add your production domain
 
 # Application definition
 INSTALLED_APPS = [

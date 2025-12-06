@@ -6,6 +6,7 @@ Knights of Columbus - Event Attendance
 {% endblock %}
 
 {% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
 
 <div class="dashboard-container">
@@ -155,6 +156,9 @@ Knights of Columbus - Event Attendance
                         {% if is_today %}
                         <div class="save-attendance-container">
                             <a href="{% url 'officer_take_attendance' %}" class="dashboard-btn"><i class="fa-solid fa-camera"></i>Scan QR Code</a>
+                            <button type="button" id="downloadEventPDF" class="dashboard-btn" style="background-color: #28a745;">
+                                <i class="fas fa-download"></i> Download
+                            </button>
                             <button type="button" id="saveAttendance" class="dashboard-btn">
                                 <i class="fas fa-save"></i> Save Attendance
                             </button>
@@ -251,6 +255,13 @@ Knights of Columbus - Event Attendance
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
+body.dark-mode .event-card,
+body.dark-mode .attendance-card {
+    background-color: #252525 !important;
+    color: #ffffff !important;
+    border: 1px solid #333 !important;
+}
+
 .event-card h2 {
     margin-top: 0;
     margin-bottom: 0.5rem;
@@ -274,14 +285,26 @@ Knights of Columbus - Event Attendance
     margin-top: 0.2rem;
 }
 
+body.dark-mode .meta-item i {
+    color: #f4b41a !important;
+}
+
 .meta-item strong {
     display: block;
     margin-bottom: 0.25rem;
     color: var(--heading-color);
 }
 
+body.dark-mode .meta-item strong {
+    color: #f4b41a !important;
+}
+
 .meta-item p {
     margin: 0;
+}
+
+body.dark-mode .meta-item p {
+    color: #ffffff !important;
 }
 
 .event-description h3 {
@@ -341,6 +364,11 @@ Knights of Columbus - Event Attendance
     background-color: #f8f9fa;
     padding: 1rem;
     border-radius: var(--border-radius);
+}
+
+body.dark-mode .attendance-stats {
+    background-color: #252525 !important;
+    border: 1px solid #333 !important;
 }
 
 .stat-item {
@@ -468,6 +496,73 @@ Knights of Columbus - Event Attendance
     background-color: #030D4E;
 }
 
+body.dark-mode .checkmark {
+    background-color: #3a3a3a !important;
+    border: 1px solid #555 !important;
+}
+
+body.dark-mode .attendance-checkbox:hover input ~ .checkmark {
+    background-color: #f4b41a !important;
+}
+
+body.dark-mode .attendance-checkbox input:checked ~ .checkmark {
+    background-color: #f4b41a !important;
+}
+
+body.dark-mode .event-card h2,
+body.dark-mode .attendance-header h2 {
+    color: #ffffff !important;
+}
+
+body.dark-mode .event-description h3 {
+    color: #f4b41a !important;
+}
+
+body.dark-mode .event-description p {
+    color: #ffffff !important;
+}
+
+body.dark-mode .attendance-stats {
+    background-color: #3a3a3a !important;
+}
+
+body.dark-mode .stat-value {
+    color: #f4b41a !important;
+}
+
+body.dark-mode .stat-label {
+    color: #999 !important;
+}
+
+body.dark-mode .attendance-list th {
+    background-color: #1f1f1f !important;
+    color: #f4b41a !important;
+    border-bottom-color: #333 !important;
+}
+
+body.dark-mode .attendance-list td {
+    border-bottom-color: #333 !important;
+    color: #ffffff !important;
+}
+
+body.dark-mode .member-name {
+    color: #ffffff !important;
+}
+
+body.dark-mode .member-role {
+    color: #999 !important;
+}
+
+body.dark-mode .search-input {
+    background-color: #3a3a3a !important;
+    color: #ffffff !important;
+    border-color: #555 !important;
+}
+
+body.dark-mode .search-input::placeholder {
+    color: #999 !important;
+}
+
 .attendance-checkbox input:disabled ~ .checkmark {
     opacity: 0.5;
     cursor: not-allowed;
@@ -501,7 +596,10 @@ Knights of Columbus - Event Attendance
 
 .save-attendance-container {
     margin-top: 1.5rem;
-    text-align: right;
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    flex-wrap: wrap;
 }
 
 .notification {
@@ -884,6 +982,51 @@ document.addEventListener('DOMContentLoaded', function() {
             console.log('Removed show class from notification');
         }, 4000);
     }
+    
+    // Download PDF button
+    const downloadButton = document.getElementById('downloadEventPDF');
+    // Download CSV button
+    document.getElementById('downloadEventPDF').addEventListener('click', function() {
+        const eventName = '{{ event.name }}';
+        const eventCategory = '{{ event.category }}{% if event.subcategory and event.subcategory != "N/A" %} - {{ event.subcategory }}{% endif %}';
+        const eventDate = '{{ event.date_from|date:"F j, Y" }}{% if event.date_until and event.date_until != event.date_from %} to {{ event.date_until|date:"F j, Y" }}{% endif %}';
+        const eventLocation = '{{ event.street }}, {{ event.barangay }}, {{ event.city }}, {{ event.province }}';
+        const eventCouncil = '{% if event.is_global %}All Councils{% else %}{{ event.council.name }}{% endif %}';
+        const eventDescription = '{{ event.description }}';
+        const presentCount = document.getElementById('presentCount').textContent;
+        const totalMembers = document.getElementById('totalMembers').textContent;
+        
+        // Get attendees list
+        let attendeesList = '';
+        document.querySelectorAll('.member-row').forEach(row => {
+            const nameElement = row.querySelector('.member-name');
+            const roleElement = row.querySelector('.member-role');
+            const checkbox = row.querySelector('.attendance-check');
+            if (nameElement && roleElement) {
+                const name = nameElement.textContent.trim();
+                const roleText = roleElement.textContent.trim();
+                const status = checkbox && checkbox.checked ? 'Present' : 'Absent';
+                attendeesList += `"${name}","${roleText}","${status}"\n`;
+            }
+        });
+        
+        const csvContent = `Event Name,Category,Date,Location,Council,Description,Total Registered,Total Attended,Total Absent,Generated On
+"${eventName}","${eventCategory}","${eventDate}","${eventLocation}","${eventCouncil}","${eventDescription}","${totalMembers}","${presentCount}","${parseInt(totalMembers) - parseInt(presentCount)}","${new Date().toLocaleString()}"
+
+Member Name,Role,Status
+${attendeesList}`;
+        
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `Event_Attendance_${eventName.replace(/\s+/g, '_')}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+    
     
     // Save attendance button
     const saveButton = document.getElementById('saveAttendance');

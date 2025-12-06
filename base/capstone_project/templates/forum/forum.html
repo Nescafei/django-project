@@ -744,7 +744,7 @@
     
     .forum-container {
         flex-direction: row;
-        height: calc(94vh - 60px);
+        height: calc(84vh - 60px);
         position: relative;
     }
     
@@ -1171,7 +1171,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    function loadMessages(categoryId, shouldScroll = true) {
+    function loadMessages(categoryId, shouldScroll = true, forceRefresh = false) {
         if (isSearching) return;
         
         fetch(`/forum/messages/${categoryId}/?forum_type=${currentForumType}`)
@@ -1181,23 +1181,30 @@ document.addEventListener('DOMContentLoaded', function() {
                     return new Date(a.timestamp) - new Date(b.timestamp);
                 });
                 
-                originalMessages = sortedMessages;
-                
-                // Check if there are any new messages
+                // Check if there are any changes (new messages, deleted messages, or pin status changes)
                 const hasNewMessages = sortedMessages.some(message => 
                     !messageIds.has(message.id)
                 );
                 
-                // Force refresh when clearing search by setting hasNewMessages to true
-                // when messageIds is empty or after a search clear
-                if (!hasNewMessages && messageIds.size > 0 && !window.searchJustCleared) {
-                    return; // No new messages, don't update DOM
+                const hasDeletedMessages = messageIds.size > sortedMessages.length;
+                
+                const hasPinStatusChanges = sortedMessages.some(message => {
+                    const oldMessage = originalMessages.find(m => m.id === message.id);
+                    return oldMessage && oldMessage.is_pinned !== message.is_pinned;
+                });
+                
+                // Force refresh when clearing search, or when there are changes
+                if (!forceRefresh && !hasNewMessages && !hasDeletedMessages && !hasPinStatusChanges && messageIds.size > 0 && !window.searchJustCleared) {
+                    return; // No changes, don't update DOM
                 }
                 
                 // Reset the search clear flag
                 window.searchJustCleared = false;
                 
+                originalMessages = sortedMessages;
                 messagesContainer.innerHTML = '';
+                messageIds.clear();
+                
                 sortedMessages.forEach(message => {
                     messageIds.add(message.id);
                     const messageElement = createMessageElement(message);
@@ -1399,6 +1406,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     }
                     // Update pinned messages list if needed
                     updatePinnedMessagesList();
+                    // Force refresh to sync with other users
+                    loadMessages(currentCategory, isNearBottom);
                 }, 500);
             } else {
                 // If error, remove animation class
@@ -1438,6 +1447,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 setTimeout(() => {
                     const message = document.querySelector(`.message[data-message-id="${messageId}"]`);
                     if (message) message.classList.remove('pinning');
+                    // Force refresh to sync with other users
+                    loadMessages(currentCategory, isNearBottom);
                 }, 500);
             }
         })

@@ -8,6 +8,14 @@ from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from ..models import Event
 from django.contrib import messages
+from ..notification_utils import (
+    notify_admin_pending_proposal,
+    notify_officer_proposal_status,
+    notify_admin_event_today,
+    notify_officer_event_today,
+    notify_member_event_today
+)
+from datetime import date
 
 @never_cache
 @login_required
@@ -78,6 +86,8 @@ def add_event(request):
                 event.save()
                 messages.success(request, f'Event "{name}" has been created successfully.')
             else:
+                # Notify admins of pending event proposal
+                notify_admin_pending_proposal(request.user, proposal_type="event")
                 messages.success(request, f'Event "{name}" has been proposed and is pending approval.')
                 
             return redirect('dashboard')
@@ -172,6 +182,17 @@ def approve_event(request, event_id):
         event.status = 'approved'
         event.approved_by = request.user
         event.save()
+        
+        # Notify the officer who proposed the event
+        notify_officer_proposal_status(event.created_by, event, status='approved')
+        
+        # If event is happening today, notify all users
+        if event.date_from == date.today():
+            notify_admin_event_today(event)
+            if event.council:
+                notify_officer_event_today(event)
+                notify_member_event_today(event)
+        
         messages.success(request, f'Event "{event.name}" has been approved.')
         
     return redirect('event_proposals')
@@ -204,6 +225,10 @@ def reject_event(request, event_id):
             event.status = 'rejected'
             event.rejection_reason = final_reason
             event.save()
+            
+            # Notify the officer who proposed the event
+            notify_officer_proposal_status(event.created_by, event, status='rejected')
+            
             messages.success(request, f'Event "{event.name}" has been rejected.')
             return redirect('event_proposals')
         else:
@@ -215,16 +240,16 @@ def reject_event(request, event_id):
     return redirect('event_proposals')
 
 @never_cache
-@login_required
 def event_details(request, event_id):
-    """API endpoint for event details"""
-    if not request.user.is_authenticated:
-        return JsonResponse({'error': 'Not authorized'}, status=401)
-        
+    """API endpoint for event details - allows unauthenticated users to view approved events"""
     event = get_object_or_404(Event, id=event_id)
     
-    # If not admin, users can only see their council's events, global events, or approved events
-    if request.user.role != 'admin':
+    # Unauthenticated users can only see approved events
+    if not request.user.is_authenticated:
+        if event.status != 'approved':
+            return JsonResponse({'error': 'Not authorized'}, status=403)
+    # If authenticated but not admin, users can only see their council's events, global events, or approved events
+    elif request.user.role != 'admin':
         if not event.is_global and event.council != request.user.council and event.status != 'approved':
             return JsonResponse({'error': 'Not authorized'}, status=403)
     
@@ -419,3 +444,85 @@ def event_list(request):
     }
     
     return render(request, 'event_list.html', context)
+
+@never_cache
+def approved_events(request):
+    """View for displaying approved events to all users (authenticated and non-authenticated)"""
+    from datetime import date
+    today = date.today()
+    
+    # Show only approved events that are current or future
+    base_query = Q(date_from__gte=today) | Q(date_until__gte=today)
+    
+    # All users (authenticated or not) can see ALL approved events regardless of council
+    events = Event.objects.filter(base_query & Q(status='approved')).order_by('date_from')
+    
+    # Filter by category if specified
+    category_filter = request.GET.get('category', None)
+    if category_filter and category_filter != 'all':
+        events = events.filter(category=category_filter)
+    
+    # Filter by council if specified
+    council_filter = request.GET.get('council', None)
+    if council_filter and council_filter != 'all':
+        events = events.filter(council_id=council_filter)
+    
+    # Filter by province if specified
+    province_filter = request.GET.get('province', None)
+    if province_filter and province_filter != 'all':
+        events = events.filter(province=province_filter)
+    
+    # Filter by city if specified
+    city_filter = request.GET.get('city', None)
+    if city_filter and city_filter != 'all':
+        events = events.filter(city=city_filter)
+    
+    # Filter by barangay if specified
+    barangay_filter = request.GET.get('barangay', None)
+    if barangay_filter and barangay_filter != 'all':
+        events = events.filter(barangay=barangay_filter)
+    
+    # Search functionality
+    search_query = request.GET.get('search', None)
+    if search_query:
+        events = events.filter(
+            Q(name__icontains=search_query) | 
+            Q(description__icontains=search_query) |
+            Q(category__icontains=search_query)
+        )
+    
+    # Sort events
+    sort_by = request.GET.get('sort', 'date')
+    if sort_by == 'name':
+        events = events.order_by('name')
+    elif sort_by == 'date_desc':
+        events = events.order_by('-date_from')
+    elif sort_by == 'category':
+        events = events.order_by('category', 'date_from')
+    else:  # Default: date ascending (soonest first)
+        events = events.order_by('date_from')
+    
+    # Get all councils for filter dropdown
+    councils = Council.objects.all()
+    
+    # Get unique categories for filter
+    categories = Event.objects.filter(status='approved').values_list('category', flat=True).distinct()
+    
+    # Get unique provinces for filter
+    provinces = Event.objects.filter(status='approved').values_list('province', flat=True).distinct().order_by('province')
+    
+    context = {
+        'events': events,
+        'councils': councils,
+        'categories': categories,
+        'provinces': provinces,
+        'category_filter': category_filter,
+        'council_filter': council_filter,
+        'province_filter': province_filter,
+        'city_filter': city_filter,
+        'barangay_filter': barangay_filter,
+        'search_query': search_query,
+        'sort_by': sort_by,
+    }
+    
+    return render(request, 'approved_events.html', context)

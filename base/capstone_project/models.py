@@ -86,6 +86,7 @@ class User(AbstractUser):
     voluntary_join = models.BooleanField(default=False)
     e_signature = models.ImageField(upload_to='e_signatures/', null=True, blank=True)
     join_reason = models.TextField(null=True, blank=True)
+    dark_mode = models.BooleanField(default=False)
 
     def save(self, *args, **kwargs):
         if self.username == 'Mr_Admin' and self.role != 'admin':
@@ -250,12 +251,47 @@ class Analytics(models.Model):
         return f"Analytics for {self.council.name} on {self.date_updated}"
     
 class Notification(models.Model):
+    # Notification types
+    NOTIFICATION_TYPES = (
+        # Admin notifications
+        ('pending_proposal', 'Pending Proposal/Member'),
+        ('donation_received', 'Donation Received'),
+        ('event_today', 'Event Happening Today'),
+        ('donation_quota_reached', 'Donation Quota Reached'),
+        
+        # Officer notifications
+        ('proposal_accepted', 'Proposal Accepted'),
+        ('proposal_rejected', 'Proposal Rejected'),
+        ('pending_member_approval', 'Pending Member Approval'),
+        ('officer_inactive', 'Officer Inactive'),
+        ('council_moved', 'Moved to New Council'),
+        ('promoted_to_officer', 'Promoted to Officer'),
+        ('demoted_to_member', 'Demoted to Member'),
+        ('recruiter_assigned', 'Assigned as Recruiter'),
+        ('event_attended', 'Event Attended'),
+        
+        # Member notifications
+        ('member_inactive', 'Member Inactive'),
+        ('member_moved', 'Moved to New Council'),
+        ('member_promoted', 'Promoted to Officer'),
+        ('member_demoted', 'Demoted to Member'),
+        ('member_recruiter', 'Assigned as Recruiter'),
+        ('member_attended', 'Event Attended'),
+        
+        # Forum notifications
+        ('forum_message', 'Forum Message'),
+    )
+    
     user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='notifications')
     message = models.ForeignKey(ForumMessage, on_delete=models.CASCADE, null=True, blank=True)
     title = models.CharField(max_length=255, null=True, blank=True)
     content = models.TextField(null=True, blank=True)
+    notification_type = models.CharField(max_length=50, choices=NOTIFICATION_TYPES, default='forum_message')
     is_read = models.BooleanField(default=False)
     timestamp = models.DateTimeField(auto_now_add=True)
+    related_user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='notifications_about_user')
+    related_event = models.ForeignKey('Event', on_delete=models.SET_NULL, null=True, blank=True, related_name='notifications')
+    related_council = models.ForeignKey('Council', on_delete=models.SET_NULL, null=True, blank=True, related_name='notifications')
     
     def __str__(self):
         if self.message:

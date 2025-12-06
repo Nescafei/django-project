@@ -112,6 +112,7 @@ def sign_up(request):
     councils = Council.objects.all()
     print(f"Number of councils available: {councils.count()}")
     if request.method == 'POST':
+        from ..notification_utils import notify_admin_pending_proposal, notify_officer_pending_member
         # Debug information for file uploads
         print(f"POST data: {request.POST}")
         print(f"FILES data: {request.FILES}")
@@ -285,6 +286,17 @@ def sign_up(request):
                     # Continue with registration even if e-signature fails
             
             print(f"User {username} saved successfully with details: email={email}, role={user.role}, council={council}, age={age}, birthday={user.birthday}, first_name={first_name}, second_name={second_name}, middle_name={middle_name}, middle_initial={middle_initial}, last_name={last_name}, suffix={suffix}, street={street}, barangay={barangay}, city={city}, province={province}, zip_code={zip_code}, contact_number={contact_number}, gender={gender}, religion={religion}, practical_catholic={practical_catholic}, marital_status={marital_status}, occupation={occupation}, recruiter_name={recruiter_name}, voluntary_join={voluntary_join}, join_reason={join_reason}")
+            
+            # Send notifications
+            # Notify admin of pending user
+            notify_admin_pending_proposal(user, proposal_type="member")
+            
+            # Notify officer of pending user in their council
+            if council:
+                officers = User.objects.filter(council=council, role='officer', is_active=True)
+                for officer in officers:
+                    notify_officer_pending_member(officer, user)
+            
             messages.success(request, 'Account request submitted. Awaiting approval. Use your username to sign in once approved.')
             return render(request, 'sign-up.html', {'councils': councils})
         except Exception as e:
@@ -356,8 +368,17 @@ def admin_dashboard(request):
     # Count pending users for admin dashboard
     pending_users_count = User.objects.filter(role='pending', is_archived=False).count()
     
+    # Get all members and officers (not archived)
+    all_members = User.objects.filter(is_archived=False, role__in=['member', 'officer'])
+    
+    # Count active users (members/officers with activity in last 30 days)
+    active_users_count = sum(1 for u in all_members if not u.is_inactive_member())
+    
     # Count inactive users (members/officers with no activity in 30 days)
-    inactive_users_count = sum(1 for u in User.objects.filter(is_archived=False, role__in=['member', 'officer']) if u.is_inactive_member())
+    inactive_users_count = sum(1 for u in all_members if u.is_inactive_member())
+    
+    # Total members (active + inactive)
+    total_members = active_users_count + inactive_users_count
     
     # Get daily Bible verse
     daily_verse = get_daily_bible_verse()
@@ -377,7 +398,9 @@ def admin_dashboard(request):
         'analytics': analytics,
         'user_recruitment_count': user_recruitment_count,
         'pending_users_count': pending_users_count,
+        'active_users_count': active_users_count,
         'inactive_users_count': inactive_users_count,
+        'total_members': total_members,
         'daily_verse': daily_verse,
         'show_inactive_warning': show_inactive_warning,
         'councils_count': councils_count
@@ -426,8 +449,17 @@ def officer_dashboard(request):
     # Count pending users for officer dashboard (only their council)
     pending_users_count = User.objects.filter(role='pending', council=user.council, is_archived=False).count()
     
+    # Get all members and officers in officer's council (not archived)
+    council_members = User.objects.filter(is_archived=False, council=user.council, role__in=['member', 'officer'])
+    
+    # Count active users in officer's council (with activity in last 30 days)
+    active_users_count = sum(1 for u in council_members if not u.is_inactive_member())
+    
     # Count inactive users in officer's council (members/officers with no activity in 30 days)
-    inactive_users_count = sum(1 for u in User.objects.filter(is_archived=False, council=user.council, role__in=['member', 'officer']) if u.is_inactive_member())
+    inactive_users_count = sum(1 for u in council_members if u.is_inactive_member())
+    
+    # Total members in council (active + inactive)
+    total_members = active_users_count + inactive_users_count
     
     # Get daily Bible verse
     daily_verse = get_daily_bible_verse()
@@ -445,7 +477,9 @@ def officer_dashboard(request):
         'activities_count': activities_count,
         'user_recruitment_count': user_recruitment_count,
         'pending_users_count': pending_users_count,
+        'active_users_count': active_users_count,
         'inactive_users_count': inactive_users_count,
+        'total_members': total_members,
         'daily_verse': daily_verse,
         'show_inactive_warning': show_inactive_warning
     }
@@ -704,27 +738,72 @@ def pin_message(request, message_id):
 
 @login_required
 def get_notifications(request):
+    """Get all notifications for the current user"""
     notifications = Notification.objects.filter(
-        user=request.user,
-        is_read=False
-    ).select_related('message', 'message__sender')
+        user=request.user
+    ).select_related('message', 'message__sender', 'related_user', 'related_event', 'related_council').order_by('-timestamp')[:50]
     
     notifications_data = []
     for notif in notifications:
+        # Determine notification type based on whether it has a message field
+        # This is the ONLY reliable way to distinguish forum messages from system notifications
+        if notif.message:
+            # This is a forum message notification
+            notification_type = 'forum_message'
+            content = notif.message.content[:100] + '...' if len(notif.message.content) > 100 else notif.message.content
+            title = f"Message from {notif.message.sender.first_name} {notif.message.sender.last_name}"
+        else:
+            # This is a system notification
+            # Use the notification_type field, but ignore if it's the default 'forum_message'
+            # (which means it was never explicitly set)
+            if notif.notification_type and notif.notification_type != 'forum_message':
+                notification_type = notif.notification_type
+            else:
+                # If no explicit type or default type, treat as generic system notification
+                notification_type = 'system_notification'
+            
+            content = notif.content or ''
+            title = notif.title or 'Notification'
+        
+        # Debug logging
+        print(f"Notification ID: {notif.id}, Type: {notification_type}, Has Message: {bool(notif.message)}, DB Type: {notif.notification_type}")
+        
         notifications_data.append({
             'id': notif.id,
-            'sender': notif.message.sender.username,
-            'content': notif.message.content[:100] + '...' if len(notif.message.content) > 100 else notif.message.content,
-            'timestamp': notif.timestamp.strftime('%Y-%m-%d %H:%M')
+            'title': title,
+            'content': content,
+            'is_read': notif.is_read,
+            'timestamp': notif.timestamp.isoformat(),
+            'notification_type': notification_type
         })
     
     return JsonResponse({'notifications': notifications_data})
 
 @login_required
 def mark_notification_read(request, notification_id):
+    """Mark a single notification as read"""
     notification = get_object_or_404(Notification, id=notification_id, user=request.user)
     notification.is_read = True
     notification.save()
+    return JsonResponse({'status': 'success'})
+
+@login_required
+def delete_notification(request, notification_id):
+    """Delete a notification"""
+    notification = get_object_or_404(Notification, id=notification_id, user=request.user)
+    notification.delete()
+    return JsonResponse({'status': 'success'})
+
+@login_required
+def mark_all_notifications_read(request):
+    """Mark all notifications as read for the current user"""
+    Notification.objects.filter(user=request.user, is_read=False).update(is_read=True)
+    return JsonResponse({'status': 'success'})
+
+@login_required
+def delete_all_notifications(request):
+    """Delete all notifications for the current user"""
+    Notification.objects.filter(user=request.user).delete()
     return JsonResponse({'status': 'success'})
 
 def member_list(request):
@@ -1157,6 +1236,31 @@ def leaderboard(request):
     }
     
     return render(request, 'leaderboard.html', context)
+
+@login_required
+def toggle_dark_mode(request):
+    """Toggle dark mode for the current user"""
+    if request.method == 'POST':
+        try:
+            user = request.user
+            # Handle case where dark_mode field might not exist yet
+            try:
+                current_dark_mode = user.dark_mode
+            except AttributeError:
+                current_dark_mode = False
+            
+            user.dark_mode = not current_dark_mode
+            user.save()
+            return JsonResponse({
+                'status': 'success',
+                'dark_mode': user.dark_mode
+            })
+        except Exception as e:
+            return JsonResponse({
+                'status': 'error',
+                'message': str(e)
+            }, status=500)
+    return JsonResponse({'status': 'error'}, status=400)
 
 # def member_attend(request):
 #     return render(request, 'member_attend.html')

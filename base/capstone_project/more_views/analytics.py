@@ -3,9 +3,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.views.decorators.cache import never_cache
 from django.db.models import Sum, Avg, Q
+from django.utils import timezone
 import logging, json
 import pandas as pd
 from django.contrib.auth.decorators import login_required
+from django.db.models import Count, Min, Max, Avg, StdDev, Variance
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +71,10 @@ def analytics_view(request):
     logger.debug(f"Members/officers data: {members_officers_data}")
 
     # 4. Event Type Distribution
-    event_types_qs = Event.objects.filter(status='approved')
+    # Valid event categories from add_event.html
+    valid_categories = ['Exemplification', 'Service Program', 'Council Meeting', 'Assembly Meeting']
+    
+    event_types_qs = Event.objects.filter(status='approved', category__in=valid_categories)
     if council_id:
         event_types_qs = event_types_qs.filter(council_id=council_id)
     event_types_df = pd.DataFrame(list(event_types_qs.values('category')))
@@ -93,18 +98,34 @@ def analytics_view(request):
     logger.debug(f"Donation sources data: {donation_sources_data}")
 
     # 6. Active vs. Inactive Members
+    # Active = members with activity in last 30 days (recruitment or event attendance)
+    # Inactive = members with no activity in last 30 days
+    from datetime import timedelta
+    
     users_qs = User.objects.filter(is_archived=False, role='member')
     if council_id:
         users_qs = users_qs.filter(council_id=council_id)
-    total_members = users_qs.count()
+    
+    thirty_days_ago = timezone.now().date() - timedelta(days=30)
+    
+    # Count active members (recently joined OR had recent activity)
     active_members = users_qs.filter(
-        Q(submitted_donations__status='completed') |
-        Q(event_attendances__is_present=True, event_attendances__event__status='approved')
+        Q(date_joined__date__gte=thirty_days_ago) |  # Newly joined within 30 days
+        Q(recruitments__date_recruited__gte=thirty_days_ago) |  # Recent recruitment
+        Q(event_attendances__is_present=True, event_attendances__event__date_from__gte=thirty_days_ago)  # Recent attendance
     ).distinct().count()
-    logger.debug(f"Active members: {active_members}, Total members: {total_members}")
+    
+    # Count inactive members (no recent activity and joined more than 30 days ago)
+    inactive_members = users_qs.exclude(
+        Q(date_joined__date__gte=thirty_days_ago) |
+        Q(recruitments__date_recruited__gte=thirty_days_ago) |
+        Q(event_attendances__is_present=True, event_attendances__event__date_from__gte=thirty_days_ago)
+    ).count()
+    
+    logger.debug(f"Active members: {active_members}, Inactive members: {inactive_members}")
     member_activity_data = [
         {'category': 'Active Members', 'count': active_members},
-        {'category': 'Inactive Members', 'count': total_members - active_members}
+        {'category': 'Inactive Members', 'count': inactive_members}
     ]
     logger.debug(f"Member activity data: {member_activity_data}")
 
@@ -118,6 +139,80 @@ def analytics_view(request):
     }
     logger.debug(f"Summary stats: {summary_stats}")
 
+    # === FIGURE 15: Descriptive Statistics (Central Tendency + Dispersion) ===
+
+    descriptive_stats = {}
+
+    # 1. Donations Amount (per completed donation)
+    donations_for_stats = Donation.objects.filter(status='completed')
+    if council_id:
+        donations_for_stats = donations_for_stats.filter(submitted_by__council_id=council_id)
+
+    donation_amounts = donations_for_stats.values_list('amount', flat=True)
+    if donation_amounts:
+        import statistics
+        amounts_list = list(donation_amounts)
+        descriptive_stats['donations'] = {
+            'count': len(amounts_list),
+            'mean': round(statistics.mean(amounts_list), 2),
+            'median': statistics.median(amounts_list),
+            'mode': statistics.mode(amounts_list) if len(set(amounts_list)) > 1 else amounts_list[0],
+            'std_dev': round(statistics.stdev(amounts_list) if len(amounts_list) > 1 else 0, 2),
+            'min': min(amounts_list),
+            'max': max(amounts_list),
+        }
+    else:
+        descriptive_stats['donations'] = {'count': 0, 'mean': 0, 'median': 0, 'mode': 0, 'std_dev': 0, 'min': 0, 'max': 0}
+
+    # 2. Events per Council (only if NO council filter → shows variation across councils)
+    if not council_id:
+        events_per_council = Event.objects.filter(status='approved')\
+            .values('council_id')\
+            .annotate(count=Count('id'))\
+            .values_list('count', flat=True)
+        counts = list(events_per_council)
+        descriptive_stats['events_per_council'] = {
+            'count': len(counts),
+            'mean': round(statistics.mean(counts), 2) if counts else 0,
+            'median': statistics.median(counts) if counts else 0,
+            'mode': statistics.mode(counts) if counts and len(set(counts)) > 1 else (counts[0] if counts else 0),
+            'std_dev': round(statistics.stdev(counts) if len(counts) > 1 else 0, 2),
+            'min': min(counts) if counts else 0,
+            'max': max(counts) if counts else 0,
+        }
+    else:
+        # When filtered, just show total events (no variation)
+        total_events = Event.objects.filter(status='approved', council_id=council_id).count()
+        descriptive_stats['events_per_council'] = {
+            'count': 1,
+            'mean': total_events,
+            'median': total_events,
+            'mode': total_events,
+            'std_dev': 0,
+            'min': total_events,
+            'max': total_events,
+        }
+
+    # 3. Active Member Ratio (%)
+    total_members = User.objects.filter(is_archived=False, role='member')
+    if council_id:
+        total_members = total_members.filter(council_id=council_id)
+    total_members_count = total_members.count()
+
+    active_members_count = total_members.filter(
+        Q(submitted_donations__status='completed') |
+        Q(event_attendances__is_present=True, event_attendances__event__status='approved')
+    ).distinct().count()
+
+    ratio = (active_members_count / total_members_count * 100) if total_members_count > 0 else 0
+
+    descriptive_stats['active_member_ratio'] = {
+        'percentage': round(ratio, 2),
+        'active_count': active_members_count,
+        'total_count': total_members_count
+    }
+
+
     # Convert data to JSON for Chart.js
     context = {
         'councils': councils,
@@ -129,7 +224,8 @@ def analytics_view(request):
         'donation_sources_data': json.dumps(donation_sources_data),
         'member_activity_data': json.dumps(member_activity_data),
         'summary_stats': summary_stats,
-        'is_officer': request.user.role == 'officer'
+        'is_officer': request.user.role == 'officer',
+        'descriptive_stats': descriptive_stats,
     }
     return render(request, 'analytics_view.html', context)
 

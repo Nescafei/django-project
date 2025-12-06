@@ -206,10 +206,33 @@ Knights of Columbus - My Recruits
         gap: 2rem;
         justify-content: space-between;
     }
+
+    body.dark-mode .degree-progress-container {
+        background-color: #252525 !important;
+        color: #ffffff !important;
+        border: 1px solid #333 !important;
+    }
     
     .degree-info {
         flex: 1;
         min-width: 300px;
+    }
+
+    body.dark-mode .degree-info h3,
+    body.dark-mode .degree-info h4 {
+        color: #ffffff !important;
+    }
+
+    body.dark-mode .degree-info p {
+        color: #ffffff !important;
+    }
+
+    body.dark-mode .next-degree-info {
+        border-top-color: #333 !important;
+    }
+
+    body.dark-mode .requirements li i {
+        color: #f4b41a !important;
     }
     
     .stats-container {
@@ -228,6 +251,11 @@ Knights of Columbus - My Recruits
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
         transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
+
+    body.dark-mode .stat-card {
+        background-color: #3a3a3a !important;
+        color: #ffffff !important;
+    }
     
     .stat-card:hover {
         transform: translateY(-3px);
@@ -240,11 +268,19 @@ Knights of Columbus - My Recruits
         color: var(--primary-color);
         line-height: 1;
     }
+
+    body.dark-mode .stat-value {
+        color: #f4b41a !important;
+    }
     
     .stat-label {
         font-size: 0.9rem;
         color: #6c757d;
         margin-top: 0.5rem;
+    }
+
+    body.dark-mode .stat-label {
+        color: #999 !important;
     }
     
     .degree-badge {

@@ -12,11 +12,22 @@
     --table-shadow: 0 8px 32px rgba(13, 52, 113, 0.15);
 }
 
+/* Dark Mode Variables */
+body.dark-mode {
+    --primary-bg: #0D3471;
+    --secondary-bg: #252525;
+    --accent-color: #F4B41A;
+    --heading-color: #F4B41A;
+    --text-color: #ffffff;
+    --button-text: #1f1f1f;
+    --table-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
 .event-form-container {
-    max-width: 95%;
+    max-width: 1600px;
     width: 100%;
     margin: 1rem auto;
-    padding: 2.5rem;
+    padding: 2.5rem 1rem;
     background-color: var(--secondary-bg);
     border-radius: 12px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
@@ -151,6 +162,10 @@
     vertical-align: middle;
     font-size: 0.95rem;
     transition: all var(--transition-speed) ease;
+    max-width: 250px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .event-table tr:last-child td {
@@ -343,7 +358,6 @@
     color: var(--heading-color);
     margin-top: 0;
     margin-bottom: 2rem;
-    border-bottom: 2px solid var(--primary-bg);
     padding-bottom: 1rem;
     font-size: 1.8rem;
     font-weight: 700;
@@ -568,6 +582,68 @@
     border-radius: var(--border-radius);
 }
 
+/* Dark Mode Enhancements */
+body.dark-mode .event-form-container {
+    background-color: #252525;
+    color: #ffffff;
+}
+
+body.dark-mode .event-form-title {
+    color: #f4b41a;
+    border-bottom-color: #f4b41a;
+}
+
+body.dark-mode .form-group label {
+    color: #f4b41a;
+}
+
+body.dark-mode .form-group input,
+body.dark-mode .form-group select,
+body.dark-mode .form-group textarea {
+    background-color: #333;
+    color: #ffffff;
+    border-color: #555;
+}
+
+body.dark-mode .form-group input:focus,
+body.dark-mode .form-group select:focus,
+body.dark-mode .form-group textarea:focus {
+    border-color: #f4b41a;
+    box-shadow: 0 0 0 3px rgba(244, 180, 26, 0.2);
+}
+
+body.dark-mode .event-table {
+    background-color: #252525;
+    color: #ffffff;
+}
+
+body.dark-mode .event-table thead {
+    background-color: #1f1f1f;
+}
+
+body.dark-mode .event-table th {
+    color: #f4b41a;
+    border-bottom-color: #333;
+}
+
+body.dark-mode .event-table td {
+    border-bottom-color: #333;
+    color: #ffffff;
+}
+
+body.dark-mode .event-table tr:hover {
+    background-color: #333;
+}
+
+body.dark-mode .btn-primary {
+    background-color: #f4b41a;
+    color: #1f1f1f;
+}
+
+body.dark-mode .btn-primary:hover {
+    background-color: #ffc93d;
+}
+
 .modal-detail-item strong {
     display: block;
     color: var(--heading-color);
@@ -583,4 +659,21 @@
     margin: 0 0 1rem 0;
     padding-bottom: 1rem;
     border-bottom: 1px solid rgba(13, 52, 113, 0.1);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.modal-detail-item {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.modal-detail-item p,
+.modal-detail-item span,
+.modal-detail-item address {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }

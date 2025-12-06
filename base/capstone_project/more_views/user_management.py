@@ -4,10 +4,12 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.cache import never_cache
 from django.db.models import Q
-from django.contrib.auth.decorators import login_required
-from django.http import JsonResponse
-from ..models import User, EventAttendance
 from django.contrib import messages
+from ..notification_utils import (
+    notify_user_promotion, notify_user_demotion, 
+    notify_user_recruiter_assigned, notify_user_event_attended,
+    notify_recruiter_manual_assignment, notify_recruit_manual_assignment
+)
 
 @never_cache
 @login_required
@@ -145,6 +147,8 @@ def promote_user(request, user_id):
     user = get_object_or_404(User, id=user_id, is_archived=False)
     user.role = 'officer'
     user.save()
+    # Send notification to user
+    notify_user_promotion(user, 'officer')
     messages.success(request, f"{user.first_name} {user.last_name} has been promoted to Officer.")
     return redirect('manage_roles')
 
@@ -154,8 +158,11 @@ def demote_user(request, user_id):
     if request.user.role != 'admin':
         return redirect('dashboard')
     user = get_object_or_404(User, id=user_id, is_archived=False)
+    old_role = user.role
     user.role = 'member'
     user.save()
+    # Send notification to user
+    notify_user_demotion(user, old_role)
     messages.success(request, f"{user.first_name} {user.last_name} has been demoted to Member.")
     return redirect('manage_roles')
 
@@ -480,6 +487,10 @@ def add_recruitment(request):
                     added_by=request.user  # Record who added it
                 )
                 
+                # Notify both the recruiter and the recruit about the manual assignment
+                notify_recruiter_manual_assignment(recruiter, recruit)
+                notify_recruit_manual_assignment(recruit, recruiter)
+                
                 # Recalculate the recruiter's degree
                 recalculate_degree(recruiter)
                 
@@ -568,10 +579,16 @@ def change_council(request, user_id):
         
         try:
             new_council = Council.objects.get(id=new_council_id)
+            old_council = user_to_change.council
             
             # Update the user's council
             user_to_change.council = new_council
             user_to_change.save()
+            
+            # Notify user of council transfer
+            from ..notification_utils import notify_user_council_moved
+            if old_council:
+                notify_user_council_moved(user_to_change, new_council, old_council)
             
             messages.success(request, f'{user_to_change.first_name} {user_to_change.last_name} has been moved to {new_council.name}.')
             

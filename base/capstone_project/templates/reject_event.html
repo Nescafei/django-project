@@ -172,6 +172,41 @@ Knights of Columbus - Reject Event
         background-size: 1.2em;
         cursor: pointer;
     }
+
+    /* Dark Mode Styling */
+    body.dark-mode .event-summary {
+        background-color: #252525 !important;
+        border: 1px solid #333 !important;
+    }
+
+    body.dark-mode .detail-column p,
+    body.dark-mode .event-description p {
+        color: #ffffff !important;
+    }
+
+    body.dark-mode .detail-column p strong,
+    body.dark-mode .event-description p strong {
+        color: #f4b41a !important;
+    }
+
+    body.dark-mode .event-description {
+        border-top-color: #333 !important;
+    }
+
+    body.dark-mode .form-control {
+        background-color: #3a3a3a !important;
+        color: #ffffff !important;
+        border-color: #333 !important;
+    }
+
+    body.dark-mode .form-control:focus {
+        border-color: #f4b41a !important;
+        box-shadow: 0 0 0 3px rgba(244, 180, 26, 0.1) !important;
+    }
+
+    body.dark-mode .form-group label {
+        color: #f4b41a !important;
+    }
 </style>
 
 <script>

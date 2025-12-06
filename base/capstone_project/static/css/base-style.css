@@ -123,6 +123,13 @@ nav ul li a.active {
     transition: opacity 0.3s ease, transform 0.3s ease;
 }
 
+/* Dark Mode Notification */
+body.dark-mode .notification {
+    background-color: #252525;
+    color: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
 .notification.fade-out {
     opacity: 0;
     transform: translateX(30px);

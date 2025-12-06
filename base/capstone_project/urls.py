@@ -1,4 +1,5 @@
 from django.urls import path
+from capstone_project.more_views import api_endpoints
 from capstone_project.more_views import views,donation, ledger, event_management, user_management, attendance, analytics, council
 
 urlpatterns = [
@@ -65,6 +66,7 @@ urlpatterns = [
     
     # New URLs for member and event lists
     path('event-list/', event_management.event_list, name='event_list'),
+    path('approved-events/', event_management.approved_events, name='approved_events'),
     path('member-list/', views.member_list, name='member_list'),
     path('council-members/', views.council_members, name='council_members'),
     path('council-events/', views.council_events, name='council_events'),
@@ -105,4 +107,21 @@ urlpatterns = [
     path('add-council/', council.add_council, name='add_council'),
     path('delete-council/<int:council_id>/', council.delete_council, name='delete_council'),
     path('edit-council/<int:council_id>/', council.edit_council, name='edit_council'),
+    
+    # API Endpoints
+    path('api/event-counts/', api_endpoints.event_counts_api, name='event_counts_api'),
+    path('api/council-event-counts/', api_endpoints.council_event_counts_api, name='council_event_counts_api'),
+    path('api/user-counts/', api_endpoints.user_counts_api, name='user_counts_api'),
+    path('api/council-user-counts/', api_endpoints.council_user_counts_api, name='council_user_counts_api'),
+    path('api/event/<int:event_id>/download-data/', api_endpoints.event_download_data, name='event_download_data'),
+    
+    # Notification Endpoints
+    path('get-notifications/', views.get_notifications, name='get_notifications'),
+    path('mark-notification-read/<int:notification_id>/', views.mark_notification_read, name='mark_notification_read'),
+    path('delete-notification/<int:notification_id>/', views.delete_notification, name='delete_notification'),
+    path('mark-all-notifications-read/', views.mark_all_notifications_read, name='mark_all_notifications_read'),
+    path('delete-all-notifications/', views.delete_all_notifications, name='delete_all_notifications'),
+    
+    # Dark Mode Toggle
+    path('toggle-dark-mode/', views.toggle_dark_mode, name='toggle_dark_mode'),
 ]

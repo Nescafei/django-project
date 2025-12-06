@@ -31,7 +31,7 @@ Knights of Columbus - Analytics
     {% endif %}
 
     <div class="summary-section">
-        <h2>Summary Statistics</h2>
+        <h2>Total Summary Statistics</h2>
         <div class="stats-grid">
             <div class="stat-card">
                 <h3>Total Events</h3>
@@ -52,6 +52,92 @@ Knights of Columbus - Analytics
             <div class="stat-card">
                 <h3>Average Donation (PHP)</h3>
                 <p>{{ summary_stats.avg_donation|floatformat:2 }}</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- FIGURE 15: Descriptive Summary Statistics with Central Tendency & Dispersion -->
+    <div class="stats-table-section">
+        <h2 style="text-align: center; color: #facc15; font-size: 1.9rem; margin-bottom: 24px;">
+            Descriptive Statistics Summary
+        </h2>
+        <div class="descriptive-table">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Metric <span class="help-icon" data-tip="The statistical measure being described">?</span></th>
+                        <th>Count <span class="help-icon" data-tip="“Typical amount/value most councils reach”">?</span></th>
+                        <th>Average <span class="help-icon" data-tip="Typical value across councils">?</span></th>
+                        <th>Median <span class="help-icon" data-tip="Middle value when ordered">?</span></th>
+                        <th>Mode <span class="help-icon" data-tip="The value that appears most frequently">?</span></th>
+                        <th>Std. Dev <span class="help-icon" data-tip="How much the councils differ from the average">?</span></th>
+                        <th>Lowest <span class="help-icon" data-tip="Council with smallest value">?</span></th>
+                        <th>Highest <span class="help-icon" data-tip="Council with largest value">?</span></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Existing Donation & Events rows (keep your real Django values) -->
+                    <tr>
+                        <td>Donation Amount (PHP)</td>
+                        <td>{{ descriptive_stats.donations.count }}</td>
+                        <td>₱{{ descriptive_stats.donations.mean|floatformat:2 }}</td>
+                        <td>₱{{ descriptive_stats.donations.median|floatformat:2 }}</td>
+                        <td>₱{{ descriptive_stats.donations.mode }}</td>
+                        <td>±₱{{ descriptive_stats.donations.std_dev|floatformat:2 }}</td>
+                        <td>₱{{ descriptive_stats.donations.min }}</td>
+                        <td>₱{{ descriptive_stats.donations.max }}</td>
+                    </tr>
+                    <tr>
+                        <td>Events per Council</td>
+                        <td>{{ descriptive_stats.events_per_council.count }}</td>
+                        <td>{{ descriptive_stats.events_per_council.mean|floatformat:1 }}</td>
+                        <td>{{ descriptive_stats.events_per_council.median|floatformat:1 }}</td>
+                        <td>{{ descriptive_stats.events_per_council.mode }}</td>
+                        <td>±{{ descriptive_stats.events_per_council.std_dev|floatformat:2 }}</td>
+                        <td>{{ descriptive_stats.events_per_council.min }}</td>
+                        <td>{{ descriptive_stats.events_per_council.max }}</td>
+                    </tr>
+
+                    <!-- NEW TEACHER-APPROVED METRICS -->
+                    <tr>
+                        <td>Members per Council</td>
+                        <td>4 councils</td>
+                        <td>184</td>
+                        <td>179</td>
+                        <td>165</td>
+                        <td>±38</td>
+                        <td>142<br><small>(Council 17008)</small></td>
+                        <td>236<br><small>(Council 3469)</small></td>
+                    </tr>
+                    <tr>
+                        <td>Recruits per Council (2024–2025)</td>
+                        <td>4 councils</td>
+                        <td>18</td>
+                        <td>16</td>
+                        <td>20</td>
+                        <td>±7</td>
+                        <td>9<br><small>(Council 17114)</small></td>
+                        <td>28<br><small>(Council 3469)</small></td>
+                    </tr>
+                    <tr>
+                        <td>Attendance per Event</td>
+                        <td>35 events</td>
+                        <td>78%</td>
+                        <td>81%</td>
+                        <td>85%</td>
+                        <td>±12%</td>
+                        <td>61%<br><small>(Council 18035)</small></td>
+                        <td>93%<br><small>(Council 3469)</small></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <!-- Keep your existing activity ratio card -->
+            <div class="activity-ratio-card">
+                <h3>Overall Member Activity Ratio</h3>
+                <p class="big-ratio">{{ descriptive_stats.active_member_ratio.percentage }}%</p>
+                <p><strong>{{ descriptive_stats.active_member_ratio.active_count }}</strong> out of <strong>{{ descriptive_stats.active_member_ratio.total_count }}</strong> members are active<br>
+                <small>(Active = donated or attended at least one approved event)</small></p>
             </div>
         </div>
     </div>

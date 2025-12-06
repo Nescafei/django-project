@@ -10,6 +10,17 @@
     --transition-speed: 0.3s;
 }
 
+/* Dark Mode Variables */
+body.dark-mode {
+    --primary-bg: #0D3471;
+    --secondary-bg: #252525;
+    --accent-color: #F4B41A;
+    --text-color: #ffffff;
+    --heading-color: #F4B41A;
+    --border-color: #333;
+    --box-shadow: 0 6px 24px rgba(0, 0, 0, 0.5);
+}
+
 .profile-container {
     max-width: 1100px;
     margin: 2rem auto;
@@ -81,7 +92,7 @@
     color: var(--heading-color);
     margin-bottom: 0.5rem;
     padding-bottom: 0.75rem;
-    border-bottom: 2px solid var(--accent-color);
+    border-bottom: 2px solid var(--heading-color);
 }
 
 .form-group {
@@ -99,6 +110,15 @@
     color: var(--heading-color);
 }
 
+.input-wrapper {
+    position: relative;
+}
+
+.password-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
 .input-wrapper input,
 .input-wrapper select {
     width: 100%;
@@ -107,6 +127,26 @@
     border-radius: var(--border-radius);
     font-size: 1rem;
     transition: all var(--transition-speed) ease;
+}
+
+.password-input-wrapper input[type="password"] {
+    padding-right: 2.5rem;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #666;
+    font-size: 1.1rem;
+    transition: color var(--transition-speed);
+    user-select: none;
+}
+
+.password-toggle:hover {
+    color: var(--accent-color);
 }
 
 .input-wrapper input:focus,
@@ -198,4 +238,146 @@
     .form-group.full-width {
         grid-column: auto;
     }
+}
+
+/* Password strength indicator styles */
+.strength-indicator {
+    display: none;
+    margin-top: 0.6rem;
+    width: 100%;
+}
+
+.strength-indicator.show {
+    display: block;
+}
+
+.strength-bar {
+    height: 6px;
+    width: 100%;
+    border-radius: 3px;
+    background-color: #e9ecef;
+    overflow: hidden;
+    margin-bottom: 0.4rem;
+}
+
+.strength-bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 3px;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.strength-text {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 0.3rem;
+}
+
+.strength-weak .strength-bar-fill {
+    width: 33%;
+    background-color: #dc3545;
+}
+
+.strength-weak .strength-text {
+    color: #dc3545;
+}
+
+.strength-weak .strength-text::before {
+    content: "Weak password";
+}
+
+.strength-medium .strength-bar-fill {
+    width: 66%;
+    background-color: #ffc107;
+}
+
+.strength-medium .strength-text {
+    color: #ffc107;
+}
+
+.strength-medium .strength-text::before {
+    content: "Medium password";
+}
+
+.strength-strong .strength-bar-fill {
+    width: 100%;
+    background-color: #28a745;
+}
+
+.strength-strong .strength-text {
+    color: #28a745;
+}
+
+.strength-strong .strength-text::before {
+    content: "Strong password";
+}
+
+/* Dark Mode Enhancements */
+body.dark-mode .profile-container {
+    background-color: #252525;
+    color: #ffffff;
+}
+
+body.dark-mode .profile-header {
+    border-bottom-color: #333;
+}
+
+body.dark-mode .profile-header h1 {
+    color: #f4b41a;
+}
+
+body.dark-mode .form-section h2 {
+    color: #f4b41a;
+    border-bottom-color: #f4b41a;
+}
+
+body.dark-mode .form-group label {
+    color: #f4b41a;
+}
+
+body.dark-mode .input-wrapper input,
+body.dark-mode .input-wrapper select {
+    background-color: #333;
+    color: #ffffff;
+    border-color: #555;
+}
+
+body.dark-mode .input-wrapper input:focus,
+body.dark-mode .input-wrapper select:focus {
+    border-color: #f4b41a;
+    box-shadow: 0 0 0 4px rgba(244, 180, 26, 0.2);
+}
+
+body.dark-mode .password-toggle {
+    color: #999;
+}
+
+body.dark-mode .password-toggle:hover {
+    color: #f4b41a;
+}
+
+body.dark-mode .styled-button {
+    background-color: #f4b41a;
+    color: #1f1f1f;
+}
+
+body.dark-mode .styled-button:hover {
+    background-color: #ffc93d;
+    color: #1f1f1f;
+}
+
+body.dark-mode .back-btn {
+    background-color: #f4b41a;
+    color: #1f1f1f;
+    border-color: #f4b41a;
+}
+
+body.dark-mode .back-btn:hover {
+    background-color: #ffc93d;
+    color: #1f1f1f;
+}
+
+body.dark-mode .strength-bar {
+    background-color: #333;
 }

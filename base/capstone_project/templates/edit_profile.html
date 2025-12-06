@@ -95,13 +95,16 @@ Knights of Columbus - Edit Profile
             </div>
             <div class="form-group">
                 <label for="password">New Password</label>
-                <div class="input-wrapper">
+                <div class="input-wrapper password-input-wrapper">
                     <input type="password" id="password" name="password" placeholder="Leave blank to keep current" oninput="validatePassword(this)">
-                    <span class="warning" id="password_warning"></span>
-                    <div class="strength-indicator" id="password_strength">
-                        <span class="strength-text"></span>
-                        <div class="strength-bar"></div>
+                    <i class="fas fa-eye password-toggle" id="passwordToggle"></i>
+                </div>
+                <span class="warning" id="password_warning"></span>
+                <div class="strength-indicator" id="password_strength">
+                    <div class="strength-bar">
+                        <div class="strength-bar-fill"></div>
                     </div>
+                    <span class="strength-text"></span>
                 </div>
             </div>
         </div>
@@ -176,6 +179,19 @@ Knights of Columbus - Edit Profile
 
 <script>
 document.addEventListener('DOMContentLoaded', function () {
+    // Password visibility toggle
+    const passwordToggle = document.getElementById('passwordToggle');
+    const passwordInput = document.getElementById('password');
+    
+    if (passwordToggle && passwordInput) {
+        passwordToggle.addEventListener('click', function() {
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+            this.classList.toggle('fa-eye');
+            this.classList.toggle('fa-eye-slash');
+        });
+    }
+    
     const input = document.getElementById('profile_picture');
     const image = document.getElementById('image');
     const imagePreview = document.getElementById('imagePreview');
@@ -346,22 +362,20 @@ document.addEventListener('DOMContentLoaded', function () {
     window.validatePassword = function (input) {
         const warning = document.getElementById('password_warning');
         const strengthIndicator = document.getElementById('password_strength');
-        const strengthText = strengthIndicator.querySelector('.strength-text');
-        const strengthBar = strengthIndicator.querySelector('.strength-bar');
+        const strengthBarFill = strengthIndicator.querySelector('.strength-bar-fill');
         const value = input.value;
 
         // Reset classes
-        strengthIndicator.classList.remove('strength-weak', 'strength-medium', 'strength-strong');
+        strengthIndicator.classList.remove('strength-weak', 'strength-medium', 'strength-strong', 'show');
 
         // If password field is empty, it's optional in edit profile
         if (!value) {
             warning.textContent = '';
-            strengthIndicator.style.display = 'none';
             return true;
         }
 
-        // Always show the strength indicator when there's a value
-        strengthIndicator.style.display = 'block';
+        // Show the strength indicator when there's a value
+        strengthIndicator.classList.add('show');
 
         // Count types
         const hasUpper = /[A-Z]/.test(value);
@@ -392,26 +406,22 @@ document.addEventListener('DOMContentLoaded', function () {
         score = Math.min(100, score);
         
         // Set strength bar width based on score
-        strengthBar.style.width = `${score}%`;
+        strengthBarFill.style.width = `${score}%`;
         
         if (length < 8) {
             strengthIndicator.classList.add('strength-weak');
-            strengthText.textContent = 'Weak';
             warning.textContent = 'Password must be at least 8 characters.';
             return false;
         } else if (score < 50) {
             strengthIndicator.classList.add('strength-weak');
-            strengthText.textContent = 'Weak';
             warning.textContent = 'Weak password. Add uppercase letters, numbers, and symbols.';
             return false;
         } else if (score < 75) {
             strengthIndicator.classList.add('strength-medium');
-            strengthText.textContent = 'Medium';
             warning.textContent = 'Medium strength password. Add more character types for stronger security.';
             return true; // Allow Medium passwords
         } else {
             strengthIndicator.classList.add('strength-strong');
-            strengthText.textContent = 'Strong';
             warning.textContent = ''; // Clear warning for strong passwords
             return true;
         }

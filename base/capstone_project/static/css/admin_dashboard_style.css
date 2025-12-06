@@ -9,6 +9,13 @@
     --spacing: 1rem;
 }
 
+/* Dark Mode Variables */
+body.dark-mode {
+    --text-color: #ffffff;
+    --background-color: #1a1a1a;
+    --card-background: #252525;
+}
+
 .container {
     max-width: 1200px;
     margin: 0 auto;
@@ -151,4 +158,67 @@
         width: 100%;
         text-align: center;
     }
+}
+
+/* Dark Mode Enhancements */
+body.dark-mode .card {
+    background-color: #252525;
+    color: #ffffff;
+    border: 1px solid #333;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+}
+
+body.dark-mode .card h2,
+body.dark-mode .card h3,
+body.dark-mode .card h4 {
+    color: #f4b41a;
+}
+
+body.dark-mode .card p,
+body.dark-mode .card span {
+    color: #ffffff;
+}
+
+body.dark-mode .user-card {
+    background-color: #252525;
+    color: #ffffff;
+    border: 1px solid #333;
+}
+
+body.dark-mode .user-card h3,
+body.dark-mode .user-card h4 {
+    color: #f4b41a;
+}
+
+body.dark-mode .user-card p,
+body.dark-mode .user-card span {
+    color: #ffffff;
+}
+
+body.dark-mode .admin-header h1 {
+    color: #f4b41a;
+}
+
+body.dark-mode .admin-header h2 {
+    color: #ffc93d;
+}
+
+body.dark-mode .admin-header p {
+    color: #ffffff;
+}
+
+body.dark-mode .btn {
+    background-color: #f4b41a;
+    color: #1f1f1f;
+    border: none;
+}
+
+body.dark-mode .btn:hover {
+    background-color: #ffc93d;
+    opacity: 1;
+}
+
+body.dark-mode .container {
+    background-color: #1a1a1a;
+    color: #ffffff;
 }

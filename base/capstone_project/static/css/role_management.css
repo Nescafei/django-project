@@ -18,8 +18,19 @@
     --table-shadow: 0 8px 32px rgba(13, 52, 113, 0.15);
 }
 
+/* Dark Mode Variables */
+body.dark-mode {
+    --primary-bg: #0D3471;
+    --secondary-bg: #252525;
+    --accent-color: #F4B41A;
+    --heading-color: #F4B41A;
+    --text-color: #ffffff;
+    --button-text: #1f1f1f;
+    --table-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+}
+
 .role-management-container {
-    max-width: 95%;
+    max-width: 1600px;
     width: 100%;
     margin: 1rem auto;
     padding: 2.5rem;
@@ -405,22 +416,25 @@
     border-top: 1px solid rgba(13, 52, 113, 0.1);
 }
 
-.modal-footer .dashboard-btn {
-    background: linear-gradient(135deg, var(--primary-bg), #1e5a96);
-    color: white;
-    border: none;
+.dashboard-btn {
+    display: inline-flex;
+    align-items: center;
     padding: 0.75rem 1.5rem;
-    border-radius: 8px;
+    background-color: var(--primary-bg);
+    color: var(--button-text);
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 1rem;
     cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(13, 52, 113, 0.3);
+    text-decoration: none;
+    transition: all var(--transition-speed) ease;
+    gap: 0.5rem;
 }
 
-.modal-footer .dashboard-btn:hover {
-    background: linear-gradient(135deg, #1e5a96, var(--primary-bg));
+.dashboard-btn:hover {
+    background-color: var(--accent-color);
+    color: var(--primary-bg);
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(13, 52, 113, 0.4);
 }
 
 .detail-group {
@@ -761,7 +775,7 @@
 
     .event-table,
     .user-role-table {
-        font-size: 0.85rem;
+        font-size: 0.75rem;
     }
 
     .event-table th,

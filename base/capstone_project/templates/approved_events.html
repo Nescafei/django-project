@@ -1,0 +1,1157 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}
+Knights of Columbus - Approved Events
+{% endblock %}
+
+{% block content %}
+<link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/event_management.css' %}?v={% now 'U' %}">
+
+<!-- Modal JavaScript - Define functions early -->
+<script>
+// View Event Details - Global function
+window.viewEventDetails = function(eventId) {
+    console.log('viewEventDetails called with ID:', eventId);
+    const modal = document.getElementById('eventModal');
+    const contentDiv = document.getElementById('eventDetailsContent');
+    
+    console.log('Modal element:', modal);
+    console.log('Content div:', contentDiv);
+    
+    // Show modal
+    if (modal) {
+        modal.style.display = 'block';
+        console.log('Modal display set to block');
+    } else {
+        console.error('Modal element not found!');
+        return;
+    }
+    
+    contentDiv.innerHTML = '<div class="loading">Loading event details...</div>';
+    
+    // Fetch event details
+    fetch(`/event/${eventId}/details/`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Failed to load event details');
+            }
+            return response.json();
+        })
+        .then(data => {
+            let detailsHTML = `
+                <h4 class="modal-event-title">${data.name}</h4>
+                <div class="modal-event-details-grid">
+                    <div class="modal-detail-item"><strong>Category:</strong> <span class="category-badge">${data.category}</span></div>
+                    <div class="modal-detail-item"><strong>Date:</strong> <span>${data.date_from}${data.date_until ? ' - ' + data.date_until : ''}</span></div>
+                    <div class="modal-detail-item"><strong>Location:</strong> <address>${data.barangay}, ${data.city}, ${data.province}</address></div>
+                    <div class="modal-detail-item"><strong>Council:</strong> <p>${data.council_name}</p></div>
+                    <div class="modal-detail-item"><strong>Organized by:</strong> <p>${data.creator_name}</p></div>
+                    <div class="modal-detail-item full-width"><strong>Description:</strong> <p>${data.description}</p></div>
+                </div>
+            `;
+            contentDiv.innerHTML = detailsHTML;
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            contentDiv.innerHTML = '<p class="error-message">Error loading event details. Please try again later.</p>';
+        });
+};
+
+// Close modal function
+window.closeEventModal = function() {
+    const modal = document.getElementById('eventModal');
+    modal.style.display = 'none';
+};
+
+// Setup button listeners immediately
+function setupModalListeners() {
+    const closeBtn = document.querySelector('.close');
+    const okButton = document.getElementById('okButton');
+    const modal = document.getElementById('eventModal');
+    
+    if (closeBtn) {
+        closeBtn.onclick = function() {
+            window.closeEventModal();
+        };
+    }
+    
+    if (okButton) {
+        okButton.onclick = function() {
+            window.closeEventModal();
+        };
+    }
+    
+    // Close modal when clicking outside
+    window.onclick = function(event) {
+        if (event.target === modal) {
+            window.closeEventModal();
+        }
+    };
+}
+
+// Setup listeners when DOM is ready
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', setupModalListeners);
+} else {
+    setupModalListeners();
+}
+</script>
+
+<div class="dashboard-container">
+    <!-- Header Section -->
+    <div class="dashboard-title">
+        <div class="title-section">
+            <h1>Current Events</h1>
+            <h2>Discover upcoming events in your community</h2>
+        </div>
+        <div class="search-container">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon" style="color:#0D3471;"></i>
+                <input type="text" id="eventSearch" class="search-input" placeholder="Search Events">
+                <button type="button" id="clearSearch" class="clear-search"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+
+        <div class="filter-group">
+            <select name="council" id="council" class="filter-select">
+                <option value="all" {% if council_filter == 'all' or not council_filter %}selected{% endif %}>All Councils</option>
+                {% for council in councils %}
+                <option value="{{ council.id }}" {% if council_filter == council.id|stringformat:"i" %}selected{% endif %}>{{ council.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+    </div>
+
+    <!-- Search and Filter Section -->
+    <!-- <div class="event-form-container search-filter-section">
+        <div class="search-container">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="eventSearch" class="search-input" placeholder="Search events by name, description, or category...">
+                <button type="button" id="clearSearch" class="clear-search"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+
+
+        <div class="filters-container">
+            <form method="get" class="filter-form">
+                <div class="filter-group">
+                    <label for="category">Category:</label>
+                    <select name="category" id="category" class="filter-select">
+                        <option value="all" {% if category_filter == 'all' or not category_filter %}selected{% endif %}>All Categories</option>
+                        <option value="Exemplification" {% if category_filter == 'Exemplification' %}selected{% endif %}>Exemplification</option>
+                        <option value="Service Program" {% if category_filter == 'Service Program' %}selected{% endif %}>Service Program</option>
+                        <option value="Council Meeting" {% if category_filter == 'Council Meeting' %}selected{% endif %}>Council Meeting</option>
+                        <option value="Assembly Meeting" {% if category_filter == 'Assembly Meeting' %}selected{% endif %}>Assembly Meeting</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="council">Council:</label>
+                    <select name="council" id="council" class="filter-select">
+                        <option value="all" {% if council_filter == 'all' or not council_filter %}selected{% endif %}>All Councils</option>
+                        {% for council in councils %}
+                        <option value="{{ council.id }}" {% if council_filter == council.id|stringformat:"i" %}selected{% endif %}>{{ council.name }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="province">Province:</label>
+                    <select name="province" id="province" class="filter-select" onchange="loadCities()">
+                        <option value="all" {% if province_filter == 'all' or not province_filter %}selected{% endif %}>All Provinces</option>
+                        {% for province in provinces %}
+                        <option value="{{ province }}" {% if province_filter == province %}selected{% endif %}>{{ province }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="city">City/Municipality:</label>
+                    <select name="city" id="city" class="filter-select" onchange="loadBarangays()">
+                        <option value="all" {% if city_filter == 'all' or not city_filter %}selected{% endif %}>All Cities</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="barangay">Barangay:</label>
+                    <select name="barangay" id="barangay" class="filter-select">
+                        <option value="all" {% if barangay_filter == 'all' or not barangay_filter %}selected{% endif %}>All Barangays</option>
+                    </select>
+                </div>
+
+                <div class="filter-group">
+                    <label for="sort">Sort By:</label>
+                    <select name="sort" id="sort" class="filter-select">
+                        <option value="date" {% if sort_by == 'date' %}selected{% endif %}>Date (Soonest First)</option>
+                        <option value="date_desc" {% if sort_by == 'date_desc' %}selected{% endif %}>Date (Latest First)</option>
+                        <option value="name" {% if sort_by == 'name' %}selected{% endif %}>Event Name</option>
+                        <option value="category" {% if sort_by == 'category' %}selected{% endif %}>Category</option>
+                    </select>
+                </div>
+
+                <div class="filter-buttons">
+                    <button type="submit" class="dashboard-btn">Apply Filters</button>
+                    <a href="{% url 'approved_events' %}" class="dashboard-btn secondary">Clear Filters</a>
+                </div>
+            </form>
+        </div>
+    </div> -->
+
+    <!-- Events Grid -->
+    {% if events %}
+    <div class="events-grid">
+        {% for event in events %}
+        <div class="event-card">
+            <div class="event-card-header">
+                <h3 class="event-title">{{ event.name }}</h3>
+            </div>
+            
+            <div class="event-card-content">
+                <div class="event-info">
+                    <div class="info-item" style="font-weight: bolder;">
+                        <i class="fas fa-tag"></i>
+                        <span>{{ event.category }}</span>
+                    </div>
+
+                    <div class="info-item">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>{{ event.date_from|date:"M. d, Y" }}{% if event.date_until and event.date_until != event.date_from %} - {{ event.date_until|date:"M. d, Y" }}{% endif %}</span>
+                    </div>
+                    
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>{{ event.barangay }}, {{ event.city }}</span>
+                    </div>
+                    
+                    {% if event.council %}
+                    <div class="info-item">
+                        <i class="fas fa-users"></i>
+                        <span>{{ event.council.name }}</span>
+                    </div>
+                    {% else %}
+                    <div class="info-item">
+                        <i class="fas fa-globe"></i>
+                        <span>Global Event</span>
+                    </div>
+                    {% endif %}
+                </div>
+                
+                <p class="event-description">{{ event.description|truncatewords:30 }}</p>
+            </div>
+            
+            <div class="event-card-footer">
+                <button class="event-details-btn" onclick="viewEventDetails({{ event.id }})">
+                    <i class="fas fa-info-circle"></i> View Details
+                </button>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <!-- Event Details Modal -->
+    <div id="eventModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Event Details</h3>
+                <span class="close">&times;</span>
+            </div>
+            <div id="eventDetailsContent">
+                <div class="loading">Loading event details...</div>
+            </div>
+            <div class="modal-footer">
+                <button id="okButton" class="dashboard-btn">OK</button>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+    <!-- No Events Message -->
+    <div class="no-events-container">
+        <div class="no-events-card">
+            <i class="fas fa-calendar-times"></i>
+            <h2>No Approved Events</h2>
+            <p>There are currently no approved events available. Please check back later for upcoming events.</p>
+        </div>
+    </div>
+    {% endif %}
+</div>
+
+<!-- Styles for Events Grid -->
+<style>
+    /* Dashboard Title - Align search and council filter */
+    .dashboard-title .search-container {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .dashboard-title .search-wrapper {
+        flex: 1;
+        display: flex;
+        align-items: center;
+    }
+
+    .dashboard-title .filter-group {
+        display: flex;
+        align-items: center;
+    }
+
+.dashboard-title .filter-select {
+        height: 35px;
+        padding: 0 10px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        background: white;
+        color: #333;
+        cursor: pointer;
+        transition: all 0.3s;
+        min-width: 150px;
+        box-sizing: border-box;
+        line-height: normal;
+    }
+
+    .dashboard-title .filter-select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(244, 180, 26, 0.1);
+    }
+
+    /* Verse text styling */
+    .verse-text {
+        font-size: 0.95rem;
+        line-height: 1.4;
+        margin: 0;
+        color: white;
+        font-weight: 400;
+        text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Search and filter section */
+    .search-filter-section {
+        margin-bottom: 20px;
+    }
+
+    .filters-container {
+        margin-top: 10px;
+    }
+
+    .events-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .event-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+        animation: slideInUp 0.5s ease-out;
+    }
+
+    .event-card:hover {
+        transform: translateY(-8px);
+        box-shadow: 0 12px 30px rgba(244, 180, 26, 0.2);
+    }
+
+    .event-card-header {
+        background: var(--secondary-bg);
+        color: white;
+        padding: 15px;
+        display: flex;
+        justify-content: space-between;
+        
+        gap: 10px;
+    }
+
+    .event-category-badge {
+        color: #0D3471;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 1,2rem;
+        font-weight: 600;
+    }
+
+    .event-status-badge {
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        font-weight: 600;
+    }
+
+    .event-card-content {
+        padding: 20px;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .event-title {
+        margin: 0 0 15px 0;
+        font-size: 1.8rem;
+        font-weight: 700;
+        color: #0D3471;
+        line-height: 1.3;
+    }
+
+    .event-info {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 15px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.2rem;
+        color: #0D3471;
+    }
+
+    .info-item i {
+        color: #0D3471;
+        width: 20px;
+        text-align: center;
+    }
+
+    .event-description {
+        margin: 0;
+        color: #0D3471;
+        font-size: 0.95rem;
+        line-height: 1.5;
+        flex: 1;
+    }
+
+    .event-card-footer {
+        padding: 15px 20px;
+        border-top: 1px solid #eee;
+        background: white;
+    }
+
+    .event-details-btn {
+        width: 100%;
+        padding: 10px;
+        background: linear-gradient(135deg, #0D3471 0%, #1a4480 100%);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-size: 0.95rem;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+    }
+
+    .event-details-btn:hover {
+        background: #ffc107;
+        color: #0D3471;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(13, 52, 113, 0.3);
+    }
+
+    .no-events-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 400px;
+        animation: fadeIn 0.5s ease-out;
+    }
+
+    .no-events-card {
+        background: white;
+        border-radius: 12px;
+        padding: 60px 40px;
+        text-align: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        max-width: 500px;
+    }
+
+    .no-events-card i {
+        font-size: 4rem;
+        color: var(--primary-color);
+        margin-bottom: 20px;
+        opacity: 0.8;
+    }
+
+    .no-events-card h2 {
+        margin: 0 0 10px 0;
+        color: #0D3471;
+        font-size: 1.8rem;
+    }
+
+    .no-events-card p {
+        margin: 0;
+        color: #666;
+        font-size: 1rem;
+        line-height: 1.6;
+    }
+
+    /* Modal Styles */
+    .modal {
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        animation: fadeIn 0.3s ease-out;
+    }
+
+    .modal-content {
+        background-color: white;
+        margin: 5% auto;
+        padding: 0;
+        border-radius: 12px;
+        width: 90%;
+        max-width: 600px;
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+        animation: slideInDown 0.3s ease-out;
+    }
+
+    .close {
+        position: absolute;
+        top: 1.5rem; right: 2rem;
+        font-size: 2rem;
+        cursor: pointer;
+        color: var(--heading-color);
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all var(--transition-speed) ease;
+    }
+    .close:hover {
+        background-color: var(--primary-bg);
+        color: var(--secondary-bg);
+        transform: rotate(90deg);
+    }
+
+    #modalBody {
+        padding: 20px;
+    }
+
+    /* Animations */
+    @keyframes slideInUp {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes slideInDown {
+        from {
+            opacity: 0;
+            transform: translateY(-20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+        }
+        to {
+            opacity: 1;
+        }
+    }
+
+    /* Search and Filter Styles */
+    .search-container {
+        margin-bottom: 12px;
+    }
+
+    .search-wrapper {
+        position: relative;
+        display: flex;
+        align-items: center;
+    }
+
+    .search-icon {
+        position: absolute;
+        left: 15px;
+        color: var(--primary-color);
+        pointer-events: none;
+    }
+
+    .search-input {
+        width: 100%;
+        padding: 12px 40px 12px 45px;
+        border: 2px solid #ddd;
+        border-radius: 8px;
+        font-size: 1rem;
+        transition: all 0.3s;
+    }
+
+    .search-input:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(244, 180, 26, 0.1);
+    }
+
+    .clear-search {
+        position: absolute;
+        right: 12px;
+        background: none;
+        border: none;
+        color: #999;
+        cursor: pointer;
+        font-size: 1.2rem;
+        padding: 5px;
+        transition: color 0.3s;
+    }
+
+    .clear-search:hover {
+        color: var(--primary-color);
+    }
+
+    .filters-container {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 8px;
+        padding: 12px 15px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .filter-form {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+        align-items: flex-end;
+        justify-content: center;
+    }
+
+    .filter-group {
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+        flex: 0 1 auto;
+        min-width: 150px;
+    }
+
+    .filter-group label {
+        font-size: 1rem;
+        font-weight: 600;
+        
+    }
+
+    .filter-select {
+        padding: 8px 10px;
+        border: 2px solid #ddd;
+        border-radius: 6px;
+        font-size: 0.9rem;
+        background: white;
+        color: #333;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .filter-select:focus {
+        outline: none;
+        border-color: var(--primary-color);
+        box-shadow: 0 0 0 3px rgba(244, 180, 26, 0.1);
+    }
+
+    .filter-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+        width: 100%;
+        margin-top: 8px;
+    }
+
+
+    /* Responsive Design */
+    @media (max-width: 768px) {
+        .events-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .dashboard-title {
+            flex-direction: column;
+            text-align: center;
+        }
+
+        .bible-verse-section {
+            text-align: center;
+        }
+
+        .verse-header {
+            justify-content: center;
+        }
+
+        .filter-form {
+            flex-direction: column;
+        }
+
+        .filter-group {
+            min-width: 100%;
+        }
+
+        .filter-buttons {
+            flex-direction: column;
+            width: 100%;
+        }
+
+        .dashboard-btn {
+            width: 100%;
+        }
+    }
+
+    /* Modal Styles */
+    .modal {
+        display: none !important;
+        position: fixed !important;
+        z-index: 1000 !important;
+        left: 0 !important;
+        top: 0 !important;
+        width: 100% !important;
+        height: 100% !important;
+        background-color: rgba(13, 52, 113, 0.8) !important;
+        backdrop-filter: blur(5px) !important;
+    }
+    
+    .modal[style*="display: block"] {
+        display: block !important;
+    }
+
+    .modal-content {
+        background: linear-gradient(135deg, var(--secondary-bg), white);
+        margin: 5% auto;
+        padding: 2rem;
+        border-radius: 16px;
+        max-width: 700px;
+        position: relative;
+        max-height: 85vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(13, 52, 113, 0.3);
+    }
+
+    .modal-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 1.5rem;
+        padding-bottom: 1rem;
+        border-bottom: 2px solid var(--primary-bg);
+    }
+
+    .modal-header h3 {
+        margin: 0;
+        color: var(--heading-color);
+        font-size: 1.8rem;
+        font-weight: 700;
+    }
+
+    .close {
+        position: absolute;
+        top: 1.5rem;
+        right: 2rem;
+        font-size: 2rem;
+        cursor: pointer;
+        color: var(--heading-color);
+        width: 40px;
+        height: 40px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        transition: all var(--transition-speed) ease;
+    }
+
+    .close:hover {
+        background-color: var(--primary-bg);
+        color: var(--secondary-bg);
+    }
+
+    .modal-footer {
+        padding-top: 1.5rem;
+        text-align: right;
+        border-top: 1px solid rgba(13, 52, 113, 0.1);
+    }
+
+    .modal-footer .dashboard-btn {
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease
+    }
+
+    /* Modal Event Details Grid */
+    .modal-event-title {
+        grid-column: 1 / -1;
+        margin: 0 0 1rem 0;
+        padding-bottom: 1rem;
+        border-bottom: 1px solid rgba(13, 52, 113, 0.1);
+        color: var(--heading-color);
+        font-size: 1.5rem;
+        font-weight: 700;
+    }
+
+    .modal-event-details-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.5rem;
+    }
+
+    .modal-detail-item {
+        padding: 1rem;
+        background-color: rgba(13, 52, 113, 0.05);
+        border-radius: var(--border-radius);
+    }
+
+    .modal-detail-item strong {
+        display: block;
+        color: var(--heading-color);
+        margin-bottom: 0.5rem;
+        font-weight: 600;
+    }
+
+    .modal-detail-item.full-width {
+        grid-column: 1 / -1;
+    }
+
+    .modal-detail-item p {
+        margin: 0;
+        color: #555;
+        line-height: 1.6;
+    }
+
+    .modal-detail-item address {
+        margin: 0;
+        color: #555;
+        line-height: 1.6;
+        font-style: normal;
+    }
+
+    .category-badge {
+        display: inline-block;
+        color: #0D3471;
+        padding: 6px 12px;
+        border-radius: 20px;
+        font-size: 0.9rem;
+        font-weight: 600;
+    }
+
+    .loading {
+        text-align: center;
+        padding: 2rem;
+        color: var(--primary-bg);
+        font-weight: 600;
+    }
+
+    .error-message {
+        color: #dc3545;
+        padding: 1rem;
+        text-align: center;
+        font-weight: 500;
+    }
+
+    @media (max-width: 768px) {
+        .modal-event-details-grid {
+            grid-template-columns: 1fr;
+        }
+    }
+}
+</style>
+
+<!-- JavaScript for Event Listeners -->
+<script>
+// Initialize event listeners when DOM is ready
+document.addEventListener('DOMContentLoaded', function() {
+    const modal = document.getElementById('eventModal');
+    const closeBtn = document.querySelector('.close');
+    const okButton = document.getElementById('okButton');
+    const searchInput = document.getElementById('eventSearch');
+    const clearSearchBtn = document.getElementById('clearSearch');
+
+    // Close modal when clicking the close button
+    if (closeBtn) {
+        closeBtn.addEventListener('click', function() {
+            window.closeEventModal();
+        });
+    }
+
+    // Close modal when clicking OK button
+    if (okButton) {
+        okButton.addEventListener('click', function() {
+            window.closeEventModal();
+        });
+    }
+
+    // Close modal when clicking outside of it
+    window.addEventListener('click', function(event) {
+        if (event.target == modal) {
+            window.closeEventModal();
+        }
+    });
+
+    // Search Functionality - Real-time filtering (similar to event_list.html)
+    if (searchInput) {
+        console.log('Search input found:', searchInput);
+        
+        const filterEvents = () => {
+            const searchTerm = searchInput.value.toLowerCase().trim();
+            const eventCards = document.querySelectorAll('.event-card');
+            let visibleCards = 0;
+
+            console.log('Filtering with term:', searchTerm);
+            console.log('Found cards:', eventCards.length);
+
+            if (clearSearchBtn) {
+                clearSearchBtn.style.display = searchTerm ? 'block' : 'none';
+            }
+
+            eventCards.forEach(card => {
+                const text = card.textContent.toLowerCase();
+                if (searchTerm === '' || text.includes(searchTerm)) {
+                    card.style.display = '';
+                    visibleCards++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            console.log('Visible cards:', visibleCards);
+        };
+
+        searchInput.addEventListener('input', filterEvents);
+        filterEvents(); // Run on page load
+
+        searchInput.addEventListener('focus', () => searchInput.parentElement.style.boxShadow = '0 0 0 3px rgba(13, 52, 113, 0.1)');
+        searchInput.addEventListener('blur', () => searchInput.parentElement.style.boxShadow = 'none');
+    } else {
+        console.error('Search input NOT found!');
+    }
+
+    // Clear Search
+    if (clearSearchBtn) {
+        clearSearchBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            searchInput.value = '';
+            searchInput.dispatchEvent(new Event('input'));
+            searchInput.focus();
+        });
+
+        // Initialize clear button visibility
+        clearSearchBtn.style.display = 'none';
+    }
+
+    // Auto-submit when council filter changes
+    const councilSelect = document.getElementById('council');
+    if (councilSelect) {
+        councilSelect.addEventListener('change', function() {
+            // Create a form to submit the council filter
+            const form = document.createElement('form');
+            form.method = 'GET';
+            form.action = window.location.pathname;
+            
+            const input = document.createElement('input');
+            input.type = 'hidden';
+            input.name = 'council';
+            input.value = this.value;
+            
+            form.appendChild(input);
+            document.body.appendChild(form);
+            form.submit();
+        });
+    }
+
+    // Prevent form submission for filters
+    const filterForm = document.querySelector('.filter-form');
+    if (filterForm) {
+        filterForm.addEventListener('submit', function(e) {
+            // Allow normal form submission - don't prevent it
+            // The form will submit and refresh with filtered results
+        });
+    }
+
+    // CALABARZON Location Data (from add_event.html)
+    const locationData = {
+        "Batangas": {
+            "Batangas City": {"zip": "4200", "barangays": ["Alangilan", "Balagtas", "Balete", "Banaba Center", "Banaba East", "Banaba West", "Barangay 1", "Barangay 2", "Barangay 3", "Barangay 4", "Barangay 5", "Barangay 6", "Barangay 7", "Barangay 8", "Barangay 9", "Barangay 10", "Barangay 11", "Barangay 12", "Barangay 13", "Barangay 14", "Barangay 15", "Barangay 16", "Barangay 17", "Barangay 18", "Barangay 19", "Barangay 20", "Barangay 21", "Barangay 22", "Barangay 23", "Barangay 24", "Bilogo", "Bolbok", "Bukal", "Calicanto", "Concepcion", "Conde Itaas", "Conde Labac", "Cuta", "Dalig", "Dela Paz", "Dela Paz Pulot Aplaya", "Dela Paz Pulot Itaas", "Dumantay", "Dumuclay", "Gulod Itaas", "Gulod Labac", "Haligue Kanluran", "Haligue Silangan", "Ilijan", "Kumintang Ibaba", "Kumintang Ilaya", "Libjo", "Liponpon", "Maapas", "Mahabang Dahilig", "Mahabang Parang", "Mahacot Silangan", "Mahacot Kanluran", "Malibayo", "Malitam", "Maruclap", "Mabacong", "Pagkilatan", "Paharang Kanluran", "Paharang Silangan", "Pallocan Kanluran", "Pallocan Silangan", "Pinamucan", "Pinamucan Ibaba", "Pinamucan Silangan", "Sampaga", "San Agapito", "San Agustin", "San Andres", "San Isidro", "San Jose", "San Pedro", "Santa Clara", "Santa Rita Aplaya", "Santa Rita Karsada", "Santo Domingo", "Santo Niño", "Simlong", "Sirang Lupa", "Sorosoro Ibaba", "Sorosoro Ilaya", "Sorosoro Karsada", "Tabangao Aplaya", "Tabangao Ambulong", "Tabangao Dao", "Talahib Pandayan", "Talahib Payapa", "Talumpok Kanluran", "Talumpok Silangan", "Tinga Itaas", "Tinga Labac", "Tulo"]},
+            "Lipa City": {"zip": "4217", "barangays": ["Adya", "Anilao", "Anilao-Labac", "Antipolo Del Norte", "Antipolo Del Sur", "Bagong Pook", "Balele", "Balintawak", "Banay-banay", "Bolbok", "Bugtong na Pulo", "Bulacnin", "Bulaklakan", "Calamias", "Cumba", "Dagatan", "Duhatan", "Halang", "Inosloban", "Kayumanggi", "Labac", "Latag", "Lodlod", "Lumbang", "Mabini", "Malagonlong", "Malitlit", "Marauoy", "Mataas Na Lupa", "Munting Pulo", "Pagolingin Bata", "Pagolingin East", "Pagolingin West", "Pangao", "Pinagkawitan", "Pinagtongulan", "Plaridel", "Poblacion Barangay 1", "Poblacion Barangay 2", "Poblacion Barangay 3", "Poblacion Barangay 4", "Poblacion Barangay 5", "Poblacion Barangay 6", "Poblacion Barangay 7", "Poblacion Barangay 8", "Poblacion Barangay 9", "Poblacion Barangay 9-A", "Poblacion Barangay 10", "Poblacion Barangay 11", "Poblacion Barangay 12", "Pusil", "Quezon", "Rizal", "Sabang", "Sampaguita", "San Benito", "San Carlos", "San Celestino", "San Francisco", "San Guillermo", "San Jose", "San Lucas", "San Salvador", "San Sebastian", "Santo Niño", "Santo Toribio", "Sapac", "Sico", "Talisay", "Tambo", "Tangob", "Tanguay", "Tibig", "Tipacan"]},
+            "Tanauan City": {"zip": "4232", "barangays": ["Altura Bata", "Altura Matanda", "Altura-South", "Ambulong", "Bagbag", "Bagumbayan", "Balele", "Banjo East", "Banjo Laurel", "Banjo West", "Barangay 1", "Barangay 2", "Barangay 3", "Barangay 4", "Barangay 5", "Barangay 6", "Barangay 7", "Bilog-Bilog", "Boot", "Cale", "Darasa", "Gonzales", "Janopol", "Janopol Oriental", "Laurel", "Luyos", "Mabini", "Malaking Pulo", "Maria Paz", "Maugat", "Montaña", "Natatas", "Pagaspas", "Pantay Bata", "Pantay Matanda", "Poblacion Barangay 1", "Poblacion Barangay 2", "Poblacion Barangay 3", "Poblacion Barangay 4", "Poblacion Barangay 5", "Poblacion Barangay 6", "Poblacion Barangay 7", "Sala", "Sambat", "San Jose", "Santol", "Santor", "Sulpoc", "Suplang", "Talaga", "Tinurik", "Trapiche", "Ulango", "Wawa"]}
+        },
+        "Cavite": {
+            "Bacoor": {"zip": "4102", "barangays": ["Alima", "Aniban I", "Aniban II", "Aniban III", "Aniban IV", "Aniban V", "Banalo", "Bayanan", "Campo Santo", "Daang Bukid", "Digman", "Dulong Bayan", "Habay I", "Habay II", "Kaingin", "Ligas I", "Ligas II", "Ligas III", "Mabolo I", "Mabolo II", "Mabolo III", "Maliksi I", "Maliksi II", "Maliksi III", "Mambog I", "Mambog II", "Mambog III", "Mambog IV", "Mambog V", "Molino I", "Molino II", "Molino III", "Molino IV", "Molino V", "Molino VI", "Molino VII", "Niog I", "Niog II", "Niog III", "P.F. Espiritu I (Panapaan I)", "P.F. Espiritu II (Panapaan II)", "P.F. Espiritu III (Panapaan III)", "P.F. Espiritu IV (Panapaan IV)", "P.F. Espiritu V (Panapaan V)", "P.F. Espiritu VI (Panapaan VI)", "P.F. Espiritu VII (Panapaan VII)", "P.F. Espiritu VIII (Panapaan VIII)", "Queens Row Central", "Queens Row East", "Queens Row West", "Real I", "Real II", "Salinas I", "Salinas II", "Salinas III", "Salinas IV", "San Nicolas I", "San Nicolas II", "San Nicolas III", "Sineguelasan", "Talaba I", "Talaba II", "Talaba III", "Talaba IV", "Talaba V", "Talaba VI", "Talaba VII", "Tabing Dagat", "Zapote I", "Zapote II", "Zapote III", "Zapote IV", "Zapote V"]},
+            "Dasmariñas": {"zip": "4114", "barangays": ["Burol I", "Burol II", "Burol III", "Burol Main", "Datu Esmael (Bago-A-Ingud)", "Emmanuel Bergado I (Langkaan I)", "Emmanuel Bergado II (Langkaan II)", "H-2 (Pala-Pala)", "Paliparan I", "Paliparan II", "Paliparan III", "Sabang", "Salawag", "Salitran I", "Salitran II", "Salitran III", "Salitran IV", "Sampaloc I", "Sampaloc II", "Sampaloc III", "Sampaloc IV", "San Agustin I", "San Agustin II", "San Agustin III", "San Andres I", "San Andres II", "San Esteban", "San Isidro Labrador I", "San Isidro Labrador II", "San Jose", "San Luis I", "San Luis II", "San Miguel I", "San Miguel II", "San Simon", "Santa Cristina I", "Santa Cristina II", "Santa Fe", "Victoria Reyes", "Zone I", "Zone I-A", "Zone II", "Zone III", "Zone IV", "Zone IV-A"]},
+            "Tagaytay": {"zip": "4120", "barangays": ["Asisan", "Bagong Tubig", "Dapdap East", "Dapdap West", "Francisco", "Guinhawa South", "Iruhin East", "Iruhin South", "Iruhin West", "Kaybagal Central", "Kaybagal East", "Kaybagal North", "Kaybagal South", "Maharlika East", "Maharlika West", "Maitim II Central", "Maitim II East", "Maitim II West", "Mendez Crossing East", "Mendez Crossing West", "Neogan", "Patutong Malaki North", "Patutong Malaki South", "Sambong", "San Jose", "Silang Junction North", "Silang Junction South", "Sungay East", "Sungay West", "Tolentino East", "Tolentino West", "Zambal"]}
+        },
+        "Laguna": {
+            "Calamba": {"zip": "4027", "barangays": ["Bagong Kalsada", "Banadero", "Banlic", "Barandal", "Batino", "Bubuyan", "Bucal", "Bunggo", "Burol", "Camaligan", "Canlubang", "Halang", "Hornalan", "Kay-Anlog", "La Mesa", "Laguerta", "Lawa", "Lecheria", "Lingga", "Looc", "Mabato", "Majada Labas", "Makiling", "Mapagong", "Masili", "Maunong", "Mayapa", "Milagrosa", "Paciano Rizal", "Palingon", "Palo-Alto", "Pansol", "Parian", "Prinza", "Punta", "Puting Lupa", "Real", "Saimsim", "Sampiruhan", "San Cristobal", "San Jose", "San Juan", "Sirang Lupa", "Sucol", "Tulo", "Turbina", "Ulango", "Uwisan", "Barangay 1", "Barangay 2", "Barangay 3", "Barangay 4", "Barangay 5", "Barangay 6", "Barangay 7"]},
+            "San Pablo": {"zip": "4000", "barangays": ["Atisan", "Bagong Pook", "Bautista", "Concepcion", "Del Remedio", "Dolores", "Estrella", "Ilayang Bayan", "Libertad", "Malinaw", "Pila", "Rizal", "San Antonio 1", "San Antonio 2", "San Bartolome", "San Buenaventura", "San Crispin", "San Cristobal", "San Diego", "San Francisco", "San Gabriel", "San Gregorio", "San Ignacio", "San Isidro", "San Joaquin", "San Jose", "San Juan", "San Lorenzo", "San Lucas 1", "San Lucas 2", "San Marcos", "San Mateo", "San Miguel", "San Nicolas", "San Pedro", "San Rafael", "San Roque", "San Vicente", "Santa Ana", "Santa Catalina", "Santa Cruz", "Santa Elena", "Santa Felomina", "Santa Filomena", "Santa Isabel", "Santa Maria", "Santa Maria Magdalena", "Santa Monica", "Santa Veronica", "Santiago I", "Santiago II", "Santo Angel", "Santo Cristo", "Santo Niño", "Santisimo Rosario", "Soledad", "Timugan", "VII-A", "VII-B", "VII-C", "VII-D", "VII-E"]},
+            "Santa Rosa": {"zip": "4026", "barangays": ["Aplaya", "Balibago", "Caingin", "Dila", "Dita", "Don Jose", "Ibaba", "Kanluran", "Labas", "Macabling", "Malitlit", "Malusak", "Market Area", "Pooc", "Pulong Santa Cruz", "Santo Domingo", "Sinalhan", "Tagapo"]}
+        },
+        "Quezon": {
+            "Lucena": {"zip": "4301", "barangays": ["Barangay 1", "Barangay 2", "Barangay 3", "Barangay 4", "Barangay 5", "Barangay 6", "Barangay 7", "Barangay 8", "Barangay 9", "Barangay 10", "Barangay 11", "Barra", "Cotta", "Dalahican", "Domoit", "Gulang-Gulang", "Ibabang Dupay", "Ibabang Iyam", "Ibabang Talim", "Ilayang Dupay", "Ilayang Iyam", "Ilayang Talim", "Isabang", "Mayao Crossing", "Mayao Kanluran", "Mayao Parada", "Mayao Silangan", "Market View", "Ransohan", "Salinas", "Silangang Mayao", "Talao-Talao"]},
+            "Tayabas": {"zip": "4327", "barangays": ["Alitao", "Angeles", "Arias", "Ayaas", "Baguio", "Bangyas", "Calumpang", "Camaysa", "Dapdap", "Domoit Kanluran", "Domoit Silangan", "Gibanga", "Ilasan", "Ipilan", "Isabang", "Katigan", "Kinatihan I", "Kinatihan II", "Lakawan", "Lalo", "Lawigue", "Lita", "Malaoa", "Mate", "Mayabobo", "Nangkaan", "Opias", "Palola", "Pook", "Potol", "San Diego", "San Isidro", "San Roque", "Silangang Katigan", "Talolong", "Tamlong", "Tongko"]},
+            "Agdangan": {"zip": "4304", "barangays": ["Binagbag", "Dayap", "Ibabang Kinagunan", "Ilayang Kinagunan", "Kanluran Calutan", "Magsaysay", "Poblacion", "Salvacion", "Silangang Calutan", "Sildora"]},
+            "Alabat": {"zip": "4333", "barangays": ["Angeles", "Bacong", "Balungay", "Buenavista", "Camagong", "Gordon", "Pambilan", "Villa Norte", "Villa Sur"]},
+            "Atimonan": {"zip": "4331", "barangays": ["Balubad", "Balugohin", "Barangay Zone 1 (Pob.)", "Barangay Zone 2 (Pob.)", "Barangay Zone 3 (Pob.)", "Barangay Zone 4 (Pob.)", "Buhangin", "Caridad Ilaya", "Caridad Ibaba", "Habingan", "Inaclagan", "Kilait", "Kulawit", "Lakip", "Lubi", "Lumutan", "Malinao Ibaba", "Malinao Ilaya", "Malusak", "Manggalayan Labak", "Manggalayan Tagpuan", "Maypulot", "Ponon", "San Andres", "San Isidro", "San Jose Balatok", "San Rafael", "Santa Catalina", "Tagbakin", "Talaba"]},
+            "Candelaria": {"zip": "4323", "barangays": ["Buenavista", "Bukal Norte", "Bukal Sur", "Dayap", "Kinatihan I", "Kinatihan II", "Malabanban Norte", "Malabanban Sur", "Mangilag Norte", "Mangilag Sur", "Masalukot I", "Masalukot II", "Masalukot III", "Masalukot IV", "Masalukot V", "Masin Norte", "Masin Sur", "Mayabobo", "Pahinga Norte", "Pahinga Sur", "Poblacion", "San Andres", "San Isidro", "Santa Catalina Norte", "Santa Catalina Sur", "Taguan"]},
+            "Sariaya": {"zip": "4322", "barangays": ["Balugo", "Bignay I", "Bignay II", "Castillas", "Concepcion I", "Concepcion II", "Cuyaoyao", "Guis-Guis Talon", "Guis-Guis San Jose", "Janagdong I", "Janagdong II", "Limbon", "Lutucan I", "Lutucan II", "Mamala I", "Mamala II", "Manggalang I", "Manggalang II", "Montecillo", "Morong", "Pili", "Poblacion I", "Poblacion II", "Poblacion III", "Poblacion IV", "Poblacion V", "Sampaloc I", "Sampaloc II", "Sampaloc III", "Sampaloc IV", "San Andres", "San Roque", "Tala", "Tumbaga I", "Tumbaga II", "Talaan I", "Talaan II"]},
+            "Tiaong": {"zip": "4325", "barangays": ["Anastacio", "Ayusan I", "Ayusan II", "Behia", "Bukal", "Cabatang", "Cabay", "Del Rosario", "Lagalag", "Lalig", "Lusacan", "Paiisa", "Palagaran", "Poblacion I", "Poblacion II", "Poblacion III", "Poblacion IV", "Quipot", "San Francisco", "San Jose", "San Juan", "San Pedro", "Talisay", "Tamisian"]}
+        },
+        "Rizal": {
+            "Antipolo": {"zip": "1870", "barangays": ["Bagong Nayon", "Beverly Hills", "Calawis", "Cupang", "Dalig", "Dela Paz", "Inarawan", "Mambugan", "Mayamot", "Muntindilaw", "San Isidro", "San Jose", "San Juan", "San Luis", "San Roque", "Santa Cruz"]},
+            "Cainta": {"zip": "1900", "barangays": ["San Andres", "San Isidro", "San Juan", "San Roque", "Santa Rosa", "Santo Domingo", "Santo Niño"]},
+            "Taytay": {"zip": "1920", "barangays": ["Dolores", "Muzon", "San Isidro", "San Juan", "Santa Ana", "Tatlong Kawayan"]}
+        }
+    };
+
+    // Function to load cities based on province selection
+    function loadCities() {
+        const provinceSelect = document.getElementById('province');
+        const citySelect = document.getElementById('city');
+        const barangaySelect = document.getElementById('barangay');
+        
+        citySelect.innerHTML = '<option value="all">All Cities</option>';
+        barangaySelect.innerHTML = '<option value="all">All Barangays</option>';
+        
+        const selectedProvince = provinceSelect.value;
+        
+        if (selectedProvince && selectedProvince !== 'all' && locationData[selectedProvince]) {
+            const cities = Object.keys(locationData[selectedProvince]);
+            cities.forEach(city => {
+                const option = document.createElement('option');
+                option.value = city;
+                option.textContent = city;
+                citySelect.appendChild(option);
+            });
+        }
+    }
+
+    // Function to load barangays based on city selection
+    function loadBarangays() {
+        const provinceSelect = document.getElementById('province');
+        const citySelect = document.getElementById('city');
+        const barangaySelect = document.getElementById('barangay');
+        
+        barangaySelect.innerHTML = '<option value="all">All Barangays</option>';
+        
+        const selectedProvince = provinceSelect.value;
+        const selectedCity = citySelect.value;
+        
+        if (selectedProvince && selectedProvince !== 'all' && selectedCity && selectedCity !== 'all' && 
+            locationData[selectedProvince] && locationData[selectedProvince][selectedCity]) {
+            
+            const barangays = locationData[selectedProvince][selectedCity].barangays;
+            barangays.forEach(barangay => {
+                const option = document.createElement('option');
+                option.value = barangay;
+                option.textContent = barangay;
+                barangaySelect.appendChild(option);
+            });
+        }
+    }
+
+    // Initialize location dropdowns on page load
+    const provinceSelect = document.getElementById('province');
+    if (provinceSelect && provinceSelect.value && provinceSelect.value !== 'all') {
+        loadCities();
+        const citySelect = document.getElementById('city');
+        if (citySelect && citySelect.value && citySelect.value !== 'all') {
+            loadBarangays();
+        }
+    }
+});
+</script>
+
+<!-- Dark Mode Styling for Events -->
+<style>
+body.dark-mode .event-card {
+    background-color: #252525 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.dark-mode .event-card:hover {
+    box-shadow: 0 12px 30px rgba(244, 180, 26, 0.3) !important;
+}
+
+body.dark-mode .event-card-header {
+    background-color: #1f1f1f !important;
+    color: #f4b41a !important;
+}
+
+body.dark-mode .event-card-header h3 {
+    color: #f4b41a !important;
+}
+
+body.dark-mode .event-card-content {
+    background-color: #252525 !important;
+}
+
+body.dark-mode .event-title {
+    color: #f4b41a !important;
+}
+
+body.dark-mode .event-info {
+    color: #ffffff !important;
+}
+
+body.dark-mode .info-item {
+    color: #ffffff !important;
+}
+
+body.dark-mode .info-item i {
+    color: #f4b41a !important;
+}
+
+body.dark-mode .event-description {
+    color: #ffffff !important;
+}
+
+body.dark-mode .event-card-footer {
+    background-color: #252525 !important;
+    border-top-color: #333 !important;
+}
+
+body.dark-mode .event-details-btn {
+    background: linear-gradient(135deg, #f4b41a 0%, #ffc93d 100%) !important;
+    color: #0D3471 !important;
+}
+
+body.dark-mode .event-details-btn:hover {
+    background: #ffc93d !important;
+    color: #0D3471 !important;
+}
+
+body.dark-mode .no-events-card {
+    background-color: #252525 !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.5) !important;
+}
+
+body.dark-mode .no-events-card h2 {
+    color: #f4b41a !important;
+}
+
+body.dark-mode .no-events-card p {
+    color: #999 !important;
+}
+</style>
+
+{% endblock %}

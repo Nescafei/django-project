@@ -2,6 +2,7 @@
 import base64, os, uuid, logging, requests
 from capstone_project.forms import DonationForm, ManualDonationForm
 from capstone_project.models import User, Council, Event, Analytics, Donation, Blockchain, blockchain, Block, ForumCategory, ForumMessage, Notification, EventAttendance, Recruitment, get_blockchain
+from capstone_project.notification_utils import notify_admin_donation_received
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.backends import default_backend
 from datetime import date
@@ -180,6 +181,9 @@ def review_manual_donations(request):
                         logger.debug(f"New block created: {new_block}")
                         if new_block:
                             logger.info(f"New block created for manual donation: Index={new_block['index']}, Transactions={len(new_block['transactions'])}")
+                            # Notify admins of donation received
+                            donor_name = donation.get_display_name()
+                            notify_admin_donation_received(donation.amount, donor_name)
                             messages.success(request, f"Donation {donation.transaction_id} approved and recorded on the blockchain.")
                             send_receipt_email(donation)  # Send unmasked receipt
                         else:

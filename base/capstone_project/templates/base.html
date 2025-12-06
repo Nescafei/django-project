@@ -4,6 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    {% csrf_token %}
     <title>{% block title %}Knights of Columbus{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/base-style.css' %}">
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}?v={% now 'U' %}" />
@@ -65,7 +66,8 @@
     <!-- CSS SECTION -->
     <link rel="stylesheet" href="{% static 'css/base-style.css' %}?v={% now 'U' %}" />
     <link rel="stylesheet" href="{% static 'css/navbar.css' %}?v={% now 'U' %}" />
-<body>
+    <link rel="stylesheet" href="{% static 'css/dark-mode.css' %}?v={% now 'U' %}" />
+<body{% if user.is_authenticated %}{% if user.dark_mode %} class="dark-mode"{% endif %}{% endif %}>
     <header class="navbar {% if not user.is_authenticated %}not-logged-in{% endif %}">
         {% if not user.is_authenticated %}
             <button class="hamburger" aria-label="Toggle menu">
@@ -88,6 +90,7 @@
                     <li><a href="{% url 'faith-action' %}" {% if request.path == '/faith-action/' %}class="active"{% endif %}>FAITH 'N ACTION</a></li>
                     <li><a href="{% url 'mission_vision' %}" {% if request.path == '/mission_vision/' %}class="active"{% endif %}>Mission & Vision</a></li>
                     <li><a href="{% url 'councils' %}" {% if request.path == '/councils/' %}class="active"{% endif %}>Councils</a></li>
+                    <li><a href="{% url 'approved_events' %}" {% if request.path == '/approved-events/' %}class="active"{% endif %}>Events</a></li>
                     <li><a href="{% url 'donations' %}" {% if request.path == '/donations/' %}class="active"{% endif %}>Donations</a></li>
                     <li><a href="{% url 'about_us' %}" {% if request.path == '/about_us/' %}class="active"{% endif %}>About us</a></li>
                     <li><a href="{% url 'sign-in' %}" {% if request.path == '/sign-in/' %}class="active"{% endif %}>Sign in</a></li>
@@ -114,10 +117,46 @@
                         <li><a href="{% url 'faith-action' %}" {% if request.path == '/faith-action/' %}class="active"{% endif %}>FAITH 'N ACTION</a></li>
                         <li><a href="{% url 'mission_vision' %}" {% if request.path == '/mission_vision/' %}class="active"{% endif %}>Mission & Vision</a></li>
                         <li><a href="{% url 'councils' %}" {% if request.path == '/councils/' %}class="active"{% endif %}>Councils</a></li>
+                        <li><a href="{% url 'approved_events' %}" {% if request.path == '/approved-events/' %}class="active"{% endif %}>Events</a></li>
                         <li><a href="{% url 'donations' %}" {% if request.path == '/donations/' %}class="active"{% endif %}>Donations</a></li>
                         <li><a href="{% url 'about_us' %}" {% if request.path == '/about_us/' %}class="active"{% endif %}>About us</a></li>
                     </ul>
                 </nav>
+                
+                <!-- Notification Bell Icon -->
+                <div class="notification-bell-container">
+                    <button class="notification-bell" id="notificationBell" title="Notifications">
+                        <i class="fas fa-bell"></i>
+                        <span class="notification-count" id="notificationCount" style="display: none;">0</span>
+                    </button>
+                    
+                    <!-- Notification Popup -->
+                    <div class="notification-popup" id="notificationPopup">
+                        <div class="notification-popup-header">
+                            <div class="notification-tabs">
+                                <button class="notification-tab active" data-tab="notifications" id="notificationsTab">
+                                    <i class="fas fa-bell"></i>
+                                    <span>Notifications</span>
+                                </button>
+                                <button class="notification-tab" data-tab="messages" id="messagesTab">
+                                    <i class="fas fa-envelope"></i>
+                                    <span>Messages</span>
+                                </button>
+                            </div>
+                            <button class="notification-popup-close" id="notificationPopupClose">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                        <div class="notification-popup-content" id="notificationPopupContent">
+                            <div class="notification-loading">Loading notifications...</div>
+                        </div>
+                        <div class="notification-popup-footer">
+                            <button class="mark-all-read-btn" id="markAllReadBtn">Mark all as read</button>
+                            <button class="delete-all-btn" id="deleteAllBtn">Delete all</button>
+                        </div>
+                    </div>
+                </div>
+                
                 <div class="profile-section">
                     <div class="profile-trigger" id="profileTrigger">
                         <div class="profile-pic-container">
@@ -147,6 +186,7 @@
                             
                             <li><a href="{% url 'forum' %}"><i class="fas fa-comments"></i>Community Chat</a></li>
                             <div class="dropdown-divider"></div>
+                            <li><button id="darkModeToggle" class="dark-mode-toggle"><i class="fas fa-moon"></i><span>Dark Mode</span></button></li>
                             <li><a href="{% url 'edit_profile' %}"><i class="fas fa-user-edit"></i>Edit Profile</a></li>
                             <li><a href="{% url 'logout' %}"><i class="fas fa-sign-out-alt"></i>Logout</a></li>
                         </ul>
@@ -211,7 +251,363 @@
                 });
             }
 
-            // Notification functionality
+            // Notification Bell functionality
+            const notificationBell = document.getElementById('notificationBell');
+            const notificationPopup = document.getElementById('notificationPopup');
+            const notificationPopupClose = document.getElementById('notificationPopupClose');
+            const notificationCount = document.getElementById('notificationCount');
+            const notificationPopupContent = document.getElementById('notificationPopupContent');
+            const markAllReadBtn = document.getElementById('markAllReadBtn');
+            const notificationsTab = document.getElementById('notificationsTab');
+            const messagesTab = document.getElementById('messagesTab');
+            
+            let currentTab = 'notifications';
+            let allNotifications = [];
+            
+            if (notificationBell) {
+                // Toggle notification popup
+                notificationBell.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    notificationPopup.classList.toggle('active');
+                    if (notificationPopup.classList.contains('active')) {
+                        loadNotifications();
+                    }
+                });
+                
+                // Close notification popup
+                if (notificationPopupClose) {
+                    notificationPopupClose.addEventListener('click', () => {
+                        notificationPopup.classList.remove('active');
+                    });
+                }
+                
+                // Tab switching
+                if (notificationsTab) {
+                    notificationsTab.addEventListener('click', () => {
+                        currentTab = 'notifications';
+                        notificationsTab.classList.add('active');
+                        messagesTab.classList.remove('active');
+                        displayNotifications(allNotifications);
+                    });
+                }
+                
+                if (messagesTab) {
+                    messagesTab.addEventListener('click', () => {
+                        currentTab = 'messages';
+                        messagesTab.classList.add('active');
+                        notificationsTab.classList.remove('active');
+                        displayNotifications(allNotifications);
+                    });
+                }
+                
+                // Close popup when clicking outside or on backdrop
+                document.addEventListener('click', (event) => {
+                    if (notificationPopup.classList.contains('active')) {
+                        if (!notificationBell.contains(event.target) && !notificationPopup.contains(event.target)) {
+                            notificationPopup.classList.remove('active');
+                        }
+                    }
+                });
+                
+                // Close popup when pressing Escape
+                document.addEventListener('keydown', (event) => {
+                    if (event.key === 'Escape' && notificationPopup.classList.contains('active')) {
+                        notificationPopup.classList.remove('active');
+                    }
+                });
+                
+                // Load notifications on page load
+                loadNotifications();
+                
+                // Refresh notifications every 30 seconds
+                setInterval(loadNotifications, 30000);
+            }
+            
+            // Load and display notifications
+            function loadNotifications() {
+                fetch('/get-notifications/')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        allNotifications = data.notifications || [];
+                        displayNotifications(allNotifications);
+                        updateNotificationCount(allNotifications);
+                    })
+                    .catch(error => {
+                        console.error('Error loading notifications:', error);
+                        notificationPopupContent.innerHTML = '<div class="notification-empty">Error loading notifications</div>';
+                    });
+            }
+            
+            // Display notifications in popup
+            function displayNotifications(notifications) {
+                // Filter notifications based on current tab
+                let filteredNotifications = notifications;
+                if (currentTab === 'messages') {
+                    filteredNotifications = notifications.filter(n => n.notification_type === 'forum_message');
+                    console.log('Messages tab - filtered:', filteredNotifications.length, 'from', notifications.length);
+                } else {
+                    filteredNotifications = notifications.filter(n => n.notification_type !== 'forum_message');
+                    console.log('Notifications tab - filtered:', filteredNotifications.length, 'from', notifications.length);
+                }
+                
+                console.log('All notifications types:', notifications.map(n => n.notification_type));
+                
+                if (filteredNotifications.length === 0) {
+                    notificationPopupContent.innerHTML = '<div class="notification-empty">No ' + currentTab + '</div>';
+                    return;
+                }
+                
+                let html = '';
+                filteredNotifications.forEach(notif => {
+                    const timeAgo = getTimeAgo(notif.timestamp);
+                    const unreadClass = notif.is_read ? '' : 'unread';
+                    html += `
+                        <div class="notification-item ${unreadClass}" data-id="${notif.id}">
+                            <div class="notification-item-content">
+                                <p class="notification-item-title">${escapeHtml(notif.title)}</p>
+                                <p class="notification-item-text">${escapeHtml(notif.content)}</p>
+                            </div>
+                            <div class="notification-item-actions">
+                                <button class="notification-item-btn mark-read-btn" title="Mark as read" type="button">
+                                    <i class="fas fa-check"></i>
+                                </button>
+                                <button class="notification-item-btn delete-btn" title="Delete" type="button">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                            <span class="notification-item-time">${timeAgo}</span>
+                        </div>
+                    `;
+                });
+                
+                notificationPopupContent.innerHTML = html;
+                
+                // Add event listeners to action buttons using event delegation
+                const markReadBtns = notificationPopupContent.querySelectorAll('.mark-read-btn');
+                const deleteBtns = notificationPopupContent.querySelectorAll('.delete-btn');
+                
+                markReadBtns.forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const notifId = this.closest('.notification-item').dataset.id;
+                        markNotificationRead(notifId);
+                    });
+                });
+                
+                deleteBtns.forEach(btn => {
+                    btn.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        const notifId = this.closest('.notification-item').dataset.id;
+                        deleteNotification(notifId);
+                    });
+                });
+            }
+            
+            // Update notification count badge
+            function updateNotificationCount(notifications) {
+                const unreadCount = notifications.filter(n => !n.is_read).length;
+                if (unreadCount > 0) {
+                    notificationCount.textContent = unreadCount > 99 ? '99+' : unreadCount;
+                    notificationCount.style.display = 'block';
+                } else {
+                    notificationCount.style.display = 'none';
+                }
+            }
+            
+            // Mark notification as read
+            function markNotificationRead(notifId) {
+                const csrfToken = getCsrfToken();
+                console.log('Marking notification as read:', notifId, 'CSRF:', csrfToken);
+                
+                fetch(`/mark-notification-read/${notifId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    console.log('Mark read response:', response.status);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Mark read data:', data);
+                    if (data.status === 'success') {
+                        loadNotifications();
+                    }
+                })
+                .catch(error => console.error('Error marking notification as read:', error));
+            }
+            
+            // Delete notification
+            function deleteNotification(notifId) {
+                const csrfToken = getCsrfToken();
+                console.log('Deleting notification:', notifId, 'CSRF:', csrfToken);
+                
+                fetch(`/delete-notification/${notifId}/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrfToken,
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => {
+                    console.log('Delete response:', response.status);
+                    if (!response.ok) {
+                        throw new Error(`HTTP error! status: ${response.status}`);
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    console.log('Delete data:', data);
+                    if (data.status === 'success') {
+                        loadNotifications();
+                    }
+                })
+                .catch(error => console.error('Error deleting notification:', error));
+            }
+            
+            // Mark all notifications as read
+            if (markAllReadBtn) {
+                markAllReadBtn.addEventListener('click', () => {
+                    const csrfToken = getCsrfToken();
+                    console.log('Marking all as read, CSRF:', csrfToken);
+                    
+                    fetch('/mark-all-notifications-read/', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrfToken,
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        console.log('Mark all read response:', response.status);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Mark all read data:', data);
+                        if (data.status === 'success') {
+                            loadNotifications();
+                        }
+                    })
+                    .catch(error => console.error('Error marking all as read:', error));
+                });
+            }
+            
+            // Delete all notifications
+            const deleteAllBtn = document.getElementById('deleteAllBtn');
+            if (deleteAllBtn) {
+                deleteAllBtn.addEventListener('click', () => {
+                    const csrfToken = getCsrfToken();
+                    console.log('Deleting all notifications, CSRF:', csrfToken);
+                    
+                    fetch('/delete-all-notifications/', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrfToken,
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => {
+                        console.log('Delete all response:', response.status);
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        console.log('Delete all data:', data);
+                        if (data.status === 'success') {
+                            loadNotifications();
+                        }
+                    })
+                    .catch(error => console.error('Error deleting all notifications:', error));
+                });
+            }
+            
+            // Helper function to escape HTML
+            function escapeHtml(text) {
+                const map = {
+                    '&': '&amp;',
+                    '<': '&lt;',
+                    '>': '&gt;',
+                    '"': '&quot;',
+                    "'": '&#039;'
+                };
+                return text.replace(/[&<>"']/g, m => map[m]);
+            }
+            
+            // Helper function to get time ago
+            function getTimeAgo(timestamp) {
+                const date = new Date(timestamp);
+                const now = new Date();
+                const seconds = Math.floor((now - date) / 1000);
+                
+                if (seconds < 60) return 'just now';
+                const minutes = Math.floor(seconds / 60);
+                if (minutes < 60) return `${minutes}m ago`;
+                const hours = Math.floor(minutes / 60);
+                if (hours < 24) return `${hours}h ago`;
+                const days = Math.floor(hours / 24);
+                return `${days}d ago`;
+            }
+            
+            // Helper function to get CSRF token
+            function getCsrfToken() {
+                // First try to get from meta tag
+                let token = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+                if (token) return token;
+                
+                // Then try to get from hidden input
+                token = document.querySelector('input[name="csrfmiddlewaretoken"]')?.value;
+                if (token) return token;
+                
+                // Finally try to get from cookie
+                const name = 'csrftoken';
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+            
+            // Helper function to get cookie (legacy)
+            function getCookie(name) {
+                let cookieValue = null;
+                if (document.cookie && document.cookie !== '') {
+                    const cookies = document.cookie.split(';');
+                    for (let i = 0; i < cookies.length; i++) {
+                        const cookie = cookies[i].trim();
+                        if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+            // Notification functionality (for top-right notifications)
             const notifications = document.querySelectorAll('.notification');
             const closeButtons = document.querySelectorAll('.notification-close');
             
@@ -235,6 +631,43 @@
                     }, 300);
                 });
             });
+
+            // Dark Mode Toggle
+            const darkModeToggle = document.getElementById('darkModeToggle');
+            if (darkModeToggle) {
+                darkModeToggle.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const csrfToken = getCsrfToken();
+                    
+                    fetch('/toggle-dark-mode/', {
+                        method: 'POST',
+                        headers: {
+                            'X-CSRFToken': csrfToken,
+                            'Content-Type': 'application/json'
+                        }
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.status === 'success') {
+                            // Toggle dark mode class on body
+                            document.body.classList.toggle('dark-mode');
+                            // Update icon and text
+                            const icon = darkModeToggle.querySelector('i');
+                            const span = darkModeToggle.querySelector('span');
+                            if (data.dark_mode) {
+                                icon.classList.remove('fa-moon');
+                                icon.classList.add('fa-sun');
+                                span.textContent = 'Light Mode';
+                            } else {
+                                icon.classList.remove('fa-sun');
+                                icon.classList.add('fa-moon');
+                                span.textContent = 'Dark Mode';
+                            }
+                        }
+                    })
+                    .catch(error => console.error('Error toggling dark mode:', error));
+                });
+            }
         });
     </script>
     

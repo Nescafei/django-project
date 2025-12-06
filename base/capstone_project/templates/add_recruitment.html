@@ -26,25 +26,21 @@ Knights of Columbus - Add Recruitment Record
                 {% csrf_token %}
                 
                 <div class="form-group">
-                    <label for="recruiter_id">Recruiter:</label>
-                    <select name="recruiter_id" id="recruiter_id" class="form-control user-select" required>
-                        <option value="">-- Select Recruiter --</option>
-                        {% for user in users %}
-                        <option value="{{ user.id }}" data-img="{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}{% static 'images/default-profile.png' %}{% endif %}" data-council="{{ user.council.name|default:'No Council' }}" data-second-name="{{ user.first_name }} {{ user.second_name }} {{ user.last_name }}">
-                        </option>
-                        {% endfor %}
-                    </select>
+                    <label for="recruiter_search">Recruiter:</label>
+                    <div class="search-input-wrapper">
+                        <input type="text" id="recruiter_search" class="form-control search-input" placeholder="Type recruiter name..." autocomplete="off">
+                        <input type="hidden" name="recruiter_id" id="recruiter_id" required>
+                        <div id="recruiter_suggestions" class="suggestions-dropdown"></div>
+                    </div>
                 </div>
                 
                 <div class="form-group">
-                    <label for="recruit_id">Recruit:</label>
-                    <select name="recruit_id" id="recruit_id" class="form-control user-select" required>
-                        <option value="">-- Select Recruit --</option>
-                        {% for user in users %}
-                        <option value="{{ user.id }}" data-img="{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}{% static 'images/default-profile.png' %}{% endif %}" data-council="{{ user.council.name|default:'No Council' }}" data-second-name="{{ user.first_name }} {{ user.second_name }} {{ user.last_name }}">
-                        </option>
-                        {% endfor %}
-                    </select>
+                    <label for="recruit_search">Recruit:</label>
+                    <div class="search-input-wrapper">
+                        <input type="text" id="recruit_search" class="form-control search-input" placeholder="Type recruit name..." autocomplete="off">
+                        <input type="hidden" name="recruit_id" id="recruit_id" required>
+                        <div id="recruit_suggestions" class="suggestions-dropdown"></div>
+                    </div>
                 </div>
                 
                 <div class="form-actions">
@@ -782,279 +778,280 @@ Knights of Columbus - Add Recruitment Record
     .danger:hover {
         background-color: #c82333;
     }
+    
+    /* Search input styles */
+    .search-input-wrapper {
+        position: relative;
+        width: 100%;
+    }
+    
+    .search-input {
+        width: 100%;
+        padding: 0.75rem;
+        border: 1px solid rgba(13, 52, 113, 0.2);
+        border-radius: var(--border-radius);
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
+    
+    .search-input:focus {
+        outline: none;
+        border-color: var(--primary-bg);
+        box-shadow: 0 0 0 3px rgba(13, 52, 113, 0.1);
+    }
+    
+    /* Suggestions dropdown */
+    .suggestions-dropdown {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: white;
+        border: 1px solid rgba(13, 52, 113, 0.2);
+        border-top: none;
+        border-radius: 0 0 var(--border-radius) var(--border-radius);
+        max-height: 300px;
+        overflow-y: auto;
+        z-index: 1000;
+        display: none;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 100%;
+        box-sizing: border-box;
+    }
+    
+    .suggestions-dropdown.show {
+        display: block;
+    }
+    
+    .suggestion-item {
+        padding: 0.75rem;
+        display: flex;
+        align-items: center;
+        cursor: pointer;
+        transition: background-color 0.2s;
+        border-bottom: 1px solid rgba(13, 52, 113, 0.05);
+    }
+    
+    .suggestion-item:hover {
+        background-color: rgba(13, 52, 113, 0.05);
+    }
+    
+    .suggestion-item.disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+        background-color: #f5f5f5;
+    }
+    
+    .suggestion-item.disabled:hover {
+        background-color: #f5f5f5;
+    }
+    
+    .suggestion-item img {
+        width: 2.5rem;
+        height: 2.5rem;
+        border-radius: 50%;
+        object-fit: cover;
+        margin-right: 0.75rem;
+        flex-shrink: 0;
+    }
+    
+    .suggestion-item .person-icon {
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1.5rem;
+        background-color: #f8f9fa;
+        border: 2px solid #dee2e6;
+        color: #6c757d;
+        margin-right: 0.75rem;
+        vertical-align: middle;
+        flex-shrink: 0;
+    }
+    
+    .suggestion-info {
+        display: flex;
+        flex-direction: column;
+        gap: 0.25rem;
+        flex: 1;
+    }
+    
+    .suggestion-name {
+        font-weight: 600;
+        color: var(--heading-color);
+    }
+    
+    .suggestion-council {
+        font-size: 0.85rem;
+        color: #6c757d;
+    }
+    
+    .no-suggestions {
+        padding: 1rem;
+        text-align: center;
+        color: #6c757d;
+    }
 </style>
 
 <script>
+    // User data from template
+    const allUsers = [
+        {% for user in users %}
+        {
+            id: '{{ user.id }}',
+            name: '{{ user.first_name }} {{ user.last_name }}',
+            fullName: '{{ user.first_name }} {{ user.second_name }} {{ user.last_name }}',
+            council: '{{ user.council.name|default:"No Council" }}',
+            img: '{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}{% static "images/default-profile.png" %}{% endif %}'
+        },
+        {% endfor %}
+    ];
+    
     document.addEventListener('DOMContentLoaded', function() {
-        // Create custom select dropdowns with profile pictures
-        function createCustomDropdowns() {
-            // Get all select elements with class 'user-select'
-            const selects = document.querySelectorAll('.user-select');
+        // Searchable input functionality
+        function setupSearchableInput(searchInputId, suggestionsId, hiddenInputId) {
+            const searchInput = document.getElementById(searchInputId);
+            const suggestionsDiv = document.getElementById(suggestionsId);
+            const hiddenInput = document.getElementById(hiddenInputId);
             
-            selects.forEach(select => {
-                // Create wrapper div
-                const wrapper = document.createElement('div');
-                wrapper.className = 'custom-select-wrapper';
-                select.parentNode.insertBefore(wrapper, select);
+            searchInput.addEventListener('input', function() {
+                const searchTerm = this.value.toLowerCase();
                 
-                // Move the select inside the wrapper
-                wrapper.appendChild(select);
+                if (searchTerm.length === 0) {
+                    suggestionsDiv.classList.remove('show');
+                    return;
+                }
                 
-                // Create custom select elements
-                const customSelect = document.createElement('div');
-                customSelect.className = 'custom-select';
-                wrapper.appendChild(customSelect);
+                // Filter users based on search term
+                const filtered = allUsers.filter(user => 
+                    user.name.toLowerCase().includes(searchTerm) ||
+                    user.council.toLowerCase().includes(searchTerm)
+                );
                 
-                // Create selected display
-                const selectedDisplay = document.createElement('div');
-                selectedDisplay.className = 'selected-option';
-                customSelect.appendChild(selectedDisplay);
-                
-                // Create dropdown
-                const dropdown = document.createElement('div');
-                dropdown.className = 'select-dropdown';
-                customSelect.appendChild(dropdown);
-                
-                // Add options to dropdown
-                const options = select.querySelectorAll('option');
-                options.forEach(option => {
-                    const customOption = document.createElement('div');
-                    customOption.className = 'select-option';
-                    if (option.disabled) {
-                        customOption.classList.add('disabled');
-                    }
-                    
-                    if (option.value) {
-                        const imgUrl = option.getAttribute('data-img');
-                        const council = option.getAttribute('data-council');
-                        const secondName = option.getAttribute('data-second-name');
-                        
-                        // Create full name with second name if available
-                        const firstName = option.textContent.split(' ')[0];
-                        const lastName = option.textContent.split(' ').pop();
-                        const fullName = secondName && secondName.trim() ? 
-                            `${firstName} ${secondName} ${lastName}` : 
-                            `${firstName} ${lastName}`;
-                        
-                        // Check if the image is a default profile image
-                        const isDefaultProfile = imgUrl && imgUrl.includes('default-profile.png');
-                        
-                        if (isDefaultProfile) {
-                            customOption.innerHTML = `
-                                <i class="fas fa-user-circle profile-pic-small person-icon" style="width: 2.5rem; height: 2.5rem; font-size: 1.5rem; color: #6c757d;"></i>
-                                <span class="option-text">${fullName}</span>
-                                <span class="council-badge">${council}</span>
-                            `;
-                        } else {
-                            customOption.innerHTML = `
-                                <img src="${imgUrl}" class="profile-pic-small" alt="${fullName}">
-                                <span class="option-text">${fullName}</span>
-                                <span class="council-badge">${council}</span>
-                            `;
-                        }
-                        customOption.dataset.value = option.value;
-                    } else {
-                        customOption.textContent = option.textContent;
-                    }
-                    
-                    dropdown.appendChild(customOption);
-                    
-                    // Handle option click
-                    customOption.addEventListener('click', () => {
-                        if (customOption.classList.contains('disabled')) return;
-                        
-                        // Update the real select value
-                        select.value = customOption.dataset.value || '';
-                        
-                        // Update the display
-                        updateSelectedDisplay(select, selectedDisplay);
-                        
-                        // Trigger change event on the real select
-                        const event = new Event('change', { bubbles: true });
-                        select.dispatchEvent(event);
-                        
-                        // Close dropdown
-                        customSelect.classList.remove('open');
-                    });
-                });
-                
-                // Initial display update
-                updateSelectedDisplay(select, selectedDisplay);
-                
-                // Toggle dropdown on click
-                selectedDisplay.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    
-                    // Close all other dropdowns
-                    document.querySelectorAll('.custom-select.open').forEach(openSelect => {
-                        if (openSelect !== customSelect) {
-                            openSelect.classList.remove('open');
-                        }
-                    });
-                    
-                    customSelect.classList.toggle('open');
-                });
-                
-                // Update display when the select changes
-                select.addEventListener('change', () => {
-                    updateSelectedDisplay(select, selectedDisplay);
-                    
-                    // Update disabled options in dropdown
-                    updateDisabledOptions(select, dropdown);
-                });
+                // Render suggestions
+                renderSuggestions(filtered, suggestionsDiv, searchInputId, hiddenInputId);
+                suggestionsDiv.classList.add('show');
             });
             
-            // Close all dropdowns when clicking outside
-            document.addEventListener('click', () => {
-                document.querySelectorAll('.custom-select.open').forEach(select => {
-                    select.classList.remove('open');
-                });
+            // Close suggestions when clicking outside
+            document.addEventListener('click', function(e) {
+                if (e.target !== searchInput && e.target !== suggestionsDiv) {
+                    suggestionsDiv.classList.remove('show');
+                }
             });
         }
         
-        // Update the selected display
-        function updateSelectedDisplay(select, display) {
-            const selectedOption = select.options[select.selectedIndex];
+        function renderSuggestions(users, container, searchInputId, hiddenInputId) {
+            container.innerHTML = '';
             
-            if (selectedOption.value) {
-                const imgUrl = selectedOption.getAttribute('data-img');
-                const council = selectedOption.getAttribute('data-council');
-                const secondName = selectedOption.getAttribute('data-second-name');
+            if (users.length === 0) {
+                container.innerHTML = '<div class="no-suggestions">No users found</div>';
+                return;
+            }
+            
+            users.forEach(user => {
+                const isDisabled = isUserDisabled(user.id, searchInputId);
+                const item = document.createElement('div');
+                item.className = `suggestion-item ${isDisabled ? 'disabled' : ''}`;
                 
-                // Create full name with second name if available
-                const firstName = selectedOption.textContent.split(' ')[0];
-                const lastName = selectedOption.textContent.split(' ').pop();
-                const fullName = secondName && secondName.trim() ? 
-                    `${firstName} ${secondName} ${lastName}` : 
-                    `${firstName} ${lastName}`;
-                
-                // Check if the image is a default profile image
-                const isDefaultProfile = imgUrl && imgUrl.includes('default-profile.png');
+                const isDefaultProfile = user.img.includes('default-profile.png');
                 
                 if (isDefaultProfile) {
-                    display.innerHTML = `
-                        <i class="fas fa-user-circle profile-pic-small person-icon" style="width: 2.5rem; height: 2.5rem; font-size: 1.5rem; color: #6c757d;"></i>
-                        <span class="option-text">${fullName}</span>
-                        <span class="council-badge">${council}</span>
+                    item.innerHTML = `
+                        <i class="fas fa-user-circle person-icon"></i>
+                        <div class="suggestion-info">
+                            <span class="suggestion-name">${user.fullName}</span>
+                            <span class="suggestion-council">${user.council}</span>
+                        </div>
                     `;
                 } else {
-                    display.innerHTML = `
-                        <img src="${imgUrl}" class="profile-pic-small" alt="${fullName}">
-                        <span class="option-text">${fullName}</span>
-                        <span class="council-badge">${council}</span>
+                    item.innerHTML = `
+                        <img src="${user.img}" alt="${user.name}">
+                        <div class="suggestion-info">
+                            <span class="suggestion-name">${user.fullName}</span>
+                            <span class="suggestion-council">${user.council}</span>
+                        </div>
                     `;
                 }
-            } else {
-                display.textContent = selectedOption.textContent;
-            }
-        }
-        
-        // Update disabled options in dropdown
-        function updateDisabledOptions(select, dropdown) {
-            const options = select.querySelectorAll('option');
-            const dropdownOptions = dropdown.querySelectorAll('.select-option');
-            
-            options.forEach((option, index) => {
-                if (option.disabled) {
-                    dropdownOptions[index].classList.add('disabled');
-                } else {
-                    dropdownOptions[index].classList.remove('disabled');
-                }
-            });
-        }
-        
-        // Prevent selecting the same user as both recruiter and recruit
-        const recruiterSelect = document.getElementById('recruiter_id');
-        const recruitSelect = document.getElementById('recruit_id');
-        
-        function updateSelections() {
-            const recruiterId = recruiterSelect.value;
-            const recruitId = recruitSelect.value;
-            
-            // Reset options
-            for (let option of recruiterSelect.options) {
-                option.disabled = false;
-            }
-            
-            for (let option of recruitSelect.options) {
-                option.disabled = false;
-            }
-            
-            // Disable selected options in the other dropdown
-            if (recruiterId) {
-                for (let option of recruitSelect.options) {
-                    if (option.value === recruiterId) {
-                        option.disabled = true;
-                    }
-                }
-            }
-            
-            if (recruitId) {
-                for (let option of recruiterSelect.options) {
-                    if (option.value === recruitId) {
-                        option.disabled = true;
-                    }
-                }
-            }
-            
-            // Apply the already-recruited restrictions
-            disableAlreadyRecruitedUsers();
-        }
-        
-        // Get all recruitment records from the table and disable already recruited users
-        function disableAlreadyRecruitedUsers() {
-            // Get all rows from the recruitment history table
-            const rows = document.querySelectorAll('.history-table tbody tr');
-            const alreadyRecruited = new Set(); // Set to store recruited user IDs
-            
-            rows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                if (cells.length >= 2) {
-                    // Get the recruit ID from the data attribute
-                    const recruitCell = cells[1];
-                    
-                    if (recruitCell && recruitCell.hasAttribute('data-user-id')) {
-                        const recruitId = recruitCell.getAttribute('data-user-id');
-                        
-                        // Add the recruit ID to the set of already recruited users
-                        alreadyRecruited.add(recruitId);
-                    }
-                }
-            });
-            
-            // Disable options for recruits that are already recruited
-            for (let option of recruitSelect.options) {
-                if (option.value && alreadyRecruited.has(option.value)) {
-                    option.disabled = true;
-                }
-            }
-            
-            // Update the custom dropdown to reflect these changes
-            const customDropdowns = document.querySelectorAll('.custom-select');
-            customDropdowns.forEach(dropdown => {
-                const select = dropdown.parentNode.querySelector('select');
-                if (select && select.id === 'recruit_id') {
-                    const dropdownOptions = dropdown.querySelectorAll('.select-option');
-                    const options = select.querySelectorAll('option');
-                    
-                    options.forEach((option, index) => {
-                        if (option.disabled && dropdownOptions[index]) {
-                            dropdownOptions[index].classList.add('disabled');
-                        }
+                
+                if (!isDisabled) {
+                    item.addEventListener('click', function() {
+                        document.getElementById(searchInputId).value = user.name;
+                        document.getElementById(hiddenInputId).value = user.id;
+                        container.classList.remove('show');
+                        updateDisabledStates();
                     });
                 }
+                
+                container.appendChild(item);
             });
         }
         
-        // Add event listeners
-        recruiterSelect.addEventListener('change', updateSelections);
-        recruitSelect.addEventListener('change', updateSelections);
+        function isUserDisabled(userId, searchInputId) {
+            const recruiterId = document.getElementById('recruiter_id').value;
+            const recruitId = document.getElementById('recruit_id').value;
+            
+            // Check if already recruited
+            const alreadyRecruited = isAlreadyRecruited(userId);
+            
+            // Check if same user selected in other field
+            if (searchInputId === 'recruiter_search' && userId === recruitId) {
+                return true;
+            }
+            if (searchInputId === 'recruit_search' && userId === recruiterId) {
+                return true;
+            }
+            
+            // For recruit field, also check if already recruited
+            if (searchInputId === 'recruit_search' && alreadyRecruited) {
+                return true;
+            }
+            
+            return false;
+        }
         
-        // Call function to create custom dropdowns
-        createCustomDropdowns();
+        function isAlreadyRecruited(userId) {
+            const rows = document.querySelectorAll('.history-table tbody tr');
+            for (let row of rows) {
+                const cells = row.querySelectorAll('td');
+                if (cells.length >= 2) {
+                    const recruitCell = cells[1];
+                    if (recruitCell && recruitCell.hasAttribute('data-user-id')) {
+                        if (recruitCell.getAttribute('data-user-id') === userId) {
+                            return true;
+                        }
+                    }
+                }
+            }
+            return false;
+        }
         
-        // Initial update of selections
-        updateSelections();
+        function updateDisabledStates() {
+            // Re-render suggestions for both inputs
+            const recruiterSearch = document.getElementById('recruiter_search');
+            const recruitSearch = document.getElementById('recruit_search');
+            
+            if (recruiterSearch.value) {
+                const filtered = allUsers.filter(user => 
+                    user.name.toLowerCase().includes(recruiterSearch.value.toLowerCase())
+                );
+                renderSuggestions(filtered, document.getElementById('recruiter_suggestions'), 'recruiter_search', 'recruiter_id');
+            }
+            
+            if (recruitSearch.value) {
+                const filtered = allUsers.filter(user => 
+                    user.name.toLowerCase().includes(recruitSearch.value.toLowerCase())
+                );
+                renderSuggestions(filtered, document.getElementById('recruit_suggestions'), 'recruit_search', 'recruit_id');
+            }
+        }
+        
+        // Setup searchable inputs
+        setupSearchableInput('recruiter_search', 'recruiter_suggestions', 'recruiter_id');
+        setupSearchableInput('recruit_search', 'recruit_suggestions', 'recruit_id');
+        
+        // Update disabled states when selections change
+        document.getElementById('recruiter_id').addEventListener('change', updateDisabledStates);
+        document.getElementById('recruit_id').addEventListener('change', updateDisabledStates);
+        
         
         // Modal functionality
         const modal = document.getElementById('confirmationModal');

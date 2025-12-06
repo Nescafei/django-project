@@ -1,5 +1,6 @@
 
 from ..models import User, Council, Event, Analytics, Donation, blockchain, ForumCategory, ForumMessage, Notification, EventAttendance, Recruitment
+from ..notification_utils import notify_user_event_attended
 from django.contrib.auth.decorators import login_required, permission_required
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
@@ -17,6 +18,7 @@ from django.core.mail import send_mail
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_protect
+from django.db import transaction
 from ..models import Event, User, EventAttendance
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
@@ -161,6 +163,10 @@ def update_attendance(request):
                                     'recorded_by': request.user
                                 }
                             )
+                            
+                            # Notify member that they attended the event
+                            if attendance.is_present:
+                                notify_user_event_attended(member, event)
                         except User.DoesNotExist:
                             continue
                 
@@ -246,6 +252,10 @@ def update_attendance(request):
                         'recorded_by': request.user
                     }
                 )
+                
+                # Notify member that they attended the event
+                if attendance.is_present:
+                    notify_user_event_attended(member, event)
                 
                 # Get updated count
                 present_count = EventAttendance.objects.filter(event=event, is_present=True).count()
@@ -410,6 +420,10 @@ def scan_qr(request):
                 member=member,
                 defaults={'is_present': True, 'recorded_by': request.user}
             )
+            
+            # Notify member that they attended the event
+            if attendance.is_present:
+                notify_user_event_attended(member, event)
             
             if not created:
                 if attendance.is_present:

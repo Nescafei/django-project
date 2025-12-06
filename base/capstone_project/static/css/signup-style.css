@@ -56,7 +56,7 @@ body {
     grid-column: 1 / -1;
     font-size: 1.5rem;
     color: var(--heading-color);
-    border-bottom: 2px solid var(--secondary-color);
+    border-bottom: 2px solid var(--heading-color);
     padding-bottom: 0.5rem;
     margin-top: 1rem;
     margin-bottom: 0.5rem;
@@ -77,6 +77,11 @@ label {
     font-size: 0.9rem;
 }
 
+.password-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
 input[type="text"],
 input[type="email"],
 input[type="password"],
@@ -91,6 +96,26 @@ textarea {
     font-size: 1rem;
     transition: border-color var(--transition-speed), box-shadow var(--transition-speed);
     box-sizing: border-box;
+}
+
+.password-input-wrapper input[type="password"] {
+    padding-right: 2.5rem;
+}
+
+.password-toggle {
+    position: absolute;
+    right: 0.75rem;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #666;
+    font-size: 1.1rem;
+    transition: color var(--transition-speed);
+    user-select: none;
+}
+
+.password-toggle:hover {
+    color: var(--secondary-color);
 }
 
 input:focus,
@@ -181,7 +206,11 @@ textarea:focus {
 }
 
 input[type="file"] {
-    display: none;
+    position: absolute;
+    opacity: 0;
+    width: 0;
+    height: 0;
+    pointer-events: none;
 }
 
 .browse-btn {
@@ -335,4 +364,77 @@ input[type="file"] {
     .signup-header h1 {
         font-size: 2rem;
     }
+}
+
+/* Password strength indicator styles */
+.strength-indicator {
+    display: none;
+    margin-top: 0.6rem;
+    width: 100%;
+}
+
+.strength-indicator.show {
+    display: block;
+}
+
+.strength-bar {
+    height: 6px;
+    width: 100%;
+    border-radius: 3px;
+    background-color: #e9ecef;
+    overflow: hidden;
+    margin-bottom: 0.4rem;
+}
+
+.strength-bar-fill {
+    height: 100%;
+    width: 0%;
+    border-radius: 3px;
+    transition: width 0.3s ease, background-color 0.3s ease;
+}
+
+.strength-text {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-top: 0.3rem;
+}
+
+.strength-weak .strength-bar-fill {
+    width: 33%;
+    background-color: #dc3545;
+}
+
+.strength-weak .strength-text {
+    color: #dc3545;
+}
+
+.strength-weak .strength-text::before {
+    content: "Weak password";
+}
+
+.strength-medium .strength-bar-fill {
+    width: 66%;
+    background-color: #ffc107;
+}
+
+.strength-medium .strength-text {
+    color: #ffc107;
+}
+
+.strength-medium .strength-text::before {
+    content: "Medium password";
+}
+
+.strength-strong .strength-bar-fill {
+    width: 100%;
+    background-color: #28a745;
+}
+
+.strength-strong .strength-text {
+    color: #28a745;
+}
+
+.strength-strong .strength-text::before {
+    content: "Strong password";
 }

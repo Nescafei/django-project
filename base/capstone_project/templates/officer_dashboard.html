@@ -43,12 +43,12 @@ Knights of Columbus - Officer Dashboard
                     <h4>{{ user.first_name }} {{ user.last_name }}</h4>
                     <p>Officer - {{ user.council.name }}</p>
                     <p>Degree: <span class="degree-badge degree-{{ user.current_degree|default:'1st' }}">{{ user.get_current_degree_display }}</span></p>
+                    <div class="action-buttons">
+                        <a href="{% url 'edit_profile' %}" class="dashboard-btn">
+                            <i class="fas fa-user-edit"></i>Edit Profile
+                        </a>
+                    </div>
                 </div>
-            </div>
-            <div class="action-buttons">
-                <a href="{% url 'edit_profile' %}" class="dashboard-btn">
-                    <i class="fas fa-user-edit"></i>Edit Profile
-                </a>
             </div>
         </div>
 
@@ -107,13 +107,17 @@ Knights of Columbus - Officer Dashboard
             <div class="card-content">
                 <p>View your council's member list.</p>
                 <div class="stat-grid">
-                    <div class="stat-card">
-                        <div class="stat-value" data-target="{{ user_list|length }}">0</div>
+                    <div class="stat-card2">
+                        <div class="stat-value" id="activeCount" data-target="{{ active_users_count|default:0 }}">0</div>
                         <div class="stat-label">Active</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-value" data-target="{{ inactive_users_count|default:0 }}">0</div>
+                        <div class="stat-value" id="inactiveCount" data-target="{{ inactive_users_count|default:0 }}">0</div>
                         <div class="stat-label">Inactive</div>
+                    </div>
+                    <div class="stat-card2">
+                        <div class="stat-value" id="totalMembers" data-target="{{ total_members|default:0 }}">0</div>
+                        <div class="stat-label">Total Members</div>
                     </div>
                     <div class="stat-card">
                         <div class="stat-value" data-target="{{ pending_users_count|default:0 }}">0</div>
@@ -230,7 +234,11 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 100 + (index * 100));
     });
 
-    // Animate counters
+    // Get total members count
+    const totalMembersElement = document.getElementById('totalMembers');
+    const totalMembers = parseInt(totalMembersElement.getAttribute('data-target')) || 0;
+    
+    // Animate counters with interdependent active/inactive
     const counters = document.querySelectorAll('.stat-value');
     counters.forEach(counter => {
         const target = parseInt(counter.getAttribute('data-target'));
@@ -245,13 +253,66 @@ document.addEventListener('DOMContentLoaded', function() {
         const timer = setInterval(() => {
             current += increment;
             if (current >= target) {
-                counter.textContent = target;
+                const finalValue = Math.floor(target);
+                counter.textContent = finalValue;
+                
+                // Update interdependent counts for active/inactive
+                if (counter.id === 'activeCount' || counter.id === 'inactiveCount') {
+                    updateMemberCounts();
+                }
                 clearInterval(timer);
             } else {
                 counter.textContent = Math.floor(current);
             }
         }, stepTime);
     });
+    
+    // Function to update active/inactive counts to be interdependent
+    function updateMemberCounts() {
+        const activeElement = document.getElementById('activeCount');
+        const inactiveElement = document.getElementById('inactiveCount');
+        
+        if (activeElement && inactiveElement) {
+            const activeCount = parseInt(activeElement.textContent) || 0;
+            const inactiveCount = parseInt(inactiveElement.textContent) || 0;
+            const total = activeCount + inactiveCount;
+            
+            // Ensure they add up correctly
+            if (total > 0) {
+                // Store the ratio for future updates
+                activeElement.dataset.ratio = activeCount / total;
+            }
+        }
+    }
+    
+    // Set up auto-refresh for user counts (every 5 seconds)
+    setInterval(() => {
+        fetch('/api/council-user-counts/')
+            .then(response => response.json())
+            .then(data => {
+                const activeElement = document.getElementById('activeCount');
+                const inactiveElement = document.getElementById('inactiveCount');
+                const totalElement = document.getElementById('totalMembers');
+                
+                if (activeElement && inactiveElement && totalElement) {
+                    const newActive = data.active_count || 0;
+                    const newInactive = data.inactive_count || 0;
+                    const newTotal = newActive + newInactive + (data.pending_count || 0);
+                    
+                    // Update counts if they changed
+                    if (parseInt(activeElement.textContent) !== newActive) {
+                        activeElement.textContent = newActive;
+                    }
+                    if (parseInt(inactiveElement.textContent) !== newInactive) {
+                        inactiveElement.textContent = newInactive;
+                    }
+                    if (parseInt(totalElement.textContent) !== newTotal) {
+                        totalElement.textContent = newTotal;
+                    }
+                }
+            })
+            .catch(error => console.log('Auto-refresh paused'));
+    }, 5000);
 });
 
 // Function to close inactive warning popup

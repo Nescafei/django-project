@@ -24,14 +24,16 @@ Knights of Columbus - Add Event
             <div class="form-row">
                 <div class="form-group full-width">
                     <label for="name">Name of Event</label>
-                    <input type="text" id="name" name="name" required class="form-input">
+                    <input type="text" id="name" name="name" required class="form-input" maxlength="50">
+                    <small style="color: #666; font-size: 0.85rem;">Maximum 50 characters</small>
                 </div>
             </div>
 
             <div class="form-row">
                 <div class="form-group full-width">
                     <label for="description">Event Details</label>
-                    <textarea id="description" name="description" rows="4" required class="form-textarea"></textarea>
+                    <textarea id="description" name="description" rows="4" required class="form-textarea" maxlength="200"></textarea>
+                    <small style="color: #666; font-size: 0.85rem;">Maximum 200 characters</small>
                 </div>
             </div>
 
@@ -62,7 +64,8 @@ Knights of Columbus - Add Event
                 <div class="form-row">
                     <div class="form-group full-width">
                         <label for="street">Street Address</label>
-                        <input type="text" id="street" name="street" required class="form-input">
+                        <input type="text" id="street" name="street" required class="form-input" maxlength="80">
+                        <small style="color: #666; font-size: 0.85rem;">Maximum 80 characters</small>
                     </div>
                 </div>
                 

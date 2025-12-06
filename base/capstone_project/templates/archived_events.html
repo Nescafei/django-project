@@ -5,7 +5,9 @@ Knights of Columbus - Archived Events
 {% endblock %}
 
 {% block content %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 <link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
+<link rel="stylesheet" href="{% static 'css/event_management.css' %}?v={% now 'U' %}">
 
 <div class="dashboard-container">
     <div class="content-card">
@@ -17,7 +19,6 @@ Knights of Columbus - Archived Events
                 </a>
             </div>
         </div>
-        <h2 style="color: var(--primary-bg);">Past Events</h2>
         <!-- Filters -->
         <div class="filters-container">
             <form method="get" class="filter-form">
@@ -143,6 +144,11 @@ Knights of Columbus - Archived Events
             <div class="loading">Loading event details...</div>
         </div>
         <div class="modal-footer">
+            <div class="modal-action-buttons">
+                <button id="downloadButton" class="dashboard-btn download-btn" style="display:none;">
+                    <i class="fas fa-download"></i> Download
+                </button>
+            </div>
             <button id="okButton" class="dashboard-btn">OK</button>
         </div>
     </div>
@@ -394,7 +400,38 @@ Knights of Columbus - Archived Events
 .modal-detail-item strong { display: block; color: var(--heading-color); margin-bottom: 0.5rem; }
 .modal-detail-item.full-width { grid-column: 1 / -1; }
 .modal-event-title { grid-column: 1 / -1; margin: 0 0 1rem 0; padding-bottom: 1rem; border-bottom: 1px solid rgba(13, 52, 113, 0.1); }
-.modal-footer { padding-top: 1.5rem; text-align: right; border-top: 1px solid rgba(13, 52, 113, 0.1); }
+.modal-footer { 
+    padding-top: 1.5rem; 
+    text-align: right; 
+    border-top: 1px solid rgba(13, 52, 113, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+}
+.modal-action-buttons {
+    display: flex;
+    gap: 0.75rem;
+}
+.modal-footer .dashboard-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+
+}
+.download-btn {
+    background: #28a745;
+}
+.download-btn:hover {
+    background: #20c997;
+}
+.print-btn {
+    background: #17a2b8;
+}
+.print-btn:hover {
+    background: #138496;
+}
+
 @media (max-width: 768px) {
     .filter-form { flex-direction: column; }
     .filter-group { width: 100%; }
@@ -405,6 +442,10 @@ Knights of Columbus - Archived Events
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
+    // Modal elements
+    const eventModal = document.getElementById('eventDetailsModal');
+    const okButton = document.getElementById('okButton');
+    
     // Search functionality
     const searchInput = document.getElementById('eventSearch');
     const clearButton = document.getElementById('clearSearch');
@@ -444,12 +485,11 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // View event details
     window.viewEventDetails = function(eventId) {
-        const modal = document.getElementById('eventDetailsModal');
         const contentDiv = document.getElementById('eventDetailsContent');
-        const okButton = document.getElementById('okButton');
-        
-        openModal(modal);
+        const downloadBtn = document.getElementById('downloadButton');
+        openModal(eventModal);
         contentDiv.innerHTML = '<div class="loading">Loading event details...</div>';
+        downloadBtn.style.display = 'none';
         
         fetch(`/event/${eventId}/details/`)
             .then(response => response.json())
@@ -498,6 +538,23 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 detailsHTML += `</div>`;
                 contentDiv.innerHTML = detailsHTML;
+                
+                // Check if event is past or present and show download/print buttons
+                fetch(`/api/event/${eventId}/download-data/`)
+                    .then(response => {
+                        if (response.ok) {
+                            return response.json();
+                        }
+                        throw new Error('Cannot download');
+                    })
+                    .then(downloadData => {
+                        window.currentEventDownloadData = downloadData;
+                        window.currentEventId = eventId;
+                        downloadBtn.style.display = 'inline-block';
+                    })
+                    .catch(error => {
+                        downloadBtn.style.display = 'none';
+                    });
             })
             .catch(error => {
                 contentDiv.innerHTML = '<p>Error loading event details. Please try again later.</p>';
@@ -528,7 +585,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // Close modal when clicking the OK button
-    const okButton = document.getElementById('okButton');
     if (okButton) {
         okButton.addEventListener('click', function() {
             const modal = document.getElementById('eventDetailsModal');
@@ -543,6 +599,26 @@ document.addEventListener('DOMContentLoaded', function() {
             closeModal(modal);
         }
     });
+    
+    // Download button handler - Generate CSV
+    document.getElementById('downloadButton').addEventListener('click', function() {
+        if (!window.currentEventDownloadData) return;
+        const data = window.currentEventDownloadData;
+        
+        const csvContent = `Event Name,Category,Date From,Date Until,Location,Council,Created By,Attended,Total Registered,Description,Generated On
+"${data.name}","${data.category}${data.subcategory && data.subcategory !== 'N/A' ? ' - ' + data.subcategory : ''}","${data.date_from}","${data.date_until || 'N/A'}","${data.street}, ${data.barangay}, ${data.city}, ${data.province}","${data.council_name}","${data.creator_name}","${data.attendance_count}","${data.total_attendees}","${data.description}","${new Date().toLocaleString()}"`;
+        
+        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const link = document.createElement('a');
+        const url = URL.createObjectURL(blob);
+        link.setAttribute('href', url);
+        link.setAttribute('download', `Event_${data.id}_${data.name.replace(/\s+/g, '_')}.csv`);
+        link.style.visibility = 'hidden';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    });
+    
 });
 </script>
 {% endblock %}

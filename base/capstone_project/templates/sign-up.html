@@ -127,7 +127,10 @@ Knights of Columbus - Sign Up
 
         <div class="form-group">
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" placeholder="Enter a strong password" required oninput="validatePassword(this)">
+            <div class="password-input-wrapper">
+                <input type="password" id="password" name="password" placeholder="Enter a strong password" required oninput="validatePassword(this)">
+                <i class="fas fa-eye password-toggle" id="passwordToggle"></i>
+            </div>
             <span class="warning" id="password_warning"></span>
             <div class="strength-indicator" id="password_strength">
                 <div class="strength-bar"><div class="strength-bar-fill"></div></div>
@@ -137,7 +140,10 @@ Knights of Columbus - Sign Up
 
         <div class="form-group">
             <label for="re_password">Re-enter Password</label>
-            <input type="password" id="re_password" name="re_password" placeholder="Confirm your password" required>
+            <div class="password-input-wrapper">
+                <input type="password" id="re_password" name="re_password" placeholder="Confirm your password" required>
+                <i class="fas fa-eye password-toggle" id="rePasswordToggle"></i>
+            </div>
             <span class="warning" id="re_password_warning"></span>
         </div>
 
@@ -271,6 +277,32 @@ Knights of Columbus - Sign Up
 </div>
 
 <script>
+    // Password visibility toggle
+    document.addEventListener('DOMContentLoaded', function() {
+        const passwordToggle = document.getElementById('passwordToggle');
+        const passwordInput = document.getElementById('password');
+        const rePasswordToggle = document.getElementById('rePasswordToggle');
+        const rePasswordInput = document.getElementById('re_password');
+        
+        if (passwordToggle && passwordInput) {
+            passwordToggle.addEventListener('click', function() {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        }
+        
+        if (rePasswordToggle && rePasswordInput) {
+            rePasswordToggle.addEventListener('click', function() {
+                const type = rePasswordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                rePasswordInput.setAttribute('type', type);
+                this.classList.toggle('fa-eye');
+                this.classList.toggle('fa-eye-slash');
+            });
+        }
+    });
+    
     function validateName(input) {
         const warning = document.getElementById(input.id + '_warning');
         let regex;
@@ -543,8 +575,15 @@ Knights of Columbus - Sign Up
         const warning = document.getElementById('password_warning');
         const strengthIndicator = document.getElementById('password_strength');
         const strengthText = strengthIndicator.querySelector('.strength-text');
-        const strengthBar = strengthIndicator.querySelector('.strength-bar');
+        const strengthBarFill = strengthIndicator.querySelector('.strength-bar-fill');
         const value = input.value;
+
+        // Show/hide strength indicator
+        if (value.length > 0) {
+            strengthIndicator.classList.add('show');
+        } else {
+            strengthIndicator.classList.remove('show');
+        }
 
         // Reset classes
         strengthIndicator.classList.remove('strength-weak', 'strength-medium', 'strength-strong');
@@ -578,26 +617,22 @@ Knights of Columbus - Sign Up
         score = Math.min(100, score);
         
         // Set strength bar width based on score
-        strengthBar.style.width = `${score}%`;
+        strengthBarFill.style.width = `${score}%`;
         
         if (length < 8) {
             strengthIndicator.classList.add('strength-weak');
-            strengthText.textContent = 'Weak';
             warning.textContent = 'Password must be at least 8 characters.';
             return false;
         } else if (score < 50) {
             strengthIndicator.classList.add('strength-weak');
-            strengthText.textContent = 'Weak';
             warning.textContent = 'Weak password. Add uppercase letters, numbers, and symbols.';
             return false;
         } else if (score < 75) {
             strengthIndicator.classList.add('strength-medium');
-            strengthText.textContent = 'Medium';
             warning.textContent = 'Medium strength password. Add more character types for stronger security.';
             return true; // Allow Medium passwords
         } else {
             strengthIndicator.classList.add('strength-strong');
-            strengthText.textContent = 'Strong';
             warning.textContent = '';
             return true;
         }

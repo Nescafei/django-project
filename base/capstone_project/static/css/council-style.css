@@ -10,6 +10,16 @@
     --transition-speed: 0.1s;
 }
 
+/* Dark Mode Variables */
+body.dark-mode {
+    --primary-bg: #0D3471;
+    --secondary-bg: #252525;
+    --accent-color: #F4B41A;
+    --heading-color: #F4B41A;
+    --text-color: #ffffff;
+    --button-text: #1f1f1f;
+}
+
 body {
     background: url('../images/homepage-img.jpeg') no-repeat center/cover;
     background-color: rgba(0, 51, 102, 0.5);
@@ -164,6 +174,21 @@ main > p {
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Dark Mode Enhancements */
+body.dark-mode .council {
+    background-color: #252525;
+    color: #ffffff;
+    border-color: #333;
+}
+
+body.dark-mode .council h3 {
+    color: #f4b41a;
+}
+
+body.dark-mode .council p {
+    color: #ffffff;
 }
 
 @keyframes fadeIn {

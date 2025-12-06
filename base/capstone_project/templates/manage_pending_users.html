@@ -9,112 +9,6 @@ Knights of Columbus - Manage Pending Users
 <link rel="stylesheet" href="{% static 'css/dashboard_shared.css' %}?v={% now 'U' %}">
 <link rel="stylesheet" href="{% static 'css/event_management.css' %}?v={% now 'U' %}">
 
-<div class="dashboard-container">
-    <div class="content-card">
-        <div class="dashboard-header">
-            <h1 style="color: var(--primary-bg);">Pending User Requests</h1>
-            <div>
-                <a href="{% url 'dashboard' %}" class="dashboard-btn secondary back-btn">
-                    <i class="fas fa-arrow-left"></i> Back to Dashboard
-                </a>
-                {% if request.user.role == 'admin' %}
-                <a href="{% url 'my_recruits' %}" class="dashboard-btn secondary back-btn">
-                    <i class="fas fa-users"></i> View My Recruits
-                </a>
-                {% endif %}
-            </div>
-        </div>
-    
-    <!-- Messages block removed - now using popup notifications from base.html -->
-    
-        <!-- Search and Filters -->
-        <div class="search-container">
-            <div class="search-wrapper">
-                <i class="fas fa-search search-icon"></i>
-                <input type="text" id="pendingUserSearch" class="search-input" placeholder="Search pending users by name or email...">
-                <button id="clearSearch" class="clear-search"><i class="fas fa-times"></i></button>
-            </div>
-        </div>
-        
-        <div class="sort-filter-container">
-            <div class="sort-filter">
-                <select id="sortSelect" class="sort-dropdown">
-                    <option value="alphabetical">Alphabetical (A-Z)</option>
-                    <option value="reverse-alphabetical">Reverse Alphabetical (Z-A)</option>
-                    <option value="newest">Newest Applications</option>
-                    <option value="oldest">Oldest Applications</option>
-                </select>
-            </div>
-        </div>
-        
-        <!-- Pending Users Table -->
-        {% if pending_users %}
-        <div class="event-table-container">
-            <table class="event-table">
-                <thead>
-                    <tr>
-                        <th>Name</th>
-                        <th>Username</th>
-                        <th>Email</th>
-                        <th>Council</th>
-                        <th>Applied On</th>
-                        <th>Status</th>
-                        <th class="action-header">Actions</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {% for user in pending_users %}
-                    <tr data-role="pending" data-name="{{ user.first_name }} {{ user.last_name }}" data-joined="{{ user.date_joined|date:'Y-m-d' }}">
-                        <td>
-                            {{ user.first_name }}
-                            {% if user.second_name %} {{ user.second_name }}{% endif %}
-                            {% if user.middle_name %} {{ user.middle_name }}{% endif %}
-                            {{ user.last_name }}
-                            {% if user.suffix %} {{ user.suffix }}{% endif %}
-                        </td>
-                        <td>{{ user.username }}</td>
-                        <td>{{ user.email }}</td>
-                        <td>{{ user.council.name }}</td>
-                        <td>{{ user.date_joined|date:"F j, Y" }}</td>
-                        <td><span class="status-badge status-pending">Pending</span></td>
-                        <td>
-                            <div class="action-cell">
-                                <button class="action-btn details-btns view-member-btn" data-user-id="{{ user.id }}">
-                                    <i class="fas fa-eye"></i> Review Details
-                                </button>
-                            </div>
-                        </td>
-                    </tr>
-                    {% endfor %}
-                </tbody>
-            </table>
-        </div>
-        {% else %}
-        <div class="no-events-message">
-            <i class="fas fa-user-check"></i>
-            <p>No pending users to review.</p>
-            <p>All membership requests have been processed.</p>
-        </div>
-        {% endif %}
-    </div>
-</div>
-
-<!-- Member details modal -->
-<div id="memberDetailsModal" class="modal">
-    <div class="modal-content">
-        <div class="modal-header">
-            <h3>Pending Member Details</h3>
-            <span class="close">&times;</span>
-        </div>
-        <div id="memberDetailsContent">
-            <div class="loading">Loading member details...</div>
-        </div>
-        <div class="modal-footer" id="modalFooter">
-            <button type="button" class="dashboard-btn" onclick="closeModal('memberDetailsModal')">OK</button>
-        </div>
-    </div>
-</div>
-
 <style>
 .dashboard-header {
     display: flex;
@@ -278,7 +172,7 @@ Knights of Columbus - Manage Pending Users
 .no-events-message i {
     font-size: 3rem;
     margin-bottom: 1rem;
-    color: var(--primary-bg);
+    color: #787878;
 }
 
 .no-events-message p {
@@ -696,6 +590,111 @@ Knights of Columbus - Manage Pending Users
 }
 </style>
 
+<div class="dashboard-container">
+    <div class="content-card">
+        <div class="dashboard-header">
+            <h1 style="color: var(--primary-bg);">Pending User Requests</h1>
+            <div>
+                <a href="{% url 'dashboard' %}" class="dashboard-btn secondary back-btn">
+                    <i class="fas fa-arrow-left"></i> Back to Dashboard
+                </a>
+                {% if request.user.role == 'admin' %}
+                <a href="{% url 'my_recruits' %}" class="dashboard-btn secondary back-btn">
+                    <i class="fas fa-users"></i> View My Recruits
+                </a>
+                {% endif %}
+            </div>
+        </div>
+    
+    
+        <!-- Search and Filters -->
+        <div class="search-container">
+            <div class="search-wrapper">
+                <i class="fas fa-search search-icon"></i>
+                <input type="text" id="pendingUserSearch" class="search-input" placeholder="Search pending users by name or email...">
+                <button id="clearSearch" class="clear-search"><i class="fas fa-times"></i></button>
+            </div>
+        </div>
+        
+        <div class="sort-filter-container">
+            <div class="sort-filter">
+                <select id="sortSelect" class="sort-dropdown">
+                    <option value="alphabetical">Alphabetical (A-Z)</option>
+                    <option value="reverse-alphabetical">Reverse Alphabetical (Z-A)</option>
+                    <option value="newest">Newest Applications</option>
+                    <option value="oldest">Oldest Applications</option>
+                </select>
+            </div>
+        </div>
+        
+        <!-- Pending Users Table -->
+        {% if pending_users %}
+        <div class="event-table-container">
+            <table class="event-table">
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Council</th>
+                        <th>Applied On</th>
+                        <th>Status</th>
+                        <th class="action-header">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in pending_users %}
+                    <tr data-role="pending" data-name="{{ user.first_name }} {{ user.last_name }}" data-joined="{{ user.date_joined|date:'Y-m-d' }}">
+                        <td>
+                            {{ user.first_name }}
+                            {% if user.second_name %} {{ user.second_name }}{% endif %}
+                            {% if user.middle_name %} {{ user.middle_name }}{% endif %}
+                            {{ user.last_name }}
+                            {% if user.suffix %} {{ user.suffix }}{% endif %}
+                        </td>
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>{{ user.council.name }}</td>
+                        <td>{{ user.date_joined|date:"F j, Y" }}</td>
+                        <td><span class="status-badge status-pending">Pending</span></td>
+                        <td>
+                            <div class="action-cell">
+                                <button class="action-btn details-btns view-member-btn" data-user-id="{{ user.id }}">
+                                    <i class="fas fa-eye"></i> Review Details
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="no-events-message">
+            <i class="fas fa-user-check"></i>
+            <p>No pending users to review.</p>
+            <p>All membership requests have been processed.</p>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Member details modal -->
+<div id="memberDetailsModal" class="modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3>Pending Member Details</h3>
+            <span class="close">&times;</span>
+        </div>
+        <div id="memberDetailsContent">
+            <div class="loading">Loading member details...</div>
+        </div>
+        <div class="modal-footer" id="modalFooter">
+            <button type="button" class="dashboard-btn" onclick="closeModal('memberDetailsModal')">OK</button>
+        </div>
+    </div>
+</div>
+
 <script>
 document.addEventListener('DOMContentLoaded', function() {
     // Search functionality with clear button
@@ -932,6 +931,7 @@ document.addEventListener('DOMContentLoaded', function() {
             closeModal();
         }
     });
+    
     
     // Make notification messages disappear after 5 seconds
     const alerts = document.querySelectorAll('.alert');

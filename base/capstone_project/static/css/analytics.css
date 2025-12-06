@@ -1,175 +1,427 @@
-body {
-    background-color: #1a2a44; /* Dark blue background */
-    color: #e0e7ff; /* Light text for contrast */
-    font-family: 'Arial', sans-serif;
+/* ==========================================================================
+   ANALYTICS DASHBOARD – FINAL CLEAN & VALIDATED VERSION
+   ========================================================================== */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+* { box-sizing: border-box; }
+
+html, body {
+    width: 100%;
     margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+}
+
+body {
+    background: linear-gradient(135deg, #0f1c34 0%, #1a2a44 100%);
+    color: #e0e7ff;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    padding: 0;
+    margin: 0;
+    min-height: 100vh;
+}
+
+/* Main Layout */
+.container {
+    max-width: 100%;
+    margin: 0;
+    display: grid;
+    grid-template-areas:
+        "header"
+        "filter"
+        "summary"
+        "stats"
+        "events"
+        "donations"
+        "event-types"
+        "members"
+        "donation-sources"
+        "member-activity";
+    gap: 28px;
     padding: 20px;
 }
 
-.container {
-    max-width: 1500px;
-    margin: 0 auto;
-    display: grid;
-    grid-template-areas:
-        "header header header"
-        "filter filter filter"
-        "summary summary summary"
-        "events donations event-types"
-        "members donation-sources member-activity"
-        "table table table";
-    gap: 20px;
-    animation: fadeIn 1s ease-in;
-    /* Prevent indefinite extension */
-    min-height: 0; /* Ensure grid children don't stretch container */
-    overflow: auto; /* Add scroll if content overflows */
+/* Headers */
+h1 {
+    grid-area: header;
+    text-align: center;
+    font-size: 2.8rem;
+    font-weight: 700;
+    color: #facc15;
+    margin: 20px 0 10px;
+    text-shadow: 0 4px 12px rgba(250, 204, 21, 0.3);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
-
-h1, h2 {
-    color: #facc15; /* Warm yellow for headers */
+h2 {
+    color: #facc15;
+    font-size: 1.6rem;
+    font-weight: 600;
+    margin: 0 0 16px 0;
     text-align: center;
 }
 
+/* Filter */
 .filter-section {
     grid-area: filter;
+    background: rgba(42, 64, 102, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 16px;
+    padding: 20px;
     text-align: center;
-    padding: 10px;
-    background-color: #2a4066;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    animation: slideDown 0.5s ease-out;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+    border: 1px solid rgba(250, 204, 21, 0.2);
 }
 
-@keyframes slideDown {
-    from { transform: translateY(-20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-}
+.filter-section h3 { margin: 0 0 12px; color: #facc15; font-size: 1.4rem; }
 
 select {
-    padding: 8px;
-    font-size: 16px;
-    background-color: #3a5578;
-    color: #e0e7ff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s;
+    padding: 12px 20px;
+    font-size: 1.1rem;
+    background: #3a5578;
+    color: white;
+    border: 2px solid #facc15;
+    border-radius: 12px;
+    min-width: 300px;
+    font-weight: 500;
 }
 
-select:hover {
-    background-color: #4a6a99;
-}
-
-.chart-container {
-    background-color: #2a4066;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    animation: scaleUp 0.5s ease-out;
-    /* Constrain chart height */
-    height: 350px; /* Fixed height for charts */
-    position: relative; /* For canvas positioning */
-}
-
-@keyframes scaleUp {
-    from { transform: scale(0.9); opacity: 0; }
-    to { transform: scale(1); opacity: 1; }
-}
-
-canvas {
-    max-width: 90%;
-    height: 90% !important; /* Ensure canvas fills container height */
-    width: 100% !important; /* Ensure canvas fills container width */
-}
-
-.table-section {
-    grid-area: table;
-    background-color: #2a4066;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    overflow-x: auto;
-}
-
-table {
-    width: 100%;
-    border-collapse: collapse;
-    color: #e0e7ff;
-}
-
-th, td {
-    padding: 10px;
-    text-align: left;
-    border-bottom: 1px solid #4a6a99;
-}
-
-th {
-    background-color: #3a5578;
-}
-
-tr:hover {
-    background-color: #4a6a99;
-    transition: background-color 0.3s;
-}
-
-.summary-section {
-    grid-area: summary;
-    background-color: #2a4066;
-    padding: 15px;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    animation: fadeIn 1s ease-in;
-}
-
+/* Summary Cards */
+.summary-section { grid-area: summary; }
 .stats-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 10px;
-    text-align: center;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 20px;
 }
 
 .stat-card {
-    background-color: #3a5578;
-    padding: 10px;
-    border-radius: 8px;
-    transition: transform 0.3s;
+    background: linear-gradient(135deg, #2a4066, #3a5578);
+    padding: 24px;
+    border-radius: 16px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(250, 204, 21, 0.3);
+    transition: all 0.3s ease;
 }
 
 .stat-card:hover {
-    transform: translateY(-5px);
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(250, 204, 21, 0.2);
+    border-color: #facc15;
 }
 
-.stat-card h3 {
-    margin: 0;
-    font-size: 1.2em;
+.stat-card h3 { color: #facc15; font-size: 1.1rem; margin: 0 0 12px; font-weight: 600; }
+.stat-card p { font-size: 2.2rem; font-weight: bold; margin: 0; color: white; }
+
+/* Figure 15 – Descriptive Table */
+.stats-table-section {
+    grid-area: stats;
+    background: rgba(42, 64, 102, 0.6);
+    backdrop-filter: blur(12px);
+    border-radius: 20px;
+    padding: 28px;
+    box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(250, 204, 21, 0.3);
+}
+
+.descriptive-table table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 12px;
+    margin-bottom: 30px;
+}
+
+.descriptive-table th {
+    background: linear-gradient(90deg, #3a5578, #4a6a99);
+    color: #facc15;
+    font-weight: 600;
+    padding: 16px;
+    font-size: 1.05rem;
+}
+
+.descriptive-table td {
+    background: rgba(58, 85, 120, 0.4);
+    padding: 16px;
+    font-size: 1.05rem;
+    font-weight: 500;
+}
+
+.descriptive-table tr td:first-child {
+    border-left: 4px solid #facc15;
+    font-weight: 600;
     color: #facc15;
 }
 
-.stat-card p {
-    margin: 5px 0 0;
-    font-size: 1.5em;
-    color: #e0e7ff;
+.descriptive-table th, .descriptive-table td { text-align: center; }
+.descriptive-table th:first-child, .descriptive-table td:first-child { text-align: left; }
+
+/* Activity Ratio Card */
+.activity-ratio-card {
+    background: linear-gradient(135deg, #162d50, #1e3a5f);
+    border: 2px solid #34d399;
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 10px 30px rgba(52, 211, 153, 0.3);
 }
 
-@media (max-width: 768px) {
+/* Fixed gradient text – no more warnings */
+.big-ratio {
+    font-size: 5rem;
+    font-weight: 800;
+    background: linear-gradient(90deg, #34d399, #6ee7b7);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin: 10px 0;
+    line-height: 1;
+}
+
+/* Charts */
+.chart-container {
+    background: rgba(42, 64, 102, 0.6);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 24px;
+    height: 420px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(250, 204, 21, 0.2);
+    transition: all 0.3s ease;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+}
+
+.chart-container:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 20px 50px rgba(250, 204, 21, 0.15);
+}
+
+.chart-container h2 { margin: 0 0 16px 0; flex-shrink: 0; }
+.chart-container canvas {
+    flex: 1;
+    width: 100% !important;
+    height: 100% !important;
+    max-height: 100% !important;
+    display: block;
+}
+
+/* Smaller Pie/Doughnut */
+#eventTypesChart,
+#donationSourcesChart {
+    max-width: 340px !important;
+    max-height: 340px !important;
+    margin: 0 auto !important;
+}
+
+/* Perfect Help Icons */
+.help-icon {
+    display: inline-block;
+    width: 19px;
+    height: 19px;
+    line-height: 19px;
+    background: linear-gradient(135deg, #facc15, #ca8a04);
+    color: #000;
+    font-weight: bold;
+    font-size: 12px;
+    text-align: center;
+    border-radius: 50%;
+    margin-left: 7px;
+    cursor: help;
+    position: relative;
+    z-index: 10;
+    transition: all 0.25s ease;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.4);
+    vertical-align: middle;
+    top: -1px;
+}
+
+.help-icon:hover,
+.help-icon.active {
+    transform: scale(1.25);
+    background: #fde047;
+    box-shadow: 0 0 16px rgba(250, 204, 21, 0.8);
+}
+
+.help-icon::after {
+    content: attr(data-tip);
+    position: absolute;
+    bottom: 150%;
+    left: 50%;
+    transform: translateX(-50%);
+    background: #0f172a;
+    color: #e0e7ff;
+    padding: 10px 14px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    font-weight: 500;
+    white-space: nowrap;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+    z-index: 9999;
+    min-width: 200px;
+    text-align: center;
+    border: 1px solid #facc15;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.7);
+    pointer-events: none;
+}
+
+.help-icon::before {
+    content: "";
+    position: absolute;
+    top: -7px;
+    left: 50%;
+    transform: translateX(-50%);
+    border: 7px solid transparent;
+    border-top-color: #0f172a;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.3s ease;
+}
+
+.help-icon:hover::after,
+.help-icon:hover::before,
+.help-icon.active::after,
+.help-icon.active::before {
+    opacity: 1;
+    visibility: visible;
+}
+
+/* Responsive - Large Screens (1200px+) */
+@media (min-width: 1200px) {
     .container {
         grid-template-areas:
-            "header"
-            "filter"
-            "summary"
-            "events"
-            "donations"
-            "event-types"
-            "members"
-            "donation-sources"
-            "member-activity"
-            "table";
+            "header header header"
+            "filter filter filter"
+            "summary summary summary"
+            "stats   stats   stats"
+            "events  donations event-types"
+            "members donation-sources member-activity";
+        grid-template-columns: repeat(3, 1fr);
     }
-    .chart-container {
-        height: 200px; /* Smaller height for mobile */
+    .stats-grid { grid-template-columns: repeat(5, 1fr); }
+}
+
+/* Responsive - Medium Screens (768px - 1199px) */
+@media (min-width: 768px) and (max-width: 1199px) {
+    .container {
+        grid-template-areas:
+            "header header"
+            "filter filter"
+            "summary summary"
+            "stats stats"
+            "events donations"
+            "event-types members"
+            "donation-sources member-activity";
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+        padding: 15px;
+    }
+    h1 { font-size: 2.4rem; }
+    .stats-grid { grid-template-columns: repeat(3, 1fr); }
+    .chart-container { height: 350px; padding: 18px; }
+    #eventTypesChart, #donationSourcesChart {
+        max-width: 300px !important;
+        max-height: 300px !important;
+    }
+    .big-ratio { font-size: 4rem; }
+    select { min-width: 100%; }
+    .descriptive-table th, .descriptive-table td { font-size: 0.95rem; padding: 12px; }
+}
+
+/* Responsive - Small Screens (480px - 767px) */
+@media (min-width: 480px) and (max-width: 767px) {
+    body { padding: 12px; }
+    .container {
+        grid-template-columns: 1fr;
+        gap: 14px;
+        padding: 10px;
+    }
+    h1 { font-size: 1.7rem; margin: 12px 0 8px; }
+    h2 { font-size: 1.2rem; margin: 0 0 14px; }
+    .filter-section { padding: 14px; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
+    .stat-card { 
+        padding: 14px; 
+        border-radius: 12px;
+    }
+    .stat-card h3 { font-size: 0.9rem; margin: 0 0 8px; }
+    .stat-card p { font-size: 1.6rem; margin: 0; }
+    .chart-container { 
+        height: 300px; 
+        padding: 12px; 
+        border-radius: 14px;
+    }
+    #eventTypesChart, #donationSourcesChart {
+        max-width: 260px !important;
+        max-height: 260px !important;
+    }
+    .big-ratio { font-size: 3rem; }
+    select { 
+        min-width: 100%; 
+        font-size: 1rem; 
+        padding: 10px 12px;
+        border-radius: 8px;
+    }
+    .descriptive-table th, .descriptive-table td { 
+        font-size: 0.85rem; 
+        padding: 8px; 
+    }
+    .descriptive-table { margin-bottom: 20px; }
+    .activity-ratio-card { 
+        padding: 18px; 
+        border-radius: 14px;
+    }
+    .help-icon { width: 16px; height: 16px; font-size: 10px; }
+}
+
+/* Responsive - Extra Small Screens (< 480px) */
+@media (max-width: 479px) {
+    body { padding: 8px; }
+    .container {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 6px;
+    }
+    h1 { font-size: 1.4rem; margin: 8px 0 6px; }
+    h2 { font-size: 1rem; margin: 0 0 10px; }
+    .filter-section { padding: 12px; }
+    .stats-grid { grid-template-columns: 1fr; gap: 8px; }
+    .stat-card { 
+        padding: 12px; 
+        border-radius: 10px;
+    }
+    .stat-card h3 { font-size: 0.85rem; margin: 0 0 6px; }
+    .stat-card p { font-size: 1.4rem; margin: 0; }
+    .chart-container { 
+        height: 260px; 
+        padding: 10px; 
+        border-radius: 12px;
+    }
+    #eventTypesChart, #donationSourcesChart {
+        max-width: 220px !important;
+        max-height: 220px !important;
+    }
+    .big-ratio { font-size: 2.4rem; }
+    select { 
+        min-width: 100%; 
+        font-size: 0.95rem; 
+        padding: 8px 10px;
+        border-radius: 8px;
+    }
+    .descriptive-table th, .descriptive-table td { 
+        font-size: 0.8rem; 
+        padding: 6px; 
+    }
+    .descriptive-table { margin-bottom: 15px; }
+    .activity-ratio-card { 
+        padding: 14px; 
+        border-radius: 12px;
+    }
+    .help-icon { width: 14px; height: 14px; font-size: 9px; margin-left: 3px; }
+    .help-icon::after { 
+        min-width: 140px; 
+        font-size: 10px; 
+        padding: 6px 8px;
     }
 }

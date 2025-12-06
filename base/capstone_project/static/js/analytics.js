@@ -244,4 +244,29 @@ document.addEventListener('DOMContentLoaded', function () {
         memberActivityChart.data.labels = ['No Data'];
         memberActivityChart.update();
     }
+// Mobile: Click ? to toggle tooltip
+document.querySelectorAll('.help-icon').forEach(icon => {
+    icon.addEventListener('click', function(e) {
+        e.stopPropagation();
+        this.classList.toggle('active');
+    });
+});
+
+// Close all on click outside
+document.addEventListener('click', () => {
+    document.querySelectorAll('.help-icon.active').forEach(el => el.classList.remove('active'));
+});
+
+const style = document.createElement('style');
+style.textContent = `
+    .help-icon.active::after,
+    .help-icon.active::before {
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    .help-icon.active::after {
+        bottom: 150% !important;
+    }
+`;
+document.head.appendChild(style);
 });

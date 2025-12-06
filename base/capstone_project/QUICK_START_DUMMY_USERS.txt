@@ -1,0 +1,75 @@
+================================================================================
+QUICK START: DUMMY USERS GENERATION
+================================================================================
+
+COMMAND LOCATION:
+  c:\Users\ianmi\Documents\Capsie\base\base\capstone_project\management\commands\generate_dummy_users.py
+
+BASIC USAGE:
+  python manage.py generate_dummy_users
+
+WHAT IT DOES:
+  ✓ Creates 75 pending users per council
+  ✓ Generates realistic Filipino names
+  ✓ Fills all sign-up form fields
+  ✓ Creates dummy e-signatures
+  ✓ Assigns to each council
+
+OPTIONS:
+
+  1. Generate 75 pending users per council (DEFAULT):
+     python manage.py generate_dummy_users
+
+  2. Generate 100 users per council:
+     python manage.py generate_dummy_users --count=100
+
+  3. Generate members instead of pending:
+     python manage.py generate_dummy_users --role=member
+
+  4. Generate 50 members per council:
+     python manage.py generate_dummy_users --count=50 --role=member
+
+GENERATED DATA INCLUDES:
+  ✓ First Name, Middle Name, Last Name
+  ✓ Birthday (age 18-70)
+  ✓ Marital Status
+  ✓ Occupation
+  ✓ Street, Province, City, Barangay, ZIP Code
+  ✓ Contact Number
+  ✓ Username (auto-generated, unique)
+  ✓ Email (auto-generated)
+  ✓ Password: DummyPass123!
+  ✓ E-Signature (dummy image)
+  ✓ Join Reason
+  ✓ Council Assignment
+
+EXAMPLE OUTPUT:
+  Generating 75 users for council: Council A
+    Created 10/75 users...
+    Created 20/75 users...
+    ...
+    Created 75/75 users...
+  ✓ Completed for Council A
+  ✓ Successfully created 300 dummy users
+
+TESTING:
+  After running the command:
+  1. Log in as Admin
+  2. Go to Manage Pending Users
+  3. See all 75 dummy users per council
+  4. Test approve/reject functionality
+
+NOTES:
+  • All dummy users have password: DummyPass123!
+  • Emails are: username@example.com (not real)
+  • E-signatures are dummy colored images
+  • Duplicates are automatically skipped
+  • No notifications are sent for dummy users
+
+CLEANUP:
+  To delete all pending users:
+  python manage.py shell
+  >>> from capstone_project.models import User
+  >>> User.objects.filter(role='pending').delete()
+
+================================================================================

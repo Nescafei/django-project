@@ -11,6 +11,48 @@
     --transition-speed: 0.1s;
 }
 
+/* Dark Mode Variables */
+body.dark-mode {
+    --primary-bg: #0D3471;
+    --secondary-bg: #252525;
+    --accent-color: #F4B41A;
+    --heading-color: #F4B41A;
+    --text-color: #ffffff;
+    --button-text: #1f1f1f;
+}
+
+/* Force scanner section to be a centered column and fix button position */
+.scanner-section {
+    display: flex !important;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+/* Center "Start Scanner" text inside the button */
+#startScanner {
+    text-align: center !important;
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    min-width: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Optional: make video responsive on large screens */
+#scannerVideo {
+    width: 100% !important;
+    max-width: 400px;
+    height: auto !important;
+    aspect-ratio: 1;
+}
+
+
+
 /* Activity warning badges */
 .warning-badge {
     padding: 0.2rem 0.6rem;
@@ -51,7 +93,7 @@ body {
 .dashboard-container {
     max-width: 1600px;
     margin: 0 auto;
-    padding: 20px;
+    padding: 15px;
 }
 
 .dashboard-title {
@@ -272,10 +314,16 @@ body {
 
 .stat-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 1rem;
     margin-top: 1rem;
     align-items: start;
+}
+
+/* Conditional layout based on number of stat cards */
+.stat-grid:has(> :nth-child(1):last-child),
+.stat-grid:has(> :nth-child(2):last-child) {
+    grid-template-columns: 1fr;
 }
 
 .stat-card {
@@ -283,14 +331,14 @@ body {
 }
 
 .stat-value {
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: 700;
     color: var(--primary-bg);
     line-height: 1;
 }
 
 .stat-label {
-    font-size: 0.875rem;
+    font-size: 0.75rem;
     color: #6c757d;
     font-weight: 500;
 }
@@ -391,28 +439,59 @@ body {
 /* Stats Cards */
 .stat-card {
     background: white;
-    padding: 0.1rem;
-    border-radius: var(--border-radius);
+    padding: 0.3rem;
+    border-radius: 0 10px 10px 0;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
     margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+}
+
+.stat-card2 {
+    background: white;
+    padding: 0.3rem;
+    border-radius: 10px 0 0 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
 }
 
 .stat-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    grid-template-columns: repeat(2, 1fr);
     gap: 0rem;
     margin: 1rem 0;
 }
 
+.stat-grid:has(> :nth-child(1):last-child),
+.stat-grid:has(> :nth-child(2):last-child) {
+    grid-template-columns: 1fr;
+}
+
+/* 1-2 item stat grids get full border-radius */
+.stat-grid:has(> :nth-child(1):last-child) .stat-card,
+.stat-grid:has(> :nth-child(1):last-child) .stat-card2,
+.stat-grid:has(> :nth-child(2):last-child) .stat-card,
+.stat-grid:has(> :nth-child(2):last-child) .stat-card2 {
+    border-radius: 10px;
+}
+
 .stat-value {
-    color: var(--primary-bg);
+    color: #0D3471;
     font-size: 2rem;
     font-weight: 700;
     margin: 0.5rem 0;
 }
 
 .stat-description {
-    color: var(--text-color);
+    color: #0D3471;
     font-size: 0.9rem;
     opacity: 0.8;
 }
@@ -538,6 +617,11 @@ body {
 
     .stat-grid {
         grid-template-columns: 1fr;
+    }
+
+    .stat-card,
+    .stat-card2 {
+        border-radius: 10px !important;
     }
 }
 
@@ -860,4 +944,133 @@ body {
         opacity: 1; 
         transform: scale(1) translateY(0); 
     }
+}
+
+/* Dark Mode Enhancements */
+body.dark-mode {
+    background: linear-gradient(135deg, #1a1a1a 0%, #252525 100%);
+}
+
+body.dark-mode .content-card,
+body.dark-mode .dashboard-card {
+    background: #252525;
+    border: 1px solid #333;
+    color: #ffffff;
+}
+
+body.dark-mode .card-header {
+    border-bottom-color: #333;
+}
+
+body.dark-mode .card-header h3 {
+    color: #f4b41a;
+}
+
+body.dark-mode .dashboard-list li {
+    background: #252525;
+    color: #ffffff;
+    border-bottom-color: #333;
+}
+
+body.dark-mode .stat-card,
+body.dark-mode .stat-card2 {
+    background: #252525;
+    color: #ffffff;
+    border: 1px solid #333;
+}
+
+body.dark-mode .stat-value {
+    color: #f4b41a;
+    background-color: #3a3a3a;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+body.dark-mode .stat-description {
+    color: #f4b41a;
+}
+
+body.dark-mode .dashboard-btn {
+    background-color: #f4b41a;
+    color: #1f1f1f;
+    border: none;
+}
+
+body.dark-mode .dashboard-btn:hover {
+    background-color: #ffc93d;
+    color: #1f1f1f;
+}
+
+body.dark-mode .dashboard-table {
+    background-color: #252525;
+}
+
+body.dark-mode .dashboard-table th {
+    background-color: #1f1f1f;
+    color: #f4b41a;
+    border-bottom-color: #333;
+}
+
+body.dark-mode .dashboard-table td {
+    border-bottom-color: #333;
+    color: #ffffff;
+}
+
+body.dark-mode .filters-container {
+    background-color: #252525;
+    border-color: #333;
+}
+
+body.dark-mode .filter-group label {
+    color: #f4b41a;
+}
+
+body.dark-mode .filter-select {
+    background-color: #333;
+    color: #ffffff;
+    border-color: #555;
+}
+
+body.dark-mode .filter-select:focus {
+    border-color: #f4b41a;
+    box-shadow: 0 0 0 3px rgba(244, 180, 26, 0.2);
+}
+
+body.dark-mode .profile-info {
+    background: #252525;
+    color: #ffffff;
+    border: 1px solid #333;
+}
+
+body.dark-mode .profile-pic {
+    border: 3px solid #f4b41a;
+}
+
+body.dark-mode .dashboard-title {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(244, 180, 26, 0.2);
+}
+
+body.dark-mode .dashboard-header {
+    background: rgba(255, 255, 255, 0.05);
+    border-color: rgba(244, 180, 26, 0.2);
+}
+
+body.dark-mode .detail-column strong {
+    color: #f4b41a;
+}
+
+body.dark-mode .detail-column p {
+    color: #ffffff;
+}
+
+body.dark-mode .count-badge {
+    background: #f4b41a;
+    color: #1f1f1f;
+}
+
+body.dark-mode .inactive-warning-popup {
+    background: linear-gradient(135deg, #252525, #1f1f1f);
+    border-color: #ff6b6b;
 }
