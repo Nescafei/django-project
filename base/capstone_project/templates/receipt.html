@@ -1,24 +1,233 @@
-# New template: request_receipt.html (create this file in your templates folder)
-{% extends 'base.html' %}
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Official Receipt - {{ donation.transaction_id }}</title>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Libre+Baskerville&family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 40px 20px;
+            background: linear-gradient(135deg, #1e3c72, #2a5298);
+            color: #e6d7a3;
+            font-family: 'Roboto', sans-serif;
+            min-height: 100vh;
+        }
+        .receipt-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: linear-gradient(135deg, #16213e, #1e2a48);
+            border-radius: 24px;
+            overflow: hidden;
+            box-shadow: 0 30px 100px rgba(0,0,0,0.8);
+            border: 5px solid #f4b41a;
+        }
+        .header {
+            background: linear-gradient(135deg, #8B0000, #DC143C);
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+        }
+        .header::after {
+            content: '';
+            position: absolute;
+            bottom: 0; left: 0; right: 0;
+            height: 8px;
+            background: linear-gradient(90deg, #f4b41a, #DC143C, #f4b41a);
+        }
+        .header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3.2rem;
+            color: white;
+            margin: 0;
+            text-shadow: 3px 3px 10px rgba(0,0,0,0.7);
+        }
+        .header p {
+            font-size: 1.4rem;
+            margin: 12px 0 0;
+            opacity: 0.95;
+        }
+        .content {
+            padding: 60px;
+        }
+        .receipt-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: rgba(255,255,255,0.08);
+            border-radius: 18px;
+            overflow: hidden;
+            margin: 30px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.4);
+        }
+        .receipt-table td {
+            padding: 22px 25px;
+            border-bottom: 1px solid rgba(244,180,26,0.3);
+        }
+        .receipt-table td:first-child {
+            font-weight: bold;
+            color: #f4b41a;
+            width: 40%;
+            background: rgba(244,180,26,0.1);
+        }
+        .amount-highlight {
+            font-size: 3.2rem !important;
+            font-weight: bold;
+            color: #4fc3f7;
+            text-align: right;
+            font-family: 'Libre Baskerville', serif;
+            text-shadow: 0 4px 15px rgba(0,0,0,0.6);
+        }
+        .blockchain-seal {
+            margin: 50px 0;
+            padding: 40px;
+            background: linear-gradient(135deg, rgba(244,180,26,0.2), rgba(244,180,26,0.1));
+            border: 3px dashed #f4b41a;
+            border-radius: 20px;
+            text-align: center;
+            position: relative;
+        }
+        .blockchain-seal::before {
+            content: "BLOCKCHAIN VERIFIED";
+            position: absolute;
+            top: -18px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #16213e;
+            color: #f4b41a;
+            padding: 8px 30px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            border-radius: 30px;
+            border: 3px solid #f4b41a;
+        }
+        .blockchain-seal h3 {
+            color: #f4b41a;
+            font-size: 1.8rem;
+            margin: 0 0 20px 0;
+        }
+        .blockchain-seal p {
+            margin: 12px 0;
+            font-size: 1.2rem;
+        }
+        .footer {
+            text-align: center;
+            padding: 40px;
+            background: rgba(0,0,0,0.4);
+            border-top: 3px solid #f4b41a;
+            font-style: italic;
+            font-size: 1.2rem;
+        }
+        .print-button {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background: #f4b41a;
+            color: #16213e;
+            padding: 16px 32px;
+            border-radius: 50px;
+            font-weight: bold;
+            font-size: 1.1rem;
+            cursor: pointer;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            z-index: 100;
+        }
+        @media print {
+            body { background: white; padding: 0; }
+            .print-button { display: none; }
+            .receipt-container { border: none; box-shadow: none; }
+        }
+    </style>
+</head>
+<body>
 
-{% block title %}Request Receipt{% endblock %}
+<div class="receipt-container">
+    <div class="header">
+        <h1>Knights of Columbus</h1>
+        <p>Official Donation Receipt • Private Blockchain Verified</p>
+    </div>
 
-{% block content %}
-<h2>Request Receipt for Donation {{ donation.transaction_id }}</h2>
+    <div class="content">
+        <table class="receipt-table">
+            <tr>
+                <td>Transaction ID</td>
+                <td><code style="font-size:1.1rem;">{{ donation.transaction_id }}</code></td>
+            </tr>
+            <tr>
+                <td>Donor Name</td>
+                <td>
+                    {% if donation.is_anonymous %}
+                        <em>Anonymous Donor</em>
+                    {% else %}
+                        {{ donation.get_full_name|default:"Anonymous Donor" }}
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>Amount Donated</td>
+                <td class="amount-highlight">₱{{ donation.amount|floatformat:2 }}</td>
+            </tr>
+            <tr>
+                <td>Date Donated</td>
+                <td>{{ donation.donation_date|date:"F d, Y" }}</td>
+            </tr>
+            <tr>
+                <td>Payment Method</td>
+                <td>{{ donation.get_payment_method_display }}</td>
+            </tr>
+            <tr>
+                <td>Purpose / Event</td>
+                <td>{{ donation.event.name|default:"General Donation" }}</td>
+            </tr>
+            <tr>
+                <td>Status</td>
+                <td>
+                    {% if donation.block_index %}
+                        <strong style="color:#4ade80;">Permanently Recorded on Blockchain</strong>
+                    {% else %}
+                        <strong style="color:#ffb74d;">Processing • Will Be Recorded Soon</strong>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>Block Number</td>
+                <td>
+                    {% if donation.block_index %}
+                        <strong style="color:#4ade80; font-size:1.4rem;">#{{ donation.block_index }}</strong>
+                    {% else %}
+                        <em style="color:#ffb74d;">Pending Mining</em>
+                    {% endif %}
+                </td>
+            </tr>
+            <tr>
+                <td>Recorded On</td>
+                <td>
+                    {% if donation.block_timestamp %}
+                        {{ donation.block_timestamp|date:"F d, Y \a\t h:i A" }}
+                    {% else %}
+                        <em>—</em>
+                    {% endif %}
+                </td>
+            </tr>
+        </table>
 
-{% if messages %}
-    {% for message in messages %}
-        <div class="alert alert-{{ message.tags }}">{{ message }}</div>
-    {% endfor %}
-{% endif %}
+        <div class="blockchain-seal">
+            <h3>This Donation is Immutable</h3>
+            <p>Secured on our private blockchain using proof-of-work and cryptographic hashing.</p>
+            <p>Cannot be altered • Cannot be deleted • Forever verifiable</p>
+            <p><strong>Generated on:</strong> {{ now|date:"F d, Y \a\t h:i A" }}</p>
+        </div>
 
-<p>Enter your email to receive the receipt. It must match the donation record.</p>
+        <div class="footer">
+            <p>Thank you for your generosity and trust.</p>
+            <p><strong>Vivat Jesus!</strong></p>
+            <p>Knights of Columbus • Council {{ donation.council.name|default:"Philippines" }}</p>
+        </div>
+    </div>
+</div>
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Request Receipt</button>
-</form>
+<button class="print-button" onclick="window.print()">Print / Save as PDF</button>
 
-<a href="{% url 'blockchain' %}">Back to Ledger</a>
-{% endblock %}
+</body>
+</html>

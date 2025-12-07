@@ -8,7 +8,7 @@
 body {
     font-family: 'Arial', sans-serif;
     background: linear-gradient(135deg, #1e3c72, #2a5298);
-    color: #e6d7a3; /* Light gold/ivory color to complement the blue gradient */
+    color: #e6d7a3;
     line-height: 1.6;
     min-height: 100vh;
     padding: 20px;
@@ -18,18 +18,18 @@ body {
 .header {
     text-align: center;
     padding: 40px 0;
-    background: rgba(0, 0, 0, 0.3); /* Slightly darker for depth */
-    border-radius: 15px; /* Softer corners */
+    background: rgba(0, 0, 0, 0.3);
+    border-radius: 15px;
     margin-bottom: 30px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Added shadow for appeal */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .header h1 {
-    font-size: 2.8rem; /* Slightly larger for impact */
+    font-size: 2.8rem;
     text-transform: uppercase;
     letter-spacing: 2px;
     color: #f4b41a;
-    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6); /* Deeper shadow */
+    text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
 }
 
 .header p {
@@ -41,21 +41,20 @@ body {
 /* Blockchain Container */
 .blockchain-container {
     max-width: 100vw;
-    max-height: 150vh;
     margin: 0 auto;
     display: flex;
     flex-direction: column;
-    gap: 25px; /* Slightly more spacing */
+    gap: 25px;
 }
 
 /* Summary Section */
 .summary {
-    background: rgba(255, 255, 255, 0.15); /* Softer background */
+    background: rgba(255, 255, 255, 0.15);
     border-radius: 15px;
     padding: 25px;
     margin-bottom: 25px;
     text-align: center;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3); /* Added shadow */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
 }
 
 .summary p {
@@ -67,500 +66,328 @@ body {
     color: #f4b41a;
 }
 
-/* Blockchain Table */
+/* === YOUR ORIGINAL TABLE DESIGN - PRESERVED 100% === */
 .blockchain-table {
-    width: 100%; /* Maximize to container width */
-    height: auto;
-    margin: 40px auto;
+    width: 100%;
     border-collapse: collapse;
-    background: rgba(0, 0, 0, 0.75); /* Darker for contrast */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.4); /* Stronger shadow */
+    background: #1a1a2e;
     border-radius: 12px;
-    overflow-x: auto; /* Allow horizontal scrolling if needed */
-    display: block; /* Enable scrolling for table */
-    table-layout: fixed; /* Fixed layout to fill width evenly */
+    overflow: hidden;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
-
-.blockchain-table th,
-.blockchain-table td {
-    padding: 18px; /* More padding for appeal */
-    text-align: left;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.15); /* Softer border */
-    white-space: normal; /* Allow wrapping to prevent dead space */
-    word-break: break-word; /* Break long words */
-    font-size: 1rem; /* Slightly larger */
-    overflow: hidden; /* Prevent overflow */
-    text-overflow: ellipsis; /* Ellipsis for long text */
-}
-
-/* Column widths for main table (8 columns) */
-.blockchain-table th:nth-child(1),
-.blockchain-table td:nth-child(1) { width: 5%; } /* Block Index */
-
-.blockchain-table th:nth-child(2),
-.blockchain-table td:nth-child(2) { width: 7%; } /* Block Timestamp */
-
-.blockchain-table th:nth-child(3),
-.blockchain-table td:nth-child(3) { width: 10%; } /* Previous Hash */
-
-.blockchain-table th:nth-child(4),
-.blockchain-table td:nth-child(4) { width: 10%; } /* Block Hash */
-
-.blockchain-table th:nth-child(5),
-.blockchain-table td:nth-child(5) { width: 5%; } /* Proof */
-
-.blockchain-table th:nth-child(6),
-.blockchain-table td:nth-child(6) { width: 6%; } /* Amount */
-
-.blockchain-table th:nth-child(7),
-.blockchain-table td:nth-child(7) { width: 7%; } /* Actions */
-
 
 .blockchain-table th {
-    background: linear-gradient(135deg, #f4b41a, #e0a10d); /* Gradient for headers */
-    color: #1e3c72;
+    background: #f4b41a;
+    color: #16213e;
+    padding: 16px;
+    text-align: left;
     font-weight: bold;
     text-transform: uppercase;
-    font-size: 1rem;
+    font-size: 0.9rem;
     letter-spacing: 1px;
-    position: sticky;
-    top: 0; /* Sticky headers */
-    z-index: 1;
 }
 
 .blockchain-table td {
-    font-size: 0.95rem;
+    padding: 16px;
+    border-bottom: 1px solid rgba(244, 180, 26, 0.2);
+    background: #16213e;
+    color: #e6d7a3;
 }
 
-.blockchain-table ul {
-    list-style: none;
-    padding-left: 0;
-    max-width: 100%; /* Fill cell */
+.blockchain-table tr:hover td {
+    background: #1e2a48;
+    transition: 0.3s;
 }
 
-.blockchain-table li {
-    margin: 5px 0;
-    position: relative;
-}
-
-.blockchain-table li::before {
-    content: "•";
-    color: #f4b41a;
+.blockchain-table .amount-cell {
+    color: #4fc3f7;
     font-weight: bold;
-    display: inline-block;
-    width: 1em;
-    margin-right: 0.5em;
-}
-
-/* Hover Effect for Rows */
-.blockchain-table tr:hover {
-    background: rgba(255, 255, 255, 0.15); /* Softer hover */
-    transition: background 0.3s ease; /* Smooth transition */
-}
-
-/* Zebra striping for appeal */
-.blockchain-table tbody tr:nth-child(even) {
-    background: rgba(255, 255, 255, 0.05); /* Alternating rows */
-}
-
-/* No Data Message */
-.no-data {
-    text-align: center;
-    padding: 25px;
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 15px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-}
-
-/* Pagination */
-.pagination {
-    text-align: center;
-    margin: 25px 0;
-}
-
-.pagination-link {
-    display: inline-block;
-    padding: 10px 20px;
-    margin: 0 8px;
-    background-color: #f4b41a;
-    color: #1e3c72;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.3s;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added shadow */
-}
-
-.pagination-link:hover {
-    background-color: #e0a10d;
-    color: #ffffff;
-    transform: translateY(-2px); /* Subtle lift on hover */
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Larger shadow on hover */
-}
-
-.pagination-info {
-    margin: 0 12px;
     font-size: 1.1rem;
 }
 
-/* Back Button */
-.back-button {
-    display: block;
-    width: fit-content;
-    margin: 25px auto;
-    padding: 12px 25px;
-    background-color: #f4b41a;
-    color: #1e3c72;
-    text-decoration: none;
-    border-radius: 8px;
+.blockchain-table .status-on-chain {
+    color: #4ade80;
     font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.3s;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added shadow */
 }
 
-.back-button:hover {
-    background-color: #e0a10d;
-    color: #ffffff;
+.blockchain-table .status-pending {
+    color: #ffb74d;
+    font-weight: bold;
+}
+
+/* Action Buttons - Match your current style */
+.actions-cell {
+    text-align: right;
+}
+
+.btn-small {
+    padding: 8px 16px;
+    margin: 0 4px;
+    font-size: 0.9em;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: all 0.3s;
+}
+
+.view-details {
+    background: #3b82f6;
+    color: white;
+}
+
+.view-details:hover {
+    background: #2563eb;
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Larger shadow on hover */
 }
 
-/* Controls Section (Filter Form and Download Button) */
+.verify-proof {
+    background: #10b981;
+    color: white;
+}
+
+.verify-proof:hover {
+    background: #059669;
+}
+
+.receipt-btn {
+    background: #f59e0b;
+    color: white;
+}
+
+.receipt-btn:hover {
+    background: #d97706;
+}
+
+/* Controls & Filters */
 .controls {
-    background: rgba(255, 255, 255, 0.15);
-    border-radius: 15px;
+    background: rgba(0, 0, 0, 0.4);
     padding: 25px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    margin-bottom: 25px;
-    max-width: 100%;
-    width: 100%; /* Maximize width */
-    margin-left: auto;
-    margin-right: auto;
+    border-radius: 15px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
 }
 
 .filter-form {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); /* Larger min for appeal */
-    gap: 18px;
-    margin-bottom: 25px;
-}
-
-.filter-form div {
-    display: flex;
-    flex-direction: column;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 15px;
+    margin-bottom: 20px;
 }
 
 .filter-form label {
-    font-size: 1rem;
-    color: #f4b41a;
+    display: block;
     margin-bottom: 6px;
     font-weight: bold;
+    color: #f4b41a;
 }
 
 .filter-form input,
 .filter-form select {
+    width: 100%;
     padding: 10px;
-    border: none;
+    border: 2px solid #f4b41a;
     border-radius: 8px;
-    background: rgba(255, 255, 255, 0.4); /* Softer input bg */
-    color: #1e3c72; /* Darker text for contrast */
+    background: rgba(255, 255, 255, 0.95);
+    color: #1e3c72;
     font-size: 1rem;
-    outline: none;
-    transition: background 0.3s ease, box-shadow 0.3s;
 }
 
-.filter-form input:focus,
-.filter-form select:focus {
-    background: rgba(255, 255, 255, 0.5);
-    box-shadow: 0 0 8px rgba(244, 180, 26, 0.6); /* Glow on focus */
-}
-
-.filter-form button {
-    grid-column: 1 / -1; /* Span all columns */
-    padding: 12px 25px;
-    background-color: #f4b41a;
+.filter-form button,
+.clear-button,
+.download-button,
+.back-button {
+    padding: 12px 24px;
+    background: #f4b41a;
     color: #1e3c72;
     border: none;
     border-radius: 8px;
     font-weight: bold;
     cursor: pointer;
-    transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.3s;
-    width: 100%;
-    max-width: 250px;
-    margin: 0 auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added shadow */
+    transition: 0.3s;
 }
 
-.filter-form button:hover {
-    background-color: #e0a10d;
-    color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Larger shadow on hover */
-}
-
-.download-button {
-    display: block;
-    padding: 12px 25px;
-    background-color: #f4b41a;
-    color: #1e3c72;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
+.clear-button, .download-button{
     text-align: center;
-    transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.3s;
-    width: 100%;
-    max-width: 300px; /* Slightly wider */
-    margin: 0 auto;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added shadow */
+    align-content: center;
 }
 
-.download-button:hover {
-    background-color: #e0a10d;
-    color: #ffffff;
+.filter-form button:hover,
+.clear-button:hover,
+.download-button:hover,
+.back-button:hover {
+    background: #ffbb1c;
     transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Larger shadow on hover */
 }
 
-/* Clear Button */
-.clear-button {
-    display: inline-block;
-    padding: 12px 25px;
-    background-color: #f4b41a;
-    color: #1e3c72;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
-    transition: background-color 0.3s ease, transform 0.2s, box-shadow 0.3s;
-    margin: auto;
-    grid-column: 1 / -1; /* Span all columns */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Added shadow */
-}
-
-.clear-button:hover {
-    background-color: #e0a10d;
-    color: #ffffff;
-    transform: translateY(-2px);
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* Larger shadow on hover */
-}
-.hash-cell {
-    font-family: 'Courier New', monospace;
-    font-size: 0.8rem;
-    word-break: break-all;
-    max-width: 150px;
-}
-
-/* Modal Styles */
+/* === EPIC DARK RECEIPT MODAL - YOUR THEME === */
 .modal {
     display: none;
     position: fixed;
     z-index: 1000;
     left: 0; top: 0;
     width: 100%; height: 100%;
-    overflow: auto;
-    background-color: rgba(0,0,0,0.7);
-    backdrop-filter: blur(5px);
+    background: rgba(0, 0, 0, 0.95);
+    backdrop-filter: blur(10px);
+    overflow-y: scroll ;
 }
 
 .modal-content {
-    background: rgba(30, 60, 114, 0.95);
-    color: #e6d7a3;
-    margin: 10% auto;
-    padding: 30px;
-    border-radius: 15px;
-    width: 90%;
-    max-width: 600px;
-    box-shadow: 0 10px 30px rgba(244, 180, 26, 0.4);
-    border: 2px solid #f4b41a;
+    margin: 4% auto;
+    max-width: 680px;
+    background: linear-gradient(135deg, #16213e, #1e2a48);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 30px 90px rgba(0, 0, 0, 0.8);
+    border: 3px solid #f4b41a;
+    position: relative;
 }
 
-.modal-content h2 {
+/* Gold Circle Close Button */
+.close-btn {
+    position: absolute;
+    top: 18px;
+    right: 24px;
+    width: 52px;
+    height: 52px;
+    background: rgba(244, 180, 26, 0.25);
     color: #f4b41a;
+    font-size: 36px;
+    font-weight: bold;
+    line-height: 52px;
     text-align: center;
-    margin-bottom: 20px;
-}
-
-.modal-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-}
-
-.modal-grid p {
-    margin: 0;
-    padding: 8px 0;
-}
-
-.close {
-    color: #f4b41a;
-    float: right;
-    font-size: 34px;
-    font-weight: bold;
+    border: 4px solid #f4b41a;
+    border-radius: 50%;
     cursor: pointer;
+    transition: all 0.4s ease;
+    backdrop-filter: blur(6px);
+    z-index: 10;
 }
 
-.close:hover { color: white; }
-
-/* Button styles */
-.view-details {
+.close-btn:hover {
     background: #f4b41a;
-    color: #1e3c72;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 6px;
-    cursor: pointer;
+    color: #16213e;
+    transform: scale(1.2) rotate(90deg);
+    box-shadow: 0 0 30px rgba(244, 180, 26, 0.9);
+}
+
+/* Receipt Content */
+.receipt-preview {
+    padding: 45px;
+    color: #e6d7a3;
+}
+
+.receipt-header {
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+.receipt-header h3 {
+    font-size: 2.6rem;
+    color: #f4b41a;
+    text-shadow: 0 4px 12px rgba(0,0,0,0.7);
+}
+
+.receipt-header p {
+    font-size: 1.2rem;
+    opacity: 0.9;
+}
+
+.receipt-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 30px 0;
+    background: rgba(255, 255, 255, 0.08);
+    border-radius: 14px;
+    overflow: hidden;
+}
+
+.receipt-table td {
+    padding: 18px;
+    border-bottom: 1px solid rgba(244, 180, 26, 0.3);
+}
+
+.receipt-table td:first-child {
     font-weight: bold;
-    margin: 4px;
+    color: #f4b41a;
+    width: 40%;
 }
 
-.view-details:hover {
-    background: #e0a10d;
-    color: white;
+.amount-highlight {
+    font-size: 2.2rem;
+    font-weight: bold;
+    color: #4fc3f7;
+    text-shadow: 0 3px 10px rgba(0,0,0,0.6);
 }
 
-.download-button.small {
-    padding: 6px 10px !important;
-    font-size: 0.9rem;
+.proof-section {
+    margin: 40px 0;
+    padding: 30px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 18px;
+    border: 2px dashed #f4b41a;
 }
 
-.na-text {
-    color: #888;
+.proof-section h4 {
+    color: #f4b41a;
+    margin-bottom: 16px;
+    font-size: 1.4rem;
+}
+
+.proof-box {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 22px;
+    border-radius: 14px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9em;
+    color: #e6d7a3;
+    margin-top: 16px;
+}
+
+.receipt-footer {
+    text-align: center;
+    margin-top: 45px;
+    padding-top: 30px;
+    border-top: 2px solid rgba(244, 180, 26, 0.5);
     font-style: italic;
-    font-size: 0.9rem;
+    font-size: 1.1rem;
+    opacity: 0.9;
 }
 
-.actions-cell {
-    white-space: nowrap;
+/* Pagination */
+.pagination {
+    text-align: center;
+    margin: 40px 0;
 }
 
-/* Responsive modal */
+.pagination-link,
+.pagination-info {
+    display: inline-block;
+    padding: 12px 20px;
+    margin: 0 8px;
+    background: rgba(244, 180, 26, 0.25);
+    color: #f4b41a;
+    border-radius: 10px;
+    font-weight: bold;
+}
+
+.back-button {
+    display: block;
+    margin: 50px auto 20px;
+    max-width: 340px;
+    text-align: center;
+}
+
+/* Responsive */
 @media (max-width: 768px) {
-    .modal-grid { grid-template-columns: 1fr; }
-}
-/* Responsive Design */
-@media (max-width: 768px) {
-    .header h1 {
-        font-size: 2.2rem;
-    }
-
-    .header p {
-        font-size: 1.1rem;
-    }
-
-    .blockchain-table {
-        width: 100%;
-        height: auto;
-        margin: 20px auto;
-    }
-
-    .blockchain-table th,
-    .blockchain-table td {
-        padding: 12px;
-        font-size: 0.95rem;
-        width: auto !important; /* Override fixed widths for small screens */
-    }
-
-    .summary p {
-        font-size: 1.1rem;
-    }
-
-    .pagination-link {
-        padding: 8px 16px;
-        font-size: 1rem;
-    }
-
-    .controls {
-        width: 100%;
-        padding: 20px;
-    }
-
-    .filter-form {
-        grid-template-columns: 1fr; /* Stack filters vertically on small screens */
-    }
-
-    .filter-form button {
-        max-width: 100%;
-    }
-
-    .download-button {
-        max-width: 100%;
-        padding: 10px 20px;
-    }
-
-    .clear-button {
-        margin-left: 0;
-        margin-top: 10px;
-        width: 100%;
-        max-width: 100vw;
-        text-align: center;
-        grid-column: 1 / -1;
-
-    }
+    .filter-form { grid-template-columns: 1fr; }
+    .receipt-preview { padding: 30px; }
+    .receipt-table td { padding: 14px; }
+    .amount-highlight { font-size: 1.9rem; }
 }
 
 @media (max-width: 480px) {
-    .header h1 {
-        font-size: 1.8rem;
-    }
-
-    .header p {
-        font-size: 1rem;
-    }
-
-    .blockchain-table {
-        width: 100%;
-        height: auto;
-        margin: 10px auto;
-    }
-
+    .header h1 { font-size: 2rem; }
     .blockchain-table th,
-    .blockchain-table td {
-        padding: 10px;
-        font-size: 0.9rem;
-        width: auto !important; /* Override for flexibility */
-    }
-
-    .summary p {
-        font-size: 1rem;
-    }
-
-    .pagination-link {
-        padding: 6px 12px;
-        font-size: 0.9rem;
-    }
-
-    .back-button {
-        padding: 10px 20px;
-        font-size: 1rem;
-    }
-
-    .controls {
-        width: 100%;
-        padding: 15px;
-    }
-
-    .filter-form label {
-        font-size: 0.95rem;
-    }
-
-    .filter-form input,
-    .filter-form select {
-        padding: 8px;
-        font-size: 0.95rem;
-    }
-
-    .filter-form button {
-        padding: 10px;
-        font-size: 1rem;
-    }
-
-    .download-button {
-        padding: 10px 20px;
-        font-size: 1rem;
-    }
-
-    .clear-button {
-        padding: 10px 20px;
-        font-size: 1rem;
-        grid-column: 1 / -1; /* Span all columns */
-    }
+    .blockchain-table td { padding: 12px; font-size: 0.9rem; }
+    .close-btn { width: 46px; height: 46px; font-size: 32px; line-height: 46px; }
 }
