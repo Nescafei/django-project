@@ -36,9 +36,10 @@ urlpatterns = [
     path('manual_donation/', donation.manual_donation, name='manual_donation'),
     path('review_manual_donations/', donation.review_manual_donations, name='review_manual_donations'),
     path('gcash/initiate', donation.initiate_gcash_payment, name='initiate_gcash_payment'),
-    path('success/', donation.success_page, name='success_page'),
+    path('donation-success/<int:donation_id>/', donation.donation_success, name='donation_success'),
     path('cancel/', donation.cancel_page, name='cancel_page'),
     path('gcash/confirm/', donation.confirm_gcash_payment, name='confirm_gcash_payment'),
+    path('receipt/download/<int:donation_id>/', donation.download_receipt, name='download_receipt'),
     # path('search-users/', views.search_users, name='search_users'),
 
     # New endpoint for recruiter name autocomplete

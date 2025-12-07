@@ -44464,3 +44464,4056 @@ DEBUG 2025-12-06 17:46:46,995 donation Rendered form HTML: <p>
       
     
   </p>
+DEBUG 2025-12-06 17:56:18,698 donation show_manual_link: True, User: hoppay, Role: officer
+DEBUG 2025-12-06 17:56:18,716 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 17:56:22,532 donation show_manual_link: True, User: hoppay, Role: officer
+DEBUG 2025-12-06 17:56:22,537 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 17:56:24,487 donation show_manual_link: True, User: hoppay, Role: officer
+DEBUG 2025-12-06 17:56:24,491 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 17:56:24,725 donation show_manual_link: True, User: hoppay, Role: officer
+DEBUG 2025-12-06 17:56:24,732 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 17:56:24,944 donation show_manual_link: True, User: hoppay, Role: officer
+DEBUG 2025-12-06 17:56:24,951 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 17:56:25,138 donation show_manual_link: True, User: hoppay, Role: officer
+DEBUG 2025-12-06 17:56:25,143 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 18:10:56,050 donation User hoppay (role=officer, council=Council 6789): Found 0 pending manual donations
+DEBUG 2025-12-06 18:12:15,763 donation show_manual_link: True, User: hoppay, Role: officer
+DEBUG 2025-12-06 18:12:15,768 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 18:25:12,773 donation User hoppay (role=officer, council=Council 6789): Found 0 pending manual donations
+DEBUG 2025-12-06 18:34:11,071 donation User hoppay (role=officer, council=Council 6789): Found 0 pending manual donations
+DEBUG 2025-12-06 18:34:14,457 donation show_manual_link: True, User: hoppay, Role: officer
+DEBUG 2025-12-06 18:34:14,472 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 18:34:29,348 donation show_manual_link: True, User: hoppay, Role: officer
+DEBUG 2025-12-06 18:34:29,354 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 18:34:31,164 donation User hoppay (role=officer, council=Council 6789): Found 0 pending manual donations
+DEBUG 2025-12-06 18:34:31,930 donation show_manual_link: True, User: hoppay, Role: officer
+DEBUG 2025-12-06 18:34:31,935 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 18:35:17,441 donation POST data: {'csrfmiddlewaretoken': ['vmyhexrX1n8ah1TUcM58kbw1gZWHBCxR6wPimhgyUbE5RvypPm8LNmPN7WjotcNT'], 'first_name': ['Andy'], 'middle_initial': [''], 'last_name': ['Riri'], 'email': ['morijin1420@gmail.com'], 'amount': ['1000'], 'donation_date': ['2025-12-06'], 'event': ['45']}
+INFO 2025-12-06 18:35:17,692 donation Manual donation created: ID=69, Email=morijin1420@gmail.com, Amount=1000, Status=pending_manual, Council=Council 6789, Event=Everyone is Groot, Anonymous=False
+DEBUG 2025-12-06 18:35:17,714 donation show_manual_link: True, User: hoppay, Role: officer
+DEBUG 2025-12-06 18:35:17,720 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 18:35:34,587 donation User Mr_Admin (role=admin, council=Council 3469): Found 6 pending manual donations
+DEBUG 2025-12-06 18:35:34,590 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:35:34,591 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:35:34,593 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:35:34,594 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:35:34,596 donation Donation ID=62, Transaction=KC-5cecf370, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:35:34,598 donation Donation ID=69, Transaction=KC-5a59f65e, Submitted by=hoppay, Council=Council 6789
+DEBUG 2025-12-06 18:35:43,384 donation User Mr_Admin (role=admin, council=Council 3469): Found 6 pending manual donations
+DEBUG 2025-12-06 18:35:43,387 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:35:43,390 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:35:43,392 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:35:43,394 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:35:43,398 donation Donation ID=62, Transaction=KC-5cecf370, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:35:43,400 donation Donation ID=69, Transaction=KC-5a59f65e, Submitted by=hoppay, Council=Council 6789
+DEBUG 2025-12-06 18:35:43,402 donation Using global keys: PRIVATE_KEY=True, PUBLIC_KEY=True
+DEBUG 2025-12-06 18:35:43,402 donation Attempting to sign donation
+DEBUG 2025-12-06 18:35:43,422 donation Donation signed and saved
+DEBUG 2025-12-06 18:35:43,423 donation Blockchain initialized
+INFO 2025-12-06 18:35:43,428 models Transaction added for donation KC-5a59f65e
+DEBUG 2025-12-06 18:35:43,428 donation Transaction added: True
+DEBUG 2025-12-06 18:35:43,429 donation Previous proof: 41769
+DEBUG 2025-12-06 18:35:43,474 donation Proof of work completed: 37872
+DEBUG 2025-12-06 18:35:43,475 models Calculated hash for Block 29: 7f97db67d4e3dd11129152a9bcbb387b984c9bf6fb6a140117169f57445299e8
+INFO 2025-12-06 18:35:43,475 models Saving Block 29: Old hash=, New hash=7f97db67d4e3dd11129152a9bcbb387b984c9bf6fb6a140117169f57445299e8
+INFO 2025-12-06 18:35:43,476 models Block 29 saved with hash=7f97db67d4e3dd11129152a9bcbb387b984c9bf6fb6a140117169f57445299e8
+INFO 2025-12-06 18:35:43,476 models Block 29 created successfully
+DEBUG 2025-12-06 18:35:43,476 donation New block created: {'index': 29, 'timestamp': '2025-12-06T10:35:43.475153+00:00', 'transactions': [{'transaction_id': 'KC-5a59f65e', 'donor_name': 'Andy  Riri', 'email': 'morijin1420@gmail.com', 'amount': 1000.0, 'donation_date': '2025-12-06', 'payment_method': 'manual', 'event': 'Everyone is Groot', 'signature': 'oNejEYrQY5ilp94WHW8gHG89e/2lfW/ZEHN5hZYYWFJmiezOV6zX2PQnMneFbiRETv1Kn3awPdW7r6HnfImwfalvqoBUqZ34gBAOLNazdaPHTUrBnDy1ZZwMwFsSns7Ebs+oXdYpi8uTD+0i0Jv3cbhi5PEajIr1DoYYyOg28J+H0cpijp3z6y/FFpNnQWFtHMIDooAW0WMNOvzOSgonKctt2U87HDzZYO4SNhmorFDDUTM6gVtSIRey1nxld9IZRYFJcHO3DbJUdsWL/b3IlUP7e9md3ANlhbjkRkfaZOoVX+pSYoY/U5jCworvPqTUbQm6X5oex2tD1/La+cNKBw==', 'submitted_by': 'hoppay', 'reviewed_by': 'Mr_Admin'}], 'proof': 37872, 'previous_hash': '681f6d380a1a579b539715306bf494ee46177a86bedad5c10453709117db96ac', 'hash': '7f97db67d4e3dd11129152a9bcbb387b984c9bf6fb6a140117169f57445299e8'}
+INFO 2025-12-06 18:35:43,476 donation New block created for manual donation: Index=29, Transactions=1
+ERROR 2025-12-06 18:35:46,278 donation Failed to send receipt email for donation KC-5a59f65e: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials 98e67ed59e1d1-34912d1765fsm4547216a91.9 - gsmtp')
+DEBUG 2025-12-06 18:35:46,332 donation User Mr_Admin (role=admin, council=Council 3469): Found 5 pending manual donations
+DEBUG 2025-12-06 18:35:46,335 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:35:46,337 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:35:46,341 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:35:46,343 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:35:46,345 donation Donation ID=62, Transaction=KC-5cecf370, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:37:12,645 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-06 18:37:12,654 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 18:37:18,942 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-12-06 18:37:18,947 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 18:37:26,587 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+INFO 2025-12-06 18:37:26,869 donation GCash donation created: ID=70, Email=morijin1420@gmail.com, Amount=200, Event=General
+DEBUG 2025-12-06 18:37:26,869 donation Initiating GCash payment for donation ID=70, Amount=200
+INFO 2025-12-06 18:37:27,075 donation PayMongo source created: Source ID=src_VhMUTaUMg46oRooeEK8KGKcV, Donation ID=70
+DEBUG 2025-12-06 18:37:29,456 donation Session data: dict_items([('_csrftoken', '6LGRVVFUCFVrqWuIQqlg0JEYzjPoVEsW'), ('donation_id', 70)])
+DEBUG 2025-12-06 18:37:29,576 donation PayMongo source response: {'data': {'id': 'src_VhMUTaUMg46oRooeEK8KGKcV', 'type': 'source', 'attributes': {'amount': 20000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'morijin1420@gmail.com', 'name': 'Andy . Riri', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_VhMUTaUMg46oRooeEK8KGKcV', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'transaction_id': 'GCASH-2907697a', 'donation_id': '70'}, 'created_at': 1765017445, 'updated_at': 1765017448}}}
+INFO 2025-12-06 18:37:29,581 models Transaction added for donation GCASH-2907697a
+DEBUG 2025-12-06 18:37:29,582 donation Previous proof: 37872
+DEBUG 2025-12-06 18:37:29,651 donation Proof of work completed: 56560
+DEBUG 2025-12-06 18:37:29,652 models Calculated hash for Block 30: 2b7016630e59dc2138f7aaad3bb08ae3dd50d70ee6834db0ce45ab59372f5424
+INFO 2025-12-06 18:37:29,652 models Saving Block 30: Old hash=, New hash=2b7016630e59dc2138f7aaad3bb08ae3dd50d70ee6834db0ce45ab59372f5424
+INFO 2025-12-06 18:37:29,653 models Block 30 saved with hash=2b7016630e59dc2138f7aaad3bb08ae3dd50d70ee6834db0ce45ab59372f5424
+INFO 2025-12-06 18:37:29,653 models Block 30 created successfully
+DEBUG 2025-12-06 18:37:29,653 donation New block created: {'index': 30, 'timestamp': '2025-12-06T10:37:29.652532+00:00', 'transactions': [{'transaction_id': 'GCASH-2907697a', 'donor_name': 'Andy  Riri', 'email': 'morijin1420@gmail.com', 'amount': 200.0, 'donation_date': '2025-12-06', 'payment_method': 'gcash', 'event': 'General Donation', 'signature': 'iE0OKvE9HoE6hVYklgWcX3pRTc75gkaevWfaT6FEq3Oz4BvWxp2u8BcMKtRzWsuqzTOw5mv+sZYyqdG+oFxgl9bHl8626XiqDBaG2kKvl2cYawaPIbhAY19ppTmh8LZ7y9C/kGaPGtwimULYAgxOo9ZSvo0TvD4/vGBdfdOjU4wilo05SSOk2WIdRM48ColK9/tKvJ4odXYx+xh9xYUVb7i2FLq926W1grlLObiW5WWWo4tdrGKj5u8MrwkHmJ/y7yNKcvJGT5IKsgUd23hBRpeTHERlI/ssuXxCJM63vrem+XTbwtE4J1JbjbsnZR9Jlc2tFZpQh0dc6foxTCOgZw==', 'submitted_by': None, 'reviewed_by': None}], 'proof': 56560, 'previous_hash': '7f97db67d4e3dd11129152a9bcbb387b984c9bf6fb6a140117169f57445299e8', 'hash': '2b7016630e59dc2138f7aaad3bb08ae3dd50d70ee6834db0ce45ab59372f5424'}
+INFO 2025-12-06 18:37:29,654 donation Block created for donation ID 70, Transaction ID GCASH-2907697a
+DEBUG 2025-12-06 18:37:29,654 donation Pending transactions after block creation: []
+ERROR 2025-12-06 18:37:32,119 donation Failed to send receipt email for donation GCASH-2907697a: (535, b'5.7.8 Username and Password not accepted. For more information, go to\n5.7.8  https://support.google.com/mail/?p=BadCredentials d2e1a72fcca58-7e29f2ece66sm7757125b3a.13 - gsmtp')
+DEBUG 2025-12-06 18:37:32,174 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-12-06 18:37:32,180 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 18:51:03,526 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-12-06 18:51:03,654 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 18:51:13,362 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+INFO 2025-12-06 18:51:13,466 donation GCash donation created: ID=71, Email=marclesterchernandez@gmail.com, Amount=200, Event=General
+DEBUG 2025-12-06 18:51:13,467 donation Initiating GCash payment for donation ID=71, Amount=200
+INFO 2025-12-06 18:51:13,689 donation PayMongo source created: Source ID=src_jRyiqA5y34j6y1DHyHQMN7NV, Donation ID=71
+DEBUG 2025-12-06 18:51:16,262 donation Session data: dict_items([('_csrftoken', '6LGRVVFUCFVrqWuIQqlg0JEYzjPoVEsW'), ('donation_id', 71)])
+DEBUG 2025-12-06 18:51:16,376 donation PayMongo source response: {'data': {'id': 'src_jRyiqA5y34j6y1DHyHQMN7NV', 'type': 'source', 'attributes': {'amount': 20000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'marclesterchernandez@gmail.com', 'name': 'Andy C. Riri', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_jRyiqA5y34j6y1DHyHQMN7NV', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'transaction_id': 'GCASH-8e898a70', 'donation_id': '71'}, 'created_at': 1765018272, 'updated_at': 1765018274}}}
+INFO 2025-12-06 18:51:16,429 models Transaction added for donation GCASH-8e898a70
+DEBUG 2025-12-06 18:51:16,430 donation Previous proof: 56560
+DEBUG 2025-12-06 18:51:16,539 donation Proof of work completed: 93290
+DEBUG 2025-12-06 18:51:16,540 models Calculated hash for Block 31: c259a0ce9f18515a3f33ba911800a1738a7aee303c8a9d415a24f4c41c7ceeae
+INFO 2025-12-06 18:51:16,540 models Saving Block 31: Old hash=, New hash=c259a0ce9f18515a3f33ba911800a1738a7aee303c8a9d415a24f4c41c7ceeae
+INFO 2025-12-06 18:51:16,541 models Block 31 saved with hash=c259a0ce9f18515a3f33ba911800a1738a7aee303c8a9d415a24f4c41c7ceeae
+INFO 2025-12-06 18:51:16,542 models Block 31 created successfully
+DEBUG 2025-12-06 18:51:16,542 donation New block created: {'index': 31, 'timestamp': '2025-12-06T10:51:16.540653+00:00', 'transactions': [{'transaction_id': 'GCASH-8e898a70', 'donor_name': 'Andy C Riri', 'email': 'marclesterchernandez@gmail.com', 'amount': 200.0, 'donation_date': '2025-12-06', 'payment_method': 'gcash', 'event': 'General Donation', 'signature': 'Tp9zVsBopf7xSD/WrMlZ7qsS9CDyB6lIhRL5WlxcPiZEa9WRv+7aZ/Bs4a5gw3fwfszMjOltJvE8g19BlXKY2sb1upa7wqkEE2PovGFBoolKvMvyOjw6pAL3zoh7OktZL9yrjiZi/Fh5rT88BHyzahSnVqTMzcS4pGZsE0vccI/lqAktPbjrYNo5rGG0JG3ovbyroEnSQU067a+fCet+OA70lLNgujHZ5xOf+vgWVWnm5SfaMsjXQK/DdeHZ6KL7Che+zwbiEvYrhGgtJDLSUsIN3mb+0MMGxS7OTeCjSBuJaOu/07W0cy322BqxYey7Anpluu4p7ojRnqt0kfoHPA==', 'submitted_by': None, 'reviewed_by': None}], 'proof': 93290, 'previous_hash': '2b7016630e59dc2138f7aaad3bb08ae3dd50d70ee6834db0ce45ab59372f5424', 'hash': 'c259a0ce9f18515a3f33ba911800a1738a7aee303c8a9d415a24f4c41c7ceeae'}
+INFO 2025-12-06 18:51:16,542 donation Block created for donation ID 71, Transaction ID GCASH-8e898a70
+DEBUG 2025-12-06 18:51:16,543 donation Pending transactions after block creation: []
+INFO 2025-12-06 18:51:20,242 donation Receipt email sent successfully for donation GCASH-8e898a70
+DEBUG 2025-12-06 18:51:20,269 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-12-06 18:51:20,275 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 18:52:06,680 donation show_manual_link: True, User: hoppay, Role: officer
+DEBUG 2025-12-06 18:52:06,687 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 18:52:09,455 donation User hoppay (role=officer, council=Council 6789): Found 0 pending manual donations
+DEBUG 2025-12-06 18:52:10,481 donation show_manual_link: True, User: hoppay, Role: officer
+DEBUG 2025-12-06 18:52:10,487 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 18:52:19,467 donation POST data: {'csrfmiddlewaretoken': ['CDWeSqPPXm5cZBUVWglH1SOAIo9tU9opQkhbO1fex2RDl1MBAlV40MIifcjdUQCL'], 'first_name': ['Andy'], 'middle_initial': [''], 'last_name': ['Riri'], 'email': ['morijin1420@gmail.com'], 'amount': ['1000'], 'donation_date': ['2025-12-06'], 'event': [''], 'receipt': ['']}
+INFO 2025-12-06 18:52:19,486 donation Manual donation created: ID=72, Email=morijin1420@gmail.com, Amount=1000, Status=pending_manual, Council=Council 6789, Event=General, Anonymous=False
+DEBUG 2025-12-06 18:52:19,510 donation show_manual_link: True, User: hoppay, Role: officer
+DEBUG 2025-12-06 18:52:19,519 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 18:52:32,153 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-06 18:52:32,158 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-06 18:52:36,650 donation User Mr_Admin (role=admin, council=Council 3469): Found 6 pending manual donations
+DEBUG 2025-12-06 18:52:36,652 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:52:36,653 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:52:36,655 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:52:36,656 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:52:36,657 donation Donation ID=62, Transaction=KC-5cecf370, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:52:36,659 donation Donation ID=72, Transaction=KC-97d105ef, Submitted by=hoppay, Council=Council 6789
+DEBUG 2025-12-06 18:52:42,029 donation User Mr_Admin (role=admin, council=Council 3469): Found 6 pending manual donations
+DEBUG 2025-12-06 18:52:42,032 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:52:42,033 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:52:42,035 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:52:42,036 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:52:42,038 donation Donation ID=62, Transaction=KC-5cecf370, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:52:42,041 donation Donation ID=72, Transaction=KC-97d105ef, Submitted by=hoppay, Council=Council 6789
+DEBUG 2025-12-06 18:52:42,043 donation Using global keys: PRIVATE_KEY=True, PUBLIC_KEY=True
+DEBUG 2025-12-06 18:52:42,043 donation Attempting to sign donation
+DEBUG 2025-12-06 18:52:42,048 donation Donation signed and saved
+DEBUG 2025-12-06 18:52:42,049 donation Blockchain initialized
+INFO 2025-12-06 18:52:42,050 models Transaction added for donation KC-97d105ef
+DEBUG 2025-12-06 18:52:42,050 donation Transaction added: True
+DEBUG 2025-12-06 18:52:42,051 donation Previous proof: 93290
+DEBUG 2025-12-06 18:52:42,144 donation Proof of work completed: 79596
+DEBUG 2025-12-06 18:52:42,145 models Calculated hash for Block 32: c7831bb5e577f7af69e1fd6a3eb00644bd691e3401ae58ea55860ee4b03c387f
+INFO 2025-12-06 18:52:42,145 models Saving Block 32: Old hash=, New hash=c7831bb5e577f7af69e1fd6a3eb00644bd691e3401ae58ea55860ee4b03c387f
+INFO 2025-12-06 18:52:42,146 models Block 32 saved with hash=c7831bb5e577f7af69e1fd6a3eb00644bd691e3401ae58ea55860ee4b03c387f
+INFO 2025-12-06 18:52:42,146 models Block 32 created successfully
+DEBUG 2025-12-06 18:52:42,147 donation New block created: {'index': 32, 'timestamp': '2025-12-06T10:52:42.145518+00:00', 'transactions': [{'transaction_id': 'KC-97d105ef', 'donor_name': 'Andy  Riri', 'email': 'morijin1420@gmail.com', 'amount': 1000.0, 'donation_date': '2025-12-06', 'payment_method': 'manual', 'event': 'General Donation', 'signature': 'ftAybQZSXaYJhZ04RNvddYS19QOb9HTGbMf0qmFr73WtAXUH52GoAB/amDA/KRYc3TmyribNECZZJkFBXWfz/J70P1kmf7zP4qwxnw0lZ/TzBUVxX5dPteUDclwnMpkIIQprW9865jBuk5vxhFXvkk4chm79D31jmvsCw/MAsl7snMteKWn1kl8RUKSG2dsenL3L0HwGaMhUhI6SssvvP6cIrRUPPOWMInPF4Ah/QfqMtU7XoA5KNW0jk9YAzCWSsfIer7Yyd2U3L5yCSAy83zjcXCaamxI4DjHlNGx0936dcHvc607n7rsDjBgUTc4vzJtL4EssguowNt3RKFx+zg==', 'submitted_by': 'hoppay', 'reviewed_by': 'Mr_Admin'}], 'proof': 79596, 'previous_hash': 'c259a0ce9f18515a3f33ba911800a1738a7aee303c8a9d415a24f4c41c7ceeae', 'hash': 'c7831bb5e577f7af69e1fd6a3eb00644bd691e3401ae58ea55860ee4b03c387f'}
+INFO 2025-12-06 18:52:42,147 donation New block created for manual donation: Index=32, Transactions=1
+INFO 2025-12-06 18:52:45,277 donation Receipt email sent successfully for donation KC-97d105ef
+DEBUG 2025-12-06 18:52:45,332 donation User Mr_Admin (role=admin, council=Council 3469): Found 5 pending manual donations
+DEBUG 2025-12-06 18:52:45,335 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:52:45,336 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:52:45,338 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:52:45,340 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:52:45,341 donation Donation ID=62, Transaction=KC-5cecf370, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:58:57,253 analytics Events data: [{'council__name': 'Council 18035', 'count': 2, 'council_name': 'Council 18035'}, {'council__name': 'Council 3469', 'count': 22, 'council_name': 'Council 3469'}, {'council__name': 'Council 6789', 'count': 5, 'council_name': 'Council 6789'}]
+DEBUG 2025-12-06 18:58:57,282 analytics Donations data: [{'month': 'December', 'total': 5600.0}, {'month': 'May', 'total': 8533.0}, {'month': 'November', 'total': 18322.0}, {'month': 'October', 'total': 20500.0}]
+DEBUG 2025-12-06 18:58:57,295 analytics Members/officers data: [{'council_name': 'Council 1234', 'members': 107, 'officers': 2}, {'council_name': 'Council 18035', 'members': 132, 'officers': 3}, {'council_name': 'Council 3469', 'members': 109, 'officers': 4}, {'council_name': 'Council 6789', 'members': 107, 'officers': 4}]
+DEBUG 2025-12-06 18:58:57,298 analytics Event types data: [{'category': 'Assembly Meeting', 'count': 5}, {'category': 'Council Meeting', 'count': 7}, {'category': 'Exemplification', 'count': 4}, {'category': 'Service Program', 'count': 7}]
+DEBUG 2025-12-06 18:58:57,301 analytics Donation sources data: [{'payment_method': 'gcash', 'amount': 48755.0}, {'payment_method': 'manual', 'amount': 4200.0}]
+DEBUG 2025-12-06 18:58:57,331 analytics Active members: 447, Inactive members: 7
+DEBUG 2025-12-06 18:58:57,332 analytics Member activity data: [{'category': 'Active Members', 'count': 447}, {'category': 'Inactive Members', 'count': 7}]
+DEBUG 2025-12-06 18:58:57,337 analytics Summary stats: {'total_events': 39.0, 'total_donations': 52955.0, 'total_members': 455.0, 'total_officers': 13.0, 'avg_donation': 1708.22580645161}
+DEBUG 2025-12-06 18:59:02,805 donation User Mr_Admin (role=admin, council=Council 3469): Found 5 pending manual donations
+DEBUG 2025-12-06 18:59:02,808 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:59:02,809 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:59:02,811 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:59:02,812 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 18:59:02,815 donation Donation ID=62, Transaction=KC-5cecf370, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:02:24,961 donation User Mr_Admin (role=admin, council=Council 3469): Found 5 pending manual donations
+DEBUG 2025-12-06 19:02:24,964 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:02:24,967 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:02:24,968 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:02:24,972 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:02:24,976 donation Donation ID=62, Transaction=KC-5cecf370, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:02:30,153 donation User Mr_Admin (role=admin, council=Council 3469): Found 5 pending manual donations
+DEBUG 2025-12-06 19:02:30,157 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:02:30,159 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:02:30,161 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:02:30,163 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:02:30,166 donation Donation ID=62, Transaction=KC-5cecf370, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:29:16,576 donation User Mr_Admin (role=admin, council=Council 3469): Found 5 pending manual donations
+DEBUG 2025-12-06 19:29:16,579 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:29:16,582 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:29:16,585 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:29:16,587 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:29:16,590 donation Donation ID=62, Transaction=KC-5cecf370, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:29:16,627 donation User Mr_Admin (role=admin, council=Council 3469): Found 5 pending manual donations
+DEBUG 2025-12-06 19:29:16,630 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:29:16,632 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:29:16,633 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:29:16,635 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-06 19:29:16,637 donation Donation ID=62, Transaction=KC-5cecf370, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-07 03:57:27,310 donation User Mr_Admin (role=admin, council=Council 3469): Found 5 pending manual donations
+DEBUG 2025-12-07 03:57:27,317 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-07 03:57:27,319 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-07 03:57:27,321 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-07 03:57:27,323 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-07 03:57:27,325 donation Donation ID=62, Transaction=KC-5cecf370, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-07 05:27:45,728 donation User Mr_Admin (role=admin, council=Council 3469): Found 5 pending manual donations
+DEBUG 2025-12-07 05:27:45,747 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-07 05:27:45,752 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-07 05:27:45,756 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-07 05:27:45,764 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-07 05:27:45,779 donation Donation ID=62, Transaction=KC-5cecf370, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-07 06:21:59,943 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-07 06:22:33,123 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-07 06:22:33,214 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 06:23:06,995 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-07 06:23:07,038 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 06:24:49,176 donation User Mr_Admin (role=admin, council=Council 3469): Found 5 pending manual donations
+DEBUG 2025-12-07 06:24:49,180 donation Donation ID=36, Transaction=MANUAL-a6a9667a, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-07 06:24:49,183 donation Donation ID=52, Transaction=KC-ac4f2900, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-07 06:24:49,185 donation Donation ID=53, Transaction=KC-204dbde2, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-07 06:24:49,188 donation Donation ID=54, Transaction=KC-2d7d2d8f, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-07 06:24:49,190 donation Donation ID=62, Transaction=KC-5cecf370, Submitted by=Mr_Admin, Council=Council 3469
+DEBUG 2025-12-07 06:24:51,053 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-07 06:24:51,085 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 06:25:33,494 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-07 06:25:33,521 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 06:44:58,257 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-07 06:44:58,401 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 06:50:39,508 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-07 06:50:39,538 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 06:51:37,891 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-07 06:51:37,899 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 07:11:52,336 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-07 07:11:52,372 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 08:25:35,621 analytics Events data: [{'council__name': 'Council 18035', 'count': 2, 'council_name': 'Council 18035'}, {'council__name': 'Council 3469', 'count': 22, 'council_name': 'Council 3469'}, {'council__name': 'Council 6789', 'count': 5, 'council_name': 'Council 6789'}]
+DEBUG 2025-12-07 08:25:35,680 analytics Donations data: [{'month': 'December', 'total': 5600.0}, {'month': 'May', 'total': 8533.0}, {'month': 'November', 'total': 18322.0}, {'month': 'October', 'total': 20500.0}]
+DEBUG 2025-12-07 08:25:35,713 analytics Members/officers data: [{'council_name': 'Council 1234', 'members': 107, 'officers': 2}, {'council_name': 'Council 18035', 'members': 132, 'officers': 3}, {'council_name': 'Council 3469', 'members': 109, 'officers': 4}, {'council_name': 'Council 6789', 'members': 107, 'officers': 4}]
+DEBUG 2025-12-07 08:25:35,718 analytics Event types data: [{'category': 'Assembly Meeting', 'count': 5}, {'category': 'Council Meeting', 'count': 7}, {'category': 'Exemplification', 'count': 4}, {'category': 'Service Program', 'count': 8}]
+DEBUG 2025-12-07 08:25:35,722 analytics Donation sources data: [{'payment_method': 'gcash', 'amount': 48755.0}, {'payment_method': 'manual', 'amount': 4200.0}]
+DEBUG 2025-12-07 08:25:35,778 analytics Active members: 447, Inactive members: 7
+DEBUG 2025-12-07 08:25:35,779 analytics Member activity data: [{'category': 'Active Members', 'count': 447}, {'category': 'Inactive Members', 'count': 7}]
+DEBUG 2025-12-07 08:25:35,785 analytics Summary stats: {'total_events': 40.0, 'total_donations': 52955.0, 'total_members': 455.0, 'total_officers': 13.0, 'avg_donation': 1708.22580645161}
+DEBUG 2025-12-07 08:52:56,272 analytics Events data: [{'council__name': 'Council 18035', 'count': 2, 'council_name': 'Council 18035'}, {'council__name': 'Council 3469', 'count': 22, 'council_name': 'Council 3469'}, {'council__name': 'Council 6789', 'count': 5, 'council_name': 'Council 6789'}]
+DEBUG 2025-12-07 08:52:56,326 analytics Donations data: [{'month': 'December', 'total': 5600.0}, {'month': 'May', 'total': 8533.0}, {'month': 'November', 'total': 18322.0}, {'month': 'October', 'total': 20500.0}]
+DEBUG 2025-12-07 08:52:56,356 analytics Members/officers data: [{'council_name': 'Council 1234', 'members': 107, 'officers': 2}, {'council_name': 'Council 18035', 'members': 132, 'officers': 3}, {'council_name': 'Council 3469', 'members': 109, 'officers': 4}, {'council_name': 'Council 6789', 'members': 107, 'officers': 4}]
+DEBUG 2025-12-07 08:52:56,360 analytics Event types data: [{'category': 'Assembly Meeting', 'count': 5}, {'category': 'Council Meeting', 'count': 7}, {'category': 'Exemplification', 'count': 4}, {'category': 'Service Program', 'count': 8}]
+DEBUG 2025-12-07 08:52:56,364 analytics Donation sources data: [{'payment_method': 'gcash', 'amount': 48755.0}, {'payment_method': 'manual', 'amount': 4200.0}]
+DEBUG 2025-12-07 08:52:56,396 analytics Active members: 447, Inactive members: 7
+DEBUG 2025-12-07 08:52:56,397 analytics Member activity data: [{'category': 'Active Members', 'count': 447}, {'category': 'Inactive Members', 'count': 7}]
+DEBUG 2025-12-07 08:52:56,402 analytics Summary stats: {'total_events': 40.0, 'total_donations': 52955.0, 'total_members': 455.0, 'total_officers': 13.0, 'avg_donation': 1708.22580645161}
+DEBUG 2025-12-07 08:52:58,809 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-07 08:52:58,862 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 08:53:05,295 donation show_manual_link: True, User: Mr_Admin, Role: admin
+INFO 2025-12-07 08:53:05,696 donation GCash donation created: ID=73, Email=morijin1420@gmail.com, Amount=2000, Event=General
+DEBUG 2025-12-07 08:53:05,696 donation Initiating GCash payment for donation ID=73, Amount=2000
+INFO 2025-12-07 08:53:05,941 donation PayMongo source created: Source ID=src_4H37p1koWRLEKwLob6YTRMmH, Donation ID=73
+DEBUG 2025-12-07 08:53:09,099 donation Session data: dict_items([('_csrftoken', 'T93GeOd03TZqtBLFAIgi1xJDTieqddjn'), ('_auth_user_id', '1'), ('_auth_user_backend', 'django.contrib.auth.backends.ModelBackend'), ('_auth_user_hash', '797e5561e062d680b59d856f4af2a73959901eeb7c1559b3ffa245c6684fe2f6'), ('_session_expiry', 28800), ('last_activity', 1765068785.943236), ('donation_id', 73)])
+DEBUG 2025-12-07 08:53:09,192 donation PayMongo source response: {'data': {'id': 'src_4H37p1koWRLEKwLob6YTRMmH', 'type': 'source', 'attributes': {'amount': 200000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'morijin1420@gmail.com', 'name': 'Andy C. Riri', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_4H37p1koWRLEKwLob6YTRMmH', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'donation_id': '73', 'transaction_id': 'GCASH-f1937826'}, 'created_at': 1765068785, 'updated_at': 1765068788}}}
+INFO 2025-12-07 08:53:09,253 models Transaction added for donation GCASH-f1937826
+DEBUG 2025-12-07 08:53:09,255 donation Previous proof: 79596
+DEBUG 2025-12-07 08:53:09,334 donation Proof of work completed: 63608
+DEBUG 2025-12-07 08:53:09,336 models Calculated hash for Block 33: ac84d18ccdcf38857be247e8212b623f88d499191ff250fdfd605e56bb8e0c84
+INFO 2025-12-07 08:53:09,336 models Saving Block 33: Old hash=, New hash=ac84d18ccdcf38857be247e8212b623f88d499191ff250fdfd605e56bb8e0c84
+INFO 2025-12-07 08:53:09,338 models Block 33 saved with hash=ac84d18ccdcf38857be247e8212b623f88d499191ff250fdfd605e56bb8e0c84
+INFO 2025-12-07 08:53:09,338 models Block 33 created successfully
+DEBUG 2025-12-07 08:53:09,339 donation New block created: {'index': 33, 'timestamp': '2025-12-07T00:53:09.335984+00:00', 'transactions': [{'transaction_id': 'GCASH-f1937826', 'donor_name': 'Andy C Riri', 'email': 'morijin1420@gmail.com', 'amount': 2000.0, 'donation_date': '2025-12-07', 'payment_method': 'gcash', 'event': 'General Donation', 'signature': 'rUrtlNInx7iNg1yhIZBCW60HQ6yswBuIFStmM7rnM0tbMVrCbr9UuAub4TU3yC7f3nx9JAuaz9S4eIl2/4SGVVQfQ6TJVNZZHk9r7a+x/Il3mMI/EUKtCMHCc1vspsw0T4jI1N07d5JBTv1QQuDf+fTcAFZsAVU74DTTmic+GB9hURSz1aN86tUStAE/KygkmVxpBlXyR2LD4Ej7uAb+GXYBO3SolB4rhUKYRV6Ch3ppRHLBwl/j5ARrGxNMuWZ9vEhzJb2xA9+ezE1PR23EfzpfgWawK86qBuSeVRwivDp4PFVMYa24pzPapQWAGBVkfOtDwzdh8+dgOT4fGqtcYw==', 'submitted_by': 'Mr_Admin', 'reviewed_by': None}], 'proof': 63608, 'previous_hash': 'c7831bb5e577f7af69e1fd6a3eb00644bd691e3401ae58ea55860ee4b03c387f', 'hash': 'ac84d18ccdcf38857be247e8212b623f88d499191ff250fdfd605e56bb8e0c84'}
+INFO 2025-12-07 08:53:09,339 donation Block created for donation ID 73, Transaction ID GCASH-f1937826
+DEBUG 2025-12-07 08:53:09,341 donation Pending transactions after block creation: []
+INFO 2025-12-07 08:53:12,911 donation Receipt email sent successfully for donation GCASH-f1937826
+DEBUG 2025-12-07 08:53:50,843 donation Session data: dict_items([('_csrftoken', 'T93GeOd03TZqtBLFAIgi1xJDTieqddjn'), ('_auth_user_id', '1'), ('_auth_user_backend', 'django.contrib.auth.backends.ModelBackend'), ('_auth_user_hash', '797e5561e062d680b59d856f4af2a73959901eeb7c1559b3ffa245c6684fe2f6'), ('_session_expiry', 28800), ('last_activity', 1765068785.943236), ('donation_id', 73)])
+ERROR 2025-12-07 08:53:50,845 donation Unexpected error in GCash confirmation for donation ID 73: No Donation matches the given query.
+DEBUG 2025-12-07 08:54:00,750 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-07 08:54:00,779 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 08:54:03,444 donation show_manual_link: True, User: Mr_Admin, Role: admin
+INFO 2025-12-07 08:54:03,517 donation GCash donation created: ID=74, Email=morijin1420@gmail.com, Amount=2000, Event=General
+DEBUG 2025-12-07 08:54:03,518 donation Initiating GCash payment for donation ID=74, Amount=2000
+INFO 2025-12-07 08:54:03,739 donation PayMongo source created: Source ID=src_LnnuWvCxna88bArEHxJ9kBae, Donation ID=74
+DEBUG 2025-12-07 08:54:06,795 donation Session data: dict_items([('_csrftoken', 'T93GeOd03TZqtBLFAIgi1xJDTieqddjn'), ('_auth_user_id', '1'), ('_auth_user_backend', 'django.contrib.auth.backends.ModelBackend'), ('_auth_user_hash', '797e5561e062d680b59d856f4af2a73959901eeb7c1559b3ffa245c6684fe2f6'), ('_session_expiry', 28800), ('last_activity', 1765068843.741328), ('donation_id', 74)])
+DEBUG 2025-12-07 08:54:06,894 donation PayMongo source response: {'data': {'id': 'src_LnnuWvCxna88bArEHxJ9kBae', 'type': 'source', 'attributes': {'amount': 200000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'morijin1420@gmail.com', 'name': 'Andy C. Riri', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_LnnuWvCxna88bArEHxJ9kBae', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'transaction_id': 'GCASH-6ba1f9ec', 'donation_id': '74'}, 'created_at': 1765068843, 'updated_at': 1765068845}}}
+INFO 2025-12-07 08:54:06,911 models Transaction added for donation GCASH-6ba1f9ec
+DEBUG 2025-12-07 08:54:06,913 donation Previous proof: 63608
+DEBUG 2025-12-07 08:54:07,158 donation Proof of work completed: 200572
+DEBUG 2025-12-07 08:54:07,160 models Calculated hash for Block 34: 11d68b412e8ffc40fabf4a7f640582c6abfb892da919c42e07a6b0fe259a4dcd
+INFO 2025-12-07 08:54:07,160 models Saving Block 34: Old hash=, New hash=11d68b412e8ffc40fabf4a7f640582c6abfb892da919c42e07a6b0fe259a4dcd
+INFO 2025-12-07 08:54:07,162 models Block 34 saved with hash=11d68b412e8ffc40fabf4a7f640582c6abfb892da919c42e07a6b0fe259a4dcd
+INFO 2025-12-07 08:54:07,164 models Block 34 created successfully
+DEBUG 2025-12-07 08:54:07,164 donation New block created: {'index': 34, 'timestamp': '2025-12-07T00:54:07.160163+00:00', 'transactions': [{'transaction_id': 'GCASH-6ba1f9ec', 'donor_name': 'Andy C Riri', 'email': 'morijin1420@gmail.com', 'amount': 2000.0, 'donation_date': '2025-12-07', 'payment_method': 'gcash', 'event': 'General Donation', 'signature': 'DUt/TnEov7jZm4ef53lBSY5dzgRAQ50JqqqAXtnEZlbMnwAXrkkXWpghZexUS3mrbkh9HP727NGahA2ub8idIfx5J11QB1PIMwF7nbHDX+956bBt35OYnQvFMqjSS6fJhX2r9fj2Wn0mkLMqFdcviqQSRhP465Xj6Ahv0D79K49Btrs4sZVksgjBiksLaRwg21yJ/sD41leRMmslI/3QCv9r9FuZqj19xWvIMLPIFeK/L8HkNFJSTFGIpYTiYq6Eul2pTL+KWMBPi5zUZzgN9wLJvf/LCgJRuRmk7qbo9Xmwn6GLais0sAFEfDOy77lIBoHkHhPEeSvdkYJ1OUcOJA==', 'submitted_by': 'Mr_Admin', 'reviewed_by': None}], 'proof': 200572, 'previous_hash': 'ac84d18ccdcf38857be247e8212b623f88d499191ff250fdfd605e56bb8e0c84', 'hash': '11d68b412e8ffc40fabf4a7f640582c6abfb892da919c42e07a6b0fe259a4dcd'}
+INFO 2025-12-07 08:54:07,165 donation Block created for donation ID 74, Transaction ID GCASH-6ba1f9ec
+DEBUG 2025-12-07 08:54:07,166 donation Pending transactions after block creation: []
+INFO 2025-12-07 08:54:10,224 donation Receipt email sent successfully for donation GCASH-6ba1f9ec
+DEBUG 2025-12-07 08:54:49,325 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-07 08:54:49,336 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:03:16,341 donation Session data: dict_items([('_csrftoken', 'T93GeOd03TZqtBLFAIgi1xJDTieqddjn'), ('_auth_user_id', '1'), ('_auth_user_backend', 'django.contrib.auth.backends.ModelBackend'), ('_auth_user_hash', '797e5561e062d680b59d856f4af2a73959901eeb7c1559b3ffa245c6684fe2f6'), ('_session_expiry', 28800), ('last_activity', 1765069390.825964)])
+ERROR 2025-12-07 09:03:16,348 donation Missing donation_id in GCash confirmation
+DEBUG 2025-12-07 09:03:16,450 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-07 09:03:16,671 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:03:33,919 donation show_manual_link: True, User: Mr_Admin, Role: admin
+INFO 2025-12-07 09:03:33,984 donation GCash donation created: ID=75, Email=KENK13605@GMAIL.COM, Amount=1000, Event=General
+DEBUG 2025-12-07 09:03:33,985 donation Initiating GCash payment for donation ID=75, Amount=1000
+INFO 2025-12-07 09:03:34,285 donation PayMongo source created: Source ID=src_TuA24nZ3AfU6JE3GWUd2EoUC, Donation ID=75
+DEBUG 2025-12-07 09:03:37,445 donation Session data: dict_items([('_csrftoken', 'T93GeOd03TZqtBLFAIgi1xJDTieqddjn'), ('_auth_user_id', '1'), ('_auth_user_backend', 'django.contrib.auth.backends.ModelBackend'), ('_auth_user_hash', '797e5561e062d680b59d856f4af2a73959901eeb7c1559b3ffa245c6684fe2f6'), ('_session_expiry', 28800), ('last_activity', 1765069414.287144), ('donation_id', 75)])
+DEBUG 2025-12-07 09:03:37,543 donation PayMongo source response: {'data': {'id': 'src_TuA24nZ3AfU6JE3GWUd2EoUC', 'type': 'source', 'attributes': {'amount': 100000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'KENK13605@GMAIL.COM', 'name': 'Test R. Event', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_TuA24nZ3AfU6JE3GWUd2EoUC', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'donation_id': '75', 'transaction_id': 'GCASH-673fa10f'}, 'created_at': 1765069413, 'updated_at': 1765069416}}}
+INFO 2025-12-07 09:03:37,583 models Transaction added for donation GCASH-673fa10f
+DEBUG 2025-12-07 09:03:37,586 donation Previous proof: 200572
+DEBUG 2025-12-07 09:03:37,595 donation Proof of work completed: 9764
+DEBUG 2025-12-07 09:03:37,597 models Calculated hash for Block 35: e44ea34fa57217ec8f26ab70628c20669bb637c78305fb7c75f6e5aad0250105
+INFO 2025-12-07 09:03:37,597 models Saving Block 35: Old hash=, New hash=e44ea34fa57217ec8f26ab70628c20669bb637c78305fb7c75f6e5aad0250105
+INFO 2025-12-07 09:03:37,599 models Block 35 saved with hash=e44ea34fa57217ec8f26ab70628c20669bb637c78305fb7c75f6e5aad0250105
+INFO 2025-12-07 09:03:37,599 models Block 35 created successfully
+DEBUG 2025-12-07 09:03:37,600 donation New block created: {'index': 35, 'timestamp': '2025-12-07T01:03:37.596912+00:00', 'transactions': [{'transaction_id': 'GCASH-673fa10f', 'donor_name': 'Test R Event', 'email': 'KENK13605@GMAIL.COM', 'amount': 1000.0, 'donation_date': '2025-12-07', 'payment_method': 'gcash', 'event': 'General Donation', 'signature': 'WXi5bx5PKhOqWnORDBbvkAhYDrZ7boVN19aitWXhQ6dAX5BDKElOwJJAWZgRkg6dafcoOGIjppk25nfrmrrK8qXRZ9rKHRCO80HzugGkYccEWMeb99dExqDOLcX+8evh5IQhs7hEffs+mzbhtwXSQ9SsapNZOUKLgpXtt3At/ebpOCEu8lIOkpQaYW0caG1Eey1vCl18tCb7J6FW5aE37pBtzMalJWqHonvBuAyhcHctgL34V/dgh3q1dH6o67OhzvP4ZGBRxpvpC+nsKUfS6Tx/NH1xQyALs+x6WF/POPLjUVkB/9Gm2PoVvKjUtpK5XjMkScfwIUuQQQvj2S+o2Q==', 'submitted_by': 'Mr_Admin', 'reviewed_by': None}], 'proof': 9764, 'previous_hash': '11d68b412e8ffc40fabf4a7f640582c6abfb892da919c42e07a6b0fe259a4dcd', 'hash': 'e44ea34fa57217ec8f26ab70628c20669bb637c78305fb7c75f6e5aad0250105'}
+INFO 2025-12-07 09:03:37,600 donation Block created for donation ID 75, Transaction ID GCASH-673fa10f
+DEBUG 2025-12-07 09:03:37,601 donation Pending transactions after block creation: []
+INFO 2025-12-07 09:03:40,514 donation Receipt email sent successfully for donation GCASH-673fa10f
+DEBUG 2025-12-07 09:03:51,305 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-07 09:03:51,315 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:03:56,034 donation show_manual_link: True, User: Mr_Admin, Role: admin
+INFO 2025-12-07 09:03:56,061 donation GCash donation created: ID=76, Email=KENK13605@GMAIL.COM, Amount=1000, Event=General
+DEBUG 2025-12-07 09:03:56,062 donation Initiating GCash payment for donation ID=76, Amount=1000
+INFO 2025-12-07 09:03:56,265 donation PayMongo source created: Source ID=src_X21j3oHdb2UPTcpnVStuoqGw, Donation ID=76
+DEBUG 2025-12-07 09:03:59,100 donation Session data: dict_items([('_csrftoken', 'T93GeOd03TZqtBLFAIgi1xJDTieqddjn'), ('_auth_user_id', '1'), ('_auth_user_backend', 'django.contrib.auth.backends.ModelBackend'), ('_auth_user_hash', '797e5561e062d680b59d856f4af2a73959901eeb7c1559b3ffa245c6684fe2f6'), ('_session_expiry', 28800), ('last_activity', 1765069436.265981), ('donation_id', 76)])
+DEBUG 2025-12-07 09:03:59,189 donation PayMongo source response: {'data': {'id': 'src_X21j3oHdb2UPTcpnVStuoqGw', 'type': 'source', 'attributes': {'amount': 100000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'KENK13605@GMAIL.COM', 'name': 'Test R. Event', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_X21j3oHdb2UPTcpnVStuoqGw', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'transaction_id': 'GCASH-3377182a', 'donation_id': '76'}, 'created_at': 1765069435, 'updated_at': 1765069438}}}
+INFO 2025-12-07 09:03:59,200 models Transaction added for donation GCASH-3377182a
+DEBUG 2025-12-07 09:03:59,202 donation Previous proof: 9764
+DEBUG 2025-12-07 09:03:59,289 donation Proof of work completed: 73130
+DEBUG 2025-12-07 09:03:59,290 models Calculated hash for Block 36: fa4308b85fd5e14d1971f5068df4f6e90ebaef60831a15c4e9c9a75928f6e23c
+INFO 2025-12-07 09:03:59,290 models Saving Block 36: Old hash=, New hash=fa4308b85fd5e14d1971f5068df4f6e90ebaef60831a15c4e9c9a75928f6e23c
+INFO 2025-12-07 09:03:59,291 models Block 36 saved with hash=fa4308b85fd5e14d1971f5068df4f6e90ebaef60831a15c4e9c9a75928f6e23c
+INFO 2025-12-07 09:03:59,292 models Block 36 created successfully
+DEBUG 2025-12-07 09:03:59,292 donation New block created: {'index': 36, 'timestamp': '2025-12-07T01:03:59.290315+00:00', 'transactions': [{'transaction_id': 'GCASH-3377182a', 'donor_name': 'Test R Event', 'email': 'KENK13605@GMAIL.COM', 'amount': 1000.0, 'donation_date': '2025-12-07', 'payment_method': 'gcash', 'event': 'General Donation', 'signature': 'mMDGgrFErvYGZd/NAirjIR5JwLcXsOJ+j3DN16tFaM2hiwQQxnkrVUeK1SuiWyuifDImleeYpWlsmMA+lOPnscKU89smKNvSJU3EJ22FidLo6kweVumOO3duyr/oROv8qWL7aOzznzGSSQhlWihT2wapWTeRnJ/Qg7y158hX/QMxApGmcmiMNE1WmJj3J6QixqqFh5DUGeXhGaB25cdY6LvIJ1xuLBdvKAqcu1Rt/g7zAU3QhAAyTOhtnSrfUqKkKk+/6V3XS0cd25AMkaVi4PpkuSN/hkKKRVd9PSRSW23zUO5y8e6ddiUP15tteXrjd/aJrwahlwvoPftYUaE1IQ==', 'submitted_by': 'Mr_Admin', 'reviewed_by': None}], 'proof': 73130, 'previous_hash': 'e44ea34fa57217ec8f26ab70628c20669bb637c78305fb7c75f6e5aad0250105', 'hash': 'fa4308b85fd5e14d1971f5068df4f6e90ebaef60831a15c4e9c9a75928f6e23c'}
+INFO 2025-12-07 09:03:59,293 donation Block created for donation ID 76, Transaction ID GCASH-3377182a
+DEBUG 2025-12-07 09:03:59,293 donation Pending transactions after block creation: []
+INFO 2025-12-07 09:04:01,756 donation Receipt email sent successfully for donation GCASH-3377182a
+DEBUG 2025-12-07 09:05:10,559 donation Session data: dict_items([('_csrftoken', 'T93GeOd03TZqtBLFAIgi1xJDTieqddjn'), ('_auth_user_id', '1'), ('_auth_user_backend', 'django.contrib.auth.backends.ModelBackend'), ('_auth_user_hash', '797e5561e062d680b59d856f4af2a73959901eeb7c1559b3ffa245c6684fe2f6'), ('_session_expiry', 28800), ('last_activity', 1765069436.265981), ('donation_id', 76)])
+ERROR 2025-12-07 09:05:10,632 donation Unexpected error in GCash confirmation for donation ID 76: No Donation matches the given query.
+DEBUG 2025-12-07 09:05:14,765 donation Session data: dict_items([('_csrftoken', 'T93GeOd03TZqtBLFAIgi1xJDTieqddjn'), ('_auth_user_id', '1'), ('_auth_user_backend', 'django.contrib.auth.backends.ModelBackend'), ('_auth_user_hash', '797e5561e062d680b59d856f4af2a73959901eeb7c1559b3ffa245c6684fe2f6'), ('_session_expiry', 28800), ('last_activity', 1765069436.265981), ('donation_id', 76)])
+ERROR 2025-12-07 09:05:14,767 donation Unexpected error in GCash confirmation for donation ID 76: No Donation matches the given query.
+DEBUG 2025-12-07 09:05:38,765 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-07 09:05:38,814 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:05:41,798 donation show_manual_link: True, User: Mr_Admin, Role: admin
+INFO 2025-12-07 09:05:41,877 donation GCash donation created: ID=77, Email=KENK13605@GMAIL.COM, Amount=1000, Event=General
+DEBUG 2025-12-07 09:05:41,878 donation Initiating GCash payment for donation ID=77, Amount=1000
+INFO 2025-12-07 09:05:42,261 donation PayMongo source created: Source ID=src_FW3PefuUuo8xNce5o6V5f6ge, Donation ID=77
+DEBUG 2025-12-07 09:05:45,374 donation Session data: dict_items([('_csrftoken', 'T93GeOd03TZqtBLFAIgi1xJDTieqddjn'), ('_auth_user_id', '1'), ('_auth_user_backend', 'django.contrib.auth.backends.ModelBackend'), ('_auth_user_hash', '797e5561e062d680b59d856f4af2a73959901eeb7c1559b3ffa245c6684fe2f6'), ('_session_expiry', 28800), ('last_activity', 1765069542.264265), ('donation_id', 77)])
+DEBUG 2025-12-07 09:05:45,458 donation PayMongo source response: {'data': {'id': 'src_FW3PefuUuo8xNce5o6V5f6ge', 'type': 'source', 'attributes': {'amount': 100000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'KENK13605@GMAIL.COM', 'name': 'Test R. Event', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_FW3PefuUuo8xNce5o6V5f6ge', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'donation_id': '77', 'transaction_id': 'GCASH-7e21277c'}, 'created_at': 1765069541, 'updated_at': 1765069544}}}
+INFO 2025-12-07 09:05:45,501 models Transaction added for donation GCASH-7e21277c
+DEBUG 2025-12-07 09:05:45,505 donation Previous proof: 73130
+DEBUG 2025-12-07 09:05:45,534 donation Proof of work completed: 27661
+DEBUG 2025-12-07 09:05:45,536 models Calculated hash for Block 37: 3b4e5756f58c711c9a8eac5a5d63111e2be4627037dc7f42986a70432ad925c9
+INFO 2025-12-07 09:05:45,536 models Saving Block 37: Old hash=, New hash=3b4e5756f58c711c9a8eac5a5d63111e2be4627037dc7f42986a70432ad925c9
+INFO 2025-12-07 09:05:45,537 models Block 37 saved with hash=3b4e5756f58c711c9a8eac5a5d63111e2be4627037dc7f42986a70432ad925c9
+INFO 2025-12-07 09:05:45,537 models Block 37 created successfully
+DEBUG 2025-12-07 09:05:45,538 donation New block created: {'index': 37, 'timestamp': '2025-12-07T01:05:45.535627+00:00', 'transactions': [{'transaction_id': 'GCASH-7e21277c', 'donor_name': 'Test R Event', 'email': 'KENK13605@GMAIL.COM', 'amount': 1000.0, 'donation_date': '2025-12-07', 'payment_method': 'gcash', 'event': 'General Donation', 'signature': 'T9EMqyLo7tXe7qcMcZJRxlRjayit8TOWRW6L68kmVtNSabeuAe6Uc7u5co3F4FeRVEFqs0q5rkkq0XePt0c0uVhWDHx9WXxMMc6Fi54O7LCwuKeuYHNFcDMO/x3BCo4ItzVsYOtOuTyV52s3G9mgnrz4AZCnuwu1hPy36QNp5Zt3RScykskamh4RwYK0TqI1dSkizzBf1rSgrGl1MblyxhrdJp4jWrfTznGipWcwEMu7R/ysrnx45wDJg/Ydbv4Gi2ajAeAwS47oOe+Vhu/0br1JHZA8b37hMohLvQnMrZv7PA8lHYxWtq3BJed7W4ujiVGlwaHjt7FiWhEPal5BDg==', 'submitted_by': 'Mr_Admin', 'reviewed_by': None}], 'proof': 27661, 'previous_hash': 'fa4308b85fd5e14d1971f5068df4f6e90ebaef60831a15c4e9c9a75928f6e23c', 'hash': '3b4e5756f58c711c9a8eac5a5d63111e2be4627037dc7f42986a70432ad925c9'}
+INFO 2025-12-07 09:05:45,538 donation Block created for donation ID 77, Transaction ID GCASH-7e21277c
+DEBUG 2025-12-07 09:05:45,539 donation Pending transactions after block creation: []
+INFO 2025-12-07 09:05:47,948 donation Receipt email sent successfully for donation GCASH-7e21277c
+DEBUG 2025-12-07 09:06:21,395 donation Session data: dict_items([('_csrftoken', 'T93GeOd03TZqtBLFAIgi1xJDTieqddjn'), ('_auth_user_id', '1'), ('_auth_user_backend', 'django.contrib.auth.backends.ModelBackend'), ('_auth_user_hash', '797e5561e062d680b59d856f4af2a73959901eeb7c1559b3ffa245c6684fe2f6'), ('_session_expiry', 28800), ('last_activity', 1765069579.169605)])
+ERROR 2025-12-07 09:06:21,396 donation Missing donation_id in GCash confirmation
+DEBUG 2025-12-07 09:06:21,705 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-07 09:06:21,735 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:08:25,216 donation show_manual_link: True, User: Mr_Admin, Role: admin
+INFO 2025-12-07 09:08:25,344 donation GCash donation created: ID=78, Email=KENK13605@GMAIL.COM, Amount=1000, Event=General
+DEBUG 2025-12-07 09:08:25,345 donation Initiating GCash payment for donation ID=78, Amount=1000
+INFO 2025-12-07 09:08:25,815 donation PayMongo source created: Source ID=src_KAXN4kJU4TgQc3nZrFswLsUn, Donation ID=78
+DEBUG 2025-12-07 09:08:30,083 donation Session data: dict_items([('_csrftoken', 'T93GeOd03TZqtBLFAIgi1xJDTieqddjn'), ('_auth_user_id', '1'), ('_auth_user_backend', 'django.contrib.auth.backends.ModelBackend'), ('_auth_user_hash', '797e5561e062d680b59d856f4af2a73959901eeb7c1559b3ffa245c6684fe2f6'), ('_session_expiry', 28800), ('last_activity', 1765069705.904615), ('donation_id', 78)])
+DEBUG 2025-12-07 09:08:30,175 donation PayMongo source response: {'data': {'id': 'src_KAXN4kJU4TgQc3nZrFswLsUn', 'type': 'source', 'attributes': {'amount': 100000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'KENK13605@GMAIL.COM', 'name': 'Test R. Event', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_KAXN4kJU4TgQc3nZrFswLsUn', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'transaction_id': 'GCASH-2c189bcf', 'donation_id': '78'}, 'created_at': 1765069705, 'updated_at': 1765069709}}}
+INFO 2025-12-07 09:08:30,223 models Transaction added for donation GCASH-2c189bcf
+DEBUG 2025-12-07 09:08:30,226 donation Previous proof: 27661
+DEBUG 2025-12-07 09:08:30,272 donation Proof of work completed: 29585
+DEBUG 2025-12-07 09:08:30,275 models Calculated hash for Block 38: 139a114b9fb490b734a13c82c2a2bed8ffe815801c91bcf352bd1786cc540e8e
+INFO 2025-12-07 09:08:30,275 models Saving Block 38: Old hash=, New hash=139a114b9fb490b734a13c82c2a2bed8ffe815801c91bcf352bd1786cc540e8e
+INFO 2025-12-07 09:08:30,279 models Block 38 saved with hash=139a114b9fb490b734a13c82c2a2bed8ffe815801c91bcf352bd1786cc540e8e
+INFO 2025-12-07 09:08:30,280 models Block 38 created successfully
+DEBUG 2025-12-07 09:08:30,280 donation New block created: {'index': 38, 'timestamp': '2025-12-07T01:08:30.273262+00:00', 'transactions': [{'transaction_id': 'GCASH-2c189bcf', 'donor_name': 'Test R Event', 'email': 'KENK13605@GMAIL.COM', 'amount': 1000.0, 'donation_date': '2025-12-07', 'payment_method': 'gcash', 'event': 'General Donation', 'signature': 'r0ANiFnqxRX2V7MEyGk5g2YUukgh/lmkx3NqZVIw/xxjWMZWEH2d0S2v4gKp7fJjKzWTW06olSJrDia4ayz4njemzRxz0fhsHCCCFU+rlbREkLqHphYES6gO81cu0CwxfYDZBnOyfPPIUT+FUkZBrM5xsSS+m8BzVnsceL5K88j6b2XxdBQNNSNbIxrfUqJIPiZd2TcRJfqA/DjIq/npec/1+wda286nYmgPMKRdGxDfS6VO6xbTT6ofgFegGN1oQYQU00LI9K0ewoddKFZTEFLz598IdfzYyjLtNHWxd+FMco/xaInB+6PVyKICgkidGiYwstCPP+SemHjgNvtO3g==', 'submitted_by': 'Mr_Admin', 'reviewed_by': None}], 'proof': 29585, 'previous_hash': '3b4e5756f58c711c9a8eac5a5d63111e2be4627037dc7f42986a70432ad925c9', 'hash': '139a114b9fb490b734a13c82c2a2bed8ffe815801c91bcf352bd1786cc540e8e'}
+INFO 2025-12-07 09:08:30,280 donation Block created for donation ID 78, Transaction ID GCASH-2c189bcf
+DEBUG 2025-12-07 09:08:30,281 donation Pending transactions after block creation: []
+INFO 2025-12-07 09:08:33,453 donation Receipt email sent successfully for donation GCASH-2c189bcf
+DEBUG 2025-12-07 09:09:36,473 donation Session data: dict_items([('_csrftoken', 'T93GeOd03TZqtBLFAIgi1xJDTieqddjn'), ('_auth_user_id', '1'), ('_auth_user_backend', 'django.contrib.auth.backends.ModelBackend'), ('_auth_user_hash', '797e5561e062d680b59d856f4af2a73959901eeb7c1559b3ffa245c6684fe2f6'), ('_session_expiry', 28800), ('last_activity', 1765069774.011844)])
+ERROR 2025-12-07 09:09:36,475 donation Missing donation_id in GCash confirmation
+DEBUG 2025-12-07 09:09:36,521 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-07 09:09:36,541 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:09:48,583 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-07 09:09:48,588 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:09:50,500 donation show_manual_link: True, User: Mr_Admin, Role: admin
+INFO 2025-12-07 09:09:50,535 donation GCash donation created: ID=79, Email=KENK13605@GMAIL.COM, Amount=1000, Event=General
+DEBUG 2025-12-07 09:09:50,537 donation Initiating GCash payment for donation ID=79, Amount=1000
+INFO 2025-12-07 09:09:50,884 donation PayMongo source created: Source ID=src_tukzChqV9Y6Zk9m3tsVjmk7J, Donation ID=79
+DEBUG 2025-12-07 09:09:53,426 donation Session data: dict_items([('_csrftoken', 'T93GeOd03TZqtBLFAIgi1xJDTieqddjn'), ('_auth_user_id', '1'), ('_auth_user_backend', 'django.contrib.auth.backends.ModelBackend'), ('_auth_user_hash', '797e5561e062d680b59d856f4af2a73959901eeb7c1559b3ffa245c6684fe2f6'), ('_session_expiry', 28800), ('last_activity', 1765069790.885608), ('donation_id', 79)])
+DEBUG 2025-12-07 09:09:53,625 donation PayMongo source response: {'data': {'id': 'src_tukzChqV9Y6Zk9m3tsVjmk7J', 'type': 'source', 'attributes': {'amount': 100000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'KENK13605@GMAIL.COM', 'name': 'Test R. Event', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_tukzChqV9Y6Zk9m3tsVjmk7J', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'donation_id': '79', 'transaction_id': 'GCASH-2e21695b'}, 'created_at': 1765069790, 'updated_at': 1765069792}}}
+INFO 2025-12-07 09:09:53,633 models Transaction added for donation GCASH-2e21695b
+DEBUG 2025-12-07 09:09:53,634 donation Previous proof: 29585
+DEBUG 2025-12-07 09:09:53,805 donation Proof of work completed: 117590
+DEBUG 2025-12-07 09:09:53,806 models Calculated hash for Block 39: 5482573d061ed8b8526931ce20c2f9041f72a960d9f914b5c115a8dd72677a7e
+INFO 2025-12-07 09:09:53,806 models Saving Block 39: Old hash=, New hash=5482573d061ed8b8526931ce20c2f9041f72a960d9f914b5c115a8dd72677a7e
+INFO 2025-12-07 09:09:53,807 models Block 39 saved with hash=5482573d061ed8b8526931ce20c2f9041f72a960d9f914b5c115a8dd72677a7e
+INFO 2025-12-07 09:09:53,808 models Block 39 created successfully
+DEBUG 2025-12-07 09:09:53,809 donation New block created: {'index': 39, 'timestamp': '2025-12-07T01:09:53.806336+00:00', 'transactions': [{'transaction_id': 'GCASH-2e21695b', 'donor_name': 'Test R Event', 'email': 'KENK13605@GMAIL.COM', 'amount': 1000.0, 'donation_date': '2025-12-07', 'payment_method': 'gcash', 'event': 'General Donation', 'signature': 'DKViMMO5D2I99v2+MuBmQljV0SIm3y7G3nosd4g5zfvj8ClPHbKDcEcTP1ruOnVwd17JqGbEWDYQXuwjSoinQDlYmMC0NUd0EhSZjn5ujdHF8uHG+GvLlTVbxgiblPsVT+Rgjaxsp4QBlHS0RmX6MFEzXA9gqpDf5FR1OIm/ZgUYiU9+hTPMmzuu8eSR6niqENt01vItrzED2qHyc4GohSGH2bO5E9OWbyZR84Qre2w0Jl1V76TCFT9GJwLscrf3PpltlyzC6dPmw9Y4S6JVBqFvM4cGJdyN/y1ZCErBmj3M1kvlv0WtweWhOdttM3gJaM6ksEfR+MpXObWY1TO3aQ==', 'submitted_by': 'Mr_Admin', 'reviewed_by': None}], 'proof': 117590, 'previous_hash': '139a114b9fb490b734a13c82c2a2bed8ffe815801c91bcf352bd1786cc540e8e', 'hash': '5482573d061ed8b8526931ce20c2f9041f72a960d9f914b5c115a8dd72677a7e'}
+INFO 2025-12-07 09:09:53,809 donation Block created for donation ID 79, Transaction ID GCASH-2e21695b
+DEBUG 2025-12-07 09:09:53,810 donation Pending transactions after block creation: []
+INFO 2025-12-07 09:09:56,710 donation Receipt email sent successfully for donation GCASH-2e21695b
+DEBUG 2025-12-07 09:12:23,282 donation Session data: dict_items([('_csrftoken', 'T93GeOd03TZqtBLFAIgi1xJDTieqddjn'), ('_auth_user_id', '1'), ('_auth_user_backend', 'django.contrib.auth.backends.ModelBackend'), ('_auth_user_hash', '797e5561e062d680b59d856f4af2a73959901eeb7c1559b3ffa245c6684fe2f6'), ('_session_expiry', 28800), ('last_activity', 1765069917.204633)])
+ERROR 2025-12-07 09:12:23,283 donation Missing donation_id in GCash confirmation
+DEBUG 2025-12-07 09:12:23,317 donation show_manual_link: True, User: Mr_Admin, Role: admin
+DEBUG 2025-12-07 09:12:23,336 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:12:33,364 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-12-07 09:12:33,370 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:12:38,105 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+INFO 2025-12-07 09:12:38,137 donation GCash donation created: ID=80, Email=KENK13605@GMAIL.COM, Amount=1000, Event=General
+DEBUG 2025-12-07 09:12:38,138 donation Initiating GCash payment for donation ID=80, Amount=1000
+INFO 2025-12-07 09:12:38,329 donation PayMongo source created: Source ID=src_qPDW9gmdPoW4BVmXehGamqQi, Donation ID=80
+DEBUG 2025-12-07 09:12:40,711 donation Session data: dict_items([('_csrftoken', 'VQPKulHv2igU1SnSZI3u44CkqEVmk8OV'), ('donation_id', 80)])
+DEBUG 2025-12-07 09:12:40,863 donation PayMongo source response: {'data': {'id': 'src_qPDW9gmdPoW4BVmXehGamqQi', 'type': 'source', 'attributes': {'amount': 100000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'KENK13605@GMAIL.COM', 'name': 'Test R. Event', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_qPDW9gmdPoW4BVmXehGamqQi', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'transaction_id': 'GCASH-b56ae31f', 'donation_id': '80'}, 'created_at': 1765069957, 'updated_at': 1765069959}}}
+INFO 2025-12-07 09:12:40,868 models Transaction added for donation GCASH-b56ae31f
+DEBUG 2025-12-07 09:12:40,869 donation Previous proof: 117590
+DEBUG 2025-12-07 09:12:40,872 donation Proof of work completed: 2533
+DEBUG 2025-12-07 09:12:40,874 models Calculated hash for Block 40: 540414da4f35235dbfaefddd3b889ba3f5aa6865395fb3f23cc8b9685472c6e1
+INFO 2025-12-07 09:12:40,874 models Saving Block 40: Old hash=, New hash=540414da4f35235dbfaefddd3b889ba3f5aa6865395fb3f23cc8b9685472c6e1
+INFO 2025-12-07 09:12:40,874 models Block 40 saved with hash=540414da4f35235dbfaefddd3b889ba3f5aa6865395fb3f23cc8b9685472c6e1
+INFO 2025-12-07 09:12:40,875 models Block 40 created successfully
+DEBUG 2025-12-07 09:12:40,876 donation New block created: {'index': 40, 'timestamp': '2025-12-07T01:12:40.873964+00:00', 'transactions': [{'transaction_id': 'GCASH-b56ae31f', 'donor_name': 'Test R Event', 'email': 'KENK13605@GMAIL.COM', 'amount': 1000.0, 'donation_date': '2025-12-07', 'payment_method': 'gcash', 'event': 'General Donation', 'signature': 'UD35e1WMvAs3CQhZ6K1eg04a79+3wIlSKpdmgBmTQHiyjtd4UqjvmkHJNpGe4sLa/jj1UtsfvqsfcjSagI+vEzzYmLflYSG0xSnHcm76oHvWlTWqcaaYRqPKV2tFSmlE3X9bzIRac51kRpvUsldBHo8uBqUeq8QozBuN0oemkp4EUxD3MX82YBaEv38ucUr5UExF5CvcqCEXaNJD29l1aknfl/yqkn24U877Bvrs7/112TUho4+10sY7ZAQLktfHcBwQeR0QIA5fyvbq355ZTs3tFLYCYANe2gWpNxFW8TS0yBw1XSE4DA/ehhO+SXeWCL2Mr1IBeS05W9R0SC9TeQ==', 'submitted_by': None, 'reviewed_by': None}], 'proof': 2533, 'previous_hash': '5482573d061ed8b8526931ce20c2f9041f72a960d9f914b5c115a8dd72677a7e', 'hash': '540414da4f35235dbfaefddd3b889ba3f5aa6865395fb3f23cc8b9685472c6e1'}
+INFO 2025-12-07 09:12:40,876 donation Block created for donation ID 80, Transaction ID GCASH-b56ae31f
+DEBUG 2025-12-07 09:12:40,877 donation Pending transactions after block creation: []
+INFO 2025-12-07 09:12:43,855 donation Receipt email sent successfully for donation GCASH-b56ae31f
+DEBUG 2025-12-07 09:16:20,741 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-12-07 09:16:20,767 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:16:24,025 donation Session data: dict_items([('_csrftoken', 'VQPKulHv2igU1SnSZI3u44CkqEVmk8OV'), ('donation_id', 80)])
+ERROR 2025-12-07 09:16:24,027 donation Unexpected error in GCash confirmation for donation ID 80: No Donation matches the given query.
+DEBUG 2025-12-07 09:16:30,236 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-12-07 09:16:30,242 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:16:32,121 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+INFO 2025-12-07 09:16:32,216 donation GCash donation created: ID=81, Email=KENK13605@GMAIL.COM, Amount=1000, Event=General
+DEBUG 2025-12-07 09:16:32,216 donation Initiating GCash payment for donation ID=81, Amount=1000
+INFO 2025-12-07 09:16:32,540 donation PayMongo source created: Source ID=src_5ARujVVTccA7qFkoP2WFfRJ4, Donation ID=81
+DEBUG 2025-12-07 09:16:35,073 donation Session data: dict_items([('_csrftoken', 'VQPKulHv2igU1SnSZI3u44CkqEVmk8OV'), ('donation_id', 81)])
+DEBUG 2025-12-07 09:16:35,185 donation PayMongo source response: {'data': {'id': 'src_5ARujVVTccA7qFkoP2WFfRJ4', 'type': 'source', 'attributes': {'amount': 100000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'KENK13605@GMAIL.COM', 'name': 'Test R. Event', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_5ARujVVTccA7qFkoP2WFfRJ4', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'donation_id': '81', 'transaction_id': 'GCASH-6b299004'}, 'created_at': 1765070191, 'updated_at': 1765070194}}}
+INFO 2025-12-07 09:16:35,207 models Transaction added for donation GCASH-6b299004
+DEBUG 2025-12-07 09:16:35,210 donation Previous proof: 2533
+DEBUG 2025-12-07 09:16:35,264 donation Proof of work completed: 49612
+DEBUG 2025-12-07 09:16:35,266 models Calculated hash for Block 41: 366f26010975e70e8306d1a29d1b0394463bdd280e91364744cd29474ce55a56
+INFO 2025-12-07 09:16:35,266 models Saving Block 41: Old hash=, New hash=366f26010975e70e8306d1a29d1b0394463bdd280e91364744cd29474ce55a56
+INFO 2025-12-07 09:16:35,267 models Block 41 saved with hash=366f26010975e70e8306d1a29d1b0394463bdd280e91364744cd29474ce55a56
+INFO 2025-12-07 09:16:35,267 models Block 41 created successfully
+DEBUG 2025-12-07 09:16:35,268 donation New block created: {'index': 41, 'timestamp': '2025-12-07T01:16:35.265929+00:00', 'transactions': [{'transaction_id': 'GCASH-6b299004', 'donor_name': 'Test R Event', 'email': 'KENK13605@GMAIL.COM', 'amount': 1000.0, 'donation_date': '2025-12-07', 'payment_method': 'gcash', 'event': 'General Donation', 'signature': 'Uo8tHdpu5q2Cfvz39EUiwfKSOTfMAY9yRUSK1pLhXwMV1Ohhlo/3CEWVsmLnX34lJTOX+tEdlvyD+93tuUpRTnt3MAtRxdsBG30fBHwofNx1gLKc6TSDh9IJpRAC3wRuMbX6Q9ChvoxY6g08VrLHesj8hndYhwv0ZOR+zi0WLTrNaol5M9eVYxLGUob6op2L0kG23jvp24Pwp67WwZ7pzdcSCh1ACnJahsJ7ytl80wHyV7Reqt4chO8VPThiL9JkmclVznPG2RPPgG4FNDKfHyGJE16j7ukX736uwzUmh59IEfZqWAnxX01YycaL5OLPVFXiu1fB/cgDiykg3nzC9Q==', 'submitted_by': None, 'reviewed_by': None}], 'proof': 49612, 'previous_hash': '540414da4f35235dbfaefddd3b889ba3f5aa6865395fb3f23cc8b9685472c6e1', 'hash': '366f26010975e70e8306d1a29d1b0394463bdd280e91364744cd29474ce55a56'}
+INFO 2025-12-07 09:16:35,268 donation Block created for donation ID 81, Transaction ID GCASH-6b299004
+DEBUG 2025-12-07 09:16:35,270 donation Pending transactions after block creation: []
+INFO 2025-12-07 09:16:38,222 donation Receipt email sent successfully for donation GCASH-6b299004
+DEBUG 2025-12-07 09:17:35,100 donation Session data: dict_items([('_csrftoken', 'VQPKulHv2igU1SnSZI3u44CkqEVmk8OV')])
+ERROR 2025-12-07 09:17:35,101 donation Missing donation_id in GCash confirmation
+DEBUG 2025-12-07 09:17:35,128 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-12-07 09:17:35,141 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:17:41,454 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+INFO 2025-12-07 09:17:41,487 donation GCash donation created: ID=82, Email=KENK13605@GMAIL.COM, Amount=1000, Event=General
+DEBUG 2025-12-07 09:17:41,487 donation Initiating GCash payment for donation ID=82, Amount=1000
+INFO 2025-12-07 09:17:41,665 donation PayMongo source created: Source ID=src_vxhMcT1jdbdmzmrKJFYKQo4x, Donation ID=82
+DEBUG 2025-12-07 09:17:44,000 donation Session data: dict_items([('_csrftoken', 'VQPKulHv2igU1SnSZI3u44CkqEVmk8OV'), ('donation_id', 82)])
+DEBUG 2025-12-07 09:17:44,095 donation PayMongo source response: {'data': {'id': 'src_vxhMcT1jdbdmzmrKJFYKQo4x', 'type': 'source', 'attributes': {'amount': 100000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'KENK13605@GMAIL.COM', 'name': 'Test R. Event', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_vxhMcT1jdbdmzmrKJFYKQo4x', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'transaction_id': 'GCASH-34d4c9c0', 'donation_id': '82'}, 'created_at': 1765070261, 'updated_at': 1765070263}}}
+INFO 2025-12-07 09:17:44,103 models Transaction added for donation GCASH-34d4c9c0
+DEBUG 2025-12-07 09:17:44,104 donation Previous proof: 49612
+DEBUG 2025-12-07 09:17:44,172 donation Proof of work completed: 59050
+DEBUG 2025-12-07 09:17:44,173 models Calculated hash for Block 42: 6eba9a0717a8ca025077940595b2f3107a50fca193c247cd4b14dd3584e82dd5
+INFO 2025-12-07 09:17:44,173 models Saving Block 42: Old hash=, New hash=6eba9a0717a8ca025077940595b2f3107a50fca193c247cd4b14dd3584e82dd5
+INFO 2025-12-07 09:17:44,174 models Block 42 saved with hash=6eba9a0717a8ca025077940595b2f3107a50fca193c247cd4b14dd3584e82dd5
+INFO 2025-12-07 09:17:44,174 models Block 42 created successfully
+DEBUG 2025-12-07 09:17:44,175 donation New block created: {'index': 42, 'timestamp': '2025-12-07T01:17:44.173385+00:00', 'transactions': [{'transaction_id': 'GCASH-34d4c9c0', 'donor_name': 'Test R Event', 'email': 'KENK13605@GMAIL.COM', 'amount': 1000.0, 'donation_date': '2025-12-07', 'payment_method': 'gcash', 'event': 'General Donation', 'signature': 'QTf2u5QpTCNOPrPVOHRNHQnyojlfM4Shrus6r2u1FM6+VxPxeGTKD2SwwMY8oVBeEOQ6Af1xW8pAXZNL+u0IvXT7c+r60VnvHo3xGbad/UgnGtsliuHFUAC0GwDKtCadP+mBcBByzsbwUnq0JzKFfEa0rFwDJf6m9m0ykgzwOkH6WnJx+RF/p1hOA2AMzjgtieGjtrBPAu80UE95WgKQ2l82YX0TawHh3/3RQftafz7jSxzQzhBDvdOpbLwauf/GvLcFWt4E8LCKgXEa1yOQP1sLpj1AF7N4hje3we+UXbW++MqBgWEOw3jJOSbSokxDK1spSDYXoB6u6qV4p+Wr9w==', 'submitted_by': None, 'reviewed_by': None}], 'proof': 59050, 'previous_hash': '366f26010975e70e8306d1a29d1b0394463bdd280e91364744cd29474ce55a56', 'hash': '6eba9a0717a8ca025077940595b2f3107a50fca193c247cd4b14dd3584e82dd5'}
+INFO 2025-12-07 09:17:44,175 donation Block created for donation ID 82, Transaction ID GCASH-34d4c9c0
+DEBUG 2025-12-07 09:17:44,176 donation Pending transactions after block creation: []
+INFO 2025-12-07 09:17:46,976 donation Receipt email sent successfully for donation GCASH-34d4c9c0
+DEBUG 2025-12-07 09:18:24,207 donation Session data: dict_items([('_csrftoken', 'VQPKulHv2igU1SnSZI3u44CkqEVmk8OV')])
+ERROR 2025-12-07 09:18:24,208 donation Missing donation_id in GCash confirmation
+DEBUG 2025-12-07 09:18:24,230 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-12-07 09:18:24,243 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:18:28,647 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+INFO 2025-12-07 09:18:28,675 donation GCash donation created: ID=83, Email=KENK13605@GMAIL.COM, Amount=1000, Event=General
+DEBUG 2025-12-07 09:18:28,675 donation Initiating GCash payment for donation ID=83, Amount=1000
+INFO 2025-12-07 09:18:28,850 donation PayMongo source created: Source ID=src_QTqYM68e2KrJn3FCZEifBg2B, Donation ID=83
+DEBUG 2025-12-07 09:18:31,403 donation Session data: dict_items([('_csrftoken', 'VQPKulHv2igU1SnSZI3u44CkqEVmk8OV'), ('donation_id', 83)])
+DEBUG 2025-12-07 09:18:31,498 donation PayMongo source response: {'data': {'id': 'src_QTqYM68e2KrJn3FCZEifBg2B', 'type': 'source', 'attributes': {'amount': 100000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'KENK13605@GMAIL.COM', 'name': 'Test R. Event', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_QTqYM68e2KrJn3FCZEifBg2B', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'donation_id': '83', 'transaction_id': 'GCASH-4bb01752'}, 'created_at': 1765070308, 'updated_at': 1765070310}}}
+INFO 2025-12-07 09:18:31,506 models Transaction added for donation GCASH-4bb01752
+DEBUG 2025-12-07 09:18:31,508 donation Previous proof: 59050
+DEBUG 2025-12-07 09:18:31,604 donation Proof of work completed: 75089
+DEBUG 2025-12-07 09:18:31,605 models Calculated hash for Block 43: f9ed94e998c7a7894a1d2d45c69ef67521ff2405a7291a34c07a8bec4ba5d3e1
+INFO 2025-12-07 09:18:31,605 models Saving Block 43: Old hash=, New hash=f9ed94e998c7a7894a1d2d45c69ef67521ff2405a7291a34c07a8bec4ba5d3e1
+INFO 2025-12-07 09:18:31,606 models Block 43 saved with hash=f9ed94e998c7a7894a1d2d45c69ef67521ff2405a7291a34c07a8bec4ba5d3e1
+INFO 2025-12-07 09:18:31,607 models Block 43 created successfully
+DEBUG 2025-12-07 09:18:31,607 donation New block created: {'index': 43, 'timestamp': '2025-12-07T01:18:31.605450+00:00', 'transactions': [{'transaction_id': 'GCASH-4bb01752', 'donor_name': 'Test R Event', 'email': 'KENK13605@GMAIL.COM', 'amount': 1000.0, 'donation_date': '2025-12-07', 'payment_method': 'gcash', 'event': 'General Donation', 'signature': 'CGzSF8xhNLbze9e8R0NDp9OdGt4md8N7LsETjBhjrdkXPbDtR/e2gD0rrzMqfcRtuVJexSuJLwGwK5heaeNFQY6tb2BRAGvlN1PfX5c+uWbPo3t6D38Q68YQBl62OEuw6tBByJnts/Y+Xe2GvLrbc1hJBiZd4qbWepuYbqfhIcDYaXIeFPVXPUJxUNyW3n/WXF9+VkeZhu0Tqs5XN+Gi8Pjv/2pj1bMu+68cyPY9JGJiRCWSOo5PiiCt2uptPk9yXolNPalK6qcFnkaPueNr8zUsFlbCdAeGFmzRKj6qGXfNAmEW8ASHRJ2D4LLGmywjgU5wymNjZDkd3AE9r1DR5w==', 'submitted_by': None, 'reviewed_by': None}], 'proof': 75089, 'previous_hash': '6eba9a0717a8ca025077940595b2f3107a50fca193c247cd4b14dd3584e82dd5', 'hash': 'f9ed94e998c7a7894a1d2d45c69ef67521ff2405a7291a34c07a8bec4ba5d3e1'}
+INFO 2025-12-07 09:18:31,607 donation Block created for donation ID 83, Transaction ID GCASH-4bb01752
+DEBUG 2025-12-07 09:18:31,608 donation Pending transactions after block creation: []
+INFO 2025-12-07 09:18:34,539 donation Receipt email sent successfully for donation GCASH-4bb01752
+DEBUG 2025-12-07 09:18:57,594 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-12-07 09:18:57,606 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:18:59,402 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+INFO 2025-12-07 09:18:59,428 donation GCash donation created: ID=84, Email=KENK13605@GMAIL.COM, Amount=1000, Event=General
+DEBUG 2025-12-07 09:18:59,429 donation Initiating GCash payment for donation ID=84, Amount=1000
+INFO 2025-12-07 09:18:59,621 donation PayMongo source created: Source ID=src_zSj7tnu3fA9hX2BSitt1wgfk, Donation ID=84
+DEBUG 2025-12-07 09:19:02,117 donation Session data: dict_items([('_csrftoken', 'VQPKulHv2igU1SnSZI3u44CkqEVmk8OV'), ('donation_id', 84)])
+DEBUG 2025-12-07 09:19:02,210 donation PayMongo source response: {'data': {'id': 'src_zSj7tnu3fA9hX2BSitt1wgfk', 'type': 'source', 'attributes': {'amount': 100000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'KENK13605@GMAIL.COM', 'name': 'Test R. Event', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_zSj7tnu3fA9hX2BSitt1wgfk', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'donation_id': '84', 'transaction_id': 'GCASH-82fcc8fe'}, 'created_at': 1765070338, 'updated_at': 1765070341}}}
+INFO 2025-12-07 09:19:02,218 models Transaction added for donation GCASH-82fcc8fe
+DEBUG 2025-12-07 09:19:02,219 donation Previous proof: 75089
+DEBUG 2025-12-07 09:19:02,240 donation Proof of work completed: 17057
+DEBUG 2025-12-07 09:19:02,241 models Calculated hash for Block 44: 20372912c00a6fcbc8c18285c23ef85c17357a7d566bb4632a2997c9e0f1187a
+INFO 2025-12-07 09:19:02,242 models Saving Block 44: Old hash=, New hash=20372912c00a6fcbc8c18285c23ef85c17357a7d566bb4632a2997c9e0f1187a
+INFO 2025-12-07 09:19:02,242 models Block 44 saved with hash=20372912c00a6fcbc8c18285c23ef85c17357a7d566bb4632a2997c9e0f1187a
+INFO 2025-12-07 09:19:02,243 models Block 44 created successfully
+DEBUG 2025-12-07 09:19:02,243 donation New block created: {'index': 44, 'timestamp': '2025-12-07T01:19:02.241739+00:00', 'transactions': [{'transaction_id': 'GCASH-82fcc8fe', 'donor_name': 'Test R Event', 'email': 'KENK13605@GMAIL.COM', 'amount': 1000.0, 'donation_date': '2025-12-07', 'payment_method': 'gcash', 'event': 'General Donation', 'signature': 'UaR3XhdbNAQFZqD6XktVh+DOSYHuGY3SbYDJ3IqiKPJzjvZVMnsPuVPoIi8w4W2/9dimmUqiewv+rioI+rUikfRchjoomOWPKUR2u4xcB+4P6Gv17YdO+Yb9B+RFCcvdHbvvP6bNFX3Uxc2hhI3LVAGfR6bSpvOCjANp0tCOckwqIwdQDBMjlnJMekQKo29JRKdfJ/ph1E+bekrkQ+oxo8LGMmfz20RRQA0XICVs/18xdLSroP9vD/KUhDqCzByBJ2bzO8VjwkOtbMMy1LizAKeQzcoO56WEm/9/MudO8x6cL9sqnPJI99fT7TUCAbGVDCEGt1134NNTConl9VRkPg==', 'submitted_by': None, 'reviewed_by': None}], 'proof': 17057, 'previous_hash': 'f9ed94e998c7a7894a1d2d45c69ef67521ff2405a7291a34c07a8bec4ba5d3e1', 'hash': '20372912c00a6fcbc8c18285c23ef85c17357a7d566bb4632a2997c9e0f1187a'}
+INFO 2025-12-07 09:19:02,244 donation Block created for donation ID 84, Transaction ID GCASH-82fcc8fe
+DEBUG 2025-12-07 09:19:02,245 donation Pending transactions after block creation: []
+INFO 2025-12-07 09:19:04,699 donation Receipt email sent successfully for donation GCASH-82fcc8fe
+DEBUG 2025-12-07 09:19:35,729 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-12-07 09:19:35,744 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:19:41,108 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+INFO 2025-12-07 09:19:41,131 donation GCash donation created: ID=85, Email=KENK13605@GMAIL.COM, Amount=1000, Event=General
+DEBUG 2025-12-07 09:19:41,131 donation Initiating GCash payment for donation ID=85, Amount=1000
+INFO 2025-12-07 09:19:41,329 donation PayMongo source created: Source ID=src_45UGnhze3akEpJty5kWS9Ppk, Donation ID=85
+DEBUG 2025-12-07 09:19:44,208 donation Session data: dict_items([('_csrftoken', 'VQPKulHv2igU1SnSZI3u44CkqEVmk8OV'), ('donation_id', 85)])
+DEBUG 2025-12-07 09:19:44,310 donation PayMongo source response: {'data': {'id': 'src_45UGnhze3akEpJty5kWS9Ppk', 'type': 'source', 'attributes': {'amount': 100000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'KENK13605@GMAIL.COM', 'name': 'Test R. Event', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_45UGnhze3akEpJty5kWS9Ppk', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'transaction_id': 'GCASH-016bd466', 'donation_id': '85'}, 'created_at': 1765070380, 'updated_at': 1765070383}}}
+INFO 2025-12-07 09:19:44,315 models Transaction added for donation GCASH-016bd466
+DEBUG 2025-12-07 09:19:44,317 donation Previous proof: 17057
+DEBUG 2025-12-07 09:19:44,327 donation Proof of work completed: 8402
+DEBUG 2025-12-07 09:19:44,328 models Calculated hash for Block 45: c684e30c070078368f6ddefb017cfffd9e788ceff0c4872ef0a6034a75f3ee8c
+INFO 2025-12-07 09:19:44,328 models Saving Block 45: Old hash=, New hash=c684e30c070078368f6ddefb017cfffd9e788ceff0c4872ef0a6034a75f3ee8c
+INFO 2025-12-07 09:19:44,329 models Block 45 saved with hash=c684e30c070078368f6ddefb017cfffd9e788ceff0c4872ef0a6034a75f3ee8c
+INFO 2025-12-07 09:19:44,329 models Block 45 created successfully
+DEBUG 2025-12-07 09:19:44,329 donation New block created: {'index': 45, 'timestamp': '2025-12-07T01:19:44.328420+00:00', 'transactions': [{'transaction_id': 'GCASH-016bd466', 'donor_name': 'Test R Event', 'email': 'KENK13605@GMAIL.COM', 'amount': 1000.0, 'donation_date': '2025-12-07', 'payment_method': 'gcash', 'event': 'General Donation', 'signature': 'rq1+4/5FSnrhhQx57Y0V0Mdmes4H3q4QhZUIv4pibhy1IWkFaHmtT/aiUITDT2Br1FHpYaK5I+LCWX6s0CgBhTAWFj7ZTozouGXA4ICHA8jAjcavxgOjVaLt2fwy5ozAAQGL7iW5SjK+yIizTHvKPAPV+1y6zI1NbEjwnK3m1tRsfvBj7k14Auhzhhd9LScnSoOdf70rgyh9XVOPrgsGtZezAFBq7zWkHUcyh+4hPsxo4Hb6WJ8gaKP5sz9v/7XK4PvhxEnbb0j+f89FyHMSXct298e1Q1cP4wHO/PzUqZujgn23sJ9ViLPhMLfM2mV/+UNnZfqAx4NbWSPxoF+XHw==', 'submitted_by': None, 'reviewed_by': None}], 'proof': 8402, 'previous_hash': '20372912c00a6fcbc8c18285c23ef85c17357a7d566bb4632a2997c9e0f1187a', 'hash': 'c684e30c070078368f6ddefb017cfffd9e788ceff0c4872ef0a6034a75f3ee8c'}
+INFO 2025-12-07 09:19:44,330 donation Block created for donation ID 85, Transaction ID GCASH-016bd466
+DEBUG 2025-12-07 09:19:44,330 donation Pending transactions after block creation: []
+INFO 2025-12-07 09:19:47,278 donation Receipt email sent successfully for donation GCASH-016bd466
+DEBUG 2025-12-07 09:20:20,958 donation Session data: dict_items([('_csrftoken', 'VQPKulHv2igU1SnSZI3u44CkqEVmk8OV')])
+ERROR 2025-12-07 09:20:20,959 donation Missing donation_id in GCash confirmation
+DEBUG 2025-12-07 09:20:20,982 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-12-07 09:20:20,999 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:20:26,985 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+INFO 2025-12-07 09:20:27,026 donation GCash donation created: ID=86, Email=morijin1420@gmail.com, Amount=2000, Event=General
+DEBUG 2025-12-07 09:20:27,026 donation Initiating GCash payment for donation ID=86, Amount=2000
+INFO 2025-12-07 09:20:27,251 donation PayMongo source created: Source ID=src_9rNNJaBeoJFMYBjEdEAkjSQv, Donation ID=86
+DEBUG 2025-12-07 09:20:29,826 donation Session data: dict_items([('_csrftoken', 'VQPKulHv2igU1SnSZI3u44CkqEVmk8OV'), ('donation_id', 86)])
+DEBUG 2025-12-07 09:20:29,922 donation PayMongo source response: {'data': {'id': 'src_9rNNJaBeoJFMYBjEdEAkjSQv', 'type': 'source', 'attributes': {'amount': 200000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'morijin1420@gmail.com', 'name': 'Andy C. Riri', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_9rNNJaBeoJFMYBjEdEAkjSQv', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'donation_id': '86', 'transaction_id': 'GCASH-08076356'}, 'created_at': 1765070426, 'updated_at': 1765070428}}}
+INFO 2025-12-07 09:20:29,929 models Transaction added for donation GCASH-08076356
+DEBUG 2025-12-07 09:20:29,930 donation Previous proof: 8402
+DEBUG 2025-12-07 09:20:30,014 donation Proof of work completed: 83649
+DEBUG 2025-12-07 09:20:30,016 models Calculated hash for Block 46: 7dca972f8dd0970b8ef01d71f8b2b7c90a08a4d28df752e6e78e35423cec8714
+INFO 2025-12-07 09:20:30,016 models Saving Block 46: Old hash=, New hash=7dca972f8dd0970b8ef01d71f8b2b7c90a08a4d28df752e6e78e35423cec8714
+INFO 2025-12-07 09:20:30,017 models Block 46 saved with hash=7dca972f8dd0970b8ef01d71f8b2b7c90a08a4d28df752e6e78e35423cec8714
+INFO 2025-12-07 09:20:30,018 models Block 46 created successfully
+DEBUG 2025-12-07 09:20:30,018 donation New block created: {'index': 46, 'timestamp': '2025-12-07T01:20:30.016252+00:00', 'transactions': [{'transaction_id': 'GCASH-08076356', 'donor_name': 'Andy C Riri', 'email': 'morijin1420@gmail.com', 'amount': 2000.0, 'donation_date': '2025-12-07', 'payment_method': 'gcash', 'event': 'General Donation', 'signature': 'Dqo34Gm1u8CR+K60cTCjOdepaCk78KBajQXx5iDikLfoTfbjB/bcN33sqJSypWQt98CF2ItXWnHHD84nypEt8BXa6CKfKiJhVUBbuy5XwRUUZxzZudA6bpmIYHrNBNv6O1D8DOGpf1sy1QlowNfsEiO70vC9KXtZNfXqBaUGpXRwIeAI5lbiltL2fcb95NKLfHScM67WvbGKDZjYAAvia03xq3g5VdKsMlPKeLgMHmfBLmk1u1BLMROfDlhsP9xayVE4sYdGaeAJQpl08vGeHAXDdY4q9OZhsxCdNTqyzoj94rrF3fkZ1ApwP88f0uB5L71hg0tI0zV32aiZ6j6z9w==', 'submitted_by': None, 'reviewed_by': None}], 'proof': 83649, 'previous_hash': 'c684e30c070078368f6ddefb017cfffd9e788ceff0c4872ef0a6034a75f3ee8c', 'hash': '7dca972f8dd0970b8ef01d71f8b2b7c90a08a4d28df752e6e78e35423cec8714'}
+INFO 2025-12-07 09:20:30,018 donation Block created for donation ID 86, Transaction ID GCASH-08076356
+DEBUG 2025-12-07 09:20:30,019 donation Pending transactions after block creation: []
+INFO 2025-12-07 09:20:32,926 donation Receipt email sent successfully for donation GCASH-08076356
+DEBUG 2025-12-07 09:20:51,611 donation Session data: dict_items([('_csrftoken', 'VQPKulHv2igU1SnSZI3u44CkqEVmk8OV')])
+ERROR 2025-12-07 09:20:51,611 donation Missing donation_id in GCash confirmation
+DEBUG 2025-12-07 09:20:51,647 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-12-07 09:20:51,660 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:21:34,941 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-12-07 09:21:34,946 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:21:39,209 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+INFO 2025-12-07 09:21:39,246 donation GCash donation created: ID=87, Email=morijin1420@gmail.com, Amount=2000, Event=General
+DEBUG 2025-12-07 09:21:39,247 donation Initiating GCash payment for donation ID=87, Amount=2000
+INFO 2025-12-07 09:21:39,477 donation PayMongo source created: Source ID=src_2nttLKLKByPtnXuQfmsFJGpv, Donation ID=87
+DEBUG 2025-12-07 09:21:42,401 donation Session data: dict_items([('_csrftoken', 'VQPKulHv2igU1SnSZI3u44CkqEVmk8OV'), ('donation_id', 87)])
+DEBUG 2025-12-07 09:21:42,499 donation PayMongo source response: {'data': {'id': 'src_2nttLKLKByPtnXuQfmsFJGpv', 'type': 'source', 'attributes': {'amount': 200000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'morijin1420@gmail.com', 'name': 'Andy C. Riri', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_2nttLKLKByPtnXuQfmsFJGpv', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'donation_id': '87', 'transaction_id': 'GCASH-0dfbbec7'}, 'created_at': 1765070498, 'updated_at': 1765070501}}}
+INFO 2025-12-07 09:21:42,504 models Transaction added for donation GCASH-0dfbbec7
+DEBUG 2025-12-07 09:21:42,505 donation Previous proof: 83649
+DEBUG 2025-12-07 09:21:42,792 donation Proof of work completed: 209847
+DEBUG 2025-12-07 09:21:42,794 models Calculated hash for Block 47: 0a96f0ddd4a39696efb93d84e92d935252a2b975566e1e096a9b88aa8cd5e32d
+INFO 2025-12-07 09:21:42,794 models Saving Block 47: Old hash=, New hash=0a96f0ddd4a39696efb93d84e92d935252a2b975566e1e096a9b88aa8cd5e32d
+INFO 2025-12-07 09:21:42,796 models Block 47 saved with hash=0a96f0ddd4a39696efb93d84e92d935252a2b975566e1e096a9b88aa8cd5e32d
+INFO 2025-12-07 09:21:42,797 models Block 47 created successfully
+DEBUG 2025-12-07 09:21:42,797 donation New block created: {'index': 47, 'timestamp': '2025-12-07T01:21:42.794571+00:00', 'transactions': [{'transaction_id': 'GCASH-0dfbbec7', 'donor_name': 'Andy C Riri', 'email': 'morijin1420@gmail.com', 'amount': 2000.0, 'donation_date': '2025-12-07', 'payment_method': 'gcash', 'event': 'General Donation', 'signature': 'V+UqYkxxsLzAwCG1GHVeFqVLjxtocscGzcz7RahprdEfwcqQXwgXUIpHzdnocxOxdVoY4Vc/S/0tDf7gkhcICS/mt3QpDuW/LD0axF3YMctZArhK00eYzimPiBTF2QaMgME/cPRgWEdDxXOrPeE8O16tp5hK3P07lI/CbPLMmpsaNHkHt+UBslPOJfTZoy0j7xro/KJ5i9xPWx8PeDD5wVhk5a3YlSVIBVW7qFUSQCwfkU96T0jrGsydLGaXzSaf4CiZUKD738TDN5eJRVbWH9lnEukEAIsUSyxoZfzgd5sycWG/1PWvJ+5yKVpdaP/+WGw165tgi2bstPpUFh0ymQ==', 'submitted_by': None, 'reviewed_by': None}], 'proof': 209847, 'previous_hash': '7dca972f8dd0970b8ef01d71f8b2b7c90a08a4d28df752e6e78e35423cec8714', 'hash': '0a96f0ddd4a39696efb93d84e92d935252a2b975566e1e096a9b88aa8cd5e32d'}
+INFO 2025-12-07 09:21:42,797 donation Block created for donation ID 87, Transaction ID GCASH-0dfbbec7
+DEBUG 2025-12-07 09:21:42,798 donation Pending transactions after block creation: []
+INFO 2025-12-07 09:21:45,680 donation Receipt email sent successfully for donation GCASH-0dfbbec7
+DEBUG 2025-12-07 09:22:24,887 donation Session data: dict_items([('_csrftoken', 'VQPKulHv2igU1SnSZI3u44CkqEVmk8OV')])
+ERROR 2025-12-07 09:22:24,888 donation Missing donation_id in GCash confirmation
+DEBUG 2025-12-07 09:22:24,924 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-12-07 09:22:24,932 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:28:08,561 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+INFO 2025-12-07 09:28:08,625 donation GCash donation created: ID=88, Email=morijin1420@gmail.com, Amount=2000, Event=General
+DEBUG 2025-12-07 09:28:08,625 donation Initiating GCash payment for donation ID=88, Amount=2000
+INFO 2025-12-07 09:28:08,811 donation PayMongo source created: Source ID=src_U4cpoTYKt7E6uZKUQ1ha1eNQ, Donation ID=88
+DEBUG 2025-12-07 09:28:11,725 donation Session data: dict_items([('_csrftoken', 'VQPKulHv2igU1SnSZI3u44CkqEVmk8OV'), ('donation_id', 88)])
+DEBUG 2025-12-07 09:28:11,946 donation PayMongo source response: {'data': {'id': 'src_U4cpoTYKt7E6uZKUQ1ha1eNQ', 'type': 'source', 'attributes': {'amount': 200000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'morijin1420@gmail.com', 'name': 'Andy C. Riri', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_U4cpoTYKt7E6uZKUQ1ha1eNQ', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'donation_id': '88', 'transaction_id': 'GCASH-be31160c'}, 'created_at': 1765070888, 'updated_at': 1765070890}}}
+INFO 2025-12-07 09:28:11,959 models Transaction added for donation GCASH-be31160c
+DEBUG 2025-12-07 09:28:11,961 donation Previous proof: 209847
+DEBUG 2025-12-07 09:28:11,988 donation Proof of work completed: 30673
+DEBUG 2025-12-07 09:28:11,990 models Calculated hash for Block 48: 1a5e9cc295fb7850882f9ddc42e41824f21f8d9ba81a39444f6397f07a08f5ad
+INFO 2025-12-07 09:28:11,990 models Saving Block 48: Old hash=, New hash=1a5e9cc295fb7850882f9ddc42e41824f21f8d9ba81a39444f6397f07a08f5ad
+INFO 2025-12-07 09:28:11,991 models Block 48 saved with hash=1a5e9cc295fb7850882f9ddc42e41824f21f8d9ba81a39444f6397f07a08f5ad
+INFO 2025-12-07 09:28:11,992 models Block 48 created successfully
+DEBUG 2025-12-07 09:28:11,992 donation New block created: {'index': 48, 'timestamp': '2025-12-07T01:28:11.990305+00:00', 'transactions': [{'transaction_id': 'GCASH-be31160c', 'donor_name': 'Andy C Riri', 'email': 'morijin1420@gmail.com', 'amount': 2000.0, 'donation_date': '2025-12-07', 'payment_method': 'gcash', 'event': 'General Donation', 'signature': 'UJ3ry+CWYOBitifKB4PvKjthYxBAF9lLiKfYU1u6wiTh9zina8kb029PkZobNOTczjbOxOSikmL5w/dnPuRvtbJywPVIDq73nd/bkhwuWin9y+CnxsuIK6IhAhp0L0G5kKMuTRNc/juaMsWOXBi6hIA3WsLENeG4Q5dcviBQZO3f3Qv3xnWMzMl0YOux3uKm65lhBfB8vazVd8+ruGzvFPZg75SKVorJjv1M/yuy9cWRozdwgCoqokoD7n+9GawINrWCVsoCvUghw+8A86YCFnN0mvzR0X83BBaERY4wCkgoDM6autjIJA32bXdapS4s6U+PNRU3WUkdQZI1nCeAPw==', 'submitted_by': None, 'reviewed_by': None}], 'proof': 30673, 'previous_hash': '0a96f0ddd4a39696efb93d84e92d935252a2b975566e1e096a9b88aa8cd5e32d', 'hash': '1a5e9cc295fb7850882f9ddc42e41824f21f8d9ba81a39444f6397f07a08f5ad'}
+INFO 2025-12-07 09:28:11,992 donation Block created for donation ID 88, Transaction ID GCASH-be31160c
+DEBUG 2025-12-07 09:28:11,993 donation Pending transactions after block creation: []
+INFO 2025-12-07 09:28:15,392 donation Receipt email sent successfully for donation GCASH-be31160c
+DEBUG 2025-12-07 09:30:04,889 donation Session data: dict_items([('_csrftoken', 'VQPKulHv2igU1SnSZI3u44CkqEVmk8OV'), ('donation_id', 88)])
+ERROR 2025-12-07 09:30:04,891 donation Unexpected error in GCash confirmation for donation ID 88: No Donation matches the given query.
+DEBUG 2025-12-07 09:30:06,824 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+DEBUG 2025-12-07 09:30:06,842 donation Rendered form HTML: <p>
+    <label for="id_first_name">First name:</label>
+    <input type="text" name="first_name" maxlength="100" id="id_first_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_middle_initial">Middle initial:</label>
+    <input type="text" name="middle_initial" maxlength="10" id="id_middle_initial">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_last_name">Last name:</label>
+    <input type="text" name="last_name" maxlength="100" id="id_last_name">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_email">Email:</label>
+    <input type="email" name="email" maxlength="254" id="id_email">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_amount">Amount:</label>
+    <input type="number" name="amount" step="0.01" required id="id_amount">
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_event">Event:</label>
+    <select name="event" id="id_event">
+  <option value="" selected>General Donation</option>
+
+  <option value="36">aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa</option>
+
+  <option value="45">Everyone is Groot</option>
+
+  <option value="49">Capstone Defense</option>
+
+  <option value="47">My Momma is Kinda Homeless</option>
+
+  <option value="35">Test Event</option>
+
+</select>
+    
+    
+  </p>
+
+  
+  <p>
+    <label for="id_donate_anonymously">Donate Anonymously:</label>
+    <input type="checkbox" name="donate_anonymously" aria-describedby="id_donate_anonymously_helptext" id="id_donate_anonymously">
+    
+      <span class="helptext" id="id_donate_anonymously_helptext">Check this box to donate without providing personal information.</span>
+    
+    
+      
+    
+  </p>
+DEBUG 2025-12-07 09:30:09,876 donation show_manual_link: False, User: AnonymousUser, Role: N/A
+INFO 2025-12-07 09:30:09,933 donation GCash donation created: ID=89, Email=morijin1420@gmail.com, Amount=2000, Event=General
+DEBUG 2025-12-07 09:30:09,933 donation Initiating GCash payment for donation ID=89, Amount=2000
+INFO 2025-12-07 09:30:10,153 donation PayMongo source created: Source ID=src_9DJoKmsWj3KyodJfbKe12S45, Donation ID=89
+DEBUG 2025-12-07 09:30:12,449 donation Session data: dict_items([('_csrftoken', 'VQPKulHv2igU1SnSZI3u44CkqEVmk8OV'), ('donation_id', 89)])
+DEBUG 2025-12-07 09:30:12,536 donation PayMongo source response: {'data': {'id': 'src_9DJoKmsWj3KyodJfbKe12S45', 'type': 'source', 'attributes': {'amount': 200000, 'billing': {'address': {'city': None, 'country': None, 'line1': None, 'line2': None, 'postal_code': None, 'state': None}, 'email': 'morijin1420@gmail.com', 'name': 'Andy C. Riri', 'phone': None}, 'currency': 'PHP', 'description': None, 'livemode': False, 'redirect': {'checkout_url': 'https://secure-authentication.paymongo.com/sources?id=src_9DJoKmsWj3KyodJfbKe12S45', 'failed': 'http://127.0.0.1:8000/cancel/', 'success': 'http://127.0.0.1:8000/gcash/confirm/'}, 'statement_descriptor': None, 'status': 'chargeable', 'type': 'gcash', 'metadata': {'donation_id': '89', 'transaction_id': 'GCASH-ba0aceea'}, 'created_at': 1765071009, 'updated_at': 1765071011}}}
+INFO 2025-12-07 09:30:12,543 models Transaction added for donation GCASH-ba0aceea
+DEBUG 2025-12-07 09:30:12,544 donation Previous proof: 30673
+DEBUG 2025-12-07 09:30:12,585 donation Proof of work completed: 41077
+DEBUG 2025-12-07 09:30:12,587 models Calculated hash for Block 49: 879f038b6c4afecb943b58bd36ebbf0e21a41c412a414c1ae862b32767382b90
+INFO 2025-12-07 09:30:12,587 models Saving Block 49: Old hash=, New hash=879f038b6c4afecb943b58bd36ebbf0e21a41c412a414c1ae862b32767382b90
+INFO 2025-12-07 09:30:12,588 models Block 49 saved with hash=879f038b6c4afecb943b58bd36ebbf0e21a41c412a414c1ae862b32767382b90
+INFO 2025-12-07 09:30:12,588 models Block 49 created successfully
+DEBUG 2025-12-07 09:30:12,588 donation New block created: {'index': 49, 'timestamp': '2025-12-07T01:30:12.587149+00:00', 'transactions': [{'transaction_id': 'GCASH-ba0aceea', 'donor_name': 'Andy C Riri', 'email': 'morijin1420@gmail.com', 'amount': 2000.0, 'donation_date': '2025-12-07', 'payment_method': 'gcash', 'event': 'General Donation', 'signature': 'QsMZfCtldmLH3XklAnC8sNToWy8ZPRaIiKf5Lsw1PsSlUe7r8MqILN6BZED9LS3PzZiAN9kYDAYiQj7nstjwqoWaZvSvnA8eNVPa8yECeE7fuyF9psFIDp20Y52aw7LUFFglR47k49R0Dbae5Te6hnezClhx4ItrErlLZw4+ZTwn1mOEnXVRA+r118ym4xl9LXd4K+mamSYFm6arEW7EDAAxB2fVoLXvCdUlIJ8A1fvUERLzkISRwejPXKw/lOaZXL09UA+dInpg1GrvpOS+8Ja/onXbVr8z8zLdYl3lHNsUobsClQG9E9YCyDNP7jK+5XD/SwNKSeU3qk1LBG+B+w==', 'submitted_by': None, 'reviewed_by': None}], 'proof': 41077, 'previous_hash': '1a5e9cc295fb7850882f9ddc42e41824f21f8d9ba81a39444f6397f07a08f5ad', 'hash': '879f038b6c4afecb943b58bd36ebbf0e21a41c412a414c1ae862b32767382b90'}
+INFO 2025-12-07 09:30:12,589 donation Block created for donation ID 89, Transaction ID GCASH-ba0aceea
+DEBUG 2025-12-07 09:30:12,589 donation Pending transactions after block creation: []
+INFO 2025-12-07 09:30:15,079 donation Receipt email sent successfully for donation GCASH-ba0aceea

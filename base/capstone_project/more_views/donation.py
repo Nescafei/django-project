@@ -12,10 +12,12 @@ from django.contrib.auth.decorators import login_required, permission_required
 from django.core.paginator import Paginator
 from django.db import transaction
 from django.db.models.signals import pre_save, pre_delete
+from django.http import HttpResponse, Http404
 from django.dispatch import receiver
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.cache import never_cache
 from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.http import require_GET
 from django.urls import reverse
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
@@ -42,6 +44,21 @@ def log_block_delete(sender, instance, **kwargs):
     logger.warning(f"Block {instance.index} deleted: index={instance.index}, timestamp={timestamp_str}")
 
 PAYMONGO_API_URL = 'https://api.paymongo.com/v1'
+
+@require_GET
+def download_receipt(request, donation_id):
+    donation = get_object_or_404(Donation, id=donation_id, status='completed')
+    
+    # Optional: Allow only donor (by email) or admin if not logged in
+    if not request.user.is_authenticated:
+        if donation.is_anonymous:
+            raise Http404("Receipt not available for anonymous donations via this link.")
+        # You could add a secret token later for extra security
+
+    pdf_buffer = generate_receipt_pdf(donation)  # You already have this function
+    response = HttpResponse(pdf_buffer, content_type='application/pdf')
+    response['Content-Disposition'] = f'attachment; filename="KofC_Receipt_{donation.transaction_id}.pdf"'
+    return response
 
 @never_cache
 def donations(request):
@@ -477,10 +494,13 @@ def confirm_gcash_payment(request):
         donation.status = 'failed'
         donation.save()
         messages.error(request, "An error occurred while processing your payment. Please try again.")
-    return redirect('donations')
+    return redirect('donation_success', donation_id=donation.id)
 
-def success_page(request):
-    return render(request, 'success.html', {'message': 'Payment processing. Awaiting confirmation.'})
+def donation_success(request, donation_id):
+    donation = get_object_or_404(Donation, id=donation_id, status='completed')
+    return render(request, 'success.html', {
+        'donation': donation
+    })
 
 def cancel_page(request):
     donation_id = request.GET.get('donation_id')

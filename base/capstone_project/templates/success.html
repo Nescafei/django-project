@@ -1,22 +1,113 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}
-Knights of Columbus - Payment Success
-{% endblock %}
+{% block title %}Thank You – Donation Received!{% endblock %}
 
 {% block content %}
 <link rel="stylesheet" href="{% static 'css/donations-style.css' %}?v={% now 'U' %}">
-<div class="background">
-    <h1>Payment Successful</h1>
-    <p>{{ message }}</p>
-</div>
-<div class="container">
-    <section class="hero">
-        <div class="content">
-            <p>Thank you for your donation! You will receive a confirmation soon.</p>
-            <a href="{% url 'donations' %}" class="donation-link">Back to Donations</a>
+
+<div style="min-height:100vh; background: linear-gradient(135deg, #0d3471 0%, #161b5f 100%); margin: auto; display:flex; align-items:center; justify-content:center; padding:2rem 1rem;">
+  <div style="background:white; max-width:560px; width:100%; border-radius:20px; box-shadow:0 25px 50px rgba(0,0,0,0.35); animation:floatIn 0.8s ease-out;">
+    <!-- Header -->
+    <div style="background:linear-gradient(135deg,#f4b41a,#e67e22); color:#161b5f; padding:5rem 2rem 3rem; text-align:center; position:relative; overflow:visible;">
+    <div style="position:absolute; top:10px; left:50%; transform:translateX(-50%); width:120px; height:120px; background:white; border-radius:50%; font-size:6rem; line-height:120px; box-shadow:0 15px 40px rgba(0,0,0,0.3); z-index:10;">
+        ✓
+    </div>
+    <h1 style="margin:3rem 0 0.5rem; font-size:2.6rem; font-weight:800;">Thank You!</h1>
+    <p style="font-size:1.3rem; opacity:0.95; margin:0;">Your donation has been received</p>
+    </div>
+
+    <!-- Body -->
+    <div style="padding:3rem 2.5rem 2.5rem; text-align:center;">
+      <div style="background:#f8f9fa; border-radius:16px; padding:2rem; margin:1rem 0;">
+        <div style="font-size:3.2rem; font-weight:800; color:#491af4; margin:0.5rem 0;">
+          ₱{{ donation.amount|floatformat:2 }}
         </div>
-    </section>
+        <p style="margin:0.8rem 0; color:#333;">
+          <strong>Transaction ID:</strong> {{ donation.transaction_id }}
+        </p>
+        <p style="margin:0.5rem 0; color:#333;">
+          <strong>Date:</strong> {{ donation.donation_date|date:"F j, Y" }}
+        </p>
+
+        {% if donation.is_anonymous %}
+          <p style="margin:1rem 0; font-size:1.1rem; color:#555;">
+            From an <strong>Anonymous Knight</strong>
+          </p>
+        {% else %}
+          <p style="margin:1rem 0; font-size:1.1rem; color:#555;">
+            Thank you{% if donation.first_name %}, <strong>{{ donation.first_name }} {{ donation.last_name }}</strong>{% endif %}!
+          </p>
+        {% endif %}
+      </div>
+
+      <!-- Action Buttons -->
+      <div style="margin:2.5rem 0; display:flex; flex-direction:column; gap:1rem;">
+        <a href="{% url 'download_receipt' donation.id %}" id="downloadReceipt"
+           style="background:linear-gradient(to right,#161b5f,#0d3471); color:white; padding:1.1rem; border-radius:50px; font-weight:600; text-decoration:none; font-size:1.15rem; transition:all 0.3s;">
+          Download Official Receipt (PDF)
+        </a>
+        <button onclick="window.print()"
+                style="background:transparent; color:#161b5f; border:2.5px solid #161b5f; padding:1rem; border-radius:50px; font-weight:600; font-size:1.1rem; cursor:pointer; transition:all 0.3s;">
+          Print This Page
+        </button>
+      </div>
+
+      <!-- Links -->
+      <div style="margin-top:2rem; font-size:0.98rem; color:#555;">
+        <p><a href="{% url 'blockchain' %}" style="color:#0d3471; text-decoration:underline;">View on Blockchain Ledger</a></p>
+        <p><a href="{% url 'donations' %}" style="color:#0d3471; text-decoration:underline;">← Make Another Donation</a></p>
+      </div>
+
+      <!-- Account prompt for guests -->
+      {% if not user.is_authenticated %}
+      <div style="margin-top:3rem; padding:2rem; background:#f0f8ff; border:3px dashed #f4b41a; border-radius:16px;">
+        <strong style="font-size:1.1rem;">Want to track all your donations?</strong><br>
+        <span style="color:#555; font-size:0.95rem;">Create a free account and never lose a receipt again.</span><br><br>
+        <a href="{% url 'sign-up' %}?email={{ donation.email|urlencode }}&donation={{ donation.id }}"
+        style="background:#f4b41a; color:#161b5f; padding:0.9rem 1.8rem; border-radius:50px; text-decoration:none; font-weight:600; display:inline-block;">
+        Create My Account (30 sec)
+        </a>
+      </div>
+      {% endif %}
+    </div>
+  </div>
 </div>
+
+<!-- Confetti + Auto-download -->
+<script>
+// Subtle confetti
+for(let i=0;i<70;i++){
+  const c = document.createElement('div');
+  c.style.position='fixed'; c.style.top='-10px'; c.style.left=Math.random()*100+'vw';
+  c.style.width='10px'; c.style.height='10px'; c.style.background=['#f4b41a','#e67e22','#161b5f','#0d3471'][i%4];
+  c.style.borderRadius='50%'; c.style.opacity='0.8'; c.style.pointerEvents='none';
+  c.style.animation=`fall ${3+Math.random()*3}s linear forwards`;
+  c.style.animationDelay=Math.random()*2+'s';
+  document.body.appendChild(c);
+}
+const style = document.createElement('style');
+style.innerHTML = `@keyframes fall{to{transform:translateY(110vh) rotate(720deg);}}`;
+document.head.appendChild(style);
+
+// Auto-download receipt after 2.5 seconds
+setTimeout(() => {
+  const btn = document.getElementById('downloadReceipt');
+  if (btn) {
+    btn.textContent = 'Preparing your receipt...';
+    setTimeout(() => btn.click(), 800);
+  }
+}, 2500);
+</script>
+
+<style>
+  @keyframes floatIn {
+    from { opacity:0; transform:translateY(40px) scale(0.95); }
+    to   { opacity:1; transform:translateY(0) scale(1); }
+  }
+  @media (max-width: 480px) {
+    div[style*="padding:4rem"] { padding:3.5rem 1.5rem 2.5rem !important; }
+    div[style*="font-size:3.2rem"] { font-size:2.6rem !important; }
+  }
+</style>
 {% endblock %}
